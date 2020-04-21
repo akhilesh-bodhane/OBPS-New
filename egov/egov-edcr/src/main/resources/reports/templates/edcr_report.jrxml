@@ -1256,7 +1256,7 @@
 					<font size="8"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Root Boundary "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["ROOT BOUNDARY "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement x="12" y="662" width="16" height="25" uuid="f2aca0b3-8185-467a-8193-9a634c106e37"/>

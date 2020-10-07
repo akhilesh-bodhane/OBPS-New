@@ -1,77 +1,94 @@
 <!DOCTYPE html>
-<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%> 
+<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <html>
 <head>
-    <!--Import Google Icon Font-->
-    
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-  <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/materialize.min.css" media="screen,projection" />
-  <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/landingpage.css" />
-  
-  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!--Import Google Icon Font-->
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
+<!--Import materialize.css-->
+<link type="text/css" rel="stylesheet"
+	href="/egi/resources/guide/css/materialize.min.css"
+	media="screen,projection" />
+<link type="text/css" rel="stylesheet"
+	href="/egi/resources/guide/css/landingpage.css" />
+
+<link
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
 <!--     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
  -->
-   <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        .icon-header {
-            display: block !important;
-        }
-    </style>
-    <script type="text/javascript" src="/egi/resources/guide/js/materialize.min.js"></script>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.collapsible');
-            var instances = M.Collapsible.init(elems, {
-                inDuration: 0,
-                outDuration: 0,
-                onOpenStart: function (e) {
-                    var row = e.querySelectorAll('.lp-row-1');
-                    row[0].classList.add("row-hide");
-                    var downarrow = e.querySelectorAll('.landingpage-card-down-arrow');
-                    downarrow[0].classList.add("row-hide");
-                    var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
-                    uparrow[0].classList.remove("row-hide");
+<!--Let browser know website is optimized for mobile-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+.icon-header {
+	display: block !important;
+}
+</style>
+<script type="text/javascript"
+	src="/egi/resources/guide/js/materialize.min.js"></script>
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.collapsible');
+		var instances = M.Collapsible.init(elems, {
+			inDuration : 0,
+			outDuration : 0,
+			onOpenStart : function(e) {
+				var row = e.querySelectorAll('.lp-row-1');
+				row[0].classList.add("row-hide");
+				var downarrow = e
+						.querySelectorAll('.landingpage-card-down-arrow');
+				downarrow[0].classList.add("row-hide");
+				var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
+				uparrow[0].classList.remove("row-hide");
 
-                },
-                onCloseEnd: function (e) {
-                    var row = e.querySelectorAll('.lp-row-1');
-                    row[0].classList.remove("row-hide");
-                    var downarrow = e.querySelectorAll('.landingpage-card-down-arrow');
-                    downarrow[0].classList.remove("row-hide");
-                    var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
-                    uparrow[0].classList.add("row-hide");
+			},
+			onCloseEnd : function(e) {
+				var row = e.querySelectorAll('.lp-row-1');
+				row[0].classList.remove("row-hide");
+				var downarrow = e
+						.querySelectorAll('.landingpage-card-down-arrow');
+				downarrow[0].classList.remove("row-hide");
+				var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
+				uparrow[0].classList.add("row-hide");
 
-                }
-            });
+			}
+		});
 
-
-
-        });
-
-
-    </script>
+	});
+</script>
 </head>
 
 <body>
-	<div class="logo-container"  style="background-color:#F8F9F9;">
+	<!-- <div class="logo-container new-login-header-wrapper" >
 				
-				<img src="https://www.egovernments.org/wp-content/uploads/2018/11/Logo-2.png" style="background-color:#3b73af" height="90">
+				<img src="/egi/resources/global/images/logo.png"  height="90">
 				
-				<a href="http://www.egovernments.org" style="padding-top:8px;padding-right:30px;" 
+				<a href="#" style="padding-top:8px;padding-right:30px;" 
 						data-strwindname="egovsite" class="open-popup"> <img
-							src="<cdn:url value='/resources/global/images/egov_logo_tr_h.png'/>"
-							title="Powered by eGovernments" height="45" alt=""> 
+							src="/egi/resources/global/images/background-banner.jpg"height="45" alt=""> 
 					</a>
-	</div>	
+	</div>	 -->
+<div class="login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
 
+	<div class="new-login-header-wrapper page-common-padding col-md-12">
+		<div class="new-login-header padding0 col-md-12">
+			<span><img src="/egi/resources/global/images/logo.png"
+				height="67" class="rounded"></span>
+		</div>
+	</div>
+</div>
 	<div class="main-content landingpage-font-style">
-			
+
 		<div class="card landingpage-card landingpage-card-video">
 			<div class="card-content collapsible-header landingpage-card-content">
-				<span class="card-title card-header card-subheader" style="text-align:center; color:black; font-weight:500;">Training and Tutorials - Building plan drawing videos </span>
+				<span class="card-title card-header card-subheader"
+					style="text-align: center; color: black; font-weight: 500;">Training
+					and Tutorials - Building plan drawing videos </span>
 			</div>
 			<ul class="collapsible card-collapse video-documents-csrd">
 				<li style="padding-left: 40px; padding-right: 40px;">
@@ -87,7 +104,7 @@
 								<p class="landingpage-card-icon-description">1.Preliminaries
 									and creation of pdf sheets from dxf</p>
 							</div>
-							<div class="col s12 m4 video-play"> 
+							<div class="col s12 m4 video-play">
 								<video width="320" height="240" controls preload="metadata">
 									<source
 										src="https://s3.ap-south-1.amazonaws.com/suvega/videos/002++bilt+up+area+of+proposed+portions.mp4#t=0.5"
@@ -280,49 +297,44 @@
 	</div>
 
 	</div>
-  <footer class="page-footer font-small blue social-media-contact-container">
-  <div class=" logo">
-      <img src="<cdn:url value='/resources/guide/assets/digit_dcr_glow_logo.png'/>"
-								 height="128" style="position: relative;right: 37px;bottom:  -10px;"> 
-  </div>
-  <div class="item-list training-ttutorial">
-    <p class="subheader">Training & Tutorials</p>
-    <ul class="tutorial-list">
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">DIGIT DCR user manual</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Citizen Help Manual</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Fee Details</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Single family residential building layers</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Layer Matrix for multiple occupancies</a>
-      </li>
-      
-        <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Layer Set (las format)</a>
-      </li>
-      <li class="tutorial-item">
-        <a href="javascript:void(0);" target="_blank">Single family residential building - Drawing Guidelines</a>
-      </li>  
-    </ul>
-  </div>
-  <div class="item-list social-media">
+	<footer
+		class="page-footer font-small blue social-media-contact-container">
+		<div class=" logo">
+			<img src="/egi/resources/global/images/background-banner.jpg"
+				height="128" style="position: relative; right: 37px; bottom: -10px;">
+		</div>
+		<div class="item-list training-ttutorial">
+			<p class="subheader">Training & Tutorials</p>
+			<ul class="tutorial-list">
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Registered building licensee user manual</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">DIGIT DCR user manual</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Citizen Help Manual</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Fee Details</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Single family residential building layers</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Layer Matrix for multiple occupancies</a></li>
+
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Layer Set (las format)</a></li>
+				<li class="tutorial-item"><a href="javascript:void(0);"
+					target="_blank">Single family residential building - Drawing
+						Guidelines</a></li>
+			</ul>
+		</div>
+		<div class="item-list social-media">
 			<p class="subheader">Follow us on</p>
-			<a href="" target="_blank" class="media-link"><i class="fa fa-twitter fa-2x"></i></a>
-      <a href="" target="_blank" class="media-link"><i class="fa fa-facebook fa-2x"></i></a>
-  </div>
-  <div class="item-list contact-us">
-    <p class="subheader">Contact Us</p>
-   <!--  <ul class="contact-mode-container">
+			<a href="" target="_blank" class="media-link"><i
+				class="fa fa-twitter fa-2x"></i></a> <a href="" target="_blank"
+				class="media-link"><i class="fa fa-facebook fa-2x"></i></a>
+		</div>
+		<div class="item-list contact-us">
+			<p class="subheader">Contact Us</p>
+			<!--  <ul class="contact-mode-container">
       <li class="contact-mode-item">
         <i class="fa fa-envelope fa-1x"></i>
         <a href="mailto:contact@egovernments.org">contact@egovernments.org</a>
@@ -335,31 +347,25 @@
         <i class="fa fa-map-marker fa-1x"></i>
         <a href="https://www.google.co.in/maps/@11.2547842,75.7710018,18.5z">Egovernment Foundation</a>
       </li>
-    </ul> --> 
-        <ul class="contact-mode-container" style="width: 245px;"> 
-      <li class="contact-mode-item">
-      
-        <i class="fa fa-envelope fa-1x"></i>
-      <!--   <a href="mailto:contact@egovernments.org">contact@egovernments.org</a> -->
-       
-						<a href="mailto:${sessionScope.corpContactEmail}"><p>${sessionScope.corpContactEmail}</p></a>
-      </li>
-      <li>
-        <i class="fa fa-phone fa-1x"></i>
-         <a href="tel:${sessionScope.corpContactNo}">${sessionScope.corpContactNo}</a>
-      </li>
-      <li>
-        <i class="fa fa-map-marker fa-1x"></i>
-        <a href="${sessionScope.corpGisLink}" target="_blank"></a>
-						<a class="block-left-text" href="${sessionScope.corpGisLink}"
-						   target="_blank">${sessionScope.corpAddress}</a>
-						</p>
-						
-<!--         <a href="https://www.google.co.in/maps/@11.2547842,75.7710018,18.5z">Egovernment Foundation</a>
- -->      </li>
-    </ul>
-  </div>
-</footer> 
+    </ul> -->
+			<ul class="contact-mode-container" style="width: 245px;">
+				<li class="contact-mode-item"><i class="fa fa-envelope fa-1x"></i>
+					<!--   <a href="mailto:contact@egovernments.org">contact@egovernments.org</a> -->
+
+					<a href="mailto:${sessionScope.corpContactEmail}"><p>${sessionScope.corpContactEmail}</p></a>
+				</li>
+				<li><i class="fa fa-phone fa-1x"></i> <a
+					href="tel:${sessionScope.corpContactNo}">${sessionScope.corpContactNo}</a>
+				</li>
+				<li><i class="fa fa-map-marker fa-1x"></i> <a
+					href="${sessionScope.corpGisLink}" target="_blank"></a> <a
+					class="block-left-text" href="${sessionScope.corpGisLink}"
+					target="_blank">${sessionScope.corpAddress}</a>
+					</p> <!--         <a href="https://www.google.co.in/maps/@11.2547842,75.7710018,18.5z">Egovernment Foundation</a>
+ --></li>
+			</ul>
+		</div>
+	</footer>
 </body>
 
 </html>

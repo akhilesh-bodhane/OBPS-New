@@ -47,7 +47,7 @@ $(document)
 							.dataTable(
 									{
 										ajax : {
-											url : "/bpa/reports/servicewise-statusreport/view",
+											url : "/bpa/reports/servicewise-statusreport-urban/view",
 											type : "POST",
 											beforeSend : function() {
 												$('.loader-class')
@@ -112,12 +112,13 @@ $(document)
 												"data" : "applicationNumber",
 												"sClass" : "text-left"
 										   },
-										   {
-												"data" : "plotNumber",
-												"sClass" : "text-left"
-										   },
+										  
 										   {
 												"data" : "sector",
+												"sClass" : "text-left"
+										   },
+										    {
+												"data" : "plotNumber",
 												"sClass" : "text-left"
 										   },
 										   {

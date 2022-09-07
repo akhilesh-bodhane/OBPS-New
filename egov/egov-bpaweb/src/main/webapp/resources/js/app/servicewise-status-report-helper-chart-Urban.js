@@ -132,7 +132,7 @@ $(document)
 								.dataTable(
 										{
 											ajax : {
-												url : "/bpa/reports/servicewise-statusreport",
+												url : "/bpa/reports/servicewise-statusreport-urban",
 												type : "POST",
 												beforeSend : function() {
 													$('.loader-class')
@@ -204,12 +204,14 @@ $(document)
 													{
 														"data" : "serviceType01",
 														 render : function(data, type, row, meta) {
-															return parseInt(row.serviceType01)!==0? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType01)!==0? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=New Construction'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
 																	+ '&'
 																	+ 'plotNumber='+plotNumber
 																	+ '&'
@@ -240,12 +242,18 @@ $(document)
 													/*{
 														"data" : "serviceType02",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType02)!==0? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType02)!==0? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Demolition'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -272,12 +280,18 @@ $(document)
 													{
 														"data" : "serviceType03",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType03)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType03)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Reconstruction'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -304,12 +318,18 @@ $(document)
 													{
 														"data" : "serviceType04",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType04)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType04)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Alteration'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -336,12 +356,18 @@ $(document)
 													/*{
 														"data" : "serviceType05",
 														render : function(data, type, row, meta) {
-						    									return parseInt(row.serviceType05)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+						    									return parseInt(row.serviceType05)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Sub-Division of plot/Land Development'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -368,12 +394,18 @@ $(document)
 													{
 														"data" : "serviceType06",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType06)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType06)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Addition or Extension'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -400,12 +432,18 @@ $(document)
 													{
 														"data" : "serviceType07",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType07)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType07)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Change in occupancy'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -432,12 +470,18 @@ $(document)
 													/*{
 														"data" : "serviceType08",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType08)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType08)!== 0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Amenities'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -464,12 +508,18 @@ $(document)
 													{
 														"data" : "serviceType09",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType09)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType09)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Huts and Sheds'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'
@@ -495,12 +545,18 @@ $(document)
 													},{
 														"data" : "serviceType14",
 														render : function(data, type, row, meta) {
-															return parseInt(row.serviceType14)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view?'
+															return parseInt(row.serviceType14)!==0 ? '<a onclick="openPopup(\'/bpa/reports/servicewise-statusreport/view/d/u?'
 																	+ 'serviceType=Tower Construction'
 																	+ '&'
 																	+ 'applicantName='+applicantName
 																	+ '&'
 																	+ 'applicationNumber='+applicationNumber
+																	+ '&'
+																	+ 'applicationTypeId='+applicationTypeId
+																	+ '&'
+																	+ 'plotNumber='+plotNumber
+																	+ '&'
+																	+ 'sector='+sector
 																	+ '&'
 																	+ 'fromDate='+from
 																	+ '&'

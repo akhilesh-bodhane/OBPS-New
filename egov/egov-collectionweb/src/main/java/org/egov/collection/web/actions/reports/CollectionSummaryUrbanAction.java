@@ -88,12 +88,13 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
     private static final String EGOV_FROM_DATE = "EGOV_FROM_DATE";
     private static final String EGOV_TO_DATE = "EGOV_TO_DATE";
     private static final String EGOV_PAYMENT_MODE = "EGOV_PAYMENT_MODE";
-    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary";
+    private static final String COLLECTION_SUMMARY_TEMPLATE = "collection_summary_urban";
     private static final String EGOV_SOURCE = "EGOV_SOURCE";
     private static final String EGOV_SERVICE_ID = "EGOV_SERVICE_ID";
     private static final String EGOV_SERVICE_NAME = "EGOV_SERVICE_NAME";
     private static final String EGOV_STATUS = "EGOV_STATUS";
     private static final String EGOV_CLASSIFICATION = "EGOV_CLASSIFICATION";
+    private static final String EGOV_TITLE = "EGOV_TITLE";
 
     private Integer statusId;
     
@@ -160,6 +161,8 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
         // Set default values of criteria fields
         setReportParam(EGOV_FROM_DATE, new Date());
         setReportParam(EGOV_TO_DATE, new Date());
+        setReportParam(EGOV_TITLE, "URBAN-BPA");
+        
         addDropdownData("receiptStatuses",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.STATUS_OF_RECEIPTS));
         serviceTypeMap.putAll(CollectionConstants.SERVICE_TYPE_CLASSIFICATION);
@@ -186,10 +189,10 @@ public class CollectionSummaryUrbanAction extends ReportFormAction {
         if (getServiceType() == null) {
         	setServiceType("ALL");
         }
-        String rootBoundaryType="URBAN";
+        List<Long> urbanApplicationTypeList = Arrays.asList(3L,5L);
        
         setReportData(reportService.getCollectionSummaryReportForUrban(getFromDate(), getToDate(), getPaymentMode(), getSource(),
-                getServiceId(), getServiceType(),rootBoundaryType));
+                getServiceId(), getServiceType(),urbanApplicationTypeList));
         setReportParam(CollectionConstants.LOGO_PATH, cityService.getCityLogoAsStream());
         return super.report();
     }

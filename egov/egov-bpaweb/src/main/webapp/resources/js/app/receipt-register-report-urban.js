@@ -60,12 +60,22 @@
  var formdata;
  function callAjaxSearch() {
 		var rrURL='/bpa/reports/receiptRegister/d/u';
+		alert(rrURL);
 		$('.report-section').removeClass('display-hide');
 		$("#searchReceiptRegister").dataTable({
+		processing: true,
+		serverSide: true,
+		sort: true,
+		filter: true,
+		"searching": false,
+		responsive: true,
+		rowReorder: true,
+		"order": [[1, 'asc']],
 		"ajax": {
 			url: rrURL,
 			type: "POST",
 			beforeSend: function() {
+			alert("before");
 				$('.loader-class').modal('show', { backdrop: 'static' });
 			},
 			data: function(args) {
@@ -80,6 +90,7 @@
 				return formdata;
 			},
 			complete: function() {
+			alert("after");
 				$('.loader-class').modal('hide');
 			}
 		},
@@ -95,20 +106,14 @@
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
-                columns: ':visible',
-                 modifier: {
-                        selected: null
-                    }
+                columns: ':visible'
             }
         }, {
             extend: 'excel',
             title: 'Receipt Register Report',
             filename: 'Receipt_Register_Report',
             exportOptions: {
-                columns: ':visible',
-                modifier: {
-                        selected: null
-                    }
+                columns: ':visible'
             }
         }, {
             extend: 'print',
@@ -117,10 +122,7 @@
             orientation: 'landscape',
             pageSize: 'A3',
             exportOptions: {
-                columns: ':visible',
-                 modifier: {
-                        selected: null
-                    }
+                columns: ':visible'
             }
         }],
 

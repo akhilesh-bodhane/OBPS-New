@@ -77,7 +77,7 @@
 	                </div>
 					<div class="form-group">
 	                    <label class="col-sm-3 control-label text-right"><spring:message
-	                            code="lbl.fromDate"/></label>
+	                            code="lbl.fromDate"/><span class="mandatory"></span></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:input path="fromDate" class="form-control datepicker"
 	                                    data-date-end-date="0d" id="fromDate"
@@ -85,7 +85,7 @@
 	                        <form:errors path="fromDate" cssClass="add-margin error-msg"/>
 	                    </div>
 	                    <label class="col-sm-2 control-label text-right"><spring:message
-	                            code="lbl.toDate"/></label>
+	                            code="lbl.toDate"/><span class="mandatory"></span></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:input path="toDate" class="form-control datepicker"
 	                                    data-date-end-date="0d" id="toDate"
@@ -139,6 +139,7 @@
 <%--                         <th><spring:message code="lbl.slno"/></th> --%>
 						<th><spring:message code="lbl.fromDate"/></th>
 						<th><spring:message code="lbl.toDate"/></th>
+						<th><spring:message code="lbl.payment.mode"/></th>
                         <th><spring:message code="lbl.source"/></th>
                         <th><spring:message code="lbl.service"/></th>
                         <th><spring:message code="lbl.cash.receipt"/></th>

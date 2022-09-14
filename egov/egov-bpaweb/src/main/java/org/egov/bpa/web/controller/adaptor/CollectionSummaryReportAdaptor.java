@@ -39,6 +39,7 @@ public class CollectionSummaryReportAdaptor implements DataTableJsonAdapter<Coll
             baseCollectionJson.addProperty("bankAmount", baseForm.getBankAmount());
             baseCollectionJson.addProperty("totalReceipt", baseForm.getTotalReceipt());
             baseCollectionJson.addProperty("totalAmount", baseForm.getTotalAmount());
+            baseCollectionJson.addProperty("paymentMode", baseForm.getPaymentMode());
             baseCollectionJson.addProperty("fromDate", DateUtils.toDefaultDateFormat(baseForm.getFromDate()));
             baseCollectionJson.addProperty("toDate", DateUtils.toDefaultDateFormat(baseForm.getToDate()));
             

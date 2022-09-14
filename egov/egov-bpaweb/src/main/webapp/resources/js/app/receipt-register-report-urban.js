@@ -60,8 +60,7 @@
  var formdata;
  function callAjaxSearch() {
 		var rrURL='/bpa/reports/receiptRegister/d/u';
-		alert(rrURL);
-		$('.report-section').removeClass('display-hide');
+		$('.receipt-report').removeClass('display-hide');
 		$("#searchReceiptRegister").dataTable({
 		processing: true,
 		serverSide: true,
@@ -75,7 +74,6 @@
 			url: rrURL,
 			type: "POST",
 			beforeSend: function() {
-			alert("before");
 				$('.loader-class').modal('show', { backdrop: 'static' });
 			},
 			data: function(args) {
@@ -90,7 +88,6 @@
 				return formdata;
 			},
 			complete: function() {
-			alert("after");
 				$('.loader-class').modal('hide');
 			}
 		},

@@ -24,6 +24,7 @@ public class CollectionSummaryReportHelper extends DataTableSearchRequest {
    private BigDecimal totalAmount;
    private Date fromDate;
    private Date toDate;
+   private String paymentMode;
    
 
    public Long getId() {
@@ -128,6 +129,12 @@ public Date getToDate() {
 }
 public void setToDate(Date toDate) {
 	this.toDate = toDate;
+}
+public String getPaymentMode() {
+	return paymentMode;
+}
+public void setPaymentMode(String paymentMode) {
+	this.paymentMode = paymentMode;
 }
    
    

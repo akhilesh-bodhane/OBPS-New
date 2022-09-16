@@ -42,7 +42,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchPendingItemsForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
+<form:form role="form" action="" modelAttribute="searchPendingItemsForm" id="searchPendingItemsRuralForm" cssClass="form-horizontal form-groups-bordered" enctype="multipart/form-data">
 	<div class="row">
 	    <div class="col-md-12">
 	        <div class="panel panel-primary" data-collapsed="0">
@@ -126,6 +126,18 @@
 	                                    id="sector" path="sector"/>
 	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
+	                    
+	                    <label class="col-sm-2 control-label text-right"><spring:message
+	                            code="lbl.appln.status"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:select path="statusId" data-first-option="false"
+	                                     id="statusId" cssClass="form-control">
+	                            <form:option value="">
+	                                <spring:message code="lbl.select"/>
+	                            </form:option>
+	                            <form:options items="${applnStatusList}" itemValue="id" itemLabel="description"/>
+	                        </form:select>
+	                    </div>
 	                   
 	                </div>
 	                <div class="form-group">
@@ -163,11 +175,11 @@
 
 <div id="chartContainer" style="height: 360px; width: 100%;"></div>
 
-<div class="row display-hide report-section" id="table_container">
+<div class="row display-hide bpa-rural-report-section" id="table_container">
 	<div class="col-md-12 table-header text-left"><spring:message code="lbl.search.result" /></div>
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="search_bpa_pending_items_table">
+			id="search_bpa_pending_items_rural_table">
 			<thead>
 				<tr>
 					<th><spring:message code="lbl.applctn.type" /></th>

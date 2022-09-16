@@ -43,7 +43,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <form:form role="form" action=""
-	modelAttribute="searchBpaApplicationForm" id="serviceTypeWiseStatusReport"
+	modelAttribute="searchBpaApplicationForm" id="serviceTypeWiseStatusReportRural"
 	cssClass="form-horizontal form-groups-bordered"
 	enctype="multipart/form-data">
 	<div class="col-md-12">
@@ -146,10 +146,10 @@
 
 <div id="chartContainer" style="height: 360px; width: 100%;"></div>
 
-<div class="row display-hide report-section" id="table_container">
+<div class="row display-hide ss-rural-report-section" id="table_container">
 	<div class="col-md-12 form-group report-table-container">
 		<table class="table table-bordered table-hover multiheadertbl"
-			id="searchStatusByServiceTypeReportTable">
+			id="searchStatusByServiceTypeReportRuralTable">
 			<thead>
 				<tr>
 					<th><spring:message code="lbl.slno"/></th>

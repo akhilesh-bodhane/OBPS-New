@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#btnSearch').click(function() {
 		var isValid = false;
-		$('#searchPendingItemsForm').find(':input', ':select', ':textarea').each(function() {
+		$('#searchPendingItemsRuralForm').find(':input', ':select', ':textarea').each(function() {
 			if ($(this).val()) {
 				isValid = true;
 				return false;
@@ -73,8 +73,8 @@ function callAjaxSearch() {
 	if($("#applicationTypeId").val()=="")
 		document.getElementById("applicationTypeId").value=4;
 		
-	$('.report-section').removeClass('display-hide');
-	$("#search_bpa_pending_items_table").dataTable({
+	$('.bpa-rural-report-section').removeClass('display-hide');
+	$("#search_bpa_pending_items_rural_table").dataTable({
 		processing: true,
 		serverSide: true,
 		sort: true,
@@ -84,7 +84,7 @@ function callAjaxSearch() {
 		rowReorder: true,
 		"order": [[1, 'asc']],
 		ajax: {
-			url: "/bpa/application/searchPendingItems",
+			url: "/bpa/application/searchPendingItems/r",
 			type: "POST",
 			beforeSend: function() {
 				$('.loader-class').modal('show', { backdrop: 'static' });
@@ -101,7 +101,8 @@ function callAjaxSearch() {
 					"toDate": $("#toDate").val(),
 					"sector":$("#sector").val(),
 					"plotNumber":$("#plotNumber").val(),
-					"ownerName":$("#applicantName").val()
+					"ownerName":$("#applicantName").val(),
+					"statusId" :$("#statusId").val()
 				};
 				console.log(formdata);
 				return formdata;

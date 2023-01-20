@@ -202,6 +202,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistory(application.getAppointmentSchedule(),
                 application.getCurrentState(), application.getStateHistory()));
         model.addAttribute("nocApplication", nocApplication);
+        //Added By Narendra For NOC Changes
+        model.addAttribute("nocWorkflowHistory",
+                workflowHistoryService.getNocWorkflowHistory(application));
         prepareCommonModelAttribute(model, application.isCitizenAccepted());
         return loadViewdata(model, application);
     }

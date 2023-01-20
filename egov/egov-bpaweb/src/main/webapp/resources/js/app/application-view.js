@@ -395,5 +395,24 @@ jQuery(document)
 						$(".workAction").hide();
 						return false;
 					}
+					
+					$(document).on('click','#reInitiateNocAppBtn',function(){
+                          var nocAppNo = $('#nocApplicationNo').val();
+                    	$.ajax({
+                            url: "/bpa/nocapplication/reInitiateNoc",
+                            type: "POST",
+                            data: {
+                                code : nocAppNo
+                            },
+                            dataType: "text",
+                            success: function (response) {
+                                
+                            },
+                            error: function (response) {
+                            }
+                        }); 
+
 
 				});
+
+});

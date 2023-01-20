@@ -88,6 +88,7 @@ import static org.egov.bpa.utils.BpaConstants.FWD_TO_AE_AFTER_TS_INSP;
 import static org.egov.bpa.utils.BpaConstants.FWD_TO_OVERSEER_AFTER_TS_INSPN;
 import static org.egov.bpa.utils.BpaConstants.NATURE_OF_WORK_OC;
 import static org.egov.bpa.utils.BpaConstants.OC_CREATION_PENDING;
+import static org.egov.bpa.utils.BpaConstants.WF_INSPECTION_APPROVED_BUTTON;
 
 /**
  * The Class ApplicationCommonWorkflow.
@@ -277,6 +278,9 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                     .withDateInfo(currentDate.toDate()).withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
                     .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
         } else {
+        	 if (null == pos && wfBean.getWorkFlowAction().equalsIgnoreCase(WF_INSPECTION_APPROVED_BUTTON)) {
+                 pos = positionMasterService.getPositionById(oc.getCurrentState().getOwnerPosition().getId());
+             }
             Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
             if (approverAssignment == null)
                 approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);

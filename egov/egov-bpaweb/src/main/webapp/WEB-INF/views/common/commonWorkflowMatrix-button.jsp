@@ -85,6 +85,8 @@
 		}else if(rejectbutton != null && rejectbutton == 'Revert to BA'){
 			removeMandatory();
 			$('#approvalComent').attr('required', 'required');
+		} else if(rejectbutton != null && rejectbutton == 'Inspection Approved'){
+			removeMandatory();
 		}
 	}
 

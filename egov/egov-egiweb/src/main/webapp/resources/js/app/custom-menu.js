@@ -49,6 +49,7 @@ $(document).ready(function () {
 	var addfav_li;
 	var menuheight = ($( window ).height() - 63);
 	var ulheight =(menuheight -93);
+	var sidemenuheight = ($( window ).height() - 63); 
 	
 	$('#menu').multilevelpushmenu({
 		menuWidth: '250px',
@@ -153,10 +154,13 @@ $(document).ready(function () {
 	}).trigger('resize');
 	
 	function setmenuheight(){
-		menuheight = ($( window ).height() - 63);
+		//menuheight = ($( window ).height() - 63);
+		menuheight = 50;
 		$('#menu').height(''+menuheight+'px');
-		$('#menu_multilevelpushmenu').height(''+menuheight+'px');
-		$('#menu, #menu_multilevelpushmenu').css('min-height', ''+menuheight+'px');
+		$('#menu_multilevelpushmenu').height(''+sidemenuheight+'px');
+		//$('#menu, #menu_multilevelpushmenu').css('min-height', ''+menuheight+'px');
+		$('#menu').css('min-height', ''+menuheight+'px');
+		$('#menu_multilevelpushmenu').css('min-height', ''+sidemenuheight+'px');
 	}
 	
 	function removeFromFavourites(actionId) {

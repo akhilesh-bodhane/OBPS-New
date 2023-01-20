@@ -194,6 +194,11 @@
 							<jsp:include page="applicationhistory-view.jsp"></jsp:include>
 						</div>
 					</c:if>
+					<c:if test="${not empty nocWorkflowHistory}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="nocWorkflowHistory.jsp"></jsp:include>
+						</div>
+					</c:if>
 				</div>
 
 				<c:if test="${not empty bpaApplication.documentScrutiny}">

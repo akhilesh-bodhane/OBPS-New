@@ -82,6 +82,11 @@
 		} else if (rejectbutton == 'Forward'
 				&& $('#currentState').val() == 'LP Initiated') {
 			removeMandatory();
+		}else if(rejectbutton != null && rejectbutton == 'Revert to BA'){
+			removeMandatory();
+			$('#approvalComent').attr('required', 'required');
+		} else if(rejectbutton != null && rejectbutton == 'Inspection Approved'){
+			removeMandatory();
 		}
 	}
 
@@ -106,7 +111,15 @@
 										<c:out value="${validButtons}" />
 									</form:button>
 								</c:if>
-								<c:if test="${nextAction ne 'Forwarded to check NOC updation'}">
+								<c:if test="${(nextAction eq 'Forwarded to Chief engineer to check NOC updation') and isAllCENOCApproved}">
+									<form:button type="submit" id="${validButtons}"
+										class="btn workAction btn-primary" value="${validButtons}"
+										onclick="validateWorkFlowApprover('${validButtons}');">
+										<c:out value="${validButtons}" />
+									</form:button>
+								</c:if>
+								
+								<c:if test="${(nextAction ne 'Forwarded to check NOC updation') and (nextAction ne 'Forwarded to Chief engineer to check NOC updation')}">
 									<form:button type="submit" id="${validButtons}"
 										class="btn workAction btn-primary" value="${validButtons}"
 										onclick="validateWorkFlowApprover('${validButtons}');">

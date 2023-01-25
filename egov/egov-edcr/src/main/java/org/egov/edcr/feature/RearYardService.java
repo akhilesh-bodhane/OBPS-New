@@ -75,6 +75,7 @@ import org.egov.common.entity.edcr.SetBack;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,128 +131,6 @@ public class RearYardService extends GeneralRule {
 		BigDecimal expectedmeanDistance = BigDecimal.ZERO;
 		boolean status = false;
 	}
-
-	
-	// CGCL start according to 26jan 
-	
-//	public void processRearYard(final Plan pl) {
-//		HashMap<String, String> errors = new HashMap<>();
-//		final Plot plot = pl.getPlot();
-//		if (plot == null)
-//			return;
-//
-//		validateRearYard(pl);
-//
-//		if (plot != null && !pl.getBlocks().isEmpty()) {
-//			for (Block block : pl.getBlocks()) { // for each block
-//
-//				scrutinyDetail = new ScrutinyDetail();
-//				scrutinyDetail.addColumnHeading(1, RULE_NO);
-//				scrutinyDetail.addColumnHeading(2, LEVEL);
-//				scrutinyDetail.addColumnHeading(3, OCCUPANCY);
-//				scrutinyDetail.addColumnHeading(4, FIELDVERIFIED);
-//				scrutinyDetail.addColumnHeading(5, PERMISSIBLE);
-//				scrutinyDetail.addColumnHeading(6, PROVIDED);
-//				scrutinyDetail.addColumnHeading(7, STATUS);
-//				scrutinyDetail.setHeading(REAR_YARD_DESC);
-//				RearYardResult rearYardResult = new RearYardResult();
-//
-//				for (SetBack setback : block.getSetBacks()) {
-//					BigDecimal min;
-//					BigDecimal mean;
-//
-//					if (setback.getRearYard() != null
-//							&& setback.getRearYard().getMean().compareTo(BigDecimal.ZERO) > 0) {
-//						min = setback.getRearYard().getMinimumDistance();
-//						mean = setback.getRearYard().getMean();
-//
-//						// if height defined at rear yard level, then use elase use buidling height.
-//						BigDecimal buildingHeight = setback.getRearYard().getHeight() != null
-//								&& setback.getRearYard().getHeight().compareTo(BigDecimal.ZERO) > 0
-//										? setback.getRearYard().getHeight()
-//										: block.getBuilding().getBuildingHeight();
-//
-//						if (buildingHeight != null && (min.doubleValue() > 0 || mean.doubleValue() > 0)) {
-//							for (final Occupancy occupancy : block.getBuilding().getTotalArea()) {
-//								scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Rear Setback");
-//
-//								if (setback.getLevel() < 0) {
-//									scrutinyDetail.setKey("Block_" + block.getName() + "_" + "Basement Rear Setback");
-//									checkRearYardBasement(pl, block.getBuilding(), block.getName(), setback.getLevel(),
-//											plot, BSMT_REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-//											rearYardResult);
-//
-//								}
-//								if ((occupancy.getTypeHelper().getSubtype() != null
-//										&& (A_R.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode())
-//										|| A_AF.equalsIgnoreCase(occupancy.getTypeHelper().getSubtype().getCode()))
-//										|| F.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode()))) {
-//									if (buildingHeight.compareTo(BigDecimal.valueOf(10)) <= 0 && block.getBuilding()
-//											.getFloorsAboveGround().compareTo(BigDecimal.valueOf(3)) <= 0) {
-//										checkRearYardUptoTenMts(pl, block.getBuilding(), block, setback.getLevel(),
-//												plot, REAR_YARD_DESC, min, mean, occupancy.getTypeHelper(),
-//												rearYardResult, buildingHeight);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(12)) <= 0
-//											&& block.getBuilding().getFloorsAboveGround()
-//													.compareTo(BigDecimal.valueOf(4)) <= 0) {
-//										checkRearYardUptoToTweleveMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, errors);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) <= 0) {
-//										checkRearYardUptoToSixteenMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, errors);
-//
-//									} else if (buildingHeight.compareTo(BigDecimal.valueOf(16)) > 0) {
-//										checkRearYardAboveSixteenMts(setback, block.getBuilding(), pl, block,
-//												setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//												occupancy.getTypeHelper(), rearYardResult, buildingHeight);
-//
-//									}
-//								} else if (G.equalsIgnoreCase(occupancy.getTypeHelper().getType().getCode())) {
-//									checkRearYardForIndustrial(setback, block.getBuilding(), pl, block,
-//											setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//											occupancy.getTypeHelper(), rearYardResult);
-//								} else {
-//									checkRearYardOtherOccupancies(setback, block.getBuilding(), pl, block,
-//											setback.getLevel(), plot, REAR_YARD_DESC, min, mean,
-//											occupancy.getTypeHelper(), rearYardResult, buildingHeight);
-//								}
-//
-//							}
-//							Map<String, String> details = new HashMap<>();
-//							details.put(RULE_NO, rearYardResult.subRule);
-//							details.put(LEVEL, rearYardResult.level != null ? rearYardResult.level.toString() : "");
-//							details.put(OCCUPANCY, rearYardResult.occupancy);
-//							if (rearYardResult.expectedmeanDistance != null
-//									&& rearYardResult.expectedmeanDistance.compareTo(BigDecimal.valueOf(0)) == 0) {
-//								details.put(FIELDVERIFIED, MINIMUMLABEL);
-//								details.put(PERMISSIBLE, rearYardResult.expectedminimumDistance.toString());
-//								details.put(PROVIDED, rearYardResult.actualMinDistance.toString());
-//
-//							} else {
-//								details.put(FIELDVERIFIED, MINIMUMLABEL);
-//								details.put(PERMISSIBLE, rearYardResult.expectedminimumDistance.toString());
-//								details.put(PROVIDED, rearYardResult.actualMinDistance.toString());
-//							}
-//							if (rearYardResult.status) {
-//								details.put(STATUS, Result.Accepted.getResultVal());
-//
-//							} else {
-//								details.put(STATUS, Result.Not_Accepted.getResultVal());
-//							}
-//							scrutinyDetail.getDetail().add(details);
-//							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
-//
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//	}
 
 	private String exceptedValue=StringUtils.EMPTY;
 	
@@ -316,9 +195,13 @@ public class RearYardService extends GeneralRule {
 							
 							if(pl.isRural()) {
 								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
-								
-								if(rearSeatBackExcepted.compareTo(new BigDecimal("1.52"))<0)
-									rearSeatBackExcepted=new BigDecimal("1.52");
+								BigDecimal refValue=new BigDecimal("1.52");
+								if(pl.getDrawingPreference().getInFeets()) {
+									refValue=CDGAdditionalService.meterToFoot(refValue);
+									min=CDGAdditionalService.inchToFeet(min);
+								}
+								if(rearSeatBackExcepted.compareTo(refValue)<0)
+									rearSeatBackExcepted=refValue;
 								
 								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
 									
@@ -330,6 +213,11 @@ public class RearYardService extends GeneralRule {
 							exceptedValue=result.get(CDGAdditionalService.SETBACK_REAR);
 							//exceptedValue="4.96";
 							}
+							if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())) {
+								exceptedValue=DxfFileConstants.NA;
+								return;
+							}
+							
 							if(DxfFileConstants.DATA_NOT_FOUND.equals(exceptedValue)) {
 								pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
 								return;
@@ -337,7 +225,7 @@ public class RearYardService extends GeneralRule {
 							
 							// end
 							
-							if(pl.getDrawingPreference().getInFeets()) {
+							if(pl.getDrawingPreference().getInFeets() && !pl.isRural()) {
 								min=CDGAdditionalService.inchToFeet(min);
 								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
 							}
@@ -928,31 +816,70 @@ public class RearYardService extends GeneralRule {
 		Boolean valid = false;
 //		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0)
 //			valid = true;
-		if (min.compareTo(minval) == 0)
+//		if (min.compareTo(minval) == 0)
+		if (CDGMathService.compare(min, minval, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0)
 			valid = true;
 		return valid;
 	}
 
 	private void validateRearYard(final Plan pl) {
-		for (Block block : pl.getBlocks()) {
-			if (!block.getCompletelyExisting()) {
-				Boolean rearYardDefined = false;
-				for (SetBack setback : block.getSetBacks()) {
-					if (setback.getRearYard() != null
-							&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
-						rearYardDefined = true;
+		
+		OccupancyTypeHelper mostRestrictiveOccupancyType = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
+		if(DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode()))
+			return;
+		
+		Double rearSetback=Double.valueOf(0);
+		if(!pl.isRural()) {
+			Map<String, String> map=getSetBack(pl, mostRestrictiveOccupancyType);
+			
+			if(DxfFileConstants.DATA_NOT_FOUND.equals(map.get(CDGAdditionalService.SETBACK_REAR))) {
+				pl.addError(OBJECTNOTDEFINED+CDGAdditionalService.SETBACK_REAR, DxfFileConstants.DATA_NOT_FOUND+" : SETBACK_REAR");
+				return;
+			}
+			
+			 rearSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_REAR)!=null && !map.get(CDGAdditionalService.SETBACK_REAR).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_REAR):"0");
+		}
+		if(rearSetback>0 || pl.isRural()) {
+			for (Block block : pl.getBlocks()) {
+				if (!block.getCompletelyExisting()) {
+					Boolean rearYardDefined = false;
+					for (SetBack setback : block.getSetBacks()) {
+						if (setback.getRearYard() != null
+								&& setback.getRearYard().getMinimumDistance().compareTo(BigDecimal.valueOf(0)) > 0) {
+							rearYardDefined = true;
+						}
+					}
+					if (!rearYardDefined ) {
+						//if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
+								HashMap<String, String> errors = new HashMap<>();
+						errors.put(REAR_YARD_DESC,
+								prepareMessage(OBJECTNOTDEFINED, REAR_YARD_DESC + " for Block " + block.getName()));
+						pl.addErrors(errors);
 					}
 				}
-				if (!rearYardDefined ) {
-					//if (!rearYardDefined && !pl.getPlanInformation().getNocToAbutRearDesc().equalsIgnoreCase(YES)) {
-							HashMap<String, String> errors = new HashMap<>();
-					errors.put(REAR_YARD_DESC,
-							prepareMessage(OBJECTNOTDEFINED, REAR_YARD_DESC + " for Block " + block.getName()));
-					pl.addErrors(errors);
-				}
+	
 			}
-
 		}
+	}
+
+	private Map<String, String> getSetBack(Plan pl, OccupancyTypeHelper occupancy) {
+
+		String plotAreaType = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
+		String sector = pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER);
+		String plotNo = pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO);
+
+		Map<String, String> input = new HashMap<String, String>();
+		input.put(CDGAdditionalService.OCCUPENCY_CODE, occupancy.getSubtype().getCode());
+		input.put(CDGAdditionalService.SECTOR, sector);
+		input.put(CDGAdditionalService.PLOT_NO, plotNo);
+		input.put(CDGAdditionalService.PLOT_TYPE, plotAreaType);
+
+		Map<String, String> result = cdgAdditionalService.getFeatureValue(CDGAConstant.SETBACKS, input);
+
+		return result;
 
 	}
 

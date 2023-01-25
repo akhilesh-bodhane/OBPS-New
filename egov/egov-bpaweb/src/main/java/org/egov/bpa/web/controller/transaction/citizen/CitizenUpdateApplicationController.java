@@ -59,6 +59,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SEND_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
+import org.egov.bpa.transaction.service.oc.OccupancyCertificateValidationService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
 import org.egov.common.entity.bpa.Occupancy;
@@ -117,6 +119,9 @@ import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.pims.commons.Position;
+import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -134,6 +139,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(value = "/application")
 public class CitizenUpdateApplicationController extends BpaGenericApplicationController {
+	private static final Logger LOG = LoggerFactory.getLogger(CitizenUpdateApplicationController.class);
     private static final String COLLECT_FEE_VALIDATE = "collectFeeValidate";
     private static final String IS_CITIZEN = "isCitizen";
     private static final String CITIZEN_VIEW = "citizen-view";
@@ -145,6 +151,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private static final String COMMON_ERROR = "common-error";
     private static final String CITIZEN_OR_BUSINESS_USER = "citizenOrBusinessUser";
     private static final String TRUE = "TRUE";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";
 
     @Autowired
     LettertoPartyService lettertoPartyService;
@@ -195,6 +202,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         model.addAttribute(APPLICATION_HISTORY, workflowHistoryService.getHistory(application.getAppointmentSchedule(),
                 application.getCurrentState(), application.getStateHistory()));
         model.addAttribute("nocApplication", nocApplication);
+        //Added By Narendra For NOC Changes
+        model.addAttribute("nocWorkflowHistory",
+                workflowHistoryService.getNocWorkflowHistory(application));
         prepareCommonModelAttribute(model, application.isCitizenAccepted());
         return loadViewdata(model, application);
     }
@@ -208,7 +218,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             model.addAttribute("mode", "showRescheduleToCitizen");
         }
         prepareFormData(model);
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        if(null!=application.getDemand()) {
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        }
         application.setApplicationAmenityTemp(application.getApplicationAmenity());
         application.setPermitOccupanciesTemp(application.getPermitOccupancies());
         applicationBpaService.buildExistingAndProposedBuildingDetails(application);
@@ -243,7 +255,8 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             String code = nocDocument.getNocDocument().getServiceChecklist().getChecklist().getCode();
             NocConfiguration nocConfig = nocConfigurationService
                     .findByDepartmentAndType(code, BpaConstants.PERMIT);
-
+            LOG.info(nocConfig==null?" nocConfig value is null":nocConfig.getDepartment());
+            
             if (permitNocService.findByApplicationNumberAndType(application.getApplicationNumber(), code) != null)
                 nocTypeApplMap.put(code, "initiated");
             if(null != edcrNocMandatory && !edcrNocMandatory.isEmpty()) {
@@ -264,7 +277,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
 	                List<User> userList = nocUsers.stream()
 	                        .filter(usr -> usr.getRoles().stream()
 	                                .anyMatch(usrrl -> usrrl.getName()
-	                                        .equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+	                                        .equals(getNocRoles(application, nocConfig))))
 	                        .collect(Collectors.toList());
 	                if (!userList.isEmpty())
 	                    nocAutoUsers.add(userList.get(0));
@@ -335,7 +348,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                 usages.addAll(subOcc.getUsages());
             model.addAttribute("usageList", usages);
         }
-
+        
+        model.addAttribute("permitDcrDocuments", application.getPermitDcrDocuments());
+        
         Boolean isCitizen = (Boolean) model.asMap().get(IS_CITIZEN);
         if (APPLICATION_STATUS_SUBMITTED.equals(application.getStatus().getCode())
                 || APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())) {
@@ -349,9 +364,12 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             } else
                 model.addAttribute(COLLECT_FEE_VALIDATE, "");
         }
-
+        
+        if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
+        	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
+        }
         if (application.getStatus() != null && application.getStatus().getCode().equals(APPLICATION_STATUS_CREATED)
-                && !isCitizen) {
+                && !isCitizen && !(application.getIsPreviousPlan()!=null && application.getIsPreviousPlan())) {
             getDcrDocumentsUploadMode(model);
             return BPAAPP_CITIZEN_FORM;
         } else {
@@ -363,8 +381,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private void buildBuildingSubUsages(final BpaApplication application) {
         for (BuildingSubUsage subUsage : application.getBuildingSubUsages())
             for (BuildingSubUsageDetails subUsageDetails : subUsage.getSubUsageDetails()) {
-                subUsageDetails.setSubUsagesTemp(
-                        occupancyService.findSubUsagesByOccupancy(subUsageDetails.getMainUsage().getName()));
+               if(subUsageDetails!=null && subUsageDetails.getMainUsage()!=null && subUsageDetails.getMainUsage().getName()!=null)
+            	   subUsageDetails.setSubUsagesTemp(
+                           occupancyService.findSubUsagesByOccupancy(subUsageDetails.getMainUsage().getName()));
             }
     }
 
@@ -592,5 +611,15 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                     new String[] { bpaApplication.getApplicationNumber() }, null));
 
         return "redirect:/application/citizen/success/" + bpaApplication.getApplicationNumber();
+    }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 }

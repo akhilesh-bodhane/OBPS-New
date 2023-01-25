@@ -11,7 +11,6 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_ZONE;
 import static org.egov.bpa.utils.BpaConstants.BPA_CITIZENACCEPTANCE_CHECK;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.DOC_SCRUTINY_INTEGRATION_REQUIRED;
 import static org.egov.bpa.utils.BpaConstants.EGMODULE_NAME;
 import static org.egov.bpa.utils.BpaConstants.LETTERTOPARTYINITIATE;
@@ -62,14 +61,17 @@ import org.egov.bpa.transaction.entity.oc.OCExistingBuildingFloor;
 import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.service.PdfQrCodeAppendService;
 import org.egov.bpa.transaction.service.messaging.BPASmsAndEmailService;
 import org.egov.bpa.transaction.workflow.BpaApplicationWorkflowCustomDefaultImpl;
 import org.egov.bpa.transaction.workflow.inspection.InspectionWorkflowCustomDefaultImpl;
 import org.egov.bpa.transaction.workflow.oc.OccupancyCertificateWorkflowCustomDefaultImpl;
+import org.egov.bpa.transaction.workflow.pl.PlinthLevelCertificateWorkflowCustomDefaultImpl;
 import org.egov.collection.integration.models.BillReceiptInfo;
 import org.egov.collection.integration.services.CollectionIntegrationService;
 import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.demand.model.EgDemand;
 import org.egov.demand.model.EgDemandDetails;
 import org.egov.eis.entity.Assignment;
@@ -237,6 +239,13 @@ public class BpaUtils {
 					.getBean("inspectionWorkflowCustomDefaultImpl");
 		return applicationWorkflowCustomDefaultImpl;
 	}
+	
+	private PlinthLevelCertificateWorkflowCustomDefaultImpl getInitialisedWorkFlowBeanForPL() {
+		PlinthLevelCertificateWorkflowCustomDefaultImpl applicationWorkflowCustomDefaultImpl = null;
+		if (null != context)
+			applicationWorkflowCustomDefaultImpl = (PlinthLevelCertificateWorkflowCustomDefaultImpl) context.getBean("plinthLevelCertificateWorkflowCustomDefaultImpl");
+		return applicationWorkflowCustomDefaultImpl;
+	}
 
 	public WorkFlowMatrix getWfMatrixByCurrentState(final Boolean isOneDayPermit, final String stateType,
 			final String currentState, String applicationType) {
@@ -286,6 +295,22 @@ public class BpaUtils {
 			portalInboxService.updateInboxMessage(application.getApplicationNumber(), module.getId(), status,
 					isResolved, new Date(), application.getState(), additionalPortalInboxUser,
 					application.getPlanPermissionNumber(), url);
+	}
+	
+	@Transactional
+	public void createPreviousPlanPortalUserinbox(final BpaApplication application, final List<User> additionalPortalInboxUser) {
+		Module module = moduleService.getModuleByName(EGMODULE_NAME);
+		boolean isResolved = true;
+//		String status="Accepted As Scrutinized";
+		
+		String url = "/bpa/application/citizen/update/" + application.getApplicationNumber();
+		final PortalInboxBuilder portalInboxBuilder = new PortalInboxBuilder(module, application.getOwner().getName(),
+				application.getServiceType().getDescription(), application.getApplicationNumber(),
+				application.getPlanPermissionNumber(), application.getId(), SUCCESS, SUCCESS, url, isResolved, application.getStatus().getDescription(),
+				new Date(), application.getState(), additionalPortalInboxUser);
+
+		final PortalInbox portalInbox = portalInboxBuilder.build();
+		portalInboxService.pushInboxMessage(portalInbox);
 	}
 
 	@Transactional
@@ -358,6 +383,45 @@ public class BpaUtils {
 			portalInboxService.updateInboxMessage(oc.getApplicationNumber(), module.getId(), status, isResolved,
 					new Date(), oc.getState(), additionalPortalInboxUser, oc.getOccupancyCertificateNumber(), url);
 	}
+	
+	
+	
+	@Transactional
+	public void createPortalUserinbox(final PlinthLevelCertificate pl, final List<User> portalInboxUser,
+			final String workFlowAction) {
+		String status = StringUtils.EMPTY;
+		if ("Save".equalsIgnoreCase(workFlowAction)) {
+			status = "To be submitted";
+		} else if (null != pl.getStatus().getDescription() && WF_LBE_SUBMIT_BUTTON.equalsIgnoreCase(workFlowAction)) {
+			status = pl.getStatus().getDescription();
+		}
+		Module module = moduleService.getModuleByName(EGMODULE_NAME);
+		boolean isResolved = false;
+		String url = "/bpa/application/citizen/plinth-level-certificate/update/" + pl.getApplicationNumber();
+		final PortalInboxBuilder portalInboxBuilder = new PortalInboxBuilder(module,
+				pl.getParent().getOwner().getName(), pl.getApplicationType(), pl.getApplicationNumber(),
+				pl.getPlinthLevelCertificateNumber(), pl.getId(), SUCCESS, SUCCESS, url, isResolved, status, new Date(),
+				pl.getState(), portalInboxUser);
+
+		final PortalInbox portalInbox = portalInboxBuilder.build();
+		portalInboxService.pushInboxMessage(portalInbox);
+	}
+
+	@Transactional
+	public void updatePortalUserinbox(final PlinthLevelCertificate pl, final User additionalPortalInboxUser) {
+		Module module = moduleService.getModuleByName(EGMODULE_NAME);
+		boolean isResolved = false;
+		String status;
+		status = pl.getStatus().getDescription();
+		if ((pl.getState() != null
+				&& (CLOSED.equals(pl.getState().getValue()) || WF_END_ACTION.equals(pl.getState().getValue())))
+				|| (pl.getStatus() != null && pl.getStatus().getCode().equals(APPLICATION_STATUS_CANCELLED)))
+			isResolved = true;
+		String url = "/bpa/application/citizen/plinth-level-certificate/update/" + pl.getApplicationNumber();
+		if (pl.getStatus() != null)
+			portalInboxService.updateInboxMessage(pl.getApplicationNumber(), module.getId(), status, isResolved,
+					new Date(), pl.getState(), additionalPortalInboxUser, pl.getPlinthLevelCertificateNumber(), url);
+	}
 
 	@Transactional
 	public void createPortalUserinbox(final PermitInspectionApplication permitInspection,
@@ -416,6 +480,16 @@ public class BpaUtils {
 
 		final PortalInbox portalInbox = portalInboxBuilder.build();
 		portalInboxService.pushInboxMessage(portalInbox);
+	}
+	
+	@Transactional
+	public void updateNocPortalUserInboxForReInitiation(final PermitNocApplication permitNoc, final User additionalPortalInboxUser) {
+		Module module = moduleService.getModuleByName(BpaConstants.NOCMODULE);
+		String status = permitNoc.getBpaNocApplication().getStatus().getCode();
+		String url = "/bpa/nocapplication/update/" + permitNoc.getBpaNocApplication().getNocApplicationNumber();
+		portalInboxService.updateInboxMessage(permitNoc.getBpaNocApplication().getNocApplicationNumber(),
+				module.getId(), status, false, new Date(), null, additionalPortalInboxUser,
+				permitNoc.getBpaApplication().getPlanPermissionNumber(), url);
 	}
 
 	@Transactional
@@ -612,6 +686,24 @@ public class BpaUtils {
 			} else {
 				ocWorkflowCustomDefaultImpl.createCommonWorkflowTransition(oc, wfBean);
 			}
+	}
+	
+	public void redirectToBpaWorkFlowForPL(final PlinthLevelCertificate pl, final WorkflowBean wfBean) {
+		buildWorkFlowForPlinthLevelCertificate(pl, wfBean);
+	}
+	
+	private void buildWorkFlowForPlinthLevelCertificate(final PlinthLevelCertificate pl, final WorkflowBean wfBean) {		
+		final WorkFlowMatrix wfMatrix = getWfMatrixByCurrentState(pl.getStateType(), wfBean.getCurrentState(), pl.getPlinthLevelCertificateType());
+		
+		final PlinthLevelCertificateWorkflowCustomDefaultImpl plWorkflowCustomDefaultImpl = getInitialisedWorkFlowBeanForPL();
+		Long approvalPositionId = wfBean.getApproverPositionId();
+		if (wfBean.getApproverPositionId() == null)
+			approvalPositionId = getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+					getBoundaryForWorkflow(pl.getParent().getSiteDetail().get(0)).getId());
+		wfBean.setAdditionalRule(pl.getPlinthLevelCertificateType());
+		wfBean.setApproverPositionId(approvalPositionId);
+		if (plWorkflowCustomDefaultImpl != null)
+			plWorkflowCustomDefaultImpl.createCommonWorkflowTransition(pl, wfBean);
 	}
 
 	public void redirectInspectionWorkFlow(final PermitInspectionApplication permitInspection,
@@ -978,5 +1070,25 @@ public class BpaUtils {
 		List<Role> collectorRole = securityUtils.getCurrentUser().getRoles().stream()
 				.filter(str -> str.getName().contains(BpaConstants.ROLE_BILLCOLLECTOR)).collect(Collectors.toList());
 		return collectorRole.isEmpty() ? false : true;
+	}
+	
+	public static boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
+		boolean flage=false;
+		
+		if(helper!=null && helper.getSubtype()!=null && helper.getSubtype().getCode()!=null) {
+			if(BpaConstants.A_SQ.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_PO.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_S.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_PG.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_ICP.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_OCP.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_AF.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_GF.equals(helper.getSubtype().getCode())
+					|| BpaConstants.A_R5.equals(helper.getSubtype().getCode())
+													)
+				flage=true;
+		}
+		
+		return flage;
 	}
 }

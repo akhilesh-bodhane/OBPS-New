@@ -65,7 +65,7 @@
 			<fmt:formatDate pattern="dd/MM/yyyy"
 				value="${bpaApplication.applicationDate}" />
 		</div> --%>
-		<form:form role="form" action="application-create" method="post"
+		<form:form role="form"  action="application-create" method="post"
 			modelAttribute="bpaApplication" id="newCitizenApplicationform"
 			cssClass="form-horizontal form-groups-bordered"
 			enctype="multipart/form-data">
@@ -103,18 +103,26 @@
 			<input type="hidden" id="stakeHolderType" value="${stakeHolderType}" />
 			<input type="hidden" id="permitApplnFeeRequired"
 				value="${permitApplnFeeRequired}" />
+			<input type="hidden" id="isPreviousPlan" name="isPreviousPlan"
+				value="${isPreviousPlan}" />
 			<form:hidden path="drawingPreference" id="drawingPreference" name="drawingPreference" />
 			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
 			    <span id="drawPref"></span>
 			</div>
 			<ul class="nav nav-tabs" id="settingstab">
-				<li class="active"><a data-toggle="tab"
+				<li id="app-tab-link" class="active"><a data-toggle="tab"
 					href="#appliccation-info" data-tabidx=0><spring:message
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
 				<li id="noc-document-tab-link" style="display: none;"><a data-toggle="tab" href="#noc-document-info"
-					data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a></li>
+					data-tabidx=3><spring:message code='lbl.noc.doc.details' /></a></li>
+				<c:if test="${(!isPreviousPlan) }">
+					<li>
+					<a id="fee-tab-link" data-toggle="tab" href="#view-fee"
+						data-tabidx=2><spring:message code='lbl.fees.details' /></a></li>
+				</c:if>
+				
 			</ul>
 			<div class="tab-content">
 				<div id="appliccation-info" class="tab-pane fade in active">
@@ -188,6 +196,22 @@
 						<jsp:include page="permit-noc-documents.jsp"></jsp:include>
 					</div>
 				</div>
+				 
+					<div id="view-fee" class="tab-pane fade" >
+						<div class="panel panel-primary" data-collapsed="0">
+							 <jsp:include page="bpa-register-fee-details.jsp"></jsp:include> 
+						</div>
+					</div>
+				 
+				
+				<%--
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<div id="view-fee" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-temp-fee-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if> --%>
 			</div>
 
 			<div align="center">
@@ -195,10 +219,10 @@
 					<c:when test="${validateCitizenAcceptance}">
 						<c:choose>
 							<c:when test="${citizenDisclaimerAccepted }">
-								<form:button type="submit" id="bpaCreate"
+								<button type="submit" id="bpaCreate"
 									class="btn btn-primary" value="Submit">
 									<spring:message code="lbl.submit" />
-								</form:button>
+								</button>
 							</c:when>
 							<c:otherwise>
 								<form:button type="submit" id="bpaSave" class="btn btn-primary"
@@ -217,10 +241,9 @@
 							value="Save">
 							<spring:message code="lbl.save" />
 						</form:button> --%>
-						<form:button type="submit" id="bpaCreate" class="btn btn-primary"
-							value="Submit">
+						<button type="submit" id="bpaCreate" class="btn btn-primary" value="Submit">
 							<spring:message code="lbl.submit" />
-						</form:button>
+						</button>
 					</c:otherwise>
 				</c:choose>
 				<input type="button" name="button2" id="button2" value="Close"
@@ -346,6 +369,7 @@
 <script src="<cdn:url value='/resources/js/app/citizen-helper.js?rnd=${app_release_no}'/>"></script>
 <script src="<cdn:url value='/resources/js/app/applicant-helper.js?rnd=${app_release_no}'/>"></script>
 <script src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/bpa-register-fee-details.js?rnd=${app_release_no}'/>"></script>
 	
 <script>
 	$(document).ready(function() {

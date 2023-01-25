@@ -41,6 +41,8 @@ package org.egov.bpa.web.controller.lettertoparty;
 
 import static org.egov.infra.utils.StringUtils.append;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -53,17 +55,24 @@ import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.master.entity.LpReason;
 import org.egov.bpa.master.service.ChecklistServicetypeMappingService;
 import org.egov.bpa.master.service.LpReasonService;
+import org.egov.bpa.model.LetterToPartyFees;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.LetterToPartyFee;
+import org.egov.bpa.transaction.entity.LetterToPartyFeeDetails;
 import org.egov.bpa.transaction.entity.PermitLetterToParty;
 import org.egov.bpa.transaction.entity.common.LetterToPartyCommon;
 import org.egov.bpa.transaction.entity.common.LetterToPartyDocumentCommon;
 import org.egov.bpa.transaction.notice.LetterToPartyFormat;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyCreateFormatImpl;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyReplyFormatImpl;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.LettertoPartyDocumentService;
+import org.egov.bpa.transaction.service.LettertoPartyFeeService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
+import org.egov.common.entity.edcr.Plan;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.reporting.engine.ReportOutput;
@@ -84,6 +93,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -110,6 +121,8 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     private static final String LETTERTO_PARTY = "permitLetterToParty";
     private static final String BPA_APPLICATION = "bpaApplication";
     private static final String MESSAGE = "message";
+    private static final String LETTERTO_PARTY_FEES = "letterToPartyFees";
+    private static final String LETTERTO_PARTY_FEE_LIST = "letterToPartyFeeList";
 
     @Autowired
     private LpReasonService lpReasonService;
@@ -120,15 +133,34 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     @Autowired
     private CustomImplProvider specificNoticeService;
     @Autowired
-    private ChecklistServicetypeMappingService checklistServiceTypeService;
+    private ChecklistServicetypeMappingService checklistServiceTypeService;    
+    @Autowired
+    private LettertoPartyFeeService lettertoPartyFeeService;
 
+    @Autowired
+    private DcrRestService drcRestService;
+    
     @ModelAttribute("lpReasonList")
     public List<LpReason> getLpReasonList() {
         return lpReasonService.findAll();
     }
 
-    public List<ChecklistServiceTypeMapping> getCheckListDetailList(final Long serviceTypeId) {
-        return checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST);
+    public List<ChecklistServiceTypeMapping> getCheckListDetailList(final Long serviceTypeId,String areaCategory) {
+    	List<ChecklistServiceTypeMapping> checklistServiceTypeMappings=new ArrayList<ChecklistServiceTypeMapping>();
+    	for(ChecklistServiceTypeMapping checklistServiceTypeMapping:checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST)) {
+    		String lpcode=checklistServiceTypeMapping.getChecklist().getCode();
+    		if(BpaConstants.RURAL.equals(areaCategory)) {
+    			if(lpcode.startsWith("LTP-R-") || BpaConstants.RURAL_LP_ADDITIONAL_DOC.contains(lpcode)) {
+    				checklistServiceTypeMappings.add(checklistServiceTypeMapping);
+    			}
+    		}else {
+    			if(!lpcode.startsWith("LTP-R-")) {
+    				checklistServiceTypeMappings.add(checklistServiceTypeMapping);
+    			}
+    		}
+    	}
+      //  return checklistServiceTypeService.findByActiveByServiceTypeAndChecklist(serviceTypeId, BpaConstants.LP_CHECKLIST);
+    	return checklistServiceTypeMappings;
     }
 
     @GetMapping("/create/{applicationNumber}")
@@ -143,15 +175,23 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     }
 
     private void prepareData(final PermitLetterToParty lettertoParty, final BpaApplication bpaApplication, final Model model) {
+    	Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         model.addAttribute("mode", "new");
         model.addAttribute(BPA_APPLICATION, bpaApplication);
-        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId()));
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId(),areaCategory));
+        model.addAttribute(LETTERTO_PARTY_FEES, lettertoPartyFeeService.getLPFees(bpaApplication,areaCategory));
         lettertoParty.setApplication(bpaApplication);
     }
 
     public void validateCreateLetterToParty(PermitLetterToParty permitLTP, BindingResult errors) {
         if (permitLTP.getLetterToParty().getLpReason() == null)
             errors.rejectValue("lpReason", "lbl.lp.reason.required");
+    }
+    
+    public Plan getPlanInfo(final String edcrNumber) {		
+		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest());		 
+        return edcrPlanInfo.getPlan();
     }
 
     @PostMapping("/create")
@@ -200,7 +240,16 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         }
         //Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(permitLTP.getApplication(), "LP Initiated");
         permitLTP.getLetterToParty().setSentDate(new Date());
+        
+        LetterToPartyFee letterToPartyFee = populateLPFee(permitLTP.getLetterToPartyFees(), permitLTP.getApplication());
+        
         lettertoPartyService.save(permitLTP, ownerPosition.getId());
+        
+        if(null!=letterToPartyFee) {
+        	letterToPartyFee.setPermitLetterToParty(permitLTP);
+        	lettertoPartyFeeService.save(letterToPartyFee);
+        }
+        
         User user = workflowHistoryService.getUserPositionByPassingPosition(ownerPosition.getId());
         String message = messageSource.getMessage(MSG_LP_FORWARD_CREATE, new String[] {
                 user != null ? user.getUsername().concat("~")
@@ -210,6 +259,26 @@ public class LetterToPartyController extends BpaGenericApplicationController {
                 LocaleContextHolder.getLocale());
         redirectAttributes.addFlashAttribute(MESSAGE, message);
         return REDIRECT_LETTERTOPARTY_RESULT + permitLTP.getId();
+    }
+    
+    private LetterToPartyFee populateLPFee(List<LetterToPartyFees> letterToPartyFees, BpaApplication application) {
+    	if(null!=letterToPartyFees) {
+    		LetterToPartyFee letterToPartyFee = new LetterToPartyFee();
+    		letterToPartyFee.setApplication(application);
+    		List<LetterToPartyFeeDetails> letterToPartyFeeDetails = new ArrayList<LetterToPartyFeeDetails>();
+    		for(LetterToPartyFees fees:letterToPartyFees) {
+    			LetterToPartyFeeDetails feeDetails = new LetterToPartyFeeDetails();
+    			feeDetails.setLetterToPartyFee(letterToPartyFee);
+    			feeDetails.setFloorarea(BigDecimal.ZERO);
+    			feeDetails.setIsMandatory(fees.getIsMandatory());
+    			feeDetails.setRemarks(fees.getRemarks());
+    			feeDetails.setLetterToPartyFeeMaster(lettertoPartyFeeService.getLPFeeMasterById(fees.getFeeMstrId()));
+    			letterToPartyFeeDetails.add(feeDetails);
+    		}
+    		letterToPartyFee.setLetterToPartyFeeDetails(letterToPartyFeeDetails);
+    		return letterToPartyFee;
+    	}
+    	return null;
     }
 
     private String getApproverDesigName(Position pos) {
@@ -233,6 +302,8 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         final BpaApplication bpaApplication = applicationBpaService.findByApplicationNumber(applicationNumber);
         final List<PermitLetterToParty> lettertoPartyList = lettertoPartyService
                 .findByBpaApplicationOrderByIdDesc(bpaApplication);
+        Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         PermitLetterToParty lettertoParty = null;
         if (!lettertoPartyList.isEmpty())
             lettertoParty = lettertoPartyList.get(0);
@@ -240,7 +311,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
             model.addAttribute(LETTERTO_PARTY, lettertoParty);
             model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty.getLetterToParty().getLetterToPartyDocuments());
         }
-        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId()));
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(bpaApplication.getServiceType().getId(),areaCategory));
         model.addAttribute(BPA_APPLICATION, bpaApplication);
     }
 
@@ -260,8 +331,8 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         model.addAttribute(LETTERTO_PARTY, lettertoPartyService.findById(id));
         PermitLetterToParty lettertoParty = lettertoPartyService.findById(id);
         model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty.getLetterToParty().getLetterToPartyDocuments());
-        model.addAttribute(LETTERTOPARTYLIST,
-                lettertoPartyService.findByBpaApplicationOrderByIdDesc(lettertoParty.getApplication()));
+        model.addAttribute(LETTERTOPARTYLIST, lettertoPartyService.findByBpaApplicationOrderByIdDesc(lettertoParty.getApplication()));
+        model.addAttribute(LETTERTO_PARTY_FEE_LIST, lettertoPartyFeeService.getLPFeeDetailsByLetterToParty(lettertoParty));
         return LETTERTOPARTY_RESULT;
     }
 
@@ -321,6 +392,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoPartyDocumentService
                 .findByIsrequestedTrueAndLettertoPartyOrderByIdAsc(lettertoPartyService.findById(id)));
         model.addAttribute(LETTERTO_PARTY, lettertoParty);
+        model.addAttribute(LETTERTO_PARTY_FEE_LIST, lettertoPartyFeeService.getLPFeeDetailsByLetterToParty(lettertoParty));
         return LETTERTOPARTY_VIEW;
     }
 
@@ -336,11 +408,13 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     @GetMapping("/lettertopartyreply/{id}")
     public String createLettertoPartyReply(@PathVariable final Long id, final Model model) {
         PermitLetterToParty lettertoParty = lettertoPartyService.findById(id);
+        Plan plan = applicationBpaService.getPlanInfo(lettertoParty.getApplication().geteDcrNumber());
+    	String areaCategory=plan.isRural()?BpaConstants.RURAL:BpaConstants.URBAN;
         model.addAttribute(LETTERTO_PARTY, lettertoParty);
         model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty.getLetterToParty().getLetterToPartyDocuments());
         model.addAttribute(BPA_APPLICATION, lettertoParty.getApplication());
-        model.addAttribute(CHECK_LIST_DETAIL_LIST,
-                getCheckListDetailList(lettertoParty.getApplication().getServiceType().getId()));
+        model.addAttribute(CHECK_LIST_DETAIL_LIST, getCheckListDetailList(lettertoParty.getApplication().getServiceType().getId(),areaCategory));        
+        model.addAttribute(LETTERTO_PARTY_FEE_LIST, lettertoPartyFeeService.getLPFeeDetailsByLetterToParty(lettertoParty));
         return LETTERTOPARTY_LPREPLY;
     }
 
@@ -348,11 +422,25 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     public String createLettertoPartyReply(@ModelAttribute("permitLetterToParty") final PermitLetterToParty lettertoparty, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
         processAndStoreLetterToPartyDocuments(lettertoparty);
-        PermitLetterToParty lettertopartyRes = lettertoPartyService.save(lettertoparty,
-                lettertoparty.getApplication().getState().getOwnerPosition().getId());
+        List<LetterToPartyFeeDetails> lpFeeDetails = populateLPFeeDetails(lettertoparty.getLetterToPartyFeeDetails());
+        PermitLetterToParty lettertopartyRes = lettertoPartyService.save(lettertoparty, lettertoparty.getApplication().getState().getOwnerPosition().getId());
+        lettertoPartyFeeService.saveFeeDetails(lpFeeDetails);
         bpaUtils.updatePortalUserinbox(lettertopartyRes.getApplication(), null);
         redirectAttributes.addFlashAttribute(MESSAGE,
                 messageSource.getMessage(MSG_LETTERTOPARTY_REPLY_SUCCESS, null, null));
         return REDIRECT_LETTERTOPARTY_RESULT + lettertoparty.getId();
+    }
+    
+    private List<LetterToPartyFeeDetails> populateLPFeeDetails(List<LetterToPartyFeeDetails> letterToPartyFeeDetails) {
+    	if(null!=letterToPartyFeeDetails) {
+    		List<LetterToPartyFeeDetails> lpFeeDetails = new ArrayList<LetterToPartyFeeDetails>();
+    		for(LetterToPartyFeeDetails feeDetails:letterToPartyFeeDetails) {
+    			LetterToPartyFeeDetails newFeeDetails = lettertoPartyFeeService.getLPFeeDetailsById(feeDetails.getId());
+    			newFeeDetails.setFloorarea(feeDetails.getFloorarea());
+    			lpFeeDetails.add(newFeeDetails);
+    		}
+    		return lpFeeDetails;
+    	}
+    	return null;
     }
 }

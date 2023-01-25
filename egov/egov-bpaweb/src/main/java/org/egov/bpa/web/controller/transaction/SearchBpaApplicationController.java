@@ -47,6 +47,7 @@
 package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.BOUNDARY_TYPE_CITY;
+import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
 import static org.egov.bpa.utils.BpaConstants.IS_AUTO_CANCEL_UNATTENDED_DOCUMENT_SCRUTINY_APPLICATION;
 import static org.egov.bpa.utils.BpaConstants.OCCUPANCY_CERTIFICATE_NOTICE_TYPE;
@@ -54,29 +55,38 @@ import static org.egov.bpa.utils.BpaConstants.REVENUE_HIERARCHY_TYPE;
 import static org.egov.bpa.utils.BpaConstants.WARD;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.InConstructionInspection;
 import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
+import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.InConstructionInspectionService;
 import org.egov.bpa.transaction.service.InspectionApplicationService;
 import org.egov.bpa.transaction.service.InspectionService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
+import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationAdaptor;
+import org.egov.bpa.web.controller.adaptor.SearchBpaPendingTaskAdaptor;
 import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Jurisdiction;
 import org.egov.eis.service.EmployeeService;
@@ -84,9 +94,11 @@ import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.entity.BoundaryType;
 import org.egov.infra.admin.master.service.BoundaryTypeService;
 import org.egov.infra.admin.master.service.CrossHierarchyService;
+import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.web.support.ui.DataTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -98,12 +110,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 @Controller
 @RequestMapping(value = "/application")
 public class SearchBpaApplicationController extends BpaGenericApplicationController {
 
     private static final String APPLICATION_HISTORY = "applicationHistory";
     private static final String SEARCH_BPA_APPLICATION_FORM = "searchBpaApplicationForm";
+    private static final String SEARCH_PENDING_ITEM_FORM = "searchPendingItemsForm";
+    private static final String SEARCH_PENDING_ITEM_FORM_GRAPH = "searchPendingItemsFormG";
+    
+    private static final String URBAN ="URBAN";
+    private static final String RURAL ="RURAL";
+    private static final String RURAL_BPA_END_STATUS ="Order Issued to Applicant";
+    private static final Long RURAL_APP_ID =4L;
 
     @Autowired
     private SearchBpaApplicationService searchBpaApplicationService;
@@ -127,20 +148,225 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     private InConstructionInspectionService inspectionConstService;
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
+    @Autowired
+    private CustomImplProvider specificNoticeService;
 
     @GetMapping("/search")
     public String showSearchApprovedforFee(final Model model) {
         prepareFormData(model);
+        model.addAttribute("appTypes", applicationTypeService.getBPAApplicationTypes());
         model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
         return "search-bpa-application";
     }
-
+    
     @PostMapping(value = "/search", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String searchRegisterStatusMarriageRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchBpaApplicationService.pagedSearch(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
+    }
+    
+    @GetMapping("/searchPendingItems/d/u")
+    public String showSearchApprovedforFeeGrapUrban(final Model model) {
+    	prepareFormDataForPendingItems(model,URBAN);
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-bpa-pending-task-urban";
+    }
+    
+    @GetMapping("/searchPendingItems/d/r")
+    public String showSearchApprovedforFeeGrapRural(final Model model) {
+    	prepareFormDataForPendingItems(model,RURAL);
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+          return "search-bpa-pending-task-rural";
+    }
+    @GetMapping("/searchBPAItems/d/r")
+    public String showSearchBPAItemsGrapRural(final Model model) {
+    	prepareFormDataForBPAItems(model,RURAL);
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	 model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+          return "search-bpa-task-rural";
+    }
+    
+    @PostMapping(value = "/searchPendingItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecordsUrban(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+//    	map.put("SDoBuilding", 100L);
+//    	map.put("SDoBuilding1", 150L);
+//    	map.put("SDoBuilding2", 160L);
+//    	map.put("SDoBuilding3", 10L);
+//    	map.put("SDoBuilding4", 20L);
+    	
+    	
+//        return new DataTable<>(,
+//        		searchPendingItemsFormG.draw())
+//                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    	fillterData(searchBpaApplicationService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    private void fillterData(Page<SearchPendingItemsForm> page,Map<String, Long> map) {
+    	for(SearchPendingItemsForm pendingItemsForm:page) {
+    		if(map.get(pendingItemsForm.getCurrentOwner())==null) {
+    			map.put(pendingItemsForm.getCurrentOwner(), 1l);
+    		}else {
+    			map.put(pendingItemsForm.getCurrentOwner(), map.get(pendingItemsForm.getCurrentOwner())+1);
+    		}
+    	}
+    }
+    
+    @PostMapping(value = "/searchPendingItems/d/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecordsRural(@ModelAttribute final SearchPendingItemsForm searchPendingItemsFormG) {
+
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+//    	map.put("SDoBuilding", 100L);
+//    	map.put("SDoBuilding1", 150L);
+//    	map.put("SDoBuilding2", 160L);
+//    	map.put("SDoBuilding3", 10L);
+//    	map.put("SDoBuilding4", 20L);
+    	
+    	
+//        return new DataTable<>(,
+//        		searchPendingItemsFormG.draw())
+//                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    	if(searchPendingItemsFormG.getApplicationTypeId()==null)
+    		searchPendingItemsFormG.setApplicationTypeId(RURAL_APP_ID);
+    	fillterData(searchBpaApplicationService.pagedSearchForPendingTaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    @PostMapping(value = "/searchPendingItems/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchUrbanPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+    	return new DataTable<>(searchBpaApplicationService.pagedSearchForUrbanPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    @PostMapping(value = "/searchPendingItems/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchRuralPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+    	return new DataTable<>(searchBpaApplicationService.pagedSearchForRuralPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    @GetMapping("/searchPendingItems")
+    public String showSearchPendingItems(final Model model) {
+    	prepareFormDataForPendingItems(model);
+        model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+        return "search-bpa-pending-task";
+    }
+  
+    //Search Applications
+    @GetMapping("/searchBPAItems/d/u")
+    public String showBPAApplicationGraphUrban(final Model model) {
+    	prepareFormDataForBPAItems(model,URBAN);
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM, new SearchPendingItemsForm());
+    	model.addAttribute(SEARCH_PENDING_ITEM_FORM_GRAPH, new SearchPendingItemsForm());
+        return "search-bpa-task-urban";
+    }
+    
+    
+    @PostMapping(value = "/searchBPAItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchBPAItemsRecordsUrban(@ModelAttribute  SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+    	fillterData(searchBpaApplicationService.pagedSearchForBPATaskGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    @PostMapping(value = "/searchBPAItems/d/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchBPAItemsRecordsRural(@ModelAttribute  SearchPendingItemsForm searchPendingItemsFormG) {
+    	
+    	Map<String, Long> map=new HashMap<String, Long>(); 
+    	
+    	fillterData(searchBpaApplicationService.pagedSearchForBPATaskRuralGraph(searchPendingItemsFormG), map);
+        
+        Gson gson = new Gson();  
+		String json = gson.toJson(map); 
+		return json;
+    }
+    
+    @PostMapping(value = "/searchBPAItems/u", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchUrbanBPAItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+    	return new DataTable<>(searchBpaApplicationService.pagedSearchForUrbanBPATask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    @PostMapping(value = "/searchBPAItems/r", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchRuralBPAItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+    	return new DataTable<>(searchBpaApplicationService.pagedSearchForRuralBPATask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    @PostMapping(value = "/searchPendingItems", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String showSearchPendingItemsRecords(@ModelAttribute SearchPendingItemsForm searchPendingItemsForm) {
+        return new DataTable<>(searchBpaApplicationService.pagedSearchForPendingTask(searchPendingItemsForm),
+        		searchPendingItemsForm.draw())
+                        .toJson(SearchBpaPendingTaskAdaptor.class);
+    }
+    
+    protected void prepareFormDataForPendingItems(Model model) {
+    	model.addAttribute("appTypes", applicationTypeService.getBPAApplicationTypes());
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    }
+    
+    protected void prepareFormDataForPendingItems(Model model,String applicationType) {
+    	List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	List<BpaStatus> statusList = bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE);
+    	if(applicationType.equals(URBAN)) {
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches("Accepted as Scrutinized|Order Issued to Applicant|Cancelled|Rejected|Previous Plan Data Updated")).collect(Collectors.toList()));
+    	}else {
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    		model.addAttribute("applnStatusList", statusList.stream().filter(status->!status.getCode().matches(RURAL_BPA_END_STATUS+"|Cancelled|Rejected|Previous Plan Data Updated")).collect(Collectors.toList()));
+    	}
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	
+    	
+    	
+    }
+    
+    protected void prepareFormDataForBPAItems(Model model,String applicationType) {
+    	List<ApplicationSubType> applicationTypes = applicationTypeService.getBPAApplicationTypes();
+    	if(applicationType.equals(URBAN))
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> !appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	else
+    		model.addAttribute("appTypes",applicationTypes.stream().filter(appType -> appType.getName().equalsIgnoreCase("Medium Risk"))
+            .collect(Collectors.toList()));
+    	model.addAttribute("serviceTypeList", serviceTypeService.getAllActiveMainServiceTypes());
+    	model.addAttribute("designations", BpaConstants.getAvailableDesignations());
+    	model.addAttribute("applnStatusList", bpaStatusService.findAllByModuleType(BPASTATUS_MODULETYPE));
     }
 
     @GetMapping("/view/{applicationNumber}")
@@ -179,7 +405,14 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("lettertopartylist", lettertoPartyService.findByBpaApplicationOrderByIdDesc(application));
         model.addAttribute("isEDCRIntegrationRequire",
                 bpaDcrService.isEdcrIntegrationRequireByService(application.getServiceType().getCode()));
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        if(null!=application.getDemand()) {
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        }
+        if (!BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())) {
+        	ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService.find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+        	model.addAttribute("tempFees", feeCalculation.calculateAllFees(application));
+        }
+
         return "viewapplication-form";
     }
 
@@ -280,7 +513,9 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         }
         model.addAttribute("inconstinspectionList", inConstInspections);
         model.addAttribute("lettertopartylist", lettertoPartyService.findByBpaApplicationOrderByIdDesc(application));
-        buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
+        
+        if(application.getIsPreviousPlan()==null || !application.getIsPreviousPlan())
+        	buildReceiptDetails(application.getDemand().getEgDemandDetails(), application.getReceipts());
         return "viewapplication-form";
     }
 

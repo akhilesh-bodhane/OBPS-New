@@ -63,6 +63,7 @@ import javax.validation.Valid;
 
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.NocConfigurationService;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationTypeEnum;
@@ -196,6 +197,10 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
         }
 
         wfBean.setWorkFlowAction(request.getParameter(WORK_FLOW_ACTION));
+        
+        occupancyCertificate.setCitizenAccepted(true);
+        occupancyCertificate.setArchitectAccepted(true);
+        
         OccupancyCertificate ocResponse = occupancyCertificateService.saveOrUpdate(occupancyCertificate, wfBean);
         if (citizenOrBusinessUser) {
             if (isCitizen)
@@ -239,7 +244,7 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
     				 List<User> userList = nocUsers.stream()
     			    	      .filter(usr -> usr.getRoles().stream()
     			    	        .anyMatch(usrrl -> 
-    			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+    			    	          usrrl.getName().equals(getNocRoles(occupancyCertificate.getParent(), nocConfig))))
     			    	        .collect(Collectors.toList());	
     				 if(!userList.isEmpty())
                     	nocAutoUsers.add(userList.get(0));
@@ -273,5 +278,15 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
         }
         redirectAttributes.addFlashAttribute(MESSAGE, message);
         return "redirect:/application/citizen/success/" + occupancyCertificate.getApplicationNumber();
+    }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getOCNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getOCNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 }

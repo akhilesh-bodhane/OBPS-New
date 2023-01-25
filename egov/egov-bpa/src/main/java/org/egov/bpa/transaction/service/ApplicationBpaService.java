@@ -39,16 +39,16 @@
  */
 package org.egov.bpa.transaction.service;
 
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_ACCEPTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DIGI_SIGNED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_NOCUPDATED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PREV_PLAN_UPDATED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REJECTED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SECTION_CLRK_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_TS_INS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.BPASTATUS_MODULETYPE;
 import static org.egov.bpa.utils.BpaConstants.COMPOUND_WALL;
 import static org.egov.bpa.utils.BpaConstants.FILESTORE_MODULECODE;
@@ -64,6 +64,7 @@ import static org.egov.bpa.utils.BpaConstants.SHUTTER_DOOR_CONVERSION;
 import static org.egov.bpa.utils.BpaConstants.WELL;
 import static org.egov.bpa.utils.BpaConstants.WF_APPROVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_CREATED_STATE;
+import static org.egov.bpa.utils.BpaConstants.WF_FORWARD_FOR_PAYMENT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_INITIATE_REJECTION_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
@@ -86,6 +87,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -127,10 +129,12 @@ import org.egov.bpa.transaction.entity.common.GeneralDocument;
 import org.egov.bpa.transaction.entity.common.NocDocument;
 import org.egov.bpa.transaction.entity.common.NoticeCondition;
 import org.egov.bpa.transaction.entity.common.StoreDcrFiles;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
-import org.egov.bpa.transaction.notice.impl.PermitOrderFormatImpl;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
 import org.egov.bpa.transaction.repository.DcrDocumentRepository;
 import org.egov.bpa.transaction.repository.PermitFeeRepository;
@@ -194,6 +198,8 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private static final Logger LOG = getLogger(BpaUtils.class);
     private static final String APPLICATION_STATUS = "application.status";
     private static final String NOC_UPDATION_IN_PROGRESS = "NOC updation in progress";
+    private static final String APPLICATION_APPROVAL_PENDING = "Application Approval Pending";
+    private static final String PROPERTY_DOCUMENTS_VERIFICATION_INITIATED = "Property documents verification initiated";    
     public static final String UNCHECKED = "unchecked";
     public static final String ERROR_OCCURRED_WHILE_GETTING_INPUTSTREAM = "Error occurred while getting inputstream";
     private static final String MODULE_NAME = "BPA";
@@ -275,7 +281,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 	private PermitFeeCalculationService permitFeeCalculationService;
     @Autowired
     private DcrRestService drcRestService;
-
+    
+    @Autowired
+    private WorkflowFileService workflowFileService;
+    
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
     }
@@ -305,7 +314,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)) {
             final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_SUBMITTED);
             application.setStatus(bpaStatus);
-        } else {
+        }else if(workFlowAction !=null && workFlowAction.equals(APPLICATION_STATUS_PREV_PLAN_UPDATED)) { 
+        	 final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_PREV_PLAN_UPDATED);
+             application.setStatus(bpaStatus);
+    	}else {
             final BpaStatus bpaStatus = getStatusByCodeAndModuleType(APPLICATION_STATUS_CREATED);
             application.setStatus(bpaStatus);
         }
@@ -333,12 +345,13 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         BpaApplication bpaApplicationResponse = applicationBpaRepository.saveAndFlush(application);
         application.setPermitDcrDocuments(persistApplnDCRDocuments(permitDcrDocuments));
         applicationBpaRepository.save(bpaApplicationResponse);
-        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
-                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
-        if (bpaUtils.isApplicationFeeCollectionRequired())
-            application.setDemand(feeCalculation.createDemand(application));
-        else
-            application.setDemand(feeCalculation.createDemandWhenFeeCollectionNotRequire(application));
+        
+//        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
+//                .find(PermitFeeCalculationService.class, specificNoticeService.getCityDetails());
+//        if (bpaUtils.isApplicationFeeCollectionRequired())
+//            application.setDemand(feeCalculation.createDemand(application));
+//        else
+//            application.setDemand(feeCalculation.createDemandWhenFeeCollectionNotRequire(application));
 
         bpaIndexService.updateIndexes(bpaApplicationResponse);
         return bpaApplicationResponse;
@@ -584,9 +597,14 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         }
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction)
         		&& !WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
-                && APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equalsIgnoreCase(application.getStatus().getCode())
-                && NOC_UPDATION_IN_PROGRESS.equalsIgnoreCase(application.getState().getValue())) {
+        		//&& PROPERTY_DOCUMENTS_VERIFICATION_INITIATED.equalsIgnoreCase(application.getState().getValue())
+                //&& APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(application.getStatus().getCode())
+        		//&& BpaConstants.APPLICATION_STATUS_RECORD_APPROVED.equalsIgnoreCase(application.getState().getValue())
+                //&& BpaConstants.APPROVED.equalsIgnoreCase(application.getStatus().getCode())
+        		&& (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))
+        	) {
             String feeCalculationMode = bpaUtils.getBPAFeeCalculationMode();
+            LOG.info("1 feeCalculationMode "+feeCalculationMode);
             if (feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECAL) ||
                     feeCalculationMode.equalsIgnoreCase(BpaConstants.AUTOFEECALEDIT)) {
                 ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
@@ -594,12 +612,14 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 PermitFee permitFee = feeCalculation.calculateBpaSanctionFees(application);
                 ApplicationFee applicationFee = applicationFeeService.saveApplicationFee(permitFee.getApplicationFee());
                 permitFee.setApplicationFee(applicationFee);
+                LOG.info("applicationFee "+applicationFee);
                 permitFeeRepository.save(permitFee);
                 application.setDemand(bpaDemandService.generateDemandUsingSanctionFeeList(permitFee.getApplicationFee(),
                         permitFee.getApplication().getDemand()));
+                LOG.info("2 "+permitFee.getApplication().getDemand());
             }
         }
-        if (WF_APPROVE_BUTTON.equals(workFlowAction)) {
+        if (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction)) {
 
             if (application.getPlanPermissionNumber() == null) {
                 application.setPlanPermissionNumber(generatePlanPermissionNumber(application));
@@ -619,7 +639,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         }
         if (APPLICATION_STATUS_APPROVED.equals(application.getStatus().getCode())
                 || APPLICATION_STATUS_DIGI_SIGNED.equalsIgnoreCase(application.getStatus().getCode())
-                || WF_APPROVE_BUTTON.equals(workFlowAction)) {
+                || (WF_APPROVE_BUTTON.equals(workFlowAction) || WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))) {
             buildPermitConditions(application);
         }
         if (application.getFiles() != null && application.getFiles().length > 0) {
@@ -631,7 +651,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (WF_REJECT_BUTTON.equalsIgnoreCase(workFlowAction)
                 || WF_INITIATE_REJECTION_BUTTON.equalsIgnoreCase(workFlowAction)
                 || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(application.getStatus().getCode())
-                || (!WF_APPROVE_BUTTON.equals(workFlowAction)
+                || ((!WF_APPROVE_BUTTON.equals(workFlowAction) || !WF_FORWARD_FOR_PAYMENT_BUTTON.equals(workFlowAction))
                         && APPLICATION_STATUS_NOCUPDATED.equals(application.getStatus().getCode()))
                 || (GENERATEREVOCATIONNOTICE.equalsIgnoreCase(workFlowAction)
                         && application.getApplicationType().getName().equals(LOWRISK))) {
@@ -657,7 +677,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
                 && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
-                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED))
+                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
             for (PermitDcrDocument dcrDocument : dcrDocuments) {
@@ -674,6 +694,18 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 
     public void persistOrUpdateApplicationDocument(final BpaApplication bpaApplication) {
         processAndStoreGeneralDocuments(bpaApplication);
+    }
+    
+    public void persistWfDocuments(final BpaApplication bpaApplication) {
+        processAndStoreWfDocuments(bpaApplication);
+    }
+    
+    public void persistWfDocuments(final OccupancyCertificate occupancyCertificate) {
+        processAndStoreWfDocuments(occupancyCertificate);
+    }
+    
+    public void persistWfDocuments(final PlinthLevelCertificate plinthLevelCertificate) {
+        processAndStoreWfDocuments(plinthLevelCertificate);
     }
 
     public BigDecimal setAdmissionFeeAmountForRegistrationWithAmenities(final Long serviceType, List<ServiceType> amenityList) {
@@ -773,7 +805,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     			OccupancyTypeHelper mostRestrictiveFarHelper = plan.getVirtualBuilding() != null
 						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
 						: null;
-						totalAmount.add(permitFeeCalculationService.getTotalSecurityFee(plan, mostRestrictiveFarHelper));
+						totalAmount.add(permitFeeCalculationService.getTotalSecurityFee(plan, mostRestrictiveFarHelper,null));
     		}
     	}
         return totalAmount;
@@ -794,11 +826,15 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     public List<BpaApplication> findApplicationByEDCRNumber(final String eDcrNumber) {
         return applicationBpaRepository.findApplicationByEDcrNumberOrderByIdDesc(eDcrNumber);
     }
+    
+    public List<BpaApplication> findApplicationByPlotNumberAndSectorOrderByIdDesc(String plotNumber,String sector){
+    	 return applicationBpaRepository.findApplicationByPlotNumberAndSectorOrderByIdDesc(plotNumber,sector);
+    }
 
     public BpaApplication findByPermitNumber(final String permitNumber) {
         return applicationBpaRepository.findByPlanPermissionNumber(permitNumber);
     }
-
+    
     private void processAndStoreNocDocuments(final BpaApplication application) {
         if (!application.getPermitNocDocuments().isEmpty()
                 && null == application.getPermitNocDocuments().get(0).getId())
@@ -842,7 +878,50 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
             for (final PermitDocument ocDocuments : application.getPermitDocuments())
                 buildGeneralFiles(ocDocuments.getDocument());
     }
-
+    
+    private void processAndStoreWfDocuments(final BpaApplication application) {
+    	if (application.getWorkflowFile().getFiles() != null && application.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:application.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		application.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void processAndStoreWfDocuments(final OccupancyCertificate occupancyCertificate) {
+    	if (occupancyCertificate.getWorkflowFile().getFiles() != null && occupancyCertificate.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:occupancyCertificate.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		occupancyCertificate.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void processAndStoreWfDocuments(final PlinthLevelCertificate plinthLevelCertificate) {
+    	if (plinthLevelCertificate.getWorkflowFile().getFiles() != null && plinthLevelCertificate.getWorkflowFile().getFiles().length > 0) {
+    		UUID uuid = UUID.randomUUID();
+    		String wfFileRefId = uuid.toString();
+    		for(MultipartFile doc:plinthLevelCertificate.getWorkflowFile().getFiles()) {
+    			saveWfDocuments(doc, wfFileRefId);
+    		}
+    		plinthLevelCertificate.setWfFileRefId(wfFileRefId);
+    	}
+    }
+    
+    private void saveWfDocuments(MultipartFile file, String stateRefId) {
+    	FileStoreMapper fileStoreMapper = addToFileStore(file);
+        WorkflowFile workflowFile = new WorkflowFile();
+        workflowFile.setStateRefId(stateRefId);
+        workflowFile.setFileStoreMapper(fileStoreMapper);
+        workflowFile.setCreatedBy(securityUtils.getCurrentUser());
+        workflowFile.setCreatedDate(new Date());
+        workflowFileService.save(workflowFile);
+    }
+    
     private void buildGeneralFiles(final GeneralDocument commonDoc) {
         if (commonDoc.getFiles() != null && commonDoc.getFiles().length > 0) {
             Set<FileStoreMapper> existingFiles = new HashSet<>();

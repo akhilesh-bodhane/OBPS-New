@@ -50,12 +50,11 @@ package org.egov.bpa.web.controller.transaction.citizen;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_HISTORY;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_CREATED;
-import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFIED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_DOC_VERIFY_COMPLETED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
 import static org.egov.bpa.utils.BpaConstants.AUTH_TO_SUBMIT_PLAN;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.DISCLIMER_MESSAGE_ONSAVE;
 import static org.egov.bpa.utils.BpaConstants.ENABLEONLINEPAYMENT;
 import static org.egov.bpa.utils.BpaConstants.WF_CANCELAPPLICATION_BUTTON;
@@ -76,6 +75,7 @@ import javax.validation.Valid;
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.NocConfigurationService;
 import org.egov.bpa.transaction.entity.ApplicationFloorDetail;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BuildingDetail;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.WorkflowBean;
@@ -87,6 +87,7 @@ import org.egov.bpa.transaction.entity.oc.OCBuilding;
 import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OCLetterToParty;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
+import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
@@ -226,6 +227,10 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                         && !oc.getRescheduledByCitizen()) {
             model.addAttribute("mode", "showRescheduleToCitizen");
         }
+        
+        List<OCNotice> finalOCApp = oc.getOcNotices().stream().filter(notice->notice.getNoticeCommon().getNoticeType().equalsIgnoreCase(BpaConstants.FINAL_OCCUPANCY_CERTIFICATE_NOTICE_TYPE)).collect(Collectors.toList());
+        model.addAttribute("isFinalOCGenerated", !finalOCApp.isEmpty());
+        
         final OcInspectionService ocInspectionService = (OcInspectionService) specificNoticeService
                 .find(OcInspectionService.class, specificNoticeService.getCityDetails());
         model.addAttribute("inspectionList", ocInspectionService.findByOcOrderByIdAsc(oc));
@@ -260,6 +265,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
         List<User> nocAutoUsers = new ArrayList<>();
 	    List<User> nocUsers = userService.getUsersByTypeAndTenants(UserType.BUSINESS);
         List<OccupancyNocApplication> ocNoc = ocNocService.findByOCApplicationNumber(oc.getApplicationNumber());
+        model.addAttribute("nocApplication", ocNoc);
         model.addAttribute("isOcApplFeeReq","NO");
         model.addAttribute("ocApplFeeCollected","NO");
         if(occupancyCertificateUtils.isApplicationFeeCollectionRequired() ){
@@ -289,7 +295,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
 				 List<User> userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 				 if(!userList.isEmpty())
                 	nocAutoUsers.add(userList.get(0));
@@ -307,6 +313,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
 				else
 					model.addAttribute("nocUserExists",false);
 		}
+        
     }
 
     private void prepareFormData(final OccupancyCertificate oc, final Model model) {
@@ -399,7 +406,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                 model.addAttribute("appointmentTimeRes", activeSlotApplication.get().getSlotDetail().getAppointmentTime());
                 model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Document Scrutiny");
             }
-        } else if (APPLICATION_STATUS_DOC_VERIFIED.equals(oc.getStatus().getCode()) && oc.getInspections().isEmpty()) {
+        } else if (APPLICATION_STATUS_DOC_VERIFY_COMPLETED.equals(oc.getStatus().getCode()) && oc.getInspections().isEmpty()) {
             List<OCAppointmentSchedule> appointmentScheduledList = ocAppointmentScheduleService.findByApplication(oc,
                     AppointmentSchedulePurpose.INSPECTION);
             if (!appointmentScheduledList.isEmpty()) {
@@ -414,5 +421,15 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
                 model.addAttribute("appointmentTitle", "Scheduled Appointment Details For Field Inspection");
             }
         }
+    }
+    
+    public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getOCNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getOCNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
     }
 }

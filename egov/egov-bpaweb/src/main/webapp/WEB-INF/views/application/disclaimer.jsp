@@ -55,7 +55,14 @@
 				<!-- for citizen user login -->
 				<div class="col-sm-9 col-sm-offset-2 text-justify">
 					<div class="checkbox view-content">
-						<form:checkbox path="citizenAccepted" id="citizenAccepted" />
+						<c:choose>
+							<c:when test="${citizenDisclaimerAccepted}">
+								<form:checkbox path="citizenAccepted" id="citizenAccepted" disabled="true"/>						
+							</c:when>
+							<c:otherwise>
+								<form:checkbox path="citizenAccepted" id="citizenAccepted"/>	
+							</c:otherwise>
+						</c:choose>
 						<span class="mandatory"></span>&nbsp;<spring:message code="lbl.ack.accpt" />
 						<ul style="list-style-type: none; padding-left: 10px">
 							<li></li> 
@@ -68,12 +75,23 @@
 				<!-- for business user login -->
 				<div class="col-sm-9 col-sm-offset-2 text-justify">
 					<div class="checkbox view-content">
-						<form:checkbox path="architectAccepted" id="architectAccepted" />
+						<c:choose>
+							<c:when test="${bpaApplication.architectAccepted}">
+								<form:checkbox path="architectAccepted" id="architectAccepted" disabled="true" />
+							</c:when>
+							<c:otherwise>
+								<form:checkbox path="architectAccepted" id="architectAccepted"/>	
+							</c:otherwise>
+						</c:choose>
 						<span class="mandatory"></span>&nbsp;<spring:message code="lbl.ack.accpt" />
 						<ul style="list-style-type: none; padding-left: 10px">
 							<li></li> 
 							<li><spring:message code="lbl.accepted" /></li>
-							<li><spring:message code="lbl.accpeted1" /></li>   
+							<li><spring:message code="lbl.accpeted1" /></li> 
+							<li><spring:message code="lbl.accpeted2" /></li> 
+							<li><spring:message code="lbl.accpeted3" /></li> 
+							<li><spring:message code="lbl.accpeted4" /></li>
+							<li><spring:message code="lbl.accpeted5" /></li> 
 						</ul>
 					</div>
 				</div>

@@ -268,6 +268,70 @@
 				</c:choose>
 				</div>
 			</div>
+			
+			<div class="panel panel-primary" data-collapsed="0">
+				<div class="panel-body">
+					<c:choose>
+						<c:when test="${not empty letterToPartyFeeList}">
+							<div class="panel-heading custom_form_panel_heading">
+								<div class="panel-title">
+									<spring:message code="lbl.fee.areas"/>
+								</div>
+							</div>
+							<div class="form-group view-content header-color hidden-xs">
+								<div class="col-sm-4">
+									<spring:message code="lbl.fee.floor"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.isrequested"/>
+								</div>
+								<div class="col-sm-2">
+									<spring:message code="lbl.area"/>
+								</div>
+								<div class="col-sm-3">
+									<spring:message code="lbl.remarks"/>
+								</div>
+							</div>
+							<c:forEach var="fees" items="${letterToPartyFeeList}" varStatus="status">
+								<div class="col-sm-4">
+									<form:hidden id="letterToPartyFeeDetails${status.index}.id"
+												path="letterToPartyFeeDetails[${status.index}].id" value="${fees.id}"/>
+									${fees.letterToPartyFeeMaster.feeName} Floor ${fees.letterToPartyFeeMaster.floorNumber} 
+									<c:if test="${fees.isMandatory}">
+										<span class="mandatory"></span>
+									</c:if>									
+								</div>
+								<div class="col-sm-3">
+									<c:out value="${fees.isMandatory ? 'Yes' : 'No'}"/>
+								</div>
+								<div class="col-sm-2 add-margin">
+									<c:choose>
+										<c:when test="${fees.letterToPartyFeeMaster.feeName eq 'Security fee'}">
+											<form:select id="letterToPartyFeeDetails[${status.index}].floorarea" 
+													path="letterToPartyFeeDetails[${status.index}].floorarea" cssClass="form-control" >
+												<form:option value="1">Yes</form:option>		
+												<form:option value="0">No</form:option>		
+											</form:select>
+											<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+										</c:when>
+										<c:otherwise>
+											<form:input class="form-control patternvalidation" maxlength="20" data-pattern="text" 
+														id="letterToPartyFeeDetails[${status.index}].floorarea" 
+														path="letterToPartyFeeDetails[${status.index}].floorarea"  onkeypress="return checkIfValid(this, event)"/>
+											<form:errors path="letterToPartyFees[${status.index}].floorarea" cssClass="add-margin error-msg" />
+										</c:otherwise>
+									</c:choose>
+								</div>
+								
+								<div class="col-sm-3">
+									<c:out value="${fees.remarks}" default="N/A"/>
+								</div>
+							</c:forEach>
+						</c:when>
+					</c:choose>
+				</div>
+			</div>
+			
 		</div>
 		</div>
 	<div class="text-center">
@@ -275,10 +339,10 @@
 			<spring:message code='lbl.reply' />
 		</button>
 
-		<button type="submit" class="btn btn-primary"
+		<%-- <button type="submit" class="btn btn-primary"
 			onclick="return getUrlToPring()">
 			<spring:message code="lbl.print.lettertoparty" />
-		</button>
+		</button> --%>
 		<a href='javascript:void(0)' class='btn btn-default'
 			onclick='self.close()'><spring:message code='lbl.close' /></a>
 	</div>
@@ -298,6 +362,37 @@
 	<div id="caption"></div>
 </div>
 
+<script>
+        function isValid(el, evnt) {
+            var charC = (evnt.which) ? evnt.which : evnt.keyCode;
+            if (charC == 45) {
+                if (el.value.indexOf('-') === -1) {
+                    return true;
+                }
+                 else {
+                    return false;
+                }
+            }
+            else if (charC == 46) {
+                if (el.value.indexOf('.') === -1) {
+                    return true;
+                }
+                 else {
+                    return false;
+                }
+            }
+            else {
+                if (charC > 31 && (charC < 48 || charC > 57))
+                    return false;
+            }
+            return true;
+        }
+
+        function checkIfValid(t, evnt) {
+            var a = isValid(t, evnt);
+            return a;
+        }
+    </script>
 <script
 		src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script

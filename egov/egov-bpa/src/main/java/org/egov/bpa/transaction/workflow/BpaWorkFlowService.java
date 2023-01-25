@@ -47,7 +47,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_RESCHEDULED;
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SCHEDULED;
-import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_02;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_05;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_08;
@@ -55,6 +54,8 @@ import static org.egov.bpa.utils.BpaConstants.ST_CODE_09;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_14;
 import static org.egov.bpa.utils.BpaConstants.ST_CODE_15;
 import static org.egov.bpa.utils.BpaConstants.WF_REVERT_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON;
+
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -69,6 +70,7 @@ import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.dto.BpaStateInfo;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.bpa.SubOccupancy;
@@ -89,6 +91,8 @@ import org.egov.pims.commons.Position;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,6 +100,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class BpaWorkFlowService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BpaWorkFlowService.class);
 
     public static final String SCRUTINIZED_POS = "scrutinizedBy";
     public static final String SCRUTINIZED_USER = "scrutinizedUser";
@@ -280,7 +286,8 @@ public class BpaWorkFlowService {
         else if (isTownSurveyorInspectionRequire)
             bpaStateInfo.setTsInitiatorPos(state.getOwnerPosition().getId());
 
-        if (!isBlank(workFlowAction) && WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)
+        if (!isBlank(workFlowAction) && (WF_REVERT_BUTTON.equalsIgnoreCase(workFlowAction)
+        		|| WF_REVERT_TO_PREVIOUS_REVIEWER_BUTTON.equalsIgnoreCase(workFlowAction))
                 && !assignments.isEmpty() && assignments.get(0).getDesignation() != null) {
             bpaStateInfo.setRevertedBy("Reverted By " + securityUtils.getCurrentUser().getName() + " - "
                     + assignments.get(0).getDesignation().getName());
@@ -301,7 +308,7 @@ public class BpaWorkFlowService {
                 json = (JSONObject) parser.parse(stateHistory.get().getExtraInfo());
     
         }catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json!=null ? Long.valueOf(json.get("wfMatrixRef").toString()) : 0;
     }
@@ -320,7 +327,7 @@ public class BpaWorkFlowService {
             }
 
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(TS_INITIATOR_POS) == null ? 0 : Long.valueOf(json.get(TS_INITIATOR_POS).toString());
     }
@@ -339,7 +346,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(SCRUTINIZED_POS) == null ? 0 : Long.valueOf(json.get(SCRUTINIZED_POS).toString());
     }
@@ -358,7 +365,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(SCRUTINIZED_USER) == null ? 0 : Long.valueOf(json.get(SCRUTINIZED_USER).toString());
     }
@@ -376,7 +383,7 @@ public class BpaWorkFlowService {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+        	LOGGER.error(e.getMessage());
         }
         return json == null || json.get(REVERTED_BY) == null ? EMPTY : json.get(REVERTED_BY).toString();
     }
@@ -394,6 +401,13 @@ public class BpaWorkFlowService {
 		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(oc.getStateType(), currentState, oc.getOccupancyCertificateType());
 		return bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
 				bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
+	}
+	
+	public Position getApproverPositionOfElectionWardByCurrentStateForPL(final PlinthLevelCertificate pl,
+			final String currentState) {
+		WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(pl.getStateType(), currentState, pl.getPlinthLevelCertificateType());
+		return bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+				bpaUtils.getBoundaryForWorkflow(pl.getParent().getSiteDetail().get(0)).getId());
 	}
 
     public BigDecimal getAmountRuleByServiceType(final BpaApplication application) {

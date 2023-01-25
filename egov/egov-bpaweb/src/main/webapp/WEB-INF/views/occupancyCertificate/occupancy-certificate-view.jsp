@@ -131,6 +131,13 @@
 					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=5><spring:message
 								code='lbl.inspection.appln' /></a></li>
 				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<li>
+						<a data-toggle="tab" href="#view-appointments" data-tabidx=2>
+							<spring:message code='lbl.scheduled.appmnt' />
+						</a>
+					</li>
+				</c:if>
 				<c:if test="${captureTSRemarks}">
 					<li><a data-toggle="tab" href="#ts-remarks" data-tabidx=6><spring:message
 								code='lbl.town.surveyor.remarks' /></a></li>
@@ -139,10 +146,8 @@
 					<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
 								code='lbl.lp.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=8><spring:message
 								code='lbl.ocfee.details' /></a></li>
-				</c:if>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -182,6 +187,10 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="citizen/disclaimer-oc.jsp" />
+					</div>
+
 					<c:if test="${showRejectionReasons}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="oc-rejection-reasons.jsp"></jsp:include>
@@ -221,6 +230,13 @@
 						</div>
 					</div>
 				</c:if>
+				<c:if test="${not empty appointmentScheduledList}">
+					<div id="view-appointments" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-oc-scheduled-appiontments.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
 				<c:if test="${not empty occupancyCertificate.inspections}">
 					<div id="view-inspection" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
@@ -255,36 +271,31 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
-					<div id="view-fee" class="tab-pane fade">
-						<div class="panel panel-primary" data-collapsed="0">
-							<jsp:include page="view-oc-fee-details.jsp"></jsp:include>
-						</div>
-					</div>
-				</c:if>
+				<div id="view-fee" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="./oc-register-fee-details.jsp"></jsp:include>
+				</div>
+				</div>
 			</div>
 
 			<div class="text-center">
 
-				<c:if test="${mode eq 'newappointment'}">
-					<a
-						href="/bpa/application/occupancy-certificate/schedule-appointment/${occupancyCertificate.applicationNumber}"
-						class="btn btn-primary"> <spring:message
-							code='lbl.btn.new.appointment' />
+				<c:if test="${mode eq 'newappointment'}">					
+					<a href="/bpa/application/occupancy-certificate/schedule-appointment/${occupancyCertificate.applicationNumber}" class="btn btn-primary"> 
+						<spring:message code='lbl.btn.new.appointment' />
 					</a>
 				</c:if>
 
 				<c:if test="${mode eq 'captureInspection'}">
-					<a target="popup" class="btn btn-primary"
-						onclick="window.open('/bpa/application/occupancy-certificate/create-inspection/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
-						class="btn btn-primary"> <spring:message
-							code='lbl.btn.inspection.details' />
+					<a target="popup" class="btn btn-primary" 
+					   onclick="window.open('/bpa/application/occupancy-certificate/create-inspection/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;"
+					   class="btn btn-primary"> 
+						<spring:message code='lbl.btn.inspection.details' />
 					</a>
 					<c:if test="${isInspnRescheduleEnabled eq true}">
-						<a
-							href="/bpa/application/occupancy-certificate/reschedule-appointment/${scheduleType}/${occupancyCertificate.applicationNumber}"
-							class="btn btn-primary"> <spring:message
-								code='lbl.btn.reschedule.appointment' />
+						<a href="/bpa/application/occupancy-certificate/reschedule-appointment/${scheduleType}/${occupancyCertificate.applicationNumber}" 
+						   class="btn btn-primary"> 
+							<spring:message code='lbl.btn.reschedule.appointment' />
 						</a>
 					</c:if>
 				</c:if>
@@ -305,11 +316,10 @@
 					</a>
 
 				</c:if>
-				<c:if
-					test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Document Verification Completed'}">
+				<%-- <c:if test="${occupancyCertificate.state.value ne 'Field Inspection completed' && occupancyCertificate.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save"
 						class="btn btn-primary" />
-				</c:if>
+				</c:if> --%>
 
 				<c:if test="${createlettertoparty}">
 					<a
@@ -320,7 +330,7 @@
 				</c:if>
 			</div>
 			<br>
-			<c:if test="${isTSInspectionRequired eq true}">
+			<%-- <c:if test="${isTSInspectionRequired eq true}">
 
 				<div class="panel panel-primary" data-collapsed="0"
 					id="townSurveyorInspectionDiv">
@@ -335,8 +345,16 @@
 						</label>
 					</div>
 				</div>
+			</c:if> --%>
+			<c:if test="${occupancyCertificate.status.code eq 'Approved' }">
+				<div class="row">
+	                <label class="col-sm-3 control-label text-right"><spring:message code="lbl.comments"/></label>
+	                <div class="col-sm-8 add-margin">
+	                    <form:textarea class="form-control" path="approvalComent" maxlength="3750" id="approvalComent"
+	                                   name="approvalComent"/>
+	                </div>
+	            </div>
 			</c:if>
-
 			<c:choose>
 				<c:when test="${isFeeCollected && occupancyCertificate.status.code eq 'Approved'}">
 					<div class="buttonbottom" align="center">
@@ -349,6 +367,11 @@
 						<a href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 						   target="popup" class="btn btn-primary" 
 						   onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+								Print Provisional Occupancy Certificate 
+						</a>
+						<a href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+						   target="popup" class="btn btn-primary" 
+						   onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 								Print Occupancy Certificate 
 						</a>
 						<input type="button" name="button2" value="Close" class="btn btn-default" onclick="window.close();" />
@@ -472,3 +495,5 @@
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/oc-edcr-helper.js?rnd=${app_release_no}'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/occupancy-certificate-view.js?rnd=${app_release_no}'/>"></script>
+<script 
+	src="<cdn:url value='/resources/js/app/oc-register-fee-details.js?rnd=${app_release_no}'/>"></script>		

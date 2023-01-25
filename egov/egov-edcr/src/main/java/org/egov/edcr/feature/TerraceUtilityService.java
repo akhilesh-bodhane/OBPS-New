@@ -65,6 +65,7 @@ import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.common.entity.edcr.TerraceUtility;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.Util;
 import org.springframework.stereotype.Service;
@@ -95,11 +96,18 @@ public class TerraceUtilityService extends FeatureProcess {
 	@Override
 	public Plan process(Plan pl) {
 
-		BigDecimal expectedFrontAndRearDistance = new BigDecimal("3.0");
+		BigDecimal expectedFrontAndRearDistance = new BigDecimal("3.0");//3.048
 		BigDecimal expectedSideDistance = new BigDecimal("3.0");
+		if (pl.getDrawingPreference().getInFeets()) {
+			expectedFrontAndRearDistance=CDGADeviationConstant.addDeviation(expectedFrontAndRearDistance, CDGADeviationConstant.TERRACE_DEVIATION_MAX);
+			expectedSideDistance=CDGADeviationConstant.addDeviation(expectedSideDistance, CDGADeviationConstant.TERRACE_DEVIATION_MAX);
+		}
 
 		if (pl.getIsRowHouse()) {
-			expectedSideDistance = new BigDecimal("1.2");
+			expectedSideDistance = new BigDecimal("1.2");//1.219
+			if (pl.getDrawingPreference().getInFeets()) {
+				expectedSideDistance=CDGADeviationConstant.addDeviation(expectedSideDistance, CDGADeviationConstant.TERRACE_DEVIATION_MIN);
+			}
 		}
 
 		if (pl.getDrawingPreference().getInFeets()) {
@@ -133,7 +141,7 @@ public class TerraceUtilityService extends FeatureProcess {
 					providedMinFront = frontAndRear.stream().reduce(BigDecimal::min).get();
 					providedMinSide = side.stream().reduce(BigDecimal::min).get();
 				} catch (Exception e) {
-					e.printStackTrace();
+					
 				}
 
 				if (pl.getDrawingPreference().getInFeets()) {
@@ -149,6 +157,7 @@ public class TerraceUtilityService extends FeatureProcess {
 				if (providedMinSide.compareTo(expectedSideDistance) >= 0) {
 					sideAccepted = true;
 				}
+				//sideAccepted = true;
 				Map<String, String> details = new HashMap<>();
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
 				details.put(DESCRIPTION, "Front & Rear Distance");

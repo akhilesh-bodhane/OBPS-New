@@ -61,8 +61,18 @@
 				<security:filter-chain pattern="/error/**" filters="none" />
 				<security:filter-chain pattern="/index.jsp" filters="none" />
 				<security:filter-chain pattern="/public/**" filters="none"/>
+				<security:filter-chain pattern="/application/findby-permit-number" filters="none"/>
 				<security:filter-chain pattern="/collection/citizen/**" filters="none" />
+				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegister" filters="none"/>
+				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegisterForOC" filters="none"/>
+				<security:filter-chain pattern="/reports/statusreport-api" filters="none" />
+				<security:filter-chain pattern="/reports/servicewise-summary-api" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLPendingItemsRural" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLItems" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLPendingItems" filters="none" />
+				<security:filter-chain pattern="/reports/searchPLItemsRural" filters="none" />
 				<security:filter-chain pattern="/rest/**" filters="anonymousAuthenticationFilter"/>
+				<security:filter-chain pattern="/national-dashboard/_obpas" filters="none"/>
 				<security:filter-chain pattern="/application/citizen/check-status/**" filters="anonymousAuthenticationFilter"/>
 				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
 													 logoutFilter,authenticationProcessingFilter,headerWriterFilter,

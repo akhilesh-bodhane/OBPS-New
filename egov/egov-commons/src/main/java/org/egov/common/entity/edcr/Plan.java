@@ -65,6 +65,7 @@ import org.egov.common.entity.bpa.Usage;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /*All the details extracted from the plan are referred in this object*/
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -200,7 +201,11 @@ public class Plan implements Serializable {
 	
 	private Boolean isAdditionalFeeApplicable=false;
 	private Boolean isRowHouse=false;
+	
+	private String applicationType;
 
+	private String planPermissionNumber;
+	
 	// Used to show drawing mistakes, General errors, mistakes in following
 	// layer/color coding standard etc
 	private transient Map<String, String> errors = new LinkedHashMap<>();
@@ -216,7 +221,10 @@ public class Plan implements Serializable {
 	private HashMap<String, String> featureAmendments = new LinkedHashMap<>();
 	private transient Map<String, List<Object>> mdmsMasterData;
 	private transient Boolean mainDcrPassed = false;
+	
 
+	private OCDataComparison ocdataComparison=new OCDataComparison();
+	
 	public List<BigDecimal> getCanopyDistanceFromPlotBoundary() {
 		return canopyDistanceFromPlotBoundary;
 	}
@@ -589,8 +597,10 @@ public class Plan implements Serializable {
 
 	public void setPlanInfoProperties(Map<String, String> planInfoProperties) {
 		planInfoProperties.putAll(initPlanInfo());
-		if ("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE")))
+		if ("URBAN".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE"))) {
 			planInfoProperties.put("AVG_PLOT_DEPTH", "N/A");
+			planInfoProperties.put("ROAD_WIDTH", "3");
+		}
 		else if ("RURAL".equals(planInfoProperties.get("ROOT_BOUNDARY_TYPE"))) {// as per OBPS-30 request
 			planInfoProperties.put("AVG_PLOT_DEPTH", planInfoProperties.get("PLOT_LENGTH"));
 		}
@@ -637,7 +647,6 @@ public class Plan implements Serializable {
 		// planInfo.put("AVG_PLOT_DEPTH", "N/A");
 		planInfo.put("AVG_PLOT_WIDTH", "N/A");
 		planInfo.put("AREA_TYPE", "OLD");
-		planInfo.put("ROAD_WIDTH", "3");
 		planInfo.put("BUILDING_NEAR_MONUMENT ", "NO");
 		planInfo.put("BUILDING_NEAR_GOVT_BLDG", "NO");
 		planInfo.put("BUILDING_NEAR_TO_RIVER", "NO");
@@ -709,5 +718,29 @@ public class Plan implements Serializable {
 		this.isRowHouse = isRowHouse;
 	}
 
-	
+	public String getApplicationType() {
+		return applicationType;
+	}
+
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
+	}
+
+	public String getPlanPermissionNumber() {
+		return planPermissionNumber;
+	}
+
+	public OCDataComparison getOcdataComparison() {
+		return ocdataComparison;
+	}
+
+	public void setOcdataComparison(OCDataComparison ocdataComparison) {
+		this.ocdataComparison = ocdataComparison;
+	}
+
+	public void setPlanPermissionNumber(String planPermissionNumber) {
+		this.planPermissionNumber = planPermissionNumber;
+	}
+
+		
 }

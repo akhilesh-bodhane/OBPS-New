@@ -46,6 +46,24 @@ var features = [
 	"A-EWS"	    //EWS
 ];
 
+var atkGenDocs = [
+	"DOCUMENTATION-01","DOCUMENTATION-02","DOCUMENTATION-03","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13",
+	"DOCUMENTATION-14","DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-18","DOCUMENTATION-19","DOCUMENTATION-06","DOCUMENTATION-07",
+	"DOCUMENTATION-08","DOCUMENTATION-09","DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-34","DOCUMENTATION-23","DOCUMENTATION-24",
+	"DOCUMENTATION-25","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-STRUCTURAL-CALCULATION-SHEET","NET-SAFE-BEARING-CAPACITY-FROM-CERTIFIED-ENGINEER",
+	"DOCUMENTATION-35","DOCUMENTATION-36","DOCUMENTATION-37","DOCUMENTATION-38","DOCUMENTATION-39","DOCUMENTATION-40"
+];
+
+var btkGenDocs = [
+	"DOCUMENTATION-04","DOCUMENTATION-05","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13","DOCUMENTATION-14",
+	"DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-21","DOCUMENTATION-06","DOCUMENTATION-07","DOCUMENTATION-08","DOCUMENTATION-09",
+	"DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-35","DOCUMENTATION-36"
+];
+
+var ruralDocs = [
+	"DOCUMENTATION-01","DOCUMENTATION-28","DOCUMENTATION-29","DOCUMENTATION-30","DOCUMENTATION-31","DOCUMENTATION-32","DOCUMENTATION-33"
+];
+
 $(document).ready(
     function ($) {
         String.prototype.compose = (function (){
@@ -195,30 +213,34 @@ $(document).ready(
             //Add row
         	var occupancyId;
         	var occupancyDesc;
+        	var isFeature=false;
         	if(subOccupancy!=null && subOccupancy.length>0){
         		occupancyId = subOccupancy[0].id;
         		occupancyDesc = subOccupancy[0].description;
+        		isFeature=subOccupancy[0].isFeature;
         	} else {
         		occupancyId = occupancySuboccupancyMap[occupancy[0].id][0].id;
         		occupancyDesc = occupancySuboccupancyMap[occupancy[0].id][0].description;
+        		isFeature=occupancySuboccupancyMap[occupancy[0].id][0].isFeature;
         	}
-        		
-            var rowJsonObj={
-                'sno': sno+1,
-                'bldgIdx': bldgIdx,
-                'idx': floorIdx,
-                'orderOfFloor': floorIdx+1,
-                'floorDesc': floorDesc,
-                'floorNo': floorNo,
-                'occupancyId': occupancyId,
-                'occupancyDesc': occupancyDesc,
-                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
-                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
-                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
-            };
-            addNewRowFromObject(rowJsonObj);
-            setDCRFloorCount();
-            patternvalidation();
+        	if(!isFeature){
+	            var rowJsonObj={
+	                'sno': sno+1,
+	                'bldgIdx': bldgIdx,
+	                'idx': floorIdx,
+	                'orderOfFloor': floorIdx+1,
+	                'floorDesc': floorDesc,
+	                'floorNo': floorNo,
+	                'occupancyId': occupancyId,
+	                'occupancyDesc': occupancyDesc,
+	                'plinthArea': convertSqInchToSqFt(builtupArea.toFixed(2)),
+	                'floorArea': convertSqInchToSqFt(floorArea.toFixed(2)),
+	                'carpetArea': convertSqInchToSqFt(carpetArea.toFixed(2))
+	            };
+	            addNewRowFromObject(rowJsonObj);
+	            setDCRFloorCount();
+	            patternvalidation();
+        	}
         }
 
         function addNewRowFromObject(rowJsonObj) {
@@ -260,20 +282,60 @@ $(document).ready(
         	$.ajax({
 				url : '/bpa/ajax/getApplicationType?plotType='+plotType+'&rootBoundaryType='+boundaryType,
 				type: "GET",
-				 contentType: 'application/json; charset=utf-8',
+				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if(response){
 		                $('#applicationType').val(response.id);
-		                //$('#applicationType').removeAttr("disabled");
 	                    $('#applicationType').trigger('change');
+	                    showGenDocs(response.name);
 					}else{
 						console.log('No applications available');
-					}
-					
+					}					
 				}, 
 				error: function (response) {}
 			});
-
+        }
+        
+        function showGenDocs(appType){
+        	$(".gen-docs").each(function() {
+        		$(this).find("span.mandatory").remove();
+        		$(this).find("div.files-upload-container").removeAttr('aria-required');
+        		$(this).find("div.files-upload-container").removeAttr('required');
+        		$(this).hide();
+    		});        	
+        	var docArr=[];
+        	if(appType=="High Risk"){
+        		docArr=atkGenDocs;
+        	}else if(appType=="Low Risk"){
+        		docArr=btkGenDocs;
+        	}else if(appType=="Medium Risk"){
+        		docArr=ruralDocs;
+        	}        	
+        	$(".gen-docs").each(function() {
+        		var tht=this;
+    			var isExist=false;
+    			var mandatVal='';
+    			var divclass='';
+    			var fleclass=''; 
+    			var doccode=$(this).attr('data-doc-id');
+    			$.each(docArr, function( index, value ) {	   				
+    				if(doccode == value){ 
+    				    isExist=true;   
+    				    mandatVal="mandat-" + value;
+    				    divclass="div." + value;
+    			        fleclass="div.dvf" + value; 				    				    
+    				}        				       				
+    			});
+    			if(isExist){
+    				$(this).show();  
+    				var isMandatory=$("#"+mandatVal).val();
+					if(isMandatory == "true"){
+						$(this).find(divclass).append('<span class="mandatory"></span>');
+						$(this).find(fleclass).attr('aria-required', true);
+						$(this).find(fleclass).attr('required', '');
+					}      				
+    			}
+    		});
         }
         
         // Will Auto Populate existing building details
@@ -426,29 +488,34 @@ $(document).ready(
             //Add row
         	var occupancyId;
         	var occupancyDesc;
+        	var isFeature=false;
         	if(subOccupancy!=null && subOccupancy.length>0){
         		occupancyId = subOccupancy[0].id;
         		occupancyDesc = subOccupancy[0].description;
+        		isFeature=subOccupancy[0].isFeature;
         	} else {
         		occupancyId = occupancySuboccupancyMap[occupancy[0].id][0].id;
         		occupancyDesc = occupancySuboccupancyMap[occupancy[0].id][0].description;
+        		isFeature=occupancySuboccupancyMap[occupancy[0].id][0].isFeature;
         	}
-            var rowJsonObj={
-                'sno': sno+1,
-                'bldgIdx': bldgIdx,
-                'idx': floorIdx,
-                'orderOfFloor': floorIdx+1,
-                'floorDesc': floorDesc,
-                'floorNo': floorNo,
-                'occupancyId': occupancyId,
-                'occupancyDesc': occupancyDesc,
-                'plinthArea': convertSqInchToSqFt(builtupArea),
-                'floorArea': convertSqInchToSqFt(floorArea),
-                'carpetArea': convertSqInchToSqFt(carpetArea)
-            };
-            addNewRowFromObject1(rowJsonObj);
-            setDCRFloorCount();
-            patternvalidation();
+        	if(!isFeature){
+	            var rowJsonObj={
+	                'sno': sno+1,
+	                'bldgIdx': bldgIdx,
+	                'idx': floorIdx,
+	                'orderOfFloor': floorIdx+1,
+	                'floorDesc': floorDesc,
+	                'floorNo': floorNo,
+	                'occupancyId': occupancyId,
+	                'occupancyDesc': occupancyDesc,
+	                'plinthArea': convertSqInchToSqFt(builtupArea),
+	                'floorArea': convertSqInchToSqFt(floorArea),
+	                'carpetArea': convertSqInchToSqFt(carpetArea)
+	            };
+	            addNewRowFromObject1(rowJsonObj);
+	            setDCRFloorCount();
+	            patternvalidation();
+        	}
         }
 
         function addNewRowFromObject1(rowJsonObj) {
@@ -489,7 +556,9 @@ $(document).ready(
                             },
                             contentType: 'application/json; charset=utf-8',
                             success: function (response) {
-                                addSubUsages(idx, occupancyIdx, response, block.name, block.number, response[0].subOccupancy.occupancy.description, response[0].subOccupancy.occupancy.id);
+                            	if (response && response.length > 0) {
+                            		addSubUsages(idx, occupancyIdx, response, block.name, block.number, response[0].subOccupancy.occupancy.description, response[0].subOccupancy.occupancy.id);
+                            	}
                             }
                         });
                         occupancyIdx++;

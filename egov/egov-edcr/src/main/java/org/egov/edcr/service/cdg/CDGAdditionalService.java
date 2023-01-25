@@ -38,12 +38,17 @@ public class CDGAdditionalService {
 	public static final String FILE_NO_OF_STORY = "NoOfStory.properties";
 	public static final String FILE_BACK_YARD_CONSTRUCTION = "BackYardConstruction.properties";
 	public static final String FILE_BYLAWS = "ByLaws.properties";
-
+	public static final String FILE_DRAWING_NUMBER="DrawingNumber.properties";
+	public static final String FILE_JOB_NUMBER="JobNumber.properties";
+	
 	public static final String SETBACKS = "setBack";
 	public static final String FAR = "far";
 	public static final String PERMISSIBLE_BUILDING_HEIGHT = "pbh";
 	public static final String NO_OF_STORY = "nos";
 	public static final String BACK_YARD_CONSTRUCTION = "byc";
+	public static final String DRAWING_NUMBER="dn";
+	public static final String JOB_NUMBER="jn";
+	
 
 	public static final String OCCUPENCY_CODE = "OCC";
 	public static final String SECTOR = "SECTOR";
@@ -66,6 +71,8 @@ public class CDGAdditionalService {
 	public static final String PERMISSIBLE_BUILDING_STORIES = "Permissible building stories";
 	public static final String BACK_COURTYARD_CONSTRUCTION_WIDTH = "backCourtyardConstructionWidth";
 	public static final String BACK_COURTYARD_CONSTRUCTION_HEIGHT = "backCourtyardConstructionHeight";
+	public static final int ROUND_UP_SCALE=1;
+	
 
 	private String featurePropertiesLocation;
 
@@ -75,6 +82,8 @@ public class CDGAdditionalService {
 	private Properties noOfStoryProperties;
 	private Properties backYardConstructionProperties;
 	private static Properties byLawsProperties;
+	private static Properties drawingNumberProperties;
+	private static Properties jobNumberProperties;
 
 	@Autowired
 	public void PwcService(@Value("${pwc.properties.dir}") String featurePropertiesLocation) {
@@ -110,6 +119,14 @@ public class CDGAdditionalService {
 			FileReader byLawsReader = new FileReader(featurePropertiesLocation + FILE_BYLAWS);
 			byLawsProperties = new Properties();
 			byLawsProperties.load(byLawsReader);
+			
+			FileReader drawingNumberReader = new FileReader(featurePropertiesLocation + FILE_DRAWING_NUMBER);
+			drawingNumberProperties = new Properties();
+			drawingNumberProperties.load(drawingNumberReader);
+			
+			FileReader jobNumberReader = new FileReader(featurePropertiesLocation + FILE_JOB_NUMBER);
+			jobNumberProperties = new Properties();
+			jobNumberProperties.load(jobNumberReader);
 
 		} catch (Exception e) {
 			throw new RuntimeException("Properties file is required. // LOCATION:-" + featurePropertiesLocation
@@ -159,6 +176,12 @@ public class CDGAdditionalService {
 					value1 != null && value1.length() > 0 ? value1 : DxfFileConstants.DATA_NOT_FOUND);
 			map.put(BACK_COURTYARD_CONSTRUCTION_HEIGHT,
 					value2 != null && value2.length() > 0 ? value2 : DxfFileConstants.DATA_NOT_FOUND);
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.JOB_NUMBER.getCDGAConstantValue())) {
+			map.put(JOB_NUMBER, jobNumberProperties.getProperty(getBaseKeyCom(JOB_NUMBER, keyArrgument)));
+		}else if(featureName.getCDGAConstantValue()
+				.equals(CDGAConstant.DRAWING_NUMBER.getCDGAConstantValue())) {
+			map.put(DRAWING_NUMBER, drawingNumberProperties.getProperty(getBaseKeyCom(DRAWING_NUMBER, keyArrgument)));
 		}
 
 		return map;
@@ -211,11 +234,21 @@ public class CDGAdditionalService {
 
 		return stringBuffer.toString();
 	}
+	
+	private String getBaseKeyCom(String prefix, Map<String, String> keyArrgument) {
 
-	public static String getString(String str) {
-		return str.replaceAll("[^a-zA-Z0-9,.,*]", "_").toUpperCase();
+		StringBuffer stringBuffer = new StringBuffer(prefix + ".");
+		stringBuffer.append(keyArrgument.get(OCCUPENCY_CODE) + ".");
+		stringBuffer.append(getString(keyArrgument.get(SECTOR) + "."));
+		stringBuffer.append(getString(keyArrgument.get(PLOT_NO)));
+
+		return stringBuffer.toString();
 	}
 
+	public static String getString(String str) {
+		return str.replaceAll("[^a-zA-Z0-9,.,*,&,(,)]", "_").toUpperCase();
+	}
+	
 	private static String getAreaType(String at) {
 		if (at.equalsIgnoreCase(DxfFileConstants.ONE_KANAL)) {
 			return DxfFileConstants.ONE_KANAL;
@@ -244,14 +277,13 @@ public class CDGAdditionalService {
 	}
 
 	public static BigDecimal roundBigDecimal(BigDecimal number, int mathContext) {
-		MathContext m = new MathContext(mathContext);
-		number=number.setScale(mathContext, RoundingMode.HALF_UP);
+		number=number.setScale(mathContext, BigDecimal.ROUND_HALF_UP);
 		return number;
 
 	}
 
 	public static BigDecimal roundBigDecimal(BigDecimal number) {
-		int mathContext = 2;
+		int mathContext = ROUND_UP_SCALE;
 		return roundBigDecimal(number, mathContext);
 	}
 
@@ -319,9 +351,6 @@ public class CDGAdditionalService {
 
 	}
 
-	public BigDecimal calculatorFarWithOutAdditionalFeature() {
-		return null;
-	}
 	
 	public static BigDecimal meterToFoot(String value) {
 		return meterToFoot(new BigDecimal(value));
@@ -329,12 +358,13 @@ public class CDGAdditionalService {
 	
 	public static BigDecimal meterToFoot(BigDecimal value) {
 		BigDecimal valueInFoot=value.multiply(new BigDecimal("3.281"));
-		valueInFoot=valueInFoot.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		valueInFoot=valueInFoot.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return valueInFoot;
 	}
 	
 	public static BigDecimal meterToFootArea(BigDecimal value) {
 		BigDecimal valueInFoot=value.multiply(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		valueInFoot=valueInFoot.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return valueInFoot;
 	}
 	
@@ -344,9 +374,14 @@ public class CDGAdditionalService {
 	
 	public static BigDecimal inchToFeet(BigDecimal value) {
 		BigDecimal feet=BigDecimal.ZERO;
-		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
-			return feet;
-		feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
+		try {
+			if(value==null || BigDecimal.ZERO.compareTo(value)>0)
+				return feet;
+			feet=value.divide(new BigDecimal("12"),MathContext.DECIMAL32);
+			feet=feet.setScale(ROUND_UP_SCALE,BigDecimal.ROUND_HALF_UP);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return feet;
 	}
 	
@@ -369,7 +404,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return inch;
 		inch=value.multiply(new BigDecimal("12"),MathContext.DECIMAL32);
-		inch = inch.setScale(2, RoundingMode.CEILING);
+		inch = inch.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return inch;
 	}
 	
@@ -378,6 +413,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("39.37"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 
@@ -393,6 +429,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("1550"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -400,6 +437,7 @@ public class CDGAdditionalService {
 		if(value.length()<=0)
 			return BigDecimal.ZERO;
 		BigDecimal inch=new BigDecimal(value);
+		inch=inch.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return inchToMeterArea(inch);
 	}
 	
@@ -408,6 +446,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("10.764"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -423,6 +462,7 @@ public class CDGAdditionalService {
 		if(value==null || BigDecimal.ZERO.compareTo(value)>0)
 			return meter;
 		meter=value.divide(new BigDecimal("30.48"),MathContext.DECIMAL32);
+		meter=meter.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
 		return meter;
 	}
 	
@@ -462,8 +502,13 @@ public class CDGAdditionalService {
 	}
 	
 	public static BigDecimal inchtoFeetArea(BigDecimal value) {
-		value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
-		//value=value.setScale(2, RoundingMode.HALF_UP);
+		try {
+			if(value!=null && value.longValue()!=0)
+				value=value.divide(new BigDecimal(144),MathContext.DECIMAL32);
+				value=value.setScale(ROUND_UP_SCALE, BigDecimal.ROUND_HALF_UP);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return value;
 	}
 	
@@ -538,17 +583,23 @@ public class CDGAdditionalService {
 		return flage;
 	}
 	
-	public boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
+	public static boolean isOccupancyExcludedFromFar(OccupancyTypeHelper helper) {
 		boolean flage=false;
 		
-		if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_PO.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_S.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_PG.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_ICP.equals(helper.getSubtype().getCode())
-				|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
-												)
-			flage=true;
+		if(helper!=null && helper.getSubtype()!=null && helper.getSubtype().getCode()!=null) {
+			if(DxfFileConstants.A_SQ.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_PO.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_S.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_PG.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_ICP.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_OCP.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_AF.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_GF.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.A_R5.equals(helper.getSubtype().getCode())
+					|| DxfFileConstants.OC.equals(helper.getType().getCode())
+													)
+				flage=true;
+		}
 		
 		return flage;
 	}

@@ -63,14 +63,13 @@
 	<input type="hidden" name="permitNocApplication"
 		value="${permitNocApplication.id}">
 	<input type="hidden" name="id" value="${permitNocApplication.id}">
-	<%-- 			<input type="hidden" name="bpaNocApplication" value="${permitNocApplication.bpaNocApplication.id}">
- --%>
 	<input type="hidden" name="bpaNocApplication.id"
 		value="${permitNocApplication.bpaNocApplication.id}">
 	<input type="hidden" name="bpaApplication"
 		value="${permitNocApplication.bpaApplication.id}">
 	<input type="hidden" name="bpaApplication.id"
 		value="${permitNocApplication.bpaApplication.id}">
+		
 
 	<div class="row">
 		<div class="col-md-12">
@@ -81,6 +80,8 @@
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
 							code='title.documentdetail' /></a></li>
+				<li><a data-toggle="tab" href="#evaluation" data-tabidx=2><spring:message
+							code='title.evaluation' /></a></li>
 			</ul>
 
 			<div class="tab-content">
@@ -92,6 +93,15 @@
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="noc-bpaDocumentdetails.jsp"></jsp:include>
 					</div>
+				</div>
+				
+				<div id="evaluation" class="tab-pane fade">
+					<div class="panel panel-primary dcrDocuments" data-collapsed="0">
+						<jsp:include page="noc-dcr-evaluation.jsp"></jsp:include>
+					</div>
+					<%-- <div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="noc-bpaEvaluation.jsp"></jsp:include>
+					</div> --%>
 				</div>
 
 				<div id="application-info" class="tab-pane fade in active">
@@ -237,16 +247,13 @@
 					</div>
 				</div>
 
-
-
-
 				<div class="panel panel-primary docdetails" data-collapsed="0">
 					<div class="panel-heading custom_form_panel_heading">
-						<div class="panel-title">Comments</div>
+						<div class="panel-title">Evaluation</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label text-right">
-							<%-- <spring:message code="lbl.remarks" /> --%>
+							<spring:message code="lbl.remarks" />
 						</label>
 						<div class="col-sm-5 add-margin">
 							<form:textarea path="bpaNocApplication.remarks" id="remarks"
@@ -257,18 +264,42 @@
 								cssClass="add-margin error-msg" />
 						</div>
 					</div>
+				</div> 
+
+
+				<div class="panel panel-primary docdetails" data-collapsed="0">
+					<div class="panel-heading custom_form_panel_heading">
+						<div class="panel-title"><spring:message code="title.comments" /></div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label text-right">
+							<%-- <spring:message code="lbl.remarks" /> --%>
+						</label>
+						<div class="col-sm-5 add-margin">
+							<form:textarea path="bpaNocApplication.comments" id="comments"
+								class="form-control patternvalidation"
+								data-pattern="alphanumericspecialcharacters" maxlength="128"
+								cols="25" rows="4" />
+							<form:errors path="bpaNocApplication.comments"
+								cssClass="add-margin error-msg" />
+						</div>
+					</div>
 				</div>  </div>
 				<div align="center">
 					<c:if
-						test="${permitNocApplication.bpaNocApplication.status.code eq 'Initiated'}">
+						test="${permitNocApplication.bpaNocApplication.status.code eq 'Initiated' || permitNocApplication.bpaNocApplication.status.code eq 'Re Initiated'}">
 
 						<form:button type="submit" id="buttonApprove"
 							class="btn btn-primary" value="submit">
 							<spring:message code='lbl.approve' />
 						</form:button>
-						<form:button type="submit" id="buttonReject"
+						<%-- <form:button type="submit" id="buttonReject"
 							class="btn btn-primary" value="reject">
 							<spring:message code='lbl.reject' />
+						</form:button> --%>
+						<form:button type="submit" id="buttonSendObservations"
+							class="btn btn-primary" value="send observations">
+							<spring:message code='lbl.btn.send.observations' />
 						</form:button>
 					</c:if>
 					<input type="button" name="button2" id="button2" value="Close"
@@ -278,6 +309,8 @@
 					value="<spring:message code='msg.confirm.approve.appln'/>" /> <input
 					type="hidden" id="rejectApplication"
 					value="<spring:message code='msg.confirm.rejection.forappln'/>" />
+					<input type="hidden" id="sendObserveApplication"
+					value="<spring:message code='msg.confirm.send.observation.forappln'/>" />
 			</div>
 		
 	</div>

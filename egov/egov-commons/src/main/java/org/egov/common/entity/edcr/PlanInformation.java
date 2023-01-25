@@ -60,6 +60,7 @@ public class PlanInformation implements Serializable {
     private static final String NA = "NA";
     public static final String SEQ_EDCR_PLANINFO = "SEQ_EDCR_PLANINFO";
     private static final long serialVersionUID = 4L;
+    private static final String Yes="Yes";
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_PLANINFO, strategy = GenerationType.SEQUENCE)
@@ -121,7 +122,17 @@ public class PlanInformation implements Serializable {
     //Extracted from Plan info. Road width declared in the plan.
     private BigDecimal roadWidth = BigDecimal.ZERO;
     //Extracted from Plan info. Road length declared in the plan.
-    private BigDecimal roadLength = BigDecimal.ZERO;
+    private BigDecimal roadLength = BigDecimal.ZERO;       
+    //Extracted from Plan info. Road 2 width declared in the plan.
+    private BigDecimal roadTwoWidth = BigDecimal.ZERO;
+    //Extracted from Plan info. Road 2 length declared in the plan.
+    private BigDecimal roadTwoLength = BigDecimal.ZERO;
+    
+    //YES/NO/NA.Extracted from Plan info. Is case of death.
+  	private Boolean isDeathCase = false;
+  	private Boolean isAllotmentOfNewNumber = false;
+  	private Boolean isTransferFeeApplicable=false;
+    
     //Extracted from Plan info. Type of area. Whether old or new area.
     private String typeOfArea;
     //Extracted from Plan info. Average plot depth.
@@ -187,6 +198,8 @@ public class PlanInformation implements Serializable {
     private transient String nocPollutionDept = NA;
     //YES/NO/NA.Extracted from Plan info. Permitted with AC tax department NOC
     private transient String nocAcTaxDept = NA;
+  //YES/NO/NA.Extracted from Plan info. Permitted with Planning department NOC
+    private transient String nocPlanningDept = NA;
     
     //ROOT_BOUNDARY_TYPE
     private transient String rootBoundaryType =NA; 
@@ -262,9 +275,140 @@ public class PlanInformation implements Serializable {
     
     //PLOT_WIDTH
     private transient String plotWidth=NA;
-     
-    //COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
+    
+    //IS_OWNERSHIP_CHANGE
+    private transient String isThisACaseOfOwnershipChange=NA;
+    
+    //NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS
+    private BigDecimal numberOfFloorsWithChangesInDoorsOrWindowsLocations = BigDecimal.ZERO;
+    
+    //NUMBER_OF_GLAZING_IN_VERANDAH
+    private BigDecimal numberOfGlazingOfVerandah = BigDecimal.ZERO;
+    
+    //NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT
+    private BigDecimal numberOfLoftsConstructedBeyondPermit = BigDecimal.ZERO;
+    
+    //NUMBER_OF_NON_STANDARD_GATES
+    private BigDecimal numberOfNonStandardGates = BigDecimal.ZERO;
+    
+    //NUMBER_OF_NICHES_ON_THE_COMMON_WALL
+    private BigDecimal numberOfNichesOnTheCommonWall = BigDecimal.ZERO;
+    
+    //AREA_OF_FALSE_CEILING
+    private BigDecimal areaOfFalseCeiling = BigDecimal.ZERO;
+    
+    //IS_DPC_CERTIFICATE_AVAILABLE
+    private String isDPCCertificateAvailable = NA;
+    
+    //IS_RULE_5_APPLICABLE
+    private transient String isRule5Applicable=NA;
+    
+    //IS_ADDITIONAL_AREA_APPLICABLE
+    private transient String isAdditionalAreaApplicable=NA;
+    
+    //EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA
+    private BigDecimal excessCoverageBeyondBuildUp = BigDecimal.ZERO;
+    
+  //YES/NO/NA.Extracted from Plan info. Is case of security fee condition
+    private String isSecurityFeeApplicable = Yes;
+
+	public BigDecimal getExcessCoverageBeyondBuildUp() {
+		return excessCoverageBeyondBuildUp;
+	}
+
+	public void setExcessCoverageBeyondBuildUp(BigDecimal excessCoverageBeyondBuildUp) {
+		this.excessCoverageBeyondBuildUp = excessCoverageBeyondBuildUp;
+	}
+
+	public String getIsRule5Applicable() {
+		return isRule5Applicable;
+	}
+
+	public void setIsRule5Applicable(String isRule5Applicable) {
+		this.isRule5Applicable = isRule5Applicable;
+	}
+
+	public String getIsAdditionalAreaApplicable() {
+		return isAdditionalAreaApplicable;
+	}
+
+	public void setIsAdditionalAreaApplicable(String isAdditionalAreaApplicable) {
+		this.isAdditionalAreaApplicable = isAdditionalAreaApplicable;
+	}
+
+	public String getIsDPCCertificateAvailable() {
+		return isDPCCertificateAvailable;
+	}
+
+	public void setIsDPCCertificateAvailable(String isDPCCertificateAvailable) {
+		this.isDPCCertificateAvailable = isDPCCertificateAvailable;
+	}
+
+	public BigDecimal getNumberOfFloorsWithChangesInDoorsOrWindowsLocations() {
+		return numberOfFloorsWithChangesInDoorsOrWindowsLocations;
+	}
+
+	public void setNumberOfFloorsWithChangesInDoorsOrWindowsLocations(
+			BigDecimal numberOfFloorsWithChangesInDoorsOrWindowsLocations) {
+		this.numberOfFloorsWithChangesInDoorsOrWindowsLocations = numberOfFloorsWithChangesInDoorsOrWindowsLocations;
+	}
+
+	public BigDecimal getNumberOfGlazingOfVerandah() {
+		return numberOfGlazingOfVerandah;
+	}
+
+	public void setNumberOfGlazingOfVerandah(BigDecimal numberOfGlazingOfVerandah) {
+		this.numberOfGlazingOfVerandah = numberOfGlazingOfVerandah;
+	}
+
+	public BigDecimal getNumberOfLoftsConstructedBeyondPermit() {
+		return numberOfLoftsConstructedBeyondPermit;
+	}
+
+	public void setNumberOfLoftsConstructedBeyondPermit(BigDecimal numberOfLoftsConstructedBeyondPermit) {
+		this.numberOfLoftsConstructedBeyondPermit = numberOfLoftsConstructedBeyondPermit;
+	}
+
+	public BigDecimal getNumberOfNonStandardGates() {
+		return numberOfNonStandardGates;
+	}
+
+	public void setNumberOfNonStandardGates(BigDecimal numberOfNonStandardGates) {
+		this.numberOfNonStandardGates = numberOfNonStandardGates;
+	}
+
+	public BigDecimal getNumberOfNichesOnTheCommonWall() {
+		return numberOfNichesOnTheCommonWall;
+	}
+
+	public void setNumberOfNichesOnTheCommonWall(BigDecimal numberOfNichesOnTheCommonWall) {
+		this.numberOfNichesOnTheCommonWall = numberOfNichesOnTheCommonWall;
+	}
+
+	public BigDecimal getAreaOfFalseCeiling() {
+		return areaOfFalseCeiling;
+	}
+
+	public void setAreaOfFalseCeiling(BigDecimal areaOfFalseCeiling) {
+		this.areaOfFalseCeiling = areaOfFalseCeiling;
+	}
+
+	public String getIsThisACaseOfOwnershipChange() {
+		return isThisACaseOfOwnershipChange;
+	}
+
+	public void setIsThisACaseOfOwnershipChange(String isThisACaseOfOwnershipChange) {
+		this.isThisACaseOfOwnershipChange = isThisACaseOfOwnershipChange;
+	}
+
+	//COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE
     private transient String commercialAreaOccupancyAsPerRule=NA;
+    
+    private BigDecimal conversionChargesArea=BigDecimal.ZERO;
+    
+    private BigDecimal areaForAdditionalHeight=BigDecimal.ZERO;
+    
+    private BigDecimal presentCollectorRate=BigDecimal.ZERO;
     
 	public String getRootBoundaryType() {
 		return rootBoundaryType;
@@ -1012,4 +1156,88 @@ public class PlanInformation implements Serializable {
 	public void setNocAcTaxDept(String nocAcTaxDept) {
 		this.nocAcTaxDept = nocAcTaxDept;
 	}
+
+	public BigDecimal getConversionChargesArea() {
+		return conversionChargesArea;
+	}
+
+	public void setConversionChargesArea(BigDecimal conversionChargesArea) {
+		this.conversionChargesArea = conversionChargesArea;
+	}
+
+	public BigDecimal getRoadTwoWidth() {
+		return roadTwoWidth;
+	}
+
+	public void setRoadTwoWidth(BigDecimal roadTwoWidth) {
+		this.roadTwoWidth = roadTwoWidth;
+	}
+
+	public BigDecimal getRoadTwoLength() {
+		return roadTwoLength;
+	}
+
+	public void setRoadTwoLength(BigDecimal roadTwoLength) {
+		this.roadTwoLength = roadTwoLength;
+	}
+
+	public Boolean getIsDeathCase() {
+		return isDeathCase;
+	}
+
+	public void setIsDeathCase(Boolean isDeathCase) {
+		this.isDeathCase = isDeathCase;
+	}
+
+	public Boolean getIsAllotmentOfNewNumber() {
+		return isAllotmentOfNewNumber;
+	}
+
+	public void setIsAllotmentOfNewNumber(Boolean isAllotmentOfNewNumber) {
+		this.isAllotmentOfNewNumber = isAllotmentOfNewNumber;
+	}
+
+	public Boolean getIsTransferFeeApplicable() {
+		return isTransferFeeApplicable;
+	}
+
+	public void setIsTransferFeeApplicable(Boolean isTransferFeeApplicable) {
+		this.isTransferFeeApplicable = isTransferFeeApplicable;
+	}
+
+	public BigDecimal getAreaForAdditionalHeight() {
+		return areaForAdditionalHeight;
+	}
+
+	public void setAreaForAdditionalHeight(BigDecimal areaForAdditionalHeight) {
+		this.areaForAdditionalHeight = areaForAdditionalHeight;
+	}
+
+	public BigDecimal getPresentCollectorRate() {
+		return presentCollectorRate;
+	}
+
+	public void setPresentCollectorRate(BigDecimal presentCollectorRate) {
+		this.presentCollectorRate = presentCollectorRate;
+	}
+
+	public String getIsSecurityFeeApplicable() {
+		return isSecurityFeeApplicable;
+	}
+
+	public void setIsSecurityFeeApplicable(String isSecurityFeeApplicable) {
+		this.isSecurityFeeApplicable = isSecurityFeeApplicable;
+	}
+
+	public String getNocPlanningDept() {
+		return nocPlanningDept;
+	}
+
+	public void setNocPlanningDept(String nocPlanningDept) {
+		this.nocPlanningDept = nocPlanningDept;
+	}
+
+	
+	
+	
 }

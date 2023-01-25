@@ -119,19 +119,19 @@
 						<div class="col s12 m4 ">
 							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/licensee_1.png">
 							<p class="landingpage-card-icon-description">Online payment</p>
-							<div class="landingpage-card-description">Citizens and Building Licensees can make an online payment at anytime and from anywhere. Online payments can be made using debit/credit card/internet banking.
+							<div class="landingpage-card-description">All payments related to building plan application can be made online using debit/credit card/internet banking/etc. anytime.
 							</div>
 						</div>
 						<div class="col s12 m4">
 							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/citizen_1.png">
 							<p class="landingpage-card-icon-description">Track Application</p>
-							<p class="landingpage-card-description">The citizen as well as building licensee can receive real time updates on submitted application. The applicant will be provided with the login credentials to the user portal.
+							<p class="landingpage-card-description">The citizen and building licensee will receive real time updates related to submitted application via SMS and email notifications.
 							</p>
 						</div>
 						<div class="col s12 m4">
 							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/citizen_2.png">
 							<p class="landingpage-card-icon-description">Receive alert and notification</p>
-							<p class="landingpage-card-description">All stakeholders including citizens, business users, and ULB officials are on one platform. Real time synchronisation of the entire process including status updates for every required interaction between end users via SMS and email notifications.
+							<p class="landingpage-card-description">Centralized platform for all stakeholders including citizens, business users, and department officials. 
 							</p>
 						</div>
 					</div>
@@ -141,40 +141,35 @@
 	</div>
 		
 	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black">
-		<div class = "footer-list-content col-md-4">
+		<!-- <div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">About OBPS</div>
 			<div style = "opacity: 0.7;" class = "color-black bpa-common-text">Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</div>
-		</div>
-		<div class = "color-black footer-list-content col-md-4">
-			<div style="margin-bottom: 16px;display: none;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
-			<ul class="tutorial-list color-black" style="display: none;">
+		</div> -->
+		<div class = "color-black footer-list-content col-md-2">
+			<div style="margin-bottom: 16px;" class="color-black bpa-common-header2 bpa-common-header">Help Resources</div>
+			<ul class="tutorial-list color-black" >
+				
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Registered building licensee user manual</a>
-				</li>
-				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">DIGIT DCR user manual</a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Citizen Help Manual</a>
-				</li>
-				<li class=" bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Fee Details</a>
+					<a href="/egi/resources/guide/assets/docs/User Manual for Citizens.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Citizens</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Single family residential building layers</a>
-				</li>
-				 <li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Layer Matrix for multiple occupancies</a>
+					<a href="/egi/resources/guide/assets/docs/Drawing Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">Drawing Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Layer Set (las format)</a>
+					<a href="/egi/resources/guide/assets/docs/Rural User Manual.pdf" target="_blank"><span class = "color-black bpa-common-text">Rural User Manual</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">
-					<a href="javascript:void(0);" target="_blank">Single family residential building - Drawing Guidelines</a>
-				</li> 
+					<a href="/egi/resources/guide/bpaHelpDocument.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Videos</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/bpaHelpDocumentDXF.jsp" target="_blank"><span class = "color-black bpa-common-text">Training Drawing</span></a>
+				</li>
 			</ul>
 		</div>
-		
+		<div class = "footer-list-content col-md-6"></div>
 		<div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
 			<div class = "footer-contact-info-cont">
@@ -189,13 +184,20 @@ Chandigarh 160017</div>
 					<a href="javascript:void(0);" target="_blank">Find us on map</a>
 					</div>
 				</div>
-				
+				<div class = "footer-icon-info-cont">
+					<div class = "footer-icon">
+						<i class="fa fa-envelope-square fa-1x"></i>
+					</div>
+					<div class = "footer-info">
+						<a href="javascript:void(0);">obps.chd.helpdesk@gmail.com</a>
+					</div>
+				</div>
 				<div class = "footer-icon-info-cont">
 					<div class = "footer-icon">
 						<i class="fa fa-phone fa-1x"></i>
 					</div>
 					<div class = "footer-info">
-						<a href="javascript:void(0);">0172-504-3196</a>
+						<a href="javascript:void(0);">0172-2787200</a>
 					</div>
 				</div>
 				
@@ -218,8 +220,6 @@ Chandigarh 160017</div>
 				</div>
 			</div>
 		</div>
-			
-		
 	</footer>
 </body>
 </html>

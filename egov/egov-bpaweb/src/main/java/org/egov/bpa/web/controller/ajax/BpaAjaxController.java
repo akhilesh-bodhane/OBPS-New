@@ -79,11 +79,13 @@ import org.egov.bpa.master.service.ServiceTypeService;
 import org.egov.bpa.master.service.SlotMappingService;
 import org.egov.bpa.master.service.StakeHolderService;
 import org.egov.bpa.master.service.StakeholderTypeService;
+import org.egov.bpa.transaction.entity.ApplicationFee;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.notice.util.BpaNoticeUtil;
 import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
@@ -92,9 +94,11 @@ import org.egov.bpa.transaction.service.InspectionApplicationService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitRenewalService;
+import org.egov.bpa.transaction.service.impl.OccupancyCertificateFeeService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.bpa.utils.FeeCalculationUtils;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
 import org.egov.common.entity.bpa.Occupancy;
 import org.egov.common.entity.bpa.SubOccupancy;
@@ -214,6 +218,9 @@ public class BpaAjaxController {
     private OwnershipTransferService ownershipTransferService;
     @Autowired
     private PermitRenewalService renewalService;
+    @Autowired
+    private OccupancyCertificateFeeService occupancyCertificateFeeService;
+
 
     @GetMapping(value = "/ajax/getAdmissionFees", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -562,7 +569,7 @@ public class BpaAjaxController {
             jsonObj.addProperty("planPermissionNumber", application.getPlanPermissionNumber());
             jsonObj.addProperty("planPermissionDate", DateUtils.toDefaultDateFormat(application.getPlanPermissionDate()));
             jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
-            jsonObj.addProperty("applicationWF", application.getState().isEnded());
+            jsonObj.addProperty("applicationWF", (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan())? true:application.getState().isEnded());
             jsonObj.addProperty("applicationRevoke",
                     (application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_REVOKED)
                             || application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_INIT_REVOKE)));
@@ -739,10 +746,36 @@ public class BpaAjaxController {
         nocTypeMap.put(BpaConstants.FIRENOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocFireDept().equals("YES"));
         nocTypeMap.put(BpaConstants.PACNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocNearAirport().equals("YES"));
         nocTypeMap.put(BpaConstants.POLNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
+        nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocPlanningDept().equals("YES"));
         nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, odcrPlanInfo.getPlan().getPlanInformation().getNocStateEnvImpact().equals("YES"));
 
         checklistServicetypeMappingService.findByActiveByServiceTypeAndChecklist(serviceType, checklistType).stream()
                 .forEach(servicecklst -> {
+                	if(BpaConstants.DPC_CERTIFICATE_DOCUMENT_DESC.equals(servicecklst.getChecklist().getDescription())) {
+                		if(odcrPlanInfo.getPlan().getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.YES)) {
+                			final JsonObject jsonObj = new JsonObject();
+                            jsonObj.addProperty("id", servicecklst.getId());
+                            jsonObj.addProperty("checklistId", servicecklst.getChecklist().getId());
+                            jsonObj.addProperty("checklistDesc", servicecklst.getChecklist().getDescription());
+                            jsonObj.addProperty("checklistType", servicecklst.getChecklist().getChecklistType().getCode());
+                            jsonObj.addProperty("serviceId", servicecklst.getServiceType().getId());
+                            if (servicecklst.getChecklist().getChecklistType().getCode().equalsIgnoreCase("OCNOC")) {
+                                NocConfiguration nocConfig = nocConfigService
+                                        .findByDepartmentAndType(servicecklst.getChecklist().getCode(), BpaConstants.OC);
+                                if (nocConfig != null) {
+                                    jsonObj.addProperty("documentMandatory", nocConfig.getIntegrationType().equals("MANUAL"));
+                                    jsonObj.addProperty(MANDATORY, nocTypeMap.get(servicecklst.getChecklist().getCode()));
+                                }
+                                if (nocTypeMap.get(servicecklst.getChecklist().getCode()) == null) {
+                                    jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
+                                }
+
+                            } else {
+                                jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
+                            }
+                            jsonObjects.add(jsonObj);
+                		}
+                	} else {
                     final JsonObject jsonObj = new JsonObject();
                     jsonObj.addProperty("id", servicecklst.getId());
                     jsonObj.addProperty("checklistId", servicecklst.getChecklist().getId());
@@ -764,6 +797,7 @@ public class BpaAjaxController {
                         jsonObj.addProperty(MANDATORY, servicecklst.isMandatory());
                     }
                     jsonObjects.add(jsonObj);
+                	}
                 });
         IOUtils.write(jsonObjects.toString(), response.getWriter());
     }
@@ -1057,5 +1091,62 @@ public class BpaAjaxController {
         }
         IOUtils.write(jsonObj.toString(), response.getWriter());
     }
+    
+    @Autowired
+    FeeCalculationUtils feeCalculationUtils;
+    @Autowired
+    ApplicationSubTypeService applicationSubTypeService;
+
+	@GetMapping(value = "/ajax/getFeeDetailsDuringRegister", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public void getFeeDetailsDuringRegister(@RequestParam final String edcr, @RequestParam final String serviceType,
+			@RequestParam final String applicationType, final HttpServletResponse response) throws IOException {
+		System.out.println("EDCR NO:" + edcr);
+		System.out.println("service type:" + serviceType);
+		System.out.println("application subtype id :" + applicationType);
+		BpaApplication bpa = new BpaApplication();
+		bpa.seteDcrNumber(edcr);
+		ServiceType serviceTypeObj = new ServiceType();
+		serviceTypeObj.setId(Long.valueOf(serviceType));
+		bpa.setServiceType(serviceTypeObj);
+		ApplicationSubType applicationSubtypeObj = applicationSubTypeService.findById(Long.valueOf(applicationType));
+		bpa.setApplicationType(applicationSubtypeObj);
+		Map<String, String> map = feeCalculationUtils.calculateAllFeesWhileApplying(bpa);
+		final List<JSONObject> jsonObjects = new ArrayList<>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			final JSONObject jsonObj = new JSONObject();
+			jsonObj.put("name", entry.getKey());
+			jsonObj.put("amount", Double.valueOf(entry.getValue()));
+			jsonObjects.add(jsonObj);
+		}
+		IOUtils.write(jsonObjects.toString(), response.getWriter());
+
+	}
+	
+	@GetMapping(value = "/ajax/getFeeDetailsDuringRegisterForOC", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public void getFeeDetailsDuringRegisterForOC(@RequestParam final String ocedcr, @RequestParam final String ocserviceType,
+			@RequestParam String permitNo,final HttpServletResponse response) throws IOException {
+		System.out.println("EDCR NO:" + ocedcr);
+		System.out.println("service type:" + ocserviceType);
+		System.out.println("Pemrit No:" + permitNo);
+		OccupancyCertificate oc = new OccupancyCertificate();
+		OccupancyFee occupancyFee = new OccupancyFee();
+		oc.seteDcrNumber(ocedcr);
+		occupancyFee.setApplicationFee(new ApplicationFee());
+		occupancyFee.setOc(oc);
+		BpaApplication parent = applicationBpaService.findByPermitNumber(permitNo);
+		oc.setParent(parent);
+		Map<String, String> map = occupancyCertificateFeeService.calculateOCFees(oc,occupancyFee);
+		final List<JSONObject> jsonObjects = new ArrayList<>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			final JSONObject jsonObj = new JSONObject();
+			jsonObj.put("name", entry.getKey());
+			jsonObj.put("amount", Double.valueOf(entry.getValue()));
+			jsonObjects.add(jsonObj);
+		}
+		IOUtils.write(jsonObjects.toString(), response.getWriter());
+
+	}
 
 }

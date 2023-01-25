@@ -125,7 +125,7 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
     @SafeHtml
     private String nextAction;
 
-    @Length(max = 1024)
+    //@Length(max = 1024)
     @SafeHtml
     private String comments;
 
@@ -159,6 +159,8 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date sla;
+    
+    private String refFileId;
 
     protected State() {
         // Explicit state initialization not allowed
@@ -335,4 +337,11 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
         STARTED, INPROGRESS, ENDED
     }
 
+	public String getRefFileId() {
+		return refFileId;
+	}
+
+	public void setRefFileId(String refFileId) {
+		this.refFileId = refFileId;
+	}
 }

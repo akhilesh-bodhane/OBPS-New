@@ -62,10 +62,12 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.WordUtils;
@@ -79,6 +81,8 @@ import org.egov.bpa.transaction.entity.Response;
 import org.egov.bpa.transaction.entity.common.NoticeCommon;
 import org.egov.bpa.transaction.entity.dto.PermitFeeHelper;
 import org.egov.bpa.transaction.entity.enums.ConditionType;
+import org.egov.bpa.transaction.entity.oc.OCExistingBuildingFloor;
+import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCNoticeConditions;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
@@ -108,6 +112,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
 
 @Service
 @Transactional(readOnly = true)
@@ -154,7 +161,7 @@ public class OCNoticeUtil {
 
     public ReportOutput getReportOutput(OccupancyCertificate occupancyCertificate, OCNotice ocNotice,
             String ocrejectionfilename, String fileName, String ocRejectionNoticeType) throws IOException {
-        ReportOutput reportOutput = new ReportOutput();
+    	ReportOutput reportOutput = new ReportOutput();
         if (ocNotice == null || ocNotice.getNoticeCommon().getNoticeFileStore() == null) {
             final Map<String, Object> reportParams = buildParametersForOc(occupancyCertificate);
             reportParams.putAll(getUlbDetails());
@@ -198,7 +205,7 @@ public class OCNoticeUtil {
         reportParams.put("ocNumber", oc.getOccupancyCertificateNumber() == null ? EMPTY : oc.getOccupancyCertificateNumber());
         reportParams.put("approvalDate", DateUtils.getDefaultFormattedDate(oc.getApprovalDate()));
         reportParams.put("currentDate", currentDateToDefaultDateFormat());
-        reportParams.put("applicantName", oc.getParent().getApplicantName());
+        reportParams.put("applicantName", oc.getParent().getOwner().getName());
         reportParams.put("approverName", getApproverName(oc));
         StakeHolder stakeholder = oc.getParent().getStakeHolder().get(0).getStakeHolder();
         reportParams.put("supervisedBy",
@@ -217,7 +224,8 @@ public class OCNoticeUtil {
         reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
         reportParams.put("occupancy", oc.getParent().getOccupanciesName());
         reportParams.put("applicantAddress",
-                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());        
+                oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());
+        reportParams.put("parent", oc.getParent());
         
         String coApplicantNames = "";        
         if(null != oc.getParent().getCoApplicants()) {
@@ -258,9 +266,12 @@ public class OCNoticeUtil {
             reportParams.put("surveyNo", oc.getParent().getSiteDetail().get(0).getReSurveyNumber() == null
                     ? EMPTY
                     : oc.getParent().getSiteDetail().get(0).getReSurveyNumber());
-            reportParams.put("village", oc.getParent().getSiteDetail().get(0).getLocationBoundary() == null
+            reportParams.put("village", oc.getParent().getSiteDetail().get(0).getLocationBoundary()== null
                     ? EMPTY
                     : oc.getParent().getSiteDetail().get(0).getLocationBoundary().getName());
+//            reportParams.put("electoralWard", oc.getParent().getSiteDetail().get(0).getElectionBoundary() == null
+//                    ? EMPTY
+//                    : String.valueOf(oc.getParent().getSiteDetail().get(0).getElectionBoundary().getBoundaryNum()));
             reportParams.put("taluk",
                     oc.getParent().getSiteDetail().get(0).getPostalAddress() == null
                             || oc.getParent().getSiteDetail().get(0).getPostalAddress().getTaluk() == null
@@ -279,7 +290,6 @@ public class OCNoticeUtil {
                     exstArea.get(EXST_TOTAL_FLOOR_AREA) == null ? BigDecimal.ZERO : exstArea.get(EXST_TOTAL_FLOOR_AREA));
             reportParams.put(EXST_TOTAL_CARPET_AREA,
                     exstArea.get(EXST_TOTAL_CARPET_AREA) == null ? BigDecimal.ZERO : exstArea.get(EXST_TOTAL_CARPET_AREA));
-
         }
 
         Map<String, BigDecimal> proposedArea = BpaUtils.getProposedBuildingAreasOfOC(oc.getBuildings());
@@ -298,14 +308,16 @@ public class OCNoticeUtil {
             String lastString = " and ";
             for (BuildingSubUsage buildingSubUsage : buildingSubUsages) {
                 for (BuildingSubUsageDetails buildingSubUsageDetail : buildingSubUsage.getSubUsageDetails()) {
-                    mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
-                    StringBuilder subUsage = new StringBuilder();
-                    for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
-                        subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
-                    }
-                    subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber())
-                            .append(" - ").append(subUsage.toString(), 0, subUsage.length() - 2)
-                            .append(" under ").append(mainUsage).append(" occupancy ").append(lastString);
+                	if(null!=buildingSubUsageDetail && null!=buildingSubUsageDetail.getMainUsage()) {
+	                    mainUsage = buildingSubUsageDetail.getMainUsage().getDescription();
+	                    StringBuilder subUsage = new StringBuilder();
+	                    for (Usage subOccupancy : buildingSubUsageDetail.getSubUsages()) {
+	                        subUsage = subUsage.append(subOccupancy.getDescription()).append(", ");
+	                    }
+	                    subheader = subheader.append("Block ").append(buildingSubUsage.getBlockNumber())
+	                            .append(" - ").append(subUsage.toString(), 0, subUsage.length() - 2)
+	                            .append(" under ").append(mainUsage).append(" occupancy ").append(lastString);
+                	}
                 }
             }
             String subHeaderString = subheader.toString();
@@ -316,10 +328,57 @@ public class OCNoticeUtil {
         if (!oc.getOccupancyFee().isEmpty())
             reportParams.put("ocFeeDetails", getPermitFeeDetails(oc));
         
-        String maxFloorCount = ""; 
+        String maxFloorCount = "";
+        Optional<OCFloor> proposedBldgMaxFloorNumber = null;
+        Optional<OCExistingBuildingFloor> exisitingBldgMaxFloorNumber = null;
+        
         if (!oc.getBuildings().isEmpty()) {
-        	maxFloorCount = ordinal(oc.getBuildings().get(0).getFloorCount());
+        	List<OCFloor> floorDtls = oc.getBuildings().get(0).getFloorDetails();
+        	 proposedBldgMaxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCFloor::getFloorNumber));
         }
+         if (!oc.getExistingBuildings().isEmpty()) {
+        	List<OCExistingBuildingFloor> floorDtls = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails();
+        	exisitingBldgMaxFloorNumber = floorDtls.stream().max(Comparator.comparing(OCExistingBuildingFloor::getFloorNumber));
+        }
+        
+         if( exisitingBldgMaxFloorNumber!=null) {
+	    	 if(proposedBldgMaxFloorNumber!=null) {
+	    		 if(proposedBldgMaxFloorNumber.get().getFloorNumber()>exisitingBldgMaxFloorNumber.get().getFloorNumber()) {
+	            	OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	    		    .orElse(null);      	
+	    	
+			    	if(basement != null)
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+			    	else
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	         	}else {
+	         		OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	             		    .orElse(null);      	
+	             	
+	             	if(basement != null)
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             	else
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	         	}
+	    	 }else {
+	    		 OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+	             		    .orElse(null);      	
+	             	
+	             	if(basement != null)
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             	else
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	    	 }
+         }else {
+        	 OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+  	    		    .orElse(null);      	
+  	    	
+  			    	if(basement != null)
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+  			    	else
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+         }
+        
         reportParams.put("maxFloorNumber", maxFloorCount);
 
         return reportParams;

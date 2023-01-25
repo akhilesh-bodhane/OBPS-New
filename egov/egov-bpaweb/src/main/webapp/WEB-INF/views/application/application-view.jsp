@@ -132,10 +132,15 @@
 					<li><a data-toggle="tab" href="#noc-info" data-tabidx=5><spring:message
 							code='lbl.noc.details' /></a></li>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${(not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0) && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6><spring:message
 							code='lbl.fees.details' /></a></li>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee && !bpaApplication.isPreviousPlan}">
+					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6>
+							<spring:message code='lbl.fees.details' />
+						</a>
+					</li>
 				</c:if>
 				<c:if test="${not empty lettertopartylist}">
 					<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
@@ -195,6 +200,12 @@
 					</c:if>
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="applicationhistory-view.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="nocWorkflowHistory.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer.jsp" />
 					</div>
 					<c:if test="${showRejectionReasons}">
 						<div class="panel panel-primary" data-collapsed="0">
@@ -256,11 +267,17 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
 					<div id="view-fee" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="view-bpa-fee-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<div id="view-fee" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-temp-fee-details.jsp"></jsp:include>
 						</div>
 					</div>
 				</c:if>
@@ -309,13 +326,13 @@
 							class="btn btn-primary"> <spring:message code="lbl.btn.modify.fee"/> </a>
 
 				</c:if>
-				<c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
+				<%-- <c:if test="${bpaApplication.state.value ne 'Field Inspection completed' && bpaApplication.status.code eq 'Document Verification Completed'}">
 					<input type="button" name="save" id="btnSave" value="Save" class="btn btn-primary"/>
-				</c:if>
+				</c:if> --%>
 				<c:if test="${createlettertoparty}">
-					<a
-							href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}"
-							target="_self" class="btn btn-primary"> <spring:message code="lbl.btn.letter.to.party"/> </a>
+					<a href="/bpa/lettertoparty/create/${bpaApplication.applicationNumber}" target="_self" class="btn btn-primary"> 
+						<spring:message code="lbl.btn.letter.to.party"/> 
+					</a>
 				</c:if>
 			</div>
 			<br>
@@ -424,8 +441,10 @@
 		<input type="hidden" id="rejectAppln" value="<spring:message code='msg.confirm.reject.appln' />" />
 		<input type="hidden" id="sendBackApplnPreOfficial" value="<spring:message code='msg.confirm.sendback.previous.approved.official' />" />
 		<input type="hidden" id="approveAppln" value="<spring:message code='msg.confirm.approve.appln' />" />
+		<input type="hidden" id="forwardToPayment" value="<spring:message code='msg.confirm.forward.to.payment' />" />
 		<input type="hidden" id="forwardAppln" value="<spring:message code='msg.confirm.forward.application' />" />
 		<input type="hidden" id="generatePermitOrder" value="<spring:message code='msg.confirm.generate.permitorder' />" />
+		<input type="hidden" id="acceptedasscrutinized" value="<spring:message code='msg.confirm.accepted.as.scrutinized' />" />
 		<input type="hidden" id="permitRequired" value="<spring:message code='msg.validate.permit.mandatory' />" />
 		<input type="hidden" id="generateRejectNotice" value="<spring:message code='msg.confirm.generate.rejection.notice' />" />
 		<input type="hidden" id="townsurvFieldInspeRequest" value="<spring:message code='msg.validate.townsurveyor.filedinspec.request' />" />
@@ -444,13 +463,9 @@
 	</div>
 </div>
 
-<script
-		src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/application-edit.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/application-view.js?rnd=${app_release_no}'/>"></script>
-<script
-		src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script src="<cdn:url value='/resources/js/app/application-edit.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/application-view.js?rnd=${app_release_no}'/>"></script>
+<script src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<link rel="stylesheet" href="<c:url value='/resources/css/bpa-style.css?rnd=${app_release_no}'/>">

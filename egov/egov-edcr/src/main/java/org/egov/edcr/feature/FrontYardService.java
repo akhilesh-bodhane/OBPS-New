@@ -73,6 +73,7 @@ import org.egov.common.entity.edcr.SetBack;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -317,14 +318,20 @@ public class FrontYardService extends GeneralRule {
 														
 							if(pl.isRural()) {
 								BigDecimal rearSeatBackExcepted=pl.getPlanInformation().getDepthOfPlot().multiply(new BigDecimal("0.10"));
-								
-								if(rearSeatBackExcepted.compareTo(new BigDecimal("3.04"))<0)
-									rearSeatBackExcepted=new BigDecimal("3.04");
+								BigDecimal refValue=new BigDecimal("3.04");
+								if(pl.getDrawingPreference().getInFeets()) {
+									refValue=CDGAdditionalService.meterToFoot(refValue);
+									min=CDGAdditionalService.inchToFeet(min);
+								}
+								if(rearSeatBackExcepted.compareTo(refValue)<0)
+									rearSeatBackExcepted=refValue;
 								
 								rearSeatBackExcepted=CDGAdditionalService.roundBigDecimal(rearSeatBackExcepted);
 									
 								
 								exceptedValue=rearSeatBackExcepted.toString();
+								
+								
 							}else {
 								exceptedValue=getSetBack(pl, mostRestrictiveOccupancyType).get(CDGAdditionalService.SETBACK_FRONT);
 							}
@@ -334,7 +341,7 @@ public class FrontYardService extends GeneralRule {
 								return;
 							}
 							
-							if(pl.getDrawingPreference().getInFeets()) {
+							if(pl.getDrawingPreference().getInFeets() && !pl.isRural()) {
 								min=CDGAdditionalService.inchToFeet(min);
 								exceptedValue=CDGAdditionalService.meterToFoot(exceptedValue).toString();
 							}
@@ -402,7 +409,7 @@ public class FrontYardService extends GeneralRule {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 				
-		if(pl.isRural()) {
+		if(pl.isRural() || DxfFileConstants.F.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			return;
 		}
 
@@ -417,7 +424,7 @@ public class FrontYardService extends GeneralRule {
 					return;
 				}
 				
-				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
+				Double frontSetback=Double.valueOf(map.get(CDGAdditionalService.SETBACK_FRONT)!=null && !map.get(CDGAdditionalService.SETBACK_FRONT).equals(DxfFileConstants.NA)?map.get(CDGAdditionalService.SETBACK_FRONT):"0");
 				
 				if(frontSetback>0) {
 					Boolean frontYardDefined = false;
@@ -1016,8 +1023,9 @@ public class FrontYardService extends GeneralRule {
 //		if (min.compareTo(minval) >= 0 && mean.compareTo(meanval) >= 0) {
 //			valid = true;
 //		}
-		if (min.compareTo(minval) == 0) {
-			valid = true;
+		//if (min.compareTo(minval) == 0) {
+			if (CDGMathService.compare(min, minval, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0) {
+					valid = true;
 		}
 		
 		return valid;

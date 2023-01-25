@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,22 +20,15 @@ import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.PlanFeature;
 import org.egov.common.entity.edcr.PlanInformation;
-import org.egov.common.entity.edcr.ScrutinyDetail;
+import org.egov.edcr.config.properties.EdcrApplicationSettings;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.contract.EdcrRequest;
 import org.egov.edcr.entity.Amendment;
 import org.egov.edcr.entity.AmendmentDetails;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
-import org.egov.edcr.feature.AccessoryBuildingService;
 import org.egov.edcr.feature.Coverage;
-import org.egov.edcr.feature.Far;
 import org.egov.edcr.feature.FeatureProcess;
-import org.egov.edcr.feature.FireStair;
-import org.egov.edcr.feature.GeneralStair;
-import org.egov.edcr.feature.OpenStairService;
-import org.egov.edcr.feature.PassageService;
-import org.egov.edcr.feature.Verandah;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.custom.CustomImplProvider;
@@ -66,8 +60,16 @@ public class PlanService {
 	private ExtractService extractService;
 	@Autowired
 	private EdcrApplicationService edcrApplicationService;
-	private boolean isMeterEnabled=true;
-	private boolean isFeetEnabled=true;
+	
+	private boolean isMeterEnabled=false;
+	private boolean isFeetEnabled=false;
+	
+	
+
+	public PlanService(EdcrApplicationSettings  settings) {
+		this.isMeterEnabled=Boolean.parseBoolean(settings.getValue(DxfFileConstants.KEY_METER_ENABLE));
+		this.isFeetEnabled=Boolean.parseBoolean(settings.getValue(DxfFileConstants.KEY_FEET_ENABLE));
+	}
 
 	public Plan process(EdcrApplication dcrApplication, String applicationType) {
 		Map<String, String> cityDetails = specificRuleService.getCityDetails();
@@ -87,9 +89,17 @@ public class PlanService {
 		try {
 			plan = extractService.extract(dcrApplication.getSavedDxfFile(), amd, asOnDate,
 					featureService.getFeatures());
+			plan.setApplicationType(dcrApplication.getApplicationType().name());
+			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
+			plan.setServiceType(dcrApplication.getServiceType());
 			setProperties(plan);
+			plan = applyRules(plan, amd, cityDetails);
+			additionalValidation(plan);
+			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
+			LOG.error(e.getMessage());
 			e.printStackTrace();
+			plan=getAbortedSupportPlan(e);
 		}
 		
 //		removeError(plan);
@@ -99,14 +109,29 @@ public class PlanService {
 //		}
 		
 		if(plan!=null && checkUnits(plan)) {
-			plan.setServiceType(dcrApplication.getServiceType());
-			plan = applyRules(plan, amd, cityDetails);
-			setEDCRmandatoryNOC(plan);
+			
+			plan.setApplicationType(dcrApplication.getApplicationType().toString());
+			plan.setPlanPermissionNumber(dcrApplication.getPlanPermitNumber());
 		}
 		
 		InputStream reportStream = generateReport(plan, amd, dcrApplication);
 		saveOutputReport(dcrApplication, reportStream, plan);
 		return plan;
+	}
+	
+	private Plan  getAbortedSupportPlan(Exception e) {
+		Plan pl=new Plan();
+		pl.addError("1", "Your drawing is aborted due to one of the following reasons:");
+		pl.addError("2", "The FAR layers as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
+		pl.addError("3", "The carpet area layers as mentioned in the drawing manual are not provided in.");
+		pl.addError("4", "Building foot print layers for setback as mentioned in the drawing manual are not provided in the required occupancy colour in dxf file.");
+		pl.addError("5", "Plan_Info layer data is not provided as per drawing manual requirements.");
+		pl.addError("6", "Main Gate and Wicket Gate are not provided as per drawing manual.");
+		pl.addError("7", "Passage is not provided in the drawing, but the layer is present in the dxf flie.");
+		pl.addError("8", "Parapet is not provided in the drawing, but the layer is present in the dxf.");
+		pl.addError("9", "All the layers that are not in use are not deleted from the drawing.");
+		
+		return pl;
 	}
 	
 	public boolean checkUnits(Plan plan) {
@@ -166,17 +191,187 @@ public class PlanService {
 		pl.getPlanInformation().setPlotLength(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_LENGTH):"NA");
 		pl.getPlanInformation().setPlotWidth(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_WIDTH):"NA");
 		pl.getPlanInformation().setCommercialAreaOccupancyAsPerRule(pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.COMMERCIAL_AREA_OCCUPANCY_AS_PER_RULE):"NA");
+		pl.getPlanInformation().setIsSecurityFeeApplicable(pl.getPlanInfoProperties().get(DxfFileConstants.IS_SECRUITY_FEE_APPLICABLE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.IS_SECRUITY_FEE_APPLICABLE):"Yes");
+		
+		try {
+			pl.getPlanInformation().setDemolitionArea(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)!=null?new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.DEMOLITION_AREA)):BigDecimal.ZERO);
+		}catch (Exception e) {
+			pl.addError("DEMOLITION_AREA", "DEMOLITION_AREA is invalid in planinfo layer.");
+		}
+		
 		
 		if(DxfFileConstants.RURAL.equals(pl.getPlanInfoProperties().get(DxfFileConstants.ROOT_BOUNDARY_TYPE)))
 			pl.setRural(true);
 		else
 			pl.setRural(false);
 		
+		if(pl.isRural()) {
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_LENGTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_LENGTH", "ROAD_LENGTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_LENGTH", "ROAD_LENGTH is not provided in planinfo layer.");
+			}
+			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_WIDTH)));
+				}catch (Exception e) {
+					pl.addError("ROAD_WIDTH", "ROAD_WIDTH is invalid in planinfo layer.");
+				}
+			}else {
+				pl.addError("ROAD_WIDTH", "ROAD_WIDTH is not provided in planinfo layer.");
+			}
+						
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadTwoLength(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_LENGTH)));
+				}catch (Exception e) {}
+			}
+			
+			if(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)!=null) {
+				try {
+					pl.getPlanInformation().setRoadTwoWidth(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.ROAD_2_WIDTH)));
+				}catch (Exception e) {}
+			}
+			
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_AREA)) {
+				try {
+					pl.getPlanInformation().setConversionChargesArea(new BigDecimal(pl.getPlanInfoProperties().get(DxfFileConstants.CONVERSION_CHARGES_AREA)));
+				}catch (Exception e) {}
+			}
+			
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)
+					&& DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.IS_CASE_OF_DEATH)))
+				pl.getPlanInformation().setIsDeathCase(true);
+			
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)
+					&& DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.ALLOTMENT_OF_NEW_NUMBER)))
+				pl.getPlanInformation().setIsAllotmentOfNewNumber(true);
+			
+			if(null!=pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)
+					&& (DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE)) || DxfFileConstants.YES.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE))))
+				pl.getPlanInformation().setIsTransferFeeApplicable(DxfFileConstants.NO.equalsIgnoreCase(pl.getPlanInfoProperties().get(DxfFileConstants.TRANSFER_FEE_APPLICABLE))?false:true);
+			else
+				pl.addError("TRANSFER_FEE_APPLICABLE", "TRANSFER_FEE_APPLICABLE is mandatory");
+		}
+		
 		if(pl.getDrawingPreference().getInFeets())
 			pl.getPlot().setPlotBndryArea(CDGAdditionalService.inchtoFeetArea(pl.getPlot().getPlotBndryArea()));
 		
-	}
+		if(!pl.isRural()) {
+			//AREA_FOR_ADDITIONAL_HEIGHT_SQFT
+			String areaForAdditionalHeight=pl.getPlanInfoProperties().get(DxfFileConstants.AREA_FOR_ADDITIONAL_HEIGHT_SQFT);
+			if(areaForAdditionalHeight!=null && !DxfFileConstants.NA.equals(areaForAdditionalHeight)) {
+				try {
+					pl.getPlanInformation().setAreaForAdditionalHeight(new BigDecimal(areaForAdditionalHeight));
+				}catch (Exception e) {
+					pl.addError("AREA_FOR_ADDITIONAL_HEIGHT_SQFT", "AREA_FOR_ADDITIONAL_HEIGHT_SQFT is wrong in plan info layer.");
+				}
+			}
+			
+			//PRESENT_COLLECTOR
+			String presentCollector=pl.getPlanInfoProperties().get(DxfFileConstants.PRESENT_COLLECTOR_RATE);
+			if(presentCollector!=null && !DxfFileConstants.NA.equals(presentCollector)) {
+				try {
+					pl.getPlanInformation().setPresentCollectorRate(new BigDecimal(presentCollector));
+				} catch (Exception e) {
+					pl.addError("PRESENT_COLLECTOR_RATE", "PRESENT_COLLECTOR_RATE is wrong in plan info layer.");
+				}
+			}
+			
+			//IS_RULE_5_APPLICABLE mandatory
+			String isRule5Applicable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_RULE_5_APPLICABLE);		
+			if(isRule5Applicable!=null && !DxfFileConstants.NA.equals(isRule5Applicable) && (DxfFileConstants.YES.equals(isRule5Applicable) || DxfFileConstants.NO.equals(isRule5Applicable))) {
+				pl.getPlanInformation().setIsRule5Applicable(isRule5Applicable);
+			} else {
+				pl.addError("IS_RULE_5_APPLICABLE", "IS_RULE_5_APPLICABLE is wrongly defined in plan info layer.");
+			}
+			
+			//IS_ADDITIONAL_AREA_APPLICABLE mandatory
+			String isAdditionalAreaApplicable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_ADDITIONAL_AREA_APPLICABLE);				
+			if(isAdditionalAreaApplicable!=null && !DxfFileConstants.NA.equals(isAdditionalAreaApplicable) && (DxfFileConstants.YES.equals(isAdditionalAreaApplicable) || DxfFileConstants.NO.equals(isAdditionalAreaApplicable))) {
+				pl.getPlanInformation().setIsAdditionalAreaApplicable(isAdditionalAreaApplicable);
+			} else {
+				pl.addError("IS_ADDITIONAL_AREA_APPLICABLE", "IS_ADDITIONAL_AREA_APPLICABLE is wrongly defined in plan info layer.");
+			}
+		}
+		//for OC
+		if(pl.getApplicationType().equalsIgnoreCase(DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE)) {
+			String isOwnershipChange = pl.getPlanInfoProperties().get(DxfFileConstants.IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE);
+			if(isOwnershipChange!=null && !DxfFileConstants.NA.equals(isOwnershipChange) && (DxfFileConstants.YES.equals(isOwnershipChange) || DxfFileConstants.NO.equals(isOwnershipChange))) {
+				pl.getPlanInformation().setIsThisACaseOfOwnershipChange(isOwnershipChange);
+			} else {
+				pl.addError("IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE", "IS_THIS_A_CASE_OF_OWNERSHIP_CHANGE is wrongly defined in plan info layer.");
+			}
+			String isDPCCertificateAvailable = pl.getPlanInfoProperties().get(DxfFileConstants.IS_DPC_CERTIFICATE_AVAILABLE);
+			if(isDPCCertificateAvailable!=null && (DxfFileConstants.NA.equals(isDPCCertificateAvailable) || DxfFileConstants.YES.equals(isDPCCertificateAvailable) || DxfFileConstants.NO.equals(isDPCCertificateAvailable))) {
+				pl.getPlanInformation().setIsDPCCertificateAvailable(isDPCCertificateAvailable);
+			} else {
+				pl.addError("IS_DPC_CERTIFICATE_AVAILABLE", "IS_DPC_CERTIFICATE_AVAILABLE is wrongly defined in plan info layer.");
+			}
+			String numberOfFloorsWithChangesDW = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS);
+			if(numberOfFloorsWithChangesDW!=null && !DxfFileConstants.NA.equals(numberOfFloorsWithChangesDW)) {
+				pl.getPlanInformation().setNumberOfFloorsWithChangesInDoorsOrWindowsLocations(new BigDecimal(numberOfFloorsWithChangesDW));
+			} else {
+				pl.addError("NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS", "NUMBER_OF_FLOORS_WITH_CHANGES_IN_DOORS_OR_WINDOWS_LOCATIONS is invalid in planinfo layer.");
+			}
+			String numberOfGlazingInVerandah = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_GLAZING_IN_VERANDAH);
+			if(numberOfGlazingInVerandah!=null && !DxfFileConstants.NA.equals(numberOfGlazingInVerandah)) {
+				pl.getPlanInformation().setNumberOfGlazingOfVerandah(new BigDecimal(numberOfGlazingInVerandah));
 
+			} else {
+				pl.addError("NUMBER_OF_GLAZING_IN_VERANDAH", "NUMBER_OF_GLAZING_IN_VERANDAH is invalid in planinfo layer.");
+			}
+			String numberOfLofts = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT);
+			if(numberOfLofts!=null && !DxfFileConstants.NA.equals(numberOfLofts)) {
+				pl.getPlanInformation().setNumberOfLoftsConstructedBeyondPermit(new BigDecimal(numberOfLofts));
+				
+			} else {
+				pl.addError("NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT", "NUMBER_OF_LOFTS_CONSTRUCTED_BEYOND_PERMIT is invalid in planinfo layer.");
+			}
+			String numberOfNonStandardGates = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NON_STANDARD_GATES);
+			if(numberOfNonStandardGates!=null && !DxfFileConstants.NA.equals(numberOfNonStandardGates)) {
+				pl.getPlanInformation().setNumberOfNonStandardGates(new BigDecimal(numberOfNonStandardGates));
+				
+			} else {
+				pl.addError("NUMBER_OF_NON_STANDARD_GATES", "NUMBER_OF_NON_STANDARD_GATES is invalid in planinfo layer.");
+			}
+			String numberOfNichesOnCommonWall = pl.getPlanInfoProperties().get(DxfFileConstants.NUMBER_OF_NICHES_ON_THE_COMMON_WALL);
+			if(numberOfNichesOnCommonWall!=null && !DxfFileConstants.NA.equals(numberOfNichesOnCommonWall)) {
+				pl.getPlanInformation().setNumberOfNichesOnTheCommonWall(new BigDecimal(numberOfNichesOnCommonWall));
+
+			} else {
+				pl.addError("NUMBER_OF_NICHES_ON_THE_COMMON_WALL", "NUMBER_OF_NICHES_ON_THE_COMMON_WALL is invalid in planinfo layer.");
+			}
+			String areaOfFalseCeiling = pl.getPlanInfoProperties().get(DxfFileConstants.AREA_OF_FALSE_CEILING);
+			if(areaOfFalseCeiling!=null && !DxfFileConstants.NA.equals(areaOfFalseCeiling)) {
+				pl.getPlanInformation().setAreaOfFalseCeiling(new BigDecimal(areaOfFalseCeiling));
+			} else {
+				pl.addError("AREA_OF_FALSE_CEILING", "AREA_OF_FALSE_CEILING is invalid in planinfo layer.");
+			}
+			String excessCoverageBeyondBuildUp = pl.getPlanInfoProperties().get(DxfFileConstants.EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA);
+			if(excessCoverageBeyondBuildUp!=null && ! DxfFileConstants.NA.equals(excessCoverageBeyondBuildUp)) {
+				pl.getPlanInformation().setExcessCoverageBeyondBuildUp(new BigDecimal(excessCoverageBeyondBuildUp));				
+			} else {
+				pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA", "EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA is invalid in planifo layer");
+			}
+		}
+	}
+	
+	private void additionalValidation(Plan pl) {
+		//PRESENT_COLLECTOR for sco/scf
+		
+		OccupancyTypeHelper typeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
+		
+		if(DxfFileConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) && pl.getPlanInformation().getPresentCollectorRate().compareTo(BigDecimal.ZERO)==0) {
+			pl.addError("PRESENT_COLLECTOR_RATE_1", "PRESENT_COLLECTOR_RATE should  not be empty or zero for SCO/SCF.");
+		}
+		
+	}
 	private void setEDCRmandatoryNOC(Plan plan) {		
 		plan.getPlanInformation().setNocPACDept("NO");
 		plan.getPlanInformation().setNocStructureDept("NO");
@@ -303,53 +498,59 @@ public class PlanService {
 
 			FeatureProcess rule = null;
 			String str = ruleClass.getRuleClass().getSimpleName();
-			str = str.substring(0, 1).toLowerCase() + str.substring(1);
-			LOG.debug("Looking for bean " + str);
-			// when amendments are not present
-			if (amd.getDetails().isEmpty() || index == -1)
-				rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
-			// when amendments are present
-			else {
-				if (index >= 0) {
-					// find amendment specific beans
-					for (int i = index; i < length; i++) {
-						if (a[i].getChanges().keySet().contains(ruleClass.getRuleClass().getSimpleName())) {
-							String strNew = str + "_" + a[i].getDateOfBylawString();
-							rule = (FeatureProcess) specificRuleService.find(strNew);
-							if (rule != null)
-								break;
+			try {
+				str = str.substring(0, 1).toLowerCase() + str.substring(1);
+				LOG.debug("Looking for bean " + str);
+				// when amendments are not present
+				if (amd.getDetails().isEmpty() || index == -1)
+					rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+				// when amendments are present
+				else {
+					if (index >= 0) {
+						// find amendment specific beans
+						for (int i = index; i < length; i++) {
+							if (a[i].getChanges().keySet().contains(ruleClass.getRuleClass().getSimpleName())) {
+								String strNew = str + "_" + a[i].getDateOfBylawString();
+								rule = (FeatureProcess) specificRuleService.find(strNew);
+								if (rule != null)
+									break;
+							}
 						}
-					}
-					// when amendment specific beans not found
-					if (rule == null) {
-						rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+						// when amendment specific beans not found
+						if (rule == null) {
+							rule = (FeatureProcess) specificRuleService.find(ruleClass.getRuleClass().getSimpleName());
+						}
+
 					}
 
 				}
 
-			}
+				if (rule != null) {
+					LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
+					rule.process(plan);
+					LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());	
+				}
+				
+				// check occupancy type is present or not
+				if (ruleClass.getRuleClass().isAssignableFrom(Coverage.class)) {
+					OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper() != null
+							? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
+							: null;
+					if (occupancyTypeHelper == null && !isOccupancyTypeHelperValid(occupancyTypeHelper)) {
+						plan.addError("buildupArea-occ", DxfFileConstants.BLT_UP_AREA_ERROR_MSG);
+						return plan;
+					}
+				}
 
-			if (rule != null) {
-				LOG.debug("Looking for bean resulted in " + rule.getClass().getSimpleName());
-				rule.process(plan);
-				LOG.debug("Completed Process " + rule.getClass().getSimpleName() + "  " + new Date());	
-			}
-			
-			// check occupancy type is present or not
-			if (ruleClass.getRuleClass().isAssignableFrom(Coverage.class)) {
-				OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper() != null
-						? plan.getVirtualBuilding().getMostRestrictiveFarHelper()
-						: null;
-				if (occupancyTypeHelper == null && !isOccupancyTypeHelperValid(occupancyTypeHelper)) {
-					plan.addError("buildupArea-occ", DxfFileConstants.BLT_UP_AREA_ERROR_MSG);
+				if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)
+						|| plan.getErrors().containsKey("units not in meters")
+						|| plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_PO_NOT_ALLOWED_KEY))
 					return plan;
-				}
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+				plan.addError("Error "+str, "Error occured while processing "+str+" !");
 			}
-
-			if (plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_ALLOWED_KEY)
-					|| plan.getErrors().containsKey("units not in meters")
-					|| plan.getErrors().containsKey(DxfFileConstants.OCCUPANCY_PO_NOT_ALLOWED_KEY))
-				return plan;
 		}
 		return plan;
 	}

@@ -50,9 +50,11 @@ package org.egov.edcr.feature;
 import static org.egov.edcr.utility.DcrConstants.OBJECTDEFINED;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -108,9 +110,13 @@ public class StairCover extends FeatureProcess {
 						&& mostRestrictiveFarHelper.getSubtype() != null) {
 					// minHeight = b.getStairCovers().stream().reduce(BigDecimal::min).get();
 					minHeight = b.getStairCovers().stream().reduce(BigDecimal::max).get();
+					
+					if (minHeight.compareTo(BigDecimal.ZERO) > 0)
+						getStairCoversArea(pl, b);
+					
 					if (pl.getDrawingPreference().getInFeets()) {
 						minHeight = CDGAdditionalService.inchToFeet(minHeight);
-						expactedHeiht=CDGAdditionalService.meterToFoot(expactedHeiht);
+						expactedHeiht = CDGAdditionalService.meterToFoot(expactedHeiht);
 					}
 
 					if (minHeight.compareTo(expactedHeiht) <= 0) {
@@ -140,26 +146,30 @@ public class StairCover extends FeatureProcess {
 
 			return pl;
 		}
-
+//&& !isOccupancyNotApplicable(mostRestrictiveFarHelper)
 		if (mostRestrictiveFarHelper != null && mostRestrictiveFarHelper.getSubtype() != null
-				&& !isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
+				) {
 			for (Block b : pl.getBlocks()) {
 				minHeight = BigDecimal.ZERO;
 				if (b.getStairCovers() != null && !b.getStairCovers().isEmpty() && mostRestrictiveFarHelper != null
 						&& mostRestrictiveFarHelper.getSubtype() != null) {
 					// minHeight = b.getStairCovers().stream().reduce(BigDecimal::min).get();
 					minHeight = b.getStairCovers().stream().reduce(BigDecimal::max).get();
+
+					if (minHeight.compareTo(BigDecimal.ZERO) > 0)
+						getStairCoversArea(pl, b);
+
 					expactedHeiht = new BigDecimal(2.75);
 					if (pl.getDrawingPreference().getInFeets()) {
 						minHeight = CDGAdditionalService.inchToFeet(minHeight);
-						expactedHeiht=CDGAdditionalService.meterToFoot(expactedHeiht);
+						expactedHeiht = CDGAdditionalService.meterToFoot(expactedHeiht);
 					}
 					if (DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))
 							&& DxfFileConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 						errors.put("MumtyNotAllowed",
 								getLocaleMessage(OBJECTDEFINED, " Mumty is not allowed in block " + b.getName()));
 					}
-					
+
 					if (DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 
 						if (minHeight.compareTo(expactedHeiht) <= 0) {
@@ -179,9 +189,17 @@ public class StairCover extends FeatureProcess {
 							scrutinyDetail.getDetail().add(details);
 							pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 						}
-					} else {
+					} else if(isOccupancyNotApplicable(mostRestrictiveFarHelper)) {
 						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
-						details.put(REQUIRED, "Allowed ( "+CDGAdditionalService.viewLenght(pl, expactedHeiht) +" )");
+						details.put(REQUIRED, DxfFileConstants.NA);
+						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
+						details.put(STATUS, Result.Verify.getResultVal());
+						scrutinyDetail.getDetail().add(details);
+						pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+					}
+					else {
+						details.put(DESCRIPTION, STAIRCOVER_DESCRIPTION);
+						details.put(REQUIRED, "Allowed ( " + CDGAdditionalService.viewLenght(pl, expactedHeiht) + " )");
 						details.put(PROVIDED, CDGAdditionalService.viewLenght(pl, minHeight));
 						if (minHeight.compareTo(expactedHeiht) <= 0)
 							details.put(STATUS, Result.Verify.getResultVal());
@@ -221,4 +239,19 @@ public class StairCover extends FeatureProcess {
 		return new LinkedHashMap<>();
 	}
 
+	private void getStairCoversArea(Plan pl, Block block) {
+		String key = DxfFileConstants.PLAN_INFO_STAIR_COVERS_AREA.replace("%s", block.getNumber());
+		List<BigDecimal> stairCoversArea = new ArrayList<>();
+		try {
+			String value = pl.getPlanInfoProperties().get(key);
+			if (value == null)
+				pl.addError(key, key + " is required.");
+
+			stairCoversArea.add(new BigDecimal(value));
+
+		} catch (Exception e) {
+			pl.addError(key, key + " is not valid.");
+		}
+		block.setStairCoversArea(stairCoversArea);
+	}
 }

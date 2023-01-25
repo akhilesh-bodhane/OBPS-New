@@ -47,6 +47,9 @@
  */
 package org.egov.collection.config.properties;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -247,6 +250,58 @@ public class CollectionApplicationProperties {
 		return environment.getProperty("payu.cron.expression.delay.time", Integer.class);
 	}
 	
+	public String sbiMID(String prefix) {
+		return environment.getProperty(prefix+".sbi.mid");
+	}
+	
+	public String sbiCollaboratorId(String prefix) {
+		return environment.getProperty(prefix+".sbi.collaborator.id");
+	}
+	
+	public String sbiOperatingMode(String prefix) {
+		return environment.getProperty(prefix+".sbi.operating.mode");
+	}
+
+	public String sbiCountry(String prefix) {
+		return environment.getProperty(prefix+".sbi.country");
+	}
+
+	public String sbiCurrency(String prefix) {
+		return environment.getProperty(prefix+".sbi.currency");
+	}
+	
+	public String sbiMkey(String prefix) {
+		return environment.getProperty(prefix+".sbi.mkey");
+	}
+	
+	public String sbiReconcileUrl(String prefix) {
+		return environment.getProperty(prefix+".sbi.reconcile.url");
+	}
+	
+	public String sbiUrl(String prefix) {
+		return environment.getProperty(prefix+".sbi.url");
+	}
+	
+	public String sbiPath(String prefix) {
+		return environment.getProperty(prefix+".sbi.path");
+	}
+	
+	public Integer sbiCronExpressionDelayTime() {
+		return environment.getProperty("sbi.cron.expression.delay.time", Integer.class);
+	}
+	
+	public String sbiLabourcessIdentifier(String prefix) {
+		return environment.getProperty(prefix+".sbi.account.labourcess.identifier",String.class);
+	}
+	
+	public String sbiUtestateIdentifier(String prefix) {
+		return environment.getProperty(prefix+".sbi.account.utestate.identifier",String.class);
+	}
+	
+	public String paytmValue(String key) {
+		return environment.getProperty(key, String.class);
+	}
+	
 	public String pnbMid() {
 		return environment.getProperty("pnb.mid");
 	}
@@ -317,5 +372,11 @@ public class CollectionApplicationProperties {
     public String hdfcTransactionPhone(){
 	    return environment.getProperty("hdfc.phone");
     }
+    
+    public List<String> paymentGatewayCode(String prefix) {
+		List<String> s=environment.getProperty(prefix+".payment.gateway.code",List.class);
+		//return Arrays.asList(s.split(",", -1));
+		return s;
+	}
 
 }

@@ -76,7 +76,9 @@ import org.egov.common.entity.edcr.SetBack;
 import org.egov.common.entity.edcr.Yard;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.egov.edcr.utility.DcrConstants;
 import org.egov.infra.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +161,9 @@ public class AdditionalFeature extends FeatureProcess {
 
 	@Autowired
 	private AdditionalFeature2 additionalFeature2;
+	
+	@Autowired
+	private OCAdditionalFeature oCAdditionalFeature;
 
 	@Override
 	public Plan validate(Plan pl) {
@@ -216,8 +221,9 @@ public class AdditionalFeature extends FeatureProcess {
 			
 			return pl;
 		}
-		additionalFeature2.process(pl);
+		
 		validateAr(pl);
+		validateCommercialData(pl);
 		validateNumberOfFloorsSkelton(pl);
 		validatePlinthHeight(pl, errors);
 		// validateIntCourtYard(pl, errors);
@@ -237,8 +243,55 @@ public class AdditionalFeature extends FeatureProcess {
 		// CSCL add end
 		additionalFeature2.process(pl);
 		
+		oCAdditionalFeature.process(pl);// for disabling the code OC comparation 
 
 		return pl;
+	}
+	
+	private void validateCommercialData(Plan plan) {
+		OccupancyTypeHelper occupancyTypeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper();
+
+		if (!DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode())) {
+			return;
+		}
+
+		String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
+		Map<String, String> keyArrgument = new HashMap<String, String>();
+		keyArrgument.put(CDGAdditionalService.OCCUPENCY_CODE, suboccTypeCode);
+		keyArrgument.put(CDGAdditionalService.SECTOR, plan.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER));
+		keyArrgument.put(CDGAdditionalService.PLOT_NO, plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO));
+		Map<String, String> jobNumberValue = cDGAdditionalService.getFeatureValue(CDGAConstant.JOB_NUMBER,
+				keyArrgument);
+
+		Map<String, String> drawingNumberValue = cDGAdditionalService.getFeatureValue(CDGAConstant.DRAWING_NUMBER,
+				keyArrgument);
+
+		String jn = jobNumberValue.get(CDGAdditionalService.JOB_NUMBER);
+		String dn = drawingNumberValue.get(CDGAdditionalService.DRAWING_NUMBER);
+
+		String JOB = "Job Number";
+		String Drawing_name = "Drawing Number";
+
+		if (jn == null)
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, JOB + " not present in master data.");
+		if (dn == null)
+			plan.addError(DcrConstants.OBJECTNOTDEFINED, Drawing_name + " not present in master data.");
+
+		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+		scrutinyDetail.setKey("Common_Architecture controls");
+		scrutinyDetail.addColumnHeading(2, JOB);
+		scrutinyDetail.addColumnHeading(3, Drawing_name);
+
+		scrutinyDetail.addColumnHeading(4, STATUS);
+		Map<String, String> details = new HashMap<>();
+
+		details.put(JOB, jn);
+		details.put(Drawing_name, dn);
+		details.put(STATUS, Result.Verify.getResultVal());
+
+		scrutinyDetail.getDetail().add(details);
+		plan.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+		
 	}
 
 	private void validateAr(Plan pl) {
@@ -464,7 +517,7 @@ public class AdditionalFeature extends FeatureProcess {
 			for(Floor floor:block.getBuilding().getFloors()) {
 				for(Occupancy occupancy:floor.getOccupancies()) {
 					if(occupancy.getTypeHelper()!=null && occupancy.getTypeHelper().getSubtype()!=null) {
-						if(!(DxfFileConstants.A_P.equals(occupancy.getTypeHelper().getSubtype().getCode()) || DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())))
+						if(!(DxfFileConstants.A_P.equals(occupancy.getTypeHelper().getSubtype().getCode()) || DxfFileConstants.F_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())))
 							plan.addError("occupancy_blk"+block.getNumber()+"flr"+floor.getNumber(), occupancy.getTypeHelper().getSubtype().getName()+"Occupancy is not allowed in block "+block.getNumber()+" floor "+floor.getNumber());
 					}
 				}
@@ -498,7 +551,7 @@ public class AdditionalFeature extends FeatureProcess {
 			for (Floor floor : b.getBuilding().getFloors()) {
 				for (Occupancy occupancy : floor.getOccupancies()) {
 					if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
-							&& DxfFileConstants.A_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
+							&& DxfFileConstants.F_CIR.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
 						providedProfessionalsConsultantsSpace = providedProfessionalsConsultantsSpace
 								.add(occupancy.getBuiltUpArea());
 						isProfessionalsConsultantsSpaceProvided = true;
@@ -537,7 +590,12 @@ public class AdditionalFeature extends FeatureProcess {
 				
 				if(mostRestrictiveOccupancyType==null || mostRestrictiveOccupancyType.getSubtype() ==null)
 					return;
-
+		BigDecimal allowedMaxArea=FIFTY;
+		
+		if(pl.getDrawingPreference().getInFeets()) {
+			allowedMaxArea=CDGAdditionalService.meterToFootArea(allowedMaxArea);
+		}
+				
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
@@ -554,10 +612,10 @@ public class AdditionalFeature extends FeatureProcess {
 			BigDecimal totalCoverageAreaOf25Percent = totalCoverageArea.multiply(new BigDecimal("0.25"));
 			BigDecimal requiredProfessionalsConsultantsSpace = BigDecimal.ZERO;
 
-			if (totalCoverageAreaOf25Percent.compareTo(FIFTY) < 0)
+			if (totalCoverageAreaOf25Percent.compareTo(allowedMaxArea) < 0)
 				requiredProfessionalsConsultantsSpace = totalCoverageAreaOf25Percent;
 			else
-				requiredProfessionalsConsultantsSpace = FIFTY;
+				requiredProfessionalsConsultantsSpace = allowedMaxArea;
 			
 
 			Map<String, String> details = new HashMap<>();
@@ -607,7 +665,7 @@ public class AdditionalFeature extends FeatureProcess {
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 
 			ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
-			scrutinyDetail.setKey("Common_ServantQuarter");
+			scrutinyDetail.setKey("Common_Servant Quarter");
 			scrutinyDetail.addColumnHeading(1, RULE_NO);
 			scrutinyDetail.addColumnHeading(2, DESCRIPTION);
 			scrutinyDetail.addColumnHeading(3, REQUIRED);
@@ -638,18 +696,18 @@ public class AdditionalFeature extends FeatureProcess {
 			}
 
 			if (isOptional) {
-				details.put(DESCRIPTION, "SERVANT QUARTER");
+				details.put(DESCRIPTION, "Servant Quarter");
 				details.put(REQUIRED, optional);
 				details.put(PROVIDED, isServantQuarter == true ? "YES" : "NO");
 				details.put(STATUS, Result.Accepted.getResultVal());
 			} else {
 				if (isServantQuarter == true) {
-					details.put(DESCRIPTION, "SERVANT QUARTER");
+					details.put(DESCRIPTION, "Servant Quarter");
 					details.put(REQUIRED, "Mandatory");
 					details.put(PROVIDED, "YES");
 					details.put(STATUS, Result.Accepted.getResultVal());
 				} else {
-					details.put(DESCRIPTION, "SERVANT QUARTER");
+					details.put(DESCRIPTION, "Servant Quarter");
 					details.put(REQUIRED, "Mandatory");
 					details.put(PROVIDED, "NO");
 					details.put(STATUS, Result.Not_Accepted.getResultVal());
@@ -844,8 +902,13 @@ public class AdditionalFeature extends FeatureProcess {
 						.get(CDGAdditionalService.PERMISSIBLE_BUILDING_STORIES);
 
 				if (DxfFileConstants.DATA_NOT_FOUND.equals(noc)) {
-					pl.addError("NO OF STOREYS", "NO OF STOREYS, " + DxfFileConstants.DATA_NOT_FOUND);
-					requiredFloorCount = DxfFileConstants.DATA_NOT_FOUND;
+					if (DxfFileConstants.F.equals(occTypeCode)) {
+						requiredFloorCount = DxfFileConstants.NA;
+						isAccepted = true;
+					} else {
+						pl.addError("NO OF STOREYS", "NO OF STOREYS, " + DxfFileConstants.DATA_NOT_FOUND);
+						requiredFloorCount = DxfFileConstants.DATA_NOT_FOUND;
+					}
 				} else if (DxfFileConstants.NOT_PROVIDED.equalsIgnoreCase(noc)) {
 //					isAccepted = false;
 //					requiredFloorCount = "Master data " + DxfFileConstants.NOT_PROVIDED;
@@ -1312,16 +1375,18 @@ public class AdditionalFeature extends FeatureProcess {
 					
 					if(pl.getDrawingPreference().getInFeets()) {
 						expectedMinPlinthHeight=CDGAdditionalService.meterToFoot(expectedMinPlinthHeight);
-						expectedMaxPlinthHeight=CDGAdditionalService.meterToFoot(expectedMaxPlinthHeight);
+						expectedMaxPlinthHeight=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMaxPlinthHeight, CDGADeviationConstant.PLINTH_DEVIATION_MAX));
 						minPlinthHeight=CDGAdditionalService.inchToFeet(minPlinthHeight);
 						maxPlinthHeight=CDGAdditionalService.inchToFeet(maxPlinthHeight);
+						
 					}
 
 					if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 							&& DxfFileConstants.MARLA
 									.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) == 0) {
-							isAccepted = true;
+						//if (minPlinthHeight.compareTo(expectedMinPlinthHeight) == 0) {
+						if (CDGMathService.compare(minPlinthHeight, expectedMinPlinthHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0) {
+								isAccepted = true;
 						}
 					} else if (!isOccupancyTypePlinthNotApplicable(mostRestrictiveOccupancyType)) {
 						if (minPlinthHeight.compareTo(expectedMinPlinthHeight) >= 0

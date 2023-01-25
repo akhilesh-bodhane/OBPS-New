@@ -93,7 +93,7 @@
 								code='lbl.document.scrutiny' /></a></li>
 				</c:if>
 
-				<c:if test="${not empty bpaApplication.permitInspections}">
+				<c:if test="${not empty bpaApplication.permitInspections && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-inspection" data-tabidx=3><spring:message
 								code='lbl.inspection.appln' /></a></li>
 				</c:if>
@@ -101,10 +101,15 @@
 					<li><a data-toggle="tab" href="#noc-info" data-tabidx=4><spring:message
 								code='lbl.noc.details' /></a></li>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${(not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0 ) && !bpaApplication.isPreviousPlan}">
 					<li><a data-toggle="tab" href="#view-fee" data-tabidx=5><spring:message
 								code='lbl.fees.details' /></a></li>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee && !bpaApplication.isPreviousPlan}">
+					<li><a data-toggle="tab" href="#view-fee" data-tabidx=5>
+							<spring:message code='lbl.fees.details' />
+						</a>
+					</li>
 				</c:if>
 				<c:if
 					test="${not empty lettertopartylist && mode eq 'showLPDetails'}">
@@ -118,7 +123,7 @@
 			</ul>
 			<div class="tab-content">
 				<div id="document-info" class="tab-pane fade">
-					<c:if test="${not empty  bpaApplication.permitNocDocuments}">
+					<c:if test="${not empty  bpaApplication.permitNocDocuments || bpaApplication.isPreviousPlan}">
 						<div class="panel panel-primary dcrDocuments" data-collapsed="0">
 							<jsp:include page="view-dcr-documentdetails.jsp"></jsp:include>
 						</div>
@@ -171,12 +176,12 @@
 					<div class="panel panel-primary buildingdetails" data-collapsed="0">
 						<jsp:include page="view-building-details.jsp" />
 					</div>
-					<c:if
-						test="${(isCitizen && validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && !citizenDisclaimerAccepted && bpaApplication.sentToCitizen)}">
+<%-- 					<c:if --%>
+<%-- 						test="${(isCitizen && validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && bpaApplication.sentToCitizen)}"> --%>
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="disclaimer.jsp" />
 						</div>
-					</c:if>
+<%-- 					</c:if> --%>
 					<c:if test="${not empty  bpaApplication.receipts}">
 						<c:set var="receipts" scope="request" value="${bpaApplication.receipts}"></c:set>
 						<c:set var="applicationNumber" scope="request" value="${bpaApplication.applicationNumber}"></c:set>
@@ -187,6 +192,11 @@
 					<c:if test="${not empty applicationHistory}">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="applicationhistory-view.jsp"></jsp:include>
+						</div>
+					</c:if>
+					<c:if test="${not empty nocWorkflowHistory}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="nocWorkflowHistory.jsp"></jsp:include>
 						</div>
 					</c:if>
 				</div>
@@ -217,11 +227,17 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if
-					test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
+				<c:if test="${not empty bpaApplication.permitFee || bpaApplication.admissionfeeAmount > 0}">
 					<div id="view-fee" class="tab-pane fade">
 						<div class="panel panel-primary" data-collapsed="0">
 							<jsp:include page="view-bpa-fee-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
+				<c:if test="${not empty tempFees && empty bpaApplication.permitFee}">
+					<div id="view-fee" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-temp-fee-details.jsp"></jsp:include>
 						</div>
 					</div>
 				</c:if>
@@ -446,4 +462,4 @@
 <script
 	src="<cdn:url value='/resources/js/app/citizen-view-helper.js?rnd=${app_release_no}'/>"></script>
 <script
-	src="<cdn:url value='/resources/js/app/noc-helper.js?rnd=${app_release_no}'/>"></script>
+	src="<cdn:url value='/resources/js/app/noc-helper.js?rnd=${app_release_no}'/>"></script>	

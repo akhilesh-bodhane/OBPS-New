@@ -73,6 +73,7 @@ import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.ProcessHelper;
 import org.egov.edcr.service.cdg.CDGAConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
+import org.egov.edcr.service.cdg.CDGMathService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -152,6 +153,16 @@ public class BuildingHeight extends FeatureProcess {
 			BigDecimal exptectedHeight = BigDecimal.ZERO;
 			BigDecimal buildingHeight = BigDecimal.ZERO;
 
+			if("Stair Cover".equals(block.getBuilding().getHeightIncreasedBy())) {
+				try {
+					BigDecimal mumtyHeight=block.getStairCovers().stream().reduce(BigDecimal::min).get();
+					block.getBuilding().setBuildingHeight(block.getBuilding().getBuildingHeight().subtract(mumtyHeight));
+				}catch (Exception e) {
+					e.printStackTrace();
+					Plan.addError("Stair Cover height det", "Error while subtracting the mumty height from building height.");
+				}
+			}
+			
 			exptectedHeight = new BigDecimal("10.36");
 
 			buildingHeight = block.getBuilding().getBuildingHeight();
@@ -167,7 +178,9 @@ public class BuildingHeight extends FeatureProcess {
 
 				String actualResult = CDGAdditionalService.viewLenght(Plan, buildingHeight);
 				String expectedResult = "Upto " + CDGAdditionalService.viewLenght(Plan, exptectedHeight);
-
+				
+				
+				
 				if (buildingHeight.compareTo(exptectedHeight) > 0) {
 					Map<String, String> details = new HashMap<>();
 					// details.put(RULE_NO, subRule);
@@ -219,7 +232,8 @@ public class BuildingHeight extends FeatureProcess {
 						|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 						|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
 						|| DxfFileConstants.F_TCIM.equals(occupancyTypeHelper.getSubtype().getCode())
-						|| DxfFileConstants.G.equals(occupancyTypeHelper.getType().getCode())) {
+						|| DxfFileConstants.G.equals(occupancyTypeHelper.getType().getCode())
+						|| DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode())) {
 
 					String suboccTypeCode = occupancyTypeHelper.getSubtype().getCode();
 					Map<String, String> keyArrgument = new HashMap<String, String>();
@@ -235,6 +249,8 @@ public class BuildingHeight extends FeatureProcess {
 							.getFeatureValue(CDGAConstant.PERMISSIBLE_BUILDING_HEIGHT, keyArrgument);
 					String str = featureValues.get(CDGAdditionalService.PERMISSIBLE_BUILDING_HEIGHT);
 					if (DxfFileConstants.DATA_NOT_FOUND.equals(str)) {
+						if(DxfFileConstants.F.equals(occupancyTypeHelper.getType().getCode()))
+							return;
 						Plan.addError("PERMISSIBLE_BUILDING_HEIGHT ",
 								"PERMISSIBLE_BUILDING_HEIGHT, " + DxfFileConstants.DATA_NOT_FOUND);
 						return;
@@ -301,8 +317,8 @@ public class BuildingHeight extends FeatureProcess {
 				if (DxfFileConstants.B.equals(occupancyTypeHelper.getType().getCode())) {
 					if (DxfFileConstants.B_EC.equals(occupancyTypeHelper.getSubtype().getCode()))
 						exptectedHeight = new BigDecimal("17.52");
-					else if (DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode()))
-						exptectedHeight = new BigDecimal("14.86");
+//					else if (DxfFileConstants.B_HEI.equals(occupancyTypeHelper.getSubtype().getCode()))
+//						exptectedHeight = new BigDecimal("14.86");
 					else if (DxfFileConstants.B_H.equals(occupancyTypeHelper.getSubtype().getCode()))
 						exptectedHeight = new BigDecimal("14.86");
 				}
@@ -360,14 +376,18 @@ public class BuildingHeight extends FeatureProcess {
 					
 					boolean isAccepted=false;
 					
-					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
-						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
-						if (buildingHeight.compareTo(exptectedHeight) == 0)
-							isAccepted=true;
-					}else {
-						if (buildingHeight.compareTo(exptectedHeight) <= 0)
-							isAccepted=true;
-					}
+//					if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode()) && DxfFileConstants.MARLA.equals(Plan.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))) {
+//						expectedResult = CDGAdditionalService.viewLenght(Plan, exptectedHeight);;
+////						if (buildingHeight.compareTo(exptectedHeight) == 0)
+//						if (CDGMathService.compare(buildingHeight, exptectedHeight, CDGMathService.ZERO_POINT_FOUR_INCH_IN_FEET) == 0)
+//							isAccepted=true;
+//					}else {
+//						if (buildingHeight.compareTo(exptectedHeight) <= 0)
+//							isAccepted=true;
+//					}
+					
+					if (buildingHeight.compareTo(exptectedHeight) <= 0)
+						isAccepted=true;
 
 					if (isAccepted) {
 						Map<String, String> details = new HashMap<>();

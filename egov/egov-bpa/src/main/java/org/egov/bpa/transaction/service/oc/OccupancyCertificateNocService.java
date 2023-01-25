@@ -51,6 +51,7 @@ import org.egov.bpa.master.entity.Holiday;
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.HolidayListService;
 import org.egov.bpa.master.service.NocConfigurationService;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
@@ -153,14 +154,14 @@ public class OccupancyCertificateNocService {
 			userList = nocUsers.stream()
 		    	      .filter(usr -> usr.getRoles().stream()
 		    	        .anyMatch(usrrl -> 
-		    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+		    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 		    	        .collect(Collectors.toList());	
 			if(userList.isEmpty()) {
 				nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
 				userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 			}	
 		     nocUser.add(userList.get(0));
@@ -186,14 +187,14 @@ public class OccupancyCertificateNocService {
 			userList = nocUsers.stream()
 		    	      .filter(usr -> usr.getRoles().stream()
 		    	        .anyMatch(usrrl -> 
-		    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+		    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 		    	        .collect(Collectors.toList());	
 			if(userList.isEmpty()) {
 				nocUsers = userService.getUsersByTypeAndTenantId(UserType.BUSINESS, ApplicationConstant.STATE_TENANTID);
 				userList = nocUsers.stream()
 			    	      .filter(usr -> usr.getRoles().stream()
 			    	        .anyMatch(usrrl -> 
-			    	          usrrl.getName().equals(BpaConstants.getNocRole().get(nocConfig.getDepartment()))))
+			    	          usrrl.getName().equals(getNocRoles(oc.getParent(), nocConfig))))
 			    	        .collect(Collectors.toList());	
 			}
 		     nocUser.add(userList.get(0));
@@ -220,6 +221,16 @@ public class OccupancyCertificateNocService {
 		nocApplication.setSlaEndDate(c.getTime());
     }
 	
+	public String getNocRoles(BpaApplication application, NocConfiguration nocConfig) {
+    	String nocRole = "";
+    	if(BpaConstants.APPLICATION_TYPE_MEDIUMRISK.equalsIgnoreCase(application.getApplicationType().getName())) {
+    		nocRole = BpaConstants.getOCNocRuralRole().get(nocConfig.getDepartment());
+    	} else {
+    		nocRole = BpaConstants.getOCNocRole().get(nocConfig.getDepartment());
+    	}
+    	return nocRole;
+    }
+	
 	public Map<String, String> getEdcrNocMandatory(final String edcrNumber){	
 		
 		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -227,11 +238,13 @@ public class OccupancyCertificateNocService {
         nocTypeMap.put(BpaConstants.FIRENOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.PACNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.POLNOCTYPE, "NO");
+		nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, "NO");
 		nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, "NO");
 		if(edcrPlanInfo.getPlan()!=null){ 
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("NO");
+			edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("NO");
 			edcrPlanInfo.getPlan().getPlanInformation().setNocAcTaxDept("NO");
 			if(null!=edcrPlanInfo.getPlan()) {
 				String boundaryType = "";
@@ -247,6 +260,7 @@ public class OccupancyCertificateNocService {
 						edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 						edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
 						edcrPlanInfo.getPlan().getPlanInformation().setNocPollutionDept("YES");
+						edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");
 					}
 				}else if(boundaryType.equalsIgnoreCase(BpaConstants.RURAL)){
 					edcrPlanInfo.getPlan().getPlanInformation().setNocFireDept("YES");
@@ -256,6 +270,7 @@ public class OccupancyCertificateNocService {
 			nocTypeMap.put(BpaConstants.FIRENOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocFireDept());
 			nocTypeMap.put(BpaConstants.PACNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPACDept());
 			nocTypeMap.put(BpaConstants.POLNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPollutionDept());
+			nocTypeMap.put(BpaConstants.PLANNINGNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocPlanningDept());
 			nocTypeMap.put(BpaConstants.ACTAXNOCTYPE, edcrPlanInfo.getPlan().getPlanInformation().getNocAcTaxDept());
 	   }
 	   return nocTypeMap;

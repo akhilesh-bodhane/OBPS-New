@@ -59,12 +59,14 @@ import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;
 import org.egov.common.entity.edcr.Floor;
 import org.egov.common.entity.edcr.Measurement;
+import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.Result;
 import org.egov.common.entity.edcr.RoomHeight;
 import org.egov.common.entity.edcr.ScrutinyDetail;
 import org.egov.edcr.constants.DxfFileConstants;
 import org.egov.edcr.service.cdg.CDGAConstant;
+import org.egov.edcr.service.cdg.CDGADeviationConstant;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +86,13 @@ public class BathRoomWaterClosets extends FeatureProcess {
 	@Override
 	public Plan process(Plan pl) {
 
+		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
+		if (mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || DxfFileConstants.F_SCO.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
+			return pl;
+		
 		ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.setKey("Common_Toilet");
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
@@ -106,6 +115,11 @@ public class BathRoomWaterClosets extends FeatureProcess {
 				int countInBlock = 0;
 
 				for (Floor f : b.getBuilding().getFloors()) {
+					
+					if(f.getBathRoomWaterClosets()!=null && f.getBathRoomWaterClosets().getRooms()!=null && f.getBathRoomWaterClosets().getRooms().size()>0 
+							&& (f.getBathRoomWaterClosets().getHeights()==null || f.getBathRoomWaterClosets().getHeights().size()==0)) {
+						pl.addError("BathRoomWaterClosets", "Toilet height is not defind block "+b.getNumber()+" floor "+f.getNumber());
+					}
 
 					if (f.getBathRoomWaterClosets() != null && f.getBathRoomWaterClosets().getHeights() != null
 							&& !f.getBathRoomWaterClosets().getHeights().isEmpty()
@@ -128,7 +142,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 								&& !f.getBathRoomWaterClosets().getRooms().isEmpty()) {
 							minWidth = f.getBathRoomWaterClosets().getRooms().get(0).getWidth();
 							for (Measurement m : f.getBathRoomWaterClosets().getRooms()) {
-								totalArea = totalArea.add(CDGAdditionalService.roundBigDecimal(m.getArea()));
+								totalArea = CDGAdditionalService.roundBigDecimal(m.getArea());
 								if (m.getWidth().compareTo(minWidth) < 0) {
 									minWidth = CDGAdditionalService.roundBigDecimal(m.getWidth());
 								}
@@ -140,19 +154,21 @@ public class BathRoomWaterClosets extends FeatureProcess {
 						
 						if(pl.getDrawingPreference().getInFeets()) {
 							minHeight=CDGAdditionalService.inchToFeet(minHeight);
-							expectedMinHeight=CDGAdditionalService.meterToFoot(expectedMinHeight);
+							expectedMinHeight=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMinHeight, CDGADeviationConstant.TOILET_DEVIATION_HEIGHT));
 							totalArea=CDGAdditionalService.inchtoFeetArea(totalArea);
-							expectedArea=CDGAdditionalService.meterToFootArea(expectedArea);
+							expectedArea=CDGAdditionalService.meterToFootArea(CDGADeviationConstant.addDeviation(expectedArea, CDGADeviationConstant.TOILET_DEVIATION_AREA));
 							minWidth=CDGAdditionalService.inchToFeet(minWidth);
-							expectedMinWidth=CDGAdditionalService.meterToFoot(expectedMinWidth);
+							expectedMinWidth=CDGAdditionalService.meterToFoot(CDGADeviationConstant.addDeviation(expectedMinWidth,CDGADeviationConstant.TOILET_DEVIATION_WIDTH));
 						}
-
+						expectedArea=CDGAdditionalService.roundBigDecimal(expectedArea);
+						totalArea=CDGAdditionalService.roundBigDecimal(totalArea);
+						
 						if (minHeight.compareTo(expectedMinHeight) >= 0
 								&& totalArea.compareTo(expectedArea) >= 0
 								&& minWidth.compareTo(expectedMinWidth) >= 0) {
 
 							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
-									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedMinWidth));
 							details.put(PROVIDED,
 									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
 											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));
@@ -162,7 +178,7 @@ public class BathRoomWaterClosets extends FeatureProcess {
 
 						} else {
 							details.put(REQUIRED, "Height >=" + CDGAdditionalService.viewLenght(pl, expectedMinHeight) + ", Total Area >= "
-									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedArea));
+									+ CDGAdditionalService.viewArea(pl, expectedArea)+ ", Width >= " + CDGAdditionalService.viewLenght(pl, expectedMinWidth));
 							details.put(PROVIDED,
 									"Height = " + CDGAdditionalService.viewLenght(pl, minHeight) + ", Total Area = " + CDGAdditionalService.viewArea(pl, totalArea)
 											+", Width = " + CDGAdditionalService.viewLenght(pl, minWidth));

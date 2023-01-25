@@ -80,7 +80,7 @@
 					href="#application-info" data-tabidx=0><spring:message
 							code='lbl.appln.details' /></a></li>
 				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
-							code='title.documentdetail' /></a></li>
+							code='title.documentdetail' /></a></li>			
 				<c:if test="${not empty occupancyCertificate.getNocDocuments()}">
 					<li><a data-toggle="tab" href="#noc-document-info"
 						data-tabidx=2><spring:message code='lbl.noc.details' /></a></li>
@@ -98,10 +98,8 @@
 					<li><a data-toggle="tab" href="#view-lp" data-tabidx=5><spring:message
 								code='lbl.lp.details' /></a></li>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
-					<li><a data-toggle="tab" href="#view-fee" data-tabidx=6><spring:message
+				<li><a data-toggle="tab" href="#view-fee" data-tabidx=6><spring:message
 								code='lbl.ocfee.details' /></a></li>
-				</c:if>
 			</ul>
 			<div class="tab-content">
 				<div id="application-info" class="tab-pane fade in active">
@@ -137,12 +135,15 @@
 								value="${occupancyCertificate.receipts}"></c:set>
 							<c:set var="applicationNumber" scope="request"
 								value="${occupancyCertificate.applicationNumber}"></c:set>
-							<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+							<jsp:include page="../../common/view-bpa-receipt-details.jsp"></jsp:include>
 						</div>
 					</c:if>
 					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="../../application/applicationhistory-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="disclaimer-oc.jsp" />
+						</div>
 				</div>
 				<div id="document-info" class="tab-pane fade">
 					<div class="panel panel-primary" data-collapsed="0">
@@ -183,13 +184,11 @@
 						</div>
 					</div>
 				</c:if>
-				<c:if test="${not empty occupancyCertificate.occupancyFee}">
-					<div id="view-fee" class="tab-pane fade">
-						<div class="panel panel-primary" data-collapsed="0">
-							<jsp:include page="../view-oc-fee-details.jsp"></jsp:include>
-						</div>
+				<div id="view-fee" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../oc-register-fee-details.jsp"></jsp:include>
 					</div>
-				</c:if>
+				</div>
 			</div>
 			<div class="buttonbottom" align="center">
 				<table>
@@ -232,11 +231,24 @@
 									Print Demand Notice </a>&nbsp;</td>
 						</c:if>
 						<c:if
-							test="${occupancyCertificate.status.code eq 'Order Issued to Applicant' }">
+							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && !isFinalOCGenerated }">
 							<td><a
 								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
 								target="popup" class="btn btn-primary"
 								onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+									Print Provisional Occupancy Certificate </a>&nbsp;</td>
+						</c:if>
+						<c:if
+							test="${(occupancyCertificate.status.code eq 'Order Issued to Applicant') || (occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && isFinalOCGenerated)}">
+							<td><a
+								href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+								target="popup" class="btn btn-primary"
+								onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+									Print Provisional Occupancy Certificate </a>&nbsp;</td>
+							<td><a
+								href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+								target="popup" class="btn btn-primary"
+								onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 									Print Occupancy Certificate </a>&nbsp;</td>
 						</c:if>
 						<c:if
@@ -324,3 +336,5 @@
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/oc-edcr-helper.js?rnd=${app_release_no}'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/occupancy-certificate/occupancy-certificate-view.js?rnd=${app_release_no}'/>"></script>
+<script 
+	src="<cdn:url value='/resources/js/app/oc-register-fee-details.js?rnd=${app_release_no}'/>"></script>		

@@ -70,7 +70,11 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.collection.cdg.finance.service.VocherService;
+import org.egov.collection.config.properties.CollectionApplicationProperties;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.ReceiptDetail;
 import org.egov.collection.entity.ReceiptHeader;
@@ -80,7 +84,6 @@ import org.egov.collection.integration.pgi.PaymentRequest;
 import org.egov.collection.integration.pgi.PaymentResponse;
 import org.egov.collection.integration.services.DebitAccountHeadDetailsService;
 import org.egov.collection.service.CollectionService;
-import org.egov.collection.service.DcrBpaRestService;
 import org.egov.collection.service.ReceiptHeaderService;
 import org.egov.collection.utils.CollectionCommon;
 import org.egov.collection.utils.CollectionsUtil;
@@ -90,7 +93,6 @@ import org.egov.commons.EgwStatus;
 import org.egov.commons.Fund;
 import org.egov.commons.dao.ChartOfAccountsHibernateDAO;
 import org.egov.commons.dao.FundHibernateDAO;
-import org.egov.edcr.service.EdcrApplicationDetailService;
 import org.egov.edcr.service.EdcrExternalService;
 import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.entity.Department;
@@ -102,9 +104,6 @@ import org.egov.infra.web.struts.annotation.ValidationErrorPage;
 import org.egov.infstr.models.ServiceDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.egov.collection.constants.CollectionConstants;
 
 @ParentPackage("egov")
 @Results({ @Result(name = OnlineReceiptAction.NEW, location = "onlineReceipt-new.jsp"),
@@ -193,19 +192,33 @@ public class OnlineReceiptAction extends BaseFormAction {
     }
     @Autowired
     private ApplicationBpaService applicationBpaService;
-
+    
+    @Autowired
+    private OccupancyCertificateService occupancyCertificateService;
+    
+    @Autowired
+    private VocherService vocherService;
     @Autowired
     private EdcrExternalService edcrExternalService;
-    private Map<String, String> getPlanInfo(String applicationNumber){
+    @Autowired
+	private CollectionApplicationProperties collectionApplicationProperties;
+    private Map<String, String> getPlanInfo(String applicationNumber, String serviceCode){
     	Map<String, String> map=new HashMap<String, String>();
     	try {
-    		BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
-    		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(bpaApplication.geteDcrNumber());
-        	
+    		String dcrNumber="";
+    		if("OC".equalsIgnoreCase(serviceCode)) {
+    			OccupancyCertificate occupancyCertificate = occupancyCertificateService.findByApplicationNumber(applicationNumber);
+    			dcrNumber=occupancyCertificate.geteDcrNumber();
+    		}else {
+    			BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
+    			dcrNumber=bpaApplication.geteDcrNumber();
+    		}
+    		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(dcrNumber);
+    		
         	if(odcrPlanInfo!=null && odcrPlanInfo.getPlan()!=null)
         		map= odcrPlanInfo.getPlan().getPlanInfoProperties();
     	}catch (Exception e) {
-			e.printStackTrace();
+    		LOGGER.error(e.getMessage());
 		}
     	return map;
     }
@@ -218,10 +231,13 @@ public class OnlineReceiptAction extends BaseFormAction {
          */
     	String rootBoundaryType=null;
     	//get rootBonndaryType start
-    	String dcr=receiptHeader.getConsumerCode();
+    	String dcr=receiptHeader.getConsumerCode();    	
+    	String serviceCode="";
+    	if(null!=receiptHeader.getService()) {
+    		serviceCode=receiptHeader.getService().getCode();
+    	}   	
     	
-    	
-    	Map<String, String> planInfo=getPlanInfo(dcr);
+    	Map<String, String> planInfo=getPlanInfo(dcr,serviceCode);
     	rootBoundaryType=planInfo.get(CollectionConstants.ROOT_BOUNDARY_TYPE);
     	
     	//end
@@ -269,8 +285,12 @@ public class OnlineReceiptAction extends BaseFormAction {
                 paymentResponse.getAdditionalInfo6());
 
         if (onlinePaymentReceiptHeader != null) {
-            if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(paymentResponse.getAuthStatus()))
-                processSuccessMsg();
+            if (CollectionConstants.PGI_AUTHORISATION_CODE_SUCCESS.equals(paymentResponse.getAuthStatus())) {
+//              //vocher call start
+//              vocherService.processVocher(paymentService, onlinePaymentReceiptHeader, rbt);
+//              //vocher call start
+              processSuccessMsg();
+            }
             else if ((onlinePaymentReceiptHeader.getOnlinePayment().getService().getCode().equals(CollectionConstants.SERVICECODE_PGI_BILLDESK)
                     && CollectionConstants.PGI_AUTHORISATION_CODE_WAITINGFOR_PAY_GATEWAY_RESPONSE
                             .equals(paymentResponse.getAuthStatus()))
@@ -284,6 +304,9 @@ public class OnlineReceiptAction extends BaseFormAction {
                 onlinePaymentReceiptHeader.getOnlinePayment().setAuthorisationStatusCode(
                         paymentResponse.getAuthStatus());
                 onlinePaymentReceiptHeader.getOnlinePayment().setRemarks(paymentResponse.getErrorDescription());
+
+                
+                
             } else
                 processFailureMsg();
         } else {
@@ -536,11 +559,28 @@ public class OnlineReceiptAction extends BaseFormAction {
                 addActionError(getText("billreceipt.error.improperbilldata"));
             }
         }
+        
+        String dcr;    	
+    	String serviceCode="";
+    	String rootBoundaryType="";
+    	if(receiptHeader!=null && null!=receiptHeader.getService()) {
+    		serviceCode=receiptHeader.getService().getCode();
+    	}   	
+    	
+    	try {
+    		dcr=receiptHeader.getConsumerCode();    
+    		Map<String, String> planInfo=getPlanInfo(dcr,serviceCode);
+        	rootBoundaryType=planInfo.get(CollectionConstants.ROOT_BOUNDARY_TYPE);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    	
         addDropdownData(
                 "paymentServiceList",
                 getPersistenceService().findAllByNamedQuery(CollectionConstants.QUERY_SERVICES_BY_TYPE,
                         CollectionConstants.SERVICE_TYPE_PAYMENT));
         constructServiceDetailsList();
+        filterPaymentGateway(serviceDetailsList, rootBoundaryType);
         // Fetching pending transaction by consumer code. If transaction is in pending status display message
 	    if (null != receiptHeader && null != receiptHeader.getConsumerCode() && !"".equals(receiptHeader.getConsumerCode())
 	            && receiptHeader.getService().getCode() != null && !receiptHeader.getService().getCode().isEmpty()) {
@@ -760,7 +800,7 @@ public class OnlineReceiptAction extends BaseFormAction {
                 final String paramName = paramNames.nextElement();
                 final String paramValue = httpRequest.getParameter(paramName);
                 if (null != paramValue && !"".equals(paramValue))
-                    responseMap.put(paramName, paramValue);
+                    responseMap.put(paramName, paramValue!=null?paramValue.replace(",", "."):null);
             }
             responseMsg = responseMap.toString();
         }
@@ -961,5 +1001,24 @@ public class OnlineReceiptAction extends BaseFormAction {
 
     public void setCollectionService(final CollectionService collectionService) {
         this.collectionService = collectionService;
+    }
+    
+    private void filterPaymentGateway(List<ServiceDetails> serviceDetails,String rootBoundaryType) {
+    	List<ServiceDetails> list2=new ArrayList<>();
+    	try {
+    		if(rootBoundaryType!=null) {
+    			List<String> allowedPaymentGateway=collectionApplicationProperties.paymentGatewayCode(rootBoundaryType);
+            	for(ServiceDetails details:serviceDetails) {
+            		if(allowedPaymentGateway.contains(details.getCode()))
+            			list2.add(details);
+            	}
+    		}else{
+    			list2=serviceDetails;
+    		}
+    	}catch (NullPointerException e) {
+			// TODO: handle exception
+		}
+    	
+    	setServiceDetailsList(list2);
     }
 }

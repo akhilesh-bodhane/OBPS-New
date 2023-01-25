@@ -3,10 +3,12 @@ package com.pwc.XlsxReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Properties;
+import java.util.HashMap;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,32 +23,72 @@ import com.pwc.XlsxReader.entity.BackYardConstruction;
 import com.pwc.XlsxReader.entity.DxfConstent;
 import com.pwc.XlsxReader.entity.Far;
 import com.pwc.XlsxReader.entity.Master;
+import com.pwc.XlsxReader.entity.MyShorting;
 import com.pwc.XlsxReader.entity.NoOfStory;
 import com.pwc.XlsxReader.entity.PermissibleBuildingHeight;
 import com.pwc.XlsxReader.entity.SetBack;
 
 public class ExcelReader {
 
-	public static final String SHEET_NAME_MASTER = "Master";
+	public static final String SHEET_NAME_MASTER = "MASTER";
 	public static final String SHEET_NAME_FAR = "FAR";
 	public static final String SHEET_NAME_NO_OF_STOREYS = "No of storeys";
 	public static final String SHEET_NAME_BACK_YARD_COMSTRUCTIONS = "Back Yard construction";
 	public static final String SHEET_NAME_SETBACKS = "Setbacks";
 	public static final String SHEET_NAME_PERMISSIBLE_BUILDING_HEIGHT = "Height";
-	//public static final String SAMPLE_XLSX_FILE_PATH = "/home/root1/Desktop/doc/project ref doc/march/Master rule book v-18.xlsx";
+	// public static final String SAMPLE_XLSX_FILE_PATH =
+	// "/home/root1/Desktop/doc/project ref doc/march/Master rule book v-18.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH="/XlsxReader2/src/main/java/com/pwc/xlsx/Master rule book v-18.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/44A&44C v3.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH="src/main/java/com/pwc/xlsx/freedy-01Aug2020.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH = "C:\\Workspace\\chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\33C MASTER DATA-updated for 28 Feb 2021.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA FOR COMBINED PLOT_6sep21.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\35D  MASTER DATA.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data for sector 18 and 22.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data_8A_8B_8C and commercial_10-20 & above 40 V3.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data for sector 15A,B, 23c and booth.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Updated Mater data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 013-07-2022.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Materdata_05-08-22 _industrial.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Mater data 05-08-22 -industrial.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 23D, & 7-1-1608-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA TO UPDATE 26, 20-residential-0209.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\GOLF-0709-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 12-09-2022-Residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA 17-09-2022_residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\MASTER DATA 21-09-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\4-10-2022 Master data-Residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\12-10-2022 Master data-commercial.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 18-10-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 20-10-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data-25-10-commercial.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 27-10-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Parking master data-residetial.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Booth master data 2-11-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 14-11-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\NAC MANIMAJARA AND 17B 17-11-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\master data 25-11-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Mater data 6-12-2022-residential.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\Master data 18-12-12022-res.xlsx";
+//	static final String SAMPLE_XLSX_FILE_PATH  = "D:\\Chandigarh_new\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\20-12-22 Master data-res.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\22-12-22 Master_data_Res.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\23-12-2022_Residential_master_data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\23-12-2022_Educational_occupancy_master_data.xlsx";
+//  public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\CHD\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\updated\\Residential master data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\02-01-2023 Educational occupancy master data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\02-01-2023 Updated society master data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\03-01-2023 commercial master data1.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\10.1.23_Master data.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\18-01-2023 Master data.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Workspace\\Chandigarh\\OBPS-Chandigarh\\OBPS-Chandigarh_Impl1\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\18-01-2023 Master data.xlsx";
 	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
-
+		System.out.println("==================Start===================");
 		Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
-
-		Sheet sheet = workbook.getSheetAt(workbook.getSheetIndex(SHEET_NAME_MASTER));
+		Sheet sheet = workbook.getSheetAt(0);
 		processMaster(sheet);
-	//	System.out.println(sheet.getSheetName());
-
-		// Closing the workbook
 		workbook.close();
+		System.out.println("===================End===================");
 	}
 
 	private static void processMaster(Sheet sheet) {
@@ -54,21 +96,14 @@ public class ExcelReader {
 		DataFormatter dataFormatter = new DataFormatter();
 		List<Master> masters = new ArrayList<Master>();
 		for (Row row : sheet) {
-		//	System.out.println(row.getRowNum());
-//			if (row.getRowNum() == 0)
-//				continue;
-			if(row.getRowNum()==2613) {
-				//System.out.println("test");
-			}
+			if (row.getRowNum() == 0)
+				continue;
 			char key = 65;
 			Master master = new Master();
 			for (Cell cell : row) {
-
-				//String cellValue = DxfConstent.getString(dataFormatter.formatCellValue(cell));
 				String cellValue = dataFormatter.formatCellValue(cell);
 				cellValue = DxfConstent.validateValue(cellValue);
 				switch (key) {
-
 				case 'A':
 					break;
 				case 'D':
@@ -131,17 +166,21 @@ public class ExcelReader {
 			master.setKey(master.getCode() + "." + master.getSector() + "." + master.getPlotNo() + "."
 					+ master.getAreaType());
 			masters.add(master);
-			//System.out.println("Master : "+master);
-		}
 
+		}
 		processBackYardConstruction(masters);
+		System.out.println();
 		processFar(masters);
+		System.out.println();
 		processNoOfStory(masters);
+		System.out.println();
 		processPermissibleBuildingHight(masters);
+		System.out.println();
 		processSetBack(masters);
 	}
 
 	private static void processFar(List<Master> masters) {
+		System.out.println("----------------start processFar ------------------");
 		List<Far> fars = new ArrayList<Far>();
 
 		for (Master master : masters) {
@@ -151,14 +190,17 @@ public class ExcelReader {
 			fars.add(far);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (Far far : fars) {
-			properties.put(far.getKey(), far.getMaxmimumPermissibleFAR());
+			String s = properties.put(far.getKey(), far.getMaxmimumPermissibleFAR());
 		}
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "Far.properties");
+		System.out.println("----------------end processFar ------------------");
 	}
 
 	private static void processNoOfStory(List<Master> masters) {
+		System.out.println("----------------start processNoOfStory ------------------");
 		List<NoOfStory> noOfStories = new ArrayList<NoOfStory>();
 
 		for (Master master : masters) {
@@ -168,16 +210,17 @@ public class ExcelReader {
 			noOfStories.add(noOfStory);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (NoOfStory far : noOfStories) {
 			properties.put(far.getKey(), far.getPermissibleBuildingStories());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "NoOfStory.properties");
-
+		System.out.println("----------------end processNoOfStory ------------------");
 	}
 
 	private static void processPermissibleBuildingHight(List<Master> masters) {
+		System.out.println("----------------start processPermissibleBuildingHight ------------------");
 		List<PermissibleBuildingHeight> permissibleBuildingHeights = new ArrayList<PermissibleBuildingHeight>();
 
 		for (Master master : masters) {
@@ -188,17 +231,17 @@ public class ExcelReader {
 			permissibleBuildingHeights.add(permissibleBuildingHeight);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (PermissibleBuildingHeight buildingHeight : permissibleBuildingHeights) {
 			properties.put(buildingHeight.getKey(), buildingHeight.getPermissibleBuildingHeight());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "PermissibleBuildingHeight.properties");
-
+		System.out.println("----------------end processBackYardConstruction ------------------");
 	}
 
 	private static void processSetBack(List<Master> masters) {
-
+		System.out.println("----------------start processSetBack ------------------");
 		List<SetBack> setBacks = new ArrayList<SetBack>();
 
 		for (Master master : masters) {
@@ -241,9 +284,8 @@ public class ExcelReader {
 			setBacks.add(setBack);
 		}
 
-		Map<String, String> properties = new TreeMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (SetBack setBack : setBacks) {
-			System.out.println(setBack);
 			properties.put(setBack.getKeyFront(), setBack.getMinimumPermissibleSetback_Front());
 			properties.put(setBack.getKeyRear(), setBack.getMinimumPermissibleSetback_Rear());
 
@@ -269,12 +311,14 @@ public class ExcelReader {
 					properties.put(setBack.getKeyLeftWidth(), setBack.getMinimumPermissibleSetback_left_Width());
 			}
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "Setback.properties");
-
+		System.out.println("----------------end processSetBack ------------------");
 	}
 
 	private static void processBackYardConstruction(List<Master> masters) {
+		
+		System.out.println("----------------start processBackYardConstruction ------------------");
 
 		List<BackYardConstruction> backYardConstructions = new ArrayList<BackYardConstruction>();
 
@@ -293,16 +337,16 @@ public class ExcelReader {
 			backYardConstructions.add(backYardConstruction);
 		}
 
-		Map<String, String> properties = new LinkedHashMap<String, String>();
+		HashMap<String, String> properties = new HashMap<String, String>();
 		for (BackYardConstruction backYardConstruction : backYardConstructions) {
 			properties.put(backYardConstruction.getKeyWidth(),
 					backYardConstruction.getBackCourtyardConstructionWidth());
 			properties.put(backYardConstruction.getKeyHight(),
 					backYardConstruction.getBackCourtyardConstructionHeight());
 		}
-
+		System.out.println("Master "+masters.size()+" | properties "+properties.size());
 		Utill.writeToPropertiesFile(properties, "BackYardConstruction.properties");
-
+		System.out.println("----------------end processBackYardConstruction ------------------");
 	}
 
 	private static void printCellValue(Cell cell) {

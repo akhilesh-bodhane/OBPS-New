@@ -82,6 +82,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import static org.egov.edcr.constants.DxfFileConstants.DISCLAIMER_ONE;
 
 @Service
 public class PlanReportService {
@@ -568,8 +569,11 @@ public class PlanReportService {
             		});   
           
             Set<String> distinctOccupancies = new HashSet<>(occupancies);
+//            plan.getPlanInformation()
+//                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+           if(plan.getVirtualBuilding().getMostRestrictiveFarHelper()!=null)
             plan.getPlanInformation()
-                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+            .setOccupancy(plan.getVirtualBuilding().getMostRestrictiveFarHelper().getType().getName());
         }
         boolean reportStatus = false;
         boolean finalReportStatus = true;
@@ -657,7 +661,13 @@ public class PlanReportService {
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
         else if(plan.getDrawingPreference().getInFeets())
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
-        
+        String conditionalOCNote = "";
+        if(ApplicationType.OCCUPANCY_CERTIFICATE.equals(dcrApplication.getApplicationType()) && !finalReportStatus) {
+        	conditionalOCNote = "\t3. Architect needs ensure that the provided information in the drawing is as per the current site condition. In case variation is found in the provided information and on site condition, architect will be liable for disciplinary actions and may lead to revocation of license.";
+        }
+        valuesMap.put("disclaimer", "	1. In case of application for Residential Plotted property in Marla category, refer to the frame controls applicable as provided in the link - https://urbanplanning.chd.gov.in/index.php/home/architectural_controls . If the drawing does not comply with the applicable frame controls, the application may be rejected by the Estate office.\n"
+        		+ "\t2. "+DISCLAIMER_ONE+"\n"
+        		+ conditionalOCNote);
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
@@ -778,16 +788,21 @@ public class PlanReportService {
                         if (blkFeature.equals(FRONT_YARD_DESC)) {
                             front = allMap.get(blkName + blkFeature);
                             front.getDetail().get(0).put(SIDENUMBER_NAME, "Front");
-                            continue;
+                            if( blocks.get(blkName).contains(REAR_YARD_DESC) ||  blocks.get(blkName).contains(SIDE_YARD_DESC))
+                            	continue;
                         }
                         if (blkFeature.equals(REAR_YARD_DESC)) {
                             rear = allMap.get(blkName + blkFeature);
                             rear.getDetail().get(0).put(SIDENUMBER_NAME, "Rear");
-                            if(!plan.getIsRowHouse())
+//                            if(!plan.getIsRowHouse())
+//                            	continue;
+                            if( blocks.get(blkName).contains(SIDE_YARD_DESC))
                             	continue;
                         }
-
-                        side = allMap.get(blkName + blkFeature);
+                        if(blkFeature.equals(SIDE_YARD_DESC))
+                        	side = allMap.get(blkName + blkFeature);
+                        else
+                        	side=rear;
                         // List<Map<String, String>> detail = allMap.get(blkName +
                         // blkFeature).getDetail();
                         
@@ -798,7 +813,7 @@ public class PlanReportService {
 
                         if (front != null)
                             detail.add(0, front.getDetail().get(0));
-                        if (rear != null)
+                        if (rear != null && blkFeature.equals(SIDE_YARD_DESC))
                             detail.add(1, rear.getDetail().get(0));
 
                         for (Map<String, String> d : detail) {
@@ -1024,6 +1039,8 @@ public class PlanReportService {
                             if (!occupancies.isEmpty()) {
 
                                 for (Occupancy occupancy : occupancies) {
+                                	if(occupancy!=null && occupancy.getTypeHelper()!=null && CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper()))
+                                		continue;
                                     String occupancyName = "";
                                     if (occupancy.getTypeHelper() != null)
                                         if (occupancy.getTypeHelper().getSubtype() != null)
@@ -1118,6 +1135,8 @@ public class PlanReportService {
                             if (!occupancies.isEmpty()) {
 
                                 for (Occupancy occupancy : occupancies) {
+                                	if(occupancy!=null && occupancy.getTypeHelper()!=null && CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper()))
+                                		continue;
                                     String occupancyName = "";
                                     if (occupancy.getTypeHelper() != null)
                                         if (occupancy.getTypeHelper().getSubtype() != null)
@@ -1218,7 +1237,7 @@ public class PlanReportService {
         cs = new ConditionalStyle(fc, reportService.getDetailStyle(new Color(0, 128, 0)));
         conditionalStyles.add(cs);
 
-        fc = new FetchCondition(STATUS, "Verify");
+        fc = new FetchCondition(STATUS, "Verified");
 
         cs = new ConditionalStyle(fc, reportService.getDetailStyle(new Color(30, 144, 255)));
         conditionalStyles.add(cs);

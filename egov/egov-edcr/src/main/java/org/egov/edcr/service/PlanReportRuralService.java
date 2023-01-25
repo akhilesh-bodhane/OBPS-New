@@ -83,6 +83,8 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import static org.egov.edcr.constants.DxfFileConstants.DISCLAIMER_ONE;
+
 
 @Service
 public class PlanReportRuralService extends PlanReportService{
@@ -568,8 +570,11 @@ public class PlanReportRuralService extends PlanReportService{
             		});   
           
             Set<String> distinctOccupancies = new HashSet<>(occupancies);
+//            plan.getPlanInformation()
+//                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+            if(plan.getVirtualBuilding().getMostRestrictiveFarHelper()!=null)
             plan.getPlanInformation()
-                    .setOccupancy(distinctOccupancies.stream().map(String::new).collect(Collectors.joining(",")));
+            .setOccupancy(plan.getVirtualBuilding().getMostRestrictiveFarHelper().getType().getName());
         }
         boolean reportStatus = false;
         boolean finalReportStatus = true;
@@ -658,6 +663,9 @@ public class PlanReportRuralService extends PlanReportService{
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_METER);
         else if(plan.getDrawingPreference().getInFeets())
         	valuesMap.put("UNIT_DECLARATION", DxfFileConstants.DECLARATION_FEET);
+        
+        valuesMap.put("disclaimer", "\t1. "+DISCLAIMER_ONE+"\n");
+        
         if (clientSpecificSubReport) {
 
             List<DcrReportBlockDetail> blockDetails = new ArrayList<>();
@@ -1204,7 +1212,7 @@ public class PlanReportRuralService extends PlanReportService{
         cs = new ConditionalStyle(fc, reportService.getDetailStyle(new Color(0, 128, 0)));
         conditionalStyles.add(cs);
 
-        fc = new FetchCondition(STATUS, "Verify");
+        fc = new FetchCondition(STATUS, "Verified");
 
         cs = new ConditionalStyle(fc, reportService.getDetailStyle(new Color(30, 144, 255)));
         conditionalStyles.add(cs);

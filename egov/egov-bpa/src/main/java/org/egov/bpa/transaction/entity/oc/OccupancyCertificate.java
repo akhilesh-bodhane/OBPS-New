@@ -74,6 +74,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.WorkflowBean;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.commons.entity.Source;
 import org.egov.dcb.bean.Receipt;
 import org.egov.demand.model.EgDemand;
@@ -156,9 +157,9 @@ public class OccupancyCertificate extends StateAware<Position> {
     @Temporal(value = TemporalType.DATE)
     private Date workCompletionDueDate;
 
-    private Boolean citizenAccepted = false;
+    private boolean citizenAccepted = false;
 
-    private Boolean architectAccepted = false;
+    private boolean architectAccepted = false;
 
     private Boolean isSentToPreviousOwner = false;
 
@@ -246,6 +247,9 @@ public class OccupancyCertificate extends StateAware<Position> {
     private transient List<OCExistingBuilding> existingBldgDetailFromEdcr = new ArrayList<>();
     private transient List<OCNoticeConditions> rejectionReasonsTemp = new ArrayList<>(0);
     private transient List<OCNoticeConditions> additionalRejectReasonsTemp = new ArrayList<>(0);
+    
+    private transient WorkflowFile workflowFile = new WorkflowFile();	
+    private transient String wfFileRefId;
 
     @Override
     public Long getId() {
@@ -366,19 +370,19 @@ public class OccupancyCertificate extends StateAware<Position> {
         this.workCompletionDueDate = workCompletionDueDate;
     }
 
-    public Boolean isCitizenAccepted() {
+    public boolean isCitizenAccepted() {
         return citizenAccepted;
     }
 
-    public void setCitizenAccepted(Boolean citizenAccepted) {
+    public void setCitizenAccepted(boolean citizenAccepted) {
         this.citizenAccepted = citizenAccepted;
     }
 
-    public Boolean isArchitectAccepted() {
+    public boolean isArchitectAccepted() {
         return architectAccepted;
     }
 
-    public void setArchitectAccepted(Boolean architectAccepted) {
+    public void setArchitectAccepted(boolean architectAccepted) {
         this.architectAccepted = architectAccepted;
     }
 
@@ -706,5 +710,21 @@ public class OccupancyCertificate extends StateAware<Position> {
 
 	public void setDrawingPreference(String drawingPreference) {
 		this.drawingPreference = drawingPreference;
+	}
+
+	public WorkflowFile getWorkflowFile() {
+		return workflowFile;
+	}
+
+	public void setWorkflowFile(WorkflowFile workflowFile) {
+		this.workflowFile = workflowFile;
+	}
+
+	public String getWfFileRefId() {
+		return wfFileRefId;
+	}
+
+	public void setWfFileRefId(String wfFileRefId) {
+		this.wfFileRefId = wfFileRefId;
 	}
 }

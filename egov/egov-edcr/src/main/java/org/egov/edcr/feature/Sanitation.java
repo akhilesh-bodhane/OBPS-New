@@ -338,7 +338,7 @@ public class Sanitation extends FeatureProcess {
 				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
 				: null;
 
-		if (mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
+		if (mostRestrictiveFarHelper==null || mostRestrictiveFarHelper.getSubtype() ==null || DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()) || DxfFileConstants.F_SCO.equals(mostRestrictiveFarHelper.getSubtype().getCode()))
 			return pl;
 
 		verifyDimesions(pl);
@@ -347,7 +347,7 @@ public class Sanitation extends FeatureProcess {
 	}
 
 	private Plan verifyDimesions(Plan pl) {
-		validate(pl);
+		//validate(pl);
 
 		/*
 		 * for (Block b : pl.getBlocks()) { If block is small plot and floors above
@@ -412,15 +412,15 @@ public class Sanitation extends FeatureProcess {
 				Map<Integer, Integer> failedDimensionSpWcMap = new ConcurrentHashMap<>();
 				Double noOfPerson = CDGAdditionalService.getNumberOfPerson(pl).doubleValue();
 				for (Occupancy type : b.getBuilding().getTotalArea()) {
-					double carpetArea = 0d;
-					if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0) {
-						carpetArea = type.getCarpetArea().doubleValue();
-					} else {
-						pl.addError("Invalid carpet area",
-								"Carpet area is not calculated . Some thing wrong with builtup area");
-						return;
-					}
-					LOG.debug(type.getType() + " area" + carpetArea);
+//					double carpetArea = 0d;
+//					if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0) {
+//						carpetArea = type.getCarpetArea().doubleValue();
+//					}else if(!DxfFileConstants.APPLICATION_TYPE_OCCUPANCY_CERTIFICATE.equals(pl.getApplicationType())){
+//						pl.addError("Invalid carpet area",
+//								"Carpet area is not calculated . Some thing wrong with builtup area");
+//						return;
+//					}
+//					LOG.debug(type.getType() + " area" + carpetArea);
 
 					OccupancyHelperDetail o = type.getTypeHelper().getSubtype() != null
 							? type.getTypeHelper().getSubtype()

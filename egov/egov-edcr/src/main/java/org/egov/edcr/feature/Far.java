@@ -88,6 +88,7 @@ import static org.egov.edcr.utility.DcrConstants.ROUNDMODE_MEASUREMENTS;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -117,6 +118,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+
 
 @Service
 public class Far extends FeatureProcess {
@@ -170,6 +172,9 @@ public class Far extends FeatureProcess {
 	public static final String OLD_AREA_ERROR_MSG = "No construction shall be permitted if the road width is less than 2.4m for old area.";
 	public static final String NEW_AREA_ERROR_MSG = "No construction shall be permitted if the road width is less than 6.1m for new area.";
 
+	public static final List<String> IS_FEATURE = Arrays.asList(new String[] { "A-R5", "A-GF", "A-OCP", "A-ICP", "A-AF",
+			"A-PO", "A-PG", "A-S", "A-SQ", "OC-MIC", "OC-GOV"});
+	
 	@Override
 	public Plan validate(Plan pl) {
 		if (pl.getPlot() == null || (pl.getPlot() != null
@@ -1108,23 +1113,25 @@ public class Far extends FeatureProcess {
 			for (Floor flr : building.getFloors()) {
 				if(flr.getNumber()>=0) {// for removing basment in  
 					for (Occupancy occupancy : flr.getOccupancies()) {
-						validate2(pl, blk, flr, occupancy);
-						/*
-						 * occupancy.setCarpetArea(occupancy.getFloorArea().multiply
-						 * (BigDecimal.valueOf(0.80))); occupancy
-						 * .setExistingCarpetArea(occupancy.getExistingFloorArea().
-						 * multiply(BigDecimal.valueOf(0.80)));
-						 */
+						if(occupancy!=null && occupancy.getTypeHelper()!=null && !CDGAdditionalService.isOccupancyExcludedFromFar(occupancy.getTypeHelper())){
+							validate2(pl, blk, flr, occupancy);
+							/*
+							 * occupancy.setCarpetArea(occupancy.getFloorArea().multiply
+							 * (BigDecimal.valueOf(0.80))); occupancy
+							 * .setExistingCarpetArea(occupancy.getExistingFloorArea().
+							 * multiply(BigDecimal.valueOf(0.80)));
+							 */
 
-						bltUpArea = bltUpArea.add(
-								occupancy.getBuiltUpArea() == null ? BigDecimal.valueOf(0) : occupancy.getBuiltUpArea());
-						existingBltUpArea = existingBltUpArea
-								.add(occupancy.getExistingBuiltUpArea() == null ? BigDecimal.valueOf(0)
-										: occupancy.getExistingBuiltUpArea());
-						flrArea = flrArea.add(occupancy.getFloorArea());
-						existingFlrArea = existingFlrArea.add(occupancy.getExistingFloorArea());
-						carpetArea = carpetArea.add(occupancy.getCarpetArea());
-						existingCarpetArea = existingCarpetArea.add(occupancy.getExistingCarpetArea());
+							bltUpArea = bltUpArea.add(
+									occupancy.getBuiltUpArea() == null ? BigDecimal.valueOf(0) : occupancy.getBuiltUpArea());
+							existingBltUpArea = existingBltUpArea
+									.add(occupancy.getExistingBuiltUpArea() == null ? BigDecimal.valueOf(0)
+											: occupancy.getExistingBuiltUpArea());
+							flrArea = flrArea.add(occupancy.getFloorArea());
+							existingFlrArea = existingFlrArea.add(occupancy.getExistingFloorArea());
+							carpetArea = carpetArea.add(occupancy.getCarpetArea());
+							existingCarpetArea = existingCarpetArea.add(occupancy.getExistingCarpetArea());
+						}
 					}
 				
 				}
@@ -1321,8 +1328,14 @@ public class Far extends FeatureProcess {
 			Building building = blk.getBuilding();
 			List<OccupancyTypeHelper> blockWiseOccupancyTypes = new ArrayList<>();
 			for (Occupancy occupancy : blk.getBuilding().getOccupancies()) {
-				if (occupancy.getTypeHelper() != null)
+				if (occupancy.getTypeHelper() != null) {
+					if(occupancy.getTypeHelper().getSubtype()!=null && IS_FEATURE.contains(occupancy.getTypeHelper().getSubtype().getCode())) {
+						//not need to consider as occupancy
+						continue;
+					}
+					
 					blockWiseOccupancyTypes.add(occupancy.getTypeHelper());
+				}
 			}
 			Set<OccupancyTypeHelper> setOfBlockDistinctOccupancyTypes = new HashSet<>(blockWiseOccupancyTypes);
 			OccupancyTypeHelper mostRestrictiveFar = getMostRestrictiveFar(setOfBlockDistinctOccupancyTypes);
@@ -1662,7 +1675,9 @@ public class Far extends FeatureProcess {
 		Set<String> codes = new HashSet<>();
 		Map<String, OccupancyTypeHelper> codesMap = new HashMap<>();
 		for (OccupancyTypeHelper typeHelper : distinctOccupancyTypes) {
-
+			
+//			if(typeHelper.getSubtype()!=null )
+			
 			if (typeHelper.getType() != null)
 				codesMap.put(typeHelper.getType().getCode(), typeHelper);
 			if (typeHelper.getSubtype() != null)
@@ -1781,6 +1796,8 @@ public class Far extends FeatureProcess {
 			return codesMap.get(DxfFileConstants.F_PP);
 		else if (codes.contains(DxfFileConstants.F_CD))
 			return codesMap.get(DxfFileConstants.F_CD);
+		else if (codes.contains(DxfFileConstants.F_CIR))
+			return codesMap.get(DxfFileConstants.F_CIR);
 		else if (codes.contains(DxfFileConstants.G_GBAC))
 			return codesMap.get(DxfFileConstants.G_GBAC);
 		else if (codes.contains(DxfFileConstants.G_GBZP))
@@ -1935,16 +1952,19 @@ public class Far extends FeatureProcess {
 
 		expectedResult = result.get(CDGAdditionalService.MAXMIUM_PERMISSIBLE_FAR);
 
-		
-
-		if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
-			pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
-			isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
-			//pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
-			expectedResult = "<= " + expectedResult;
+		if(DxfFileConstants.F.equals(occupancyType.getType().getCode())) {
+			isAccepted=true;
+			expectedResult=DxfFileConstants.NA;
 		}else {
-			errors.put(OBJECTNOTDEFINED+CDGAdditionalService.FAR, DxfFileConstants.DATA_NOT_FOUND+" : FAR");
-			pl.addErrors(errors);
+			if(!DxfFileConstants.DATA_NOT_FOUND.equals(expectedResult)) {
+				pl.getFarDetails().setPermissableFar((new BigDecimal(expectedResult)).doubleValue());
+				isAccepted = far.compareTo(new BigDecimal(expectedResult)) <= 0;
+				//pl.getFarDetails().setPermissableFar(ONE_POINTTWO.doubleValue());
+				expectedResult = "<= " + expectedResult;
+			}else {
+				errors.put(OBJECTNOTDEFINED+CDGAdditionalService.FAR, DxfFileConstants.DATA_NOT_FOUND+" : FAR");
+				pl.addErrors(errors);
+			}
 		}
 
 		if (errors.isEmpty() && StringUtils.isNotBlank(expectedResult)) {

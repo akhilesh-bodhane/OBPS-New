@@ -45,9 +45,49 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
+
+var atkGenDocs = [
+	"DOCUMENTATION-01","DOCUMENTATION-02","DOCUMENTATION-03","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13",
+	"DOCUMENTATION-14","DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-18","DOCUMENTATION-19","DOCUMENTATION-06","DOCUMENTATION-07",
+	"DOCUMENTATION-08","DOCUMENTATION-09","DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-34","DOCUMENTATION-23","DOCUMENTATION-24",
+	"DOCUMENTATION-25","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-35","DOCUMENTATION-36"
+];
+
+var btkGenDocs = [
+	"DOCUMENTATION-04","DOCUMENTATION-05","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13","DOCUMENTATION-14",
+	"DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-21","DOCUMENTATION-06","DOCUMENTATION-07","DOCUMENTATION-08","DOCUMENTATION-09",
+	"DOCUMENTATION-17","DOCUMENTATION-22","DOCUMENTATION-26","DOCUMENTATION-27","DOCUMENTATION-35","DOCUMENTATION-36"
+];
+
+var ruralDocs = [
+	"DOCUMENTATION-01","DOCUMENTATION-28","DOCUMENTATION-29","DOCUMENTATION-30","DOCUMENTATION-31","DOCUMENTATION-32","DOCUMENTATION-33"
+];
+
 jQuery(document)
     .ready(
         function () {
+        	
+        	$(".genDocs").each(function() {
+				var docId = $(this).attr('id');
+				var appType=$('#appType').val();
+				var docArr=[];
+	        	if(appType=="High Risk"){
+	        		docArr=atkGenDocs;
+	        	}else if(appType=="Low Risk"){
+	        		docArr=btkGenDocs;
+	        	}else if(appType=="Medium Risk"){
+	        		docArr=ruralDocs;
+	        	}
+	        	var isExist=false;
+	        	$.each(docArr, function( index, value ) {	   				
+    				if(docId == value){ 
+    				    isExist=true; 				    				    
+    				}        				       				
+    			});
+	        	if(!isExist){
+	        		$(this).hide();
+	        	}
+    		}); 
 
             if ($('#sentToPreviousOwner').val() === 'true' &&
                 $('#approveComments').val() &&
@@ -356,7 +396,142 @@ jQuery(document)
                             }
                             return false;
                         } else if (action == 'Revert') {
-                            if (validateOnRevert() && validateForm(validator)) {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Revert To Previous Reviewer') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To SDOMC') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To MCA') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To Tehsildar') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#sendBackApplnPreOfficial').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        }else if (action == 'Send Back To JE') {
+                            if (validateOnRevert() && validateOnApproveAndForward(validator, action)) {
                                 bootbox
                                     .dialog({
                                         message: $('#sendBackApplnPreOfficial').val(),
@@ -387,6 +562,33 @@ jQuery(document)
                                 bootbox
                                     .dialog({
                                         message: $('#approveAppln').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward For Payment') {
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#forwardToPayment').val(),
                                         buttons: {
                                             'confirm': {
                                                 label: 'Yes',
@@ -442,6 +644,34 @@ jQuery(document)
                                 bootbox
                                     .dialog({
                                         message: $('#generatePermitOrder').val(),
+                                        buttons: {
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary',
+                                                callback: function (result) {
+                                                    $('#viewBpaApplicationForm').trigger('submit');
+                                                }
+                                            },
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger',
+                                                callback: function (result) {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                }
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Accept as Scrutinized') {
+                            $('#Accept as Scrutinized').attr('formnovalidate', 'true');
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .dialog({
+                                        message: $('#acceptedasscrutinized').val(),
                                         buttons: {
                                             'confirm': {
                                                 label: 'Yes',
@@ -618,7 +848,18 @@ function validateOnApproveAndForward(validator, action) {
         $('#approvalDesignation').removeAttr('required');
         $('#approvalPosition').removeAttr('required');
         return true;
-    } else {
+    } else if(action == 'Revert' 
+				|| action == 'Generate Rejection Notice' 
+					|| action == 'Revert To Previous Reviewer'
+						|| action == 'Send Back To SDOMC'
+						 	|| action == 'Send Back To MCA'
+						 		|| action == 'Send Back To Tehsildar'
+									|| action == 'Send Back To JE'){
+		$('#approvalDepartment').removeAttr('required');
+        $('#approvalDesignation').removeAttr('required');
+        $('#approvalPosition').removeAttr('required');
+        return true;
+	} else {
         var serviceTypeName = $("#serviceType").val();
         if ($('#showPermitConditions').val() && serviceTypeName != 'Tower Construction'
             && serviceTypeName != 'Pole Structures') {

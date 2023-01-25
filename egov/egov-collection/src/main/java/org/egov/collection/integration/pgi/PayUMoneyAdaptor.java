@@ -67,8 +67,6 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 	private RestTemplate restTemplate;
 	@PersistenceContext
 	private EntityManager entityManager;
-	//@Autowired
-	private ObjectMapper objectMapper=new ObjectMapper();
 
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
@@ -198,7 +196,7 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 			try {
 				throw new ApplicationException(".transactiondate.parse.error", e);
 			} catch (ApplicationException e1) {
-				e1.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
 
@@ -272,7 +270,11 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 		receiptHeader = (ReceiptHeader) qry.getSingleResult();
 		payuResponce.setAdditionalInfo6(receiptHeader.getConsumerCode().replace("-", "").replace("/", ""));
 		payuResponce.setAdditionalInfo2(ulbCode);
-		payuResponce.setBankId(new BigDecimal(responseMap.get("bank_ref_num")).intValue());
+		if(responseMap.get("bank_ref_num").matches("-?\\d+")){
+			payuResponce.setBankId(new BigDecimal(responseMap.get("bank_ref_num")).intValue());
+		} else {
+			payuResponce.setBankId(1);
+		}
 		payuResponce.setBankReferenceNo(responseMap.get("card_no"));
 		
 		
@@ -286,7 +288,7 @@ public class PayUMoneyAdaptor implements PaymentGatewayAdaptor {
 			try {
 				throw new ApplicationException(".transactiondate.parse.error", e);
 			} catch (ApplicationException e1) {
-				e1.printStackTrace();
+				LOGGER.error(e.getMessage());
 			}
 		}
             

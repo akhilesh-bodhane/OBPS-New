@@ -80,6 +80,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.entity.PermitRevocation;
 import org.egov.bpa.master.entity.ServiceType;
+import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.bpa.transaction.entity.dto.BpaStateInfo;
 import org.egov.bpa.transaction.entity.enums.ApplicantMode;
 import org.egov.bpa.transaction.entity.enums.GovernmentType;
@@ -331,7 +332,25 @@ public class BpaApplication extends StateAware<Position> {
     private transient String locationBoundary;
 	@SafeHtml
     private transient String currentStatus;
-
+	
+	private transient WorkflowFile workflowFile = new WorkflowFile();
+	
+    private transient String wfFileRefId;
+	
+	@SafeHtml
+	@Column(name="plotnumber")
+	private String plotNumber;
+	
+	@SafeHtml
+	@Column(name="filenumber")
+	private String fileNumber;
+	
+	@SafeHtml
+	@Column(name="sector")
+	private String sector;
+	
+	private Boolean isPreviousPlan = false;
+	
     @Override
     public Long getId() {
         return id;
@@ -707,13 +726,11 @@ public class BpaApplication extends StateAware<Position> {
 
     @Override
     public String getStateDetails() {
-        return String.format("Application Type: %s Applicant Name: %s Application Number %s Dated %s For the service type - %s.",
+        return String.format("Application Type: %s Applicant Name: %s Application Number %s For the service type - %s, file no - %s, plot no - %s, sector - %s.",
                 applicationType == null ? applicationType : applicationType.getDescription(),
                 owner == null ? "Not Specified" : owner.getName(),
                 applicationNumber == null ? planPermissionNumber : applicationNumber,
-                applicationDate == null ? DateUtils.toDefaultDateFormat(new Date())
-                        : DateUtils.toDefaultDateFormat(applicationDate),
-                serviceType.getDescription() == null ? "" : serviceType.getDescription());
+                serviceType.getDescription() == null ? "" : serviceType.getDescription(), getFileNumber() == null ?"" :getFileNumber(), getPlotNumber() == null ? "" :getPlotNumber() ,getSector() == null ? "" : getSector());
     }
 
     public BigDecimal getAdmissionfeeAmount() {
@@ -1229,5 +1246,53 @@ public class BpaApplication extends StateAware<Position> {
 
 	public void setDrawingPreference(String drawingPreference) {
 		this.drawingPreference = drawingPreference;
+	}
+
+	public String getPlotNumber() {
+		return plotNumber;
+	}
+
+	public void setPlotNumber(String plotNumber) {
+		this.plotNumber = plotNumber;
+	}
+
+	public String getFileNumber() {
+		return fileNumber;
+	}
+
+	public void setFileNumber(String fileNumber) {
+		this.fileNumber = fileNumber;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public WorkflowFile getWorkflowFile() {
+		return workflowFile;
+	}
+
+	public void setWorkflowFile(WorkflowFile workflowFile) {
+		this.workflowFile = workflowFile;
+	}
+
+	public String getWfFileRefId() {
+		return wfFileRefId;
+	}
+
+	public void setWfFileRefId(String wfFileRefId) {
+		this.wfFileRefId = wfFileRefId;
+	}
+
+	public Boolean getIsPreviousPlan() {
+		return isPreviousPlan;
+	}
+
+	public void setIsPreviousPlan(Boolean isPreviousPlan) {
+		this.isPreviousPlan = isPreviousPlan;
 	}
 }

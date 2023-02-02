@@ -526,7 +526,7 @@ public class GeneralStair extends FeatureProcess {
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_B.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-				|| DxfFileConstants.P_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+				|| DxfFileConstants.P_N.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
 			return BigDecimal.valueOf(1.0);
 		else if (DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
 			return BigDecimal.valueOf(1.25);
@@ -548,7 +548,7 @@ public class GeneralStair extends FeatureProcess {
 				|| DxfFileConstants.F_BH.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_TCIM.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.P_D.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-				|| DxfFileConstants.P_N.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+				|| DxfFileConstants.P_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.P_CC.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.P_SS.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.ITH_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())

@@ -370,8 +370,13 @@ public class OCNoticeUtil {
 	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
 	    	 }
          }else {
-        	 OCFloor basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
-  	    		    .orElse(null);      	
+        	 
+        	 OCFloor basement = null;
+             
+             if(oc.getBuildings() != null && oc.getBuildings().size() > 0 && oc.getBuildings().get(0) != null && oc.getBuildings().get(0).getFloorDetails() != null) {
+                 basement = oc.getBuildings().get(0).getFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
+                        .orElse(null);
+             }      	
   	    	
   			    	if(basement != null)
   			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");

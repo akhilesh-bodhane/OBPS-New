@@ -201,8 +201,14 @@ public class Basement extends FeatureProcess {
 
 					} else {
 						if (isOccupancyCompulsory(mostRestrictiveFarHelper)) {
-							errors.put("BasementNotDefined",
-									getLocaleMessage(OBJECTNOTDEFINED, " Basement of " + b.getName()));
+							if (!((DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())
+									&& pl.getServiceType().equals(DxfFileConstants.ADDITION_OR_EXTENSION))
+									|| DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())
+											&& pl.getServiceType().equals(DxfFileConstants.ALTERATION))) {
+								errors.put("BasementNotDefined",
+										getLocaleMessage(OBJECTNOTDEFINED, " Basement of " + b.getName()));
+							}
+							
 						}
 					}
 

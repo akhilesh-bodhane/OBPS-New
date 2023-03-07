@@ -505,6 +505,14 @@ public class AdditionalFeature2 extends FeatureProcess {
 		if (!DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 			return;
 		}
+		
+		if ((DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+				&& pl.getServiceType().equals(DxfFileConstants.ADDITION_OR_EXTENSION))
+				|| DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+						&& pl.getServiceType().equals(DxfFileConstants.ALTERATION)) {
+			return;
+		}
+		
 		scrutinyDetail = new ScrutinyDetail();
 		scrutinyDetail.addColumnHeading(1, RULE_NO);
 		scrutinyDetail.addColumnHeading(2, DESCRIPTION);

@@ -134,31 +134,38 @@ public class PlantationGreenStrip extends FeatureProcess {
 				boolean isAreaAccepted = false;
 
 				if (providedWidths.isEmpty()) {
-					pl.addError("RULE_37_6",
-							getLocaleMessage(DcrConstants.OBJECTNOTDEFINED, "Organized Green Planting Strip"));
+					if (!(pl.getServiceType().equals(DxfFileConstants.ALTERATION)
+							|| pl.getServiceType().equals(DxfFileConstants.ADDITION_OR_EXTENSION))) {
+						pl.addError("RULE_37_6",
+								getLocaleMessage(DcrConstants.OBJECTNOTDEFINED, "Organized Green Planting Strip"));
+					}
 				}
 				
-				BigDecimal providedMinWidth = providedWidths.stream().reduce(BigDecimal::min).get();
-				
-				if(pl.getDrawingPreference().getInFeets()) {
-					providedMinWidth=CDGAdditionalService.inchToFeet(providedMinWidth);
-					exceptedWidth=CDGAdditionalService.meterToFoot(exceptedWidth);
-					providedArea=CDGAdditionalService.inchtoFeetArea(providedArea);
-					exceptedArea=CDGAdditionalService.meterToFootArea(exceptedArea);
+				if (!providedWidths.isEmpty()) {
+					BigDecimal providedMinWidth = providedWidths.stream().reduce(BigDecimal::min).get();
+
+					if (pl.getDrawingPreference().getInFeets()) {
+						providedMinWidth = CDGAdditionalService.inchToFeet(providedMinWidth);
+						exceptedWidth = CDGAdditionalService.meterToFoot(exceptedWidth);
+						providedArea = CDGAdditionalService.inchtoFeetArea(providedArea);
+						exceptedArea = CDGAdditionalService.meterToFootArea(exceptedArea);
+					}
+
+					if (providedMinWidth.compareTo(exceptedWidth) >= 0)
+						isWidthAccepted = true;
+
+					if (providedArea.compareTo(exceptedArea) >= 0)
+						isAreaAccepted = true;
+
+					buildResult(pl, scrutinyDetail, isWidthAccepted, "Width of Organized plantation green strip",
+							">= " + CDGAdditionalService.viewLenght(pl, exceptedWidth),
+							CDGAdditionalService.viewLenght(pl, providedMinWidth));
+
+					buildResult(pl, scrutinyDetail, isAreaAccepted, "Area of Organized plantation green strip",
+							">= " + CDGAdditionalService.viewArea(pl, exceptedArea),
+							CDGAdditionalService.viewLenght(pl, providedArea));
+
 				}
-
-				if (providedMinWidth.compareTo(exceptedWidth) >= 0)
-					isWidthAccepted = true;
-
-				if (providedArea.compareTo(exceptedArea) >= 0)
-					isAreaAccepted = true;
-
-				buildResult(pl, scrutinyDetail, isWidthAccepted, "Width of Organized plantation green strip",
-						">= " + CDGAdditionalService.viewLenght(pl, exceptedWidth),CDGAdditionalService.viewLenght(pl, providedMinWidth));
-
-				buildResult(pl, scrutinyDetail, isAreaAccepted, "Area of Organized plantation green strip",
-						">= " + CDGAdditionalService.viewArea(pl, exceptedArea),CDGAdditionalService.viewLenght(pl, providedArea));
-
 			}
 
 			/*for (Block block : pl.getBlocks()) {

@@ -399,6 +399,11 @@ public class OCAdditionalFeature extends FeatureProcess {
 	}
 
 	private void stairHeadwayHeight(Plan ocPlan, Plan permitPlan, ScrutinyDetail scrutinyDetail) {
+		
+		OccupancyTypeHelper mostRestrictiveFarHelper = ocPlan.getVirtualBuilding() != null
+				? ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
 		BigDecimal ocStairHeadwayHeight = BigDecimal.ZERO;
 		BigDecimal expectedMinWidth = BigDecimal.valueOf(2.2);
 		BigDecimal allowedMinWidth = BigDecimal.valueOf(6.9);
@@ -417,7 +422,12 @@ public class OCAdditionalFeature extends FeatureProcess {
 		if (ocStairHeadwayHeight.compareTo(allowedMinWidth) < 0) {
 			decision = Result.Not_Accepted.getResultVal();
 		}
-
+		
+		//Set Stair Headway Height as optional for Booth
+		if (DxfFileConstants.F_B.equals(mostRestrictiveFarHelper.getSubtype().getCode())){
+			decision = Result.Accepted.getResultVal();
+		}
+		
 		String description = OCDataComparison.Stair_Headway_Height;
 		String oc = decision;
 		String permit = Result.Accepted.getResultVal();

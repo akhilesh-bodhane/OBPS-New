@@ -444,13 +444,25 @@ public class Parking extends FeatureProcess {
             setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
             		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Accepted.getResultVal());
         }
-        if (requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0) {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
-            		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Not_Accepted.getResultVal());
-        } else if (requiredVisitorParkArea > 0) {
-            setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
-            		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Accepted.getResultVal());
-        }
+		if (requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0) {
+			if ((DxfFileConstants.A_G.equals(mostRestrictiveOccupancy.getSubtype().getCode())
+					&& pl.getServiceType().equals(DxfFileConstants.ADDITION_OR_EXTENSION))
+					|| DxfFileConstants.A_G.equals(mostRestrictiveOccupancy.getSubtype().getCode())
+							&& pl.getServiceType().equals(DxfFileConstants.ALTERATION)) {
+				setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
+						SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
+						CDGAdditionalService.viewArea(pl, providedVisitorParkingArea), Result.Accepted.getResultVal());
+			} else {
+				setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
+						SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
+						CDGAdditionalService.viewArea(pl, providedVisitorParkingArea),
+						Result.Not_Accepted.getResultVal());
+			}
+		} else if (requiredVisitorParkArea > 0) {
+			setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
+					SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
+					CDGAdditionalService.viewArea(pl, providedVisitorParkingArea), Result.Accepted.getResultVal());
+		}
 
         LOGGER.info("******************Require no of Car Parking***************" + helper.totalRequiredCarParking);
     }

@@ -96,6 +96,10 @@ public class TerraceUtilityService extends FeatureProcess {
 	@Override
 	public Plan process(Plan pl) {
 
+		OccupancyTypeHelper mostRestrictiveFarHelper = pl.getVirtualBuilding() != null
+				? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
+				: null;
+		
 		BigDecimal expectedFrontAndRearDistance = new BigDecimal("3.0");//3.048
 		BigDecimal expectedSideDistance = new BigDecimal("3.0");
 		if (pl.getDrawingPreference().getInFeets()) {
@@ -158,6 +162,11 @@ public class TerraceUtilityService extends FeatureProcess {
 					sideAccepted = true;
 				}
 				//sideAccepted = true;
+				//Terrance Utility Optional for Booths
+				if (DxfFileConstants.F_B.equals(mostRestrictiveFarHelper.getSubtype().getCode())){
+					frontAccepted = true;
+					sideAccepted = true;
+				}
 				Map<String, String> details = new HashMap<>();
 				details.put(RULE_NO, CDGAdditionalService.getByLaws(pl, CDGAConstant.SERVICE_ZONE_ON_TERRACE));
 				details.put(DESCRIPTION, "Front & Rear Distance");

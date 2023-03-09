@@ -132,7 +132,7 @@ public class GeneralStair extends FeatureProcess {
 				List<Floor> floors = block.getBuilding().getFloors();
 				List<String> stairAbsent = new ArrayList<>();
 				// BigDecimal floorSize = block.getBuilding().getFloorsAboveGround();
-
+				int floorCount = floors.size()-1;
 				if (!isOccupancyTypehNotApplicable(mostRestrictiveOccupancyType)) {
 					for (Floor floor : floors) {
 						if (!floor.getTerrace()) {
@@ -173,7 +173,9 @@ public class GeneralStair extends FeatureProcess {
 									}
 								}
 							} else if(!isStairOptional(plan, block, floor)){
-								stairAbsent.add("Block " + block.getNumber() + " floor " + floor.getNumber());
+								if(floor.getNumber() < floorCount) {
+									stairAbsent.add("Block " + block.getNumber() + " floor " + floor.getNumber());
+								}		
 							}
 
 						}

@@ -219,8 +219,92 @@ public class SiteDetail extends AbstractAuditable {
     @SafeHtml
     @Length(min = 1, max = 4000)
     private String landregistrationdetails;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String fileName;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String propertyName;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String sector;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String typeOfProperty;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String typeOfOwnership;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String areaOfPlot;
+    
+    @SafeHtml
+    @Length(min = 1, max = 128)
+    private String typrofPlot;
 
-    @Override
+    public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getPropertyName() {
+		return propertyName;
+	}
+
+	public void setPropertyName(String propertyName) {
+		this.propertyName = propertyName;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getTypeOfProperty() {
+		return typeOfProperty;
+	}
+
+	public void setTypeOfProperty(String typeOfProperty) {
+		this.typeOfProperty = typeOfProperty;
+	}
+
+	public String getTypeOfOwnership() {
+		return typeOfOwnership;
+	}
+
+	public void setTypeOfOwnership(String typeOfOwnership) {
+		this.typeOfOwnership = typeOfOwnership;
+	}
+
+	public String getAreaOfPlot() {
+		return areaOfPlot;
+	}
+
+	public void setAreaOfPlot(String areaOfPlot) {
+		this.areaOfPlot = areaOfPlot;
+	}
+
+	public String getTyprofPlot() {
+		return typrofPlot;
+	}
+
+	public void setTyprofPlot(String typrofPlot) {
+		this.typrofPlot = typrofPlot;
+	}
+
+	@Override
     public Long getId() {
         return id;
     }

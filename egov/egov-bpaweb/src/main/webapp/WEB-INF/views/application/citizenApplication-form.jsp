@@ -154,6 +154,10 @@
 						data-collapsed="0">
 						<jsp:include page="demolition-details.jsp" />
 					</div>
+					<div class="panel panel-primary demolitionDetails"
+						data-collapsed="0">
+						<jsp:include page="property-details-nic.jsp" />
+					</div>
 					<c:choose>
 						<c:when test="${isEDCRIntegrationRequire eq true}">
 							<div class="panel panel-primary existingbuildingdetails"

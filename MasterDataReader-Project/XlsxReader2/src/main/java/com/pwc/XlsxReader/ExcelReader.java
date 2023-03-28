@@ -88,23 +88,13 @@ public class ExcelReader {
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\02-03-2023 Residential master data 02-03-2023.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\06-03-2023 Master data 06-03-23.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\09-03-2023 Boothno. 206 master data.xlsx";
-<<<<<<< Updated upstream
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\14-03-2023 Master data 09-03-2023.xlsx";
 //	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\15-03-2023 Master data 09-03-2023_2.xlsx";
-	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\20-03-2023 MASTER DATA 20-03-2023.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\20-03-2023 MASTER DATA 20-03-2023.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\22-03-2023 Master data 22-03-2023.xlsx";
+//	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\27-03-2023 Master data 27-03-2023.xlsx";
+	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\28-03-2023 Master data 27-03-2023 (1).xlsx";
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-=======
-	public static final String SAMPLE_XLSX_FILE_PATH  = "C:\\Users\\vmodisauser05\\Od_Workspaces\\Chd_Workspace_Develop\\OBPS-New\\MasterDataReader-Project\\XlsxReader2\\src\\main\\java\\com\\pwc\\xlsx\\22-03-2023 Master data 22-03-2023.xlsx";
->>>>>>> Stashed changes
 	
 	public static void main(String[] args) throws IOException, InvalidFormatException {
 		System.out.println("==================Start===================");

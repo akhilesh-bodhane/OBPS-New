@@ -111,7 +111,7 @@ public class OccupancyCertificateFeeService {
 	private static final BigDecimal EIGHTEEN = BigDecimal.valueOf(18);
 	private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
 	private static final BigDecimal HALF_ACRE_IN_SQMT = BigDecimal.valueOf(2023.43);
-	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
+	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("1");
 	private static final BigDecimal HALF_ACRE_FROM_SQFT = new BigDecimal("21780");
 	private static final BigDecimal SEVEN_HUNDRED_FIFTY = BigDecimal.valueOf(750);
 	private static final BigDecimal GST = BigDecimal.valueOf(0.18);
@@ -339,11 +339,14 @@ public class OccupancyCertificateFeeService {
 				totalAmount = BigDecimal.valueOf(7500);
 			}
 		}
-		else if (BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode())) {
+		/*else if (BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode())) {
 			if (BpaConstants.F_SCO.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 				totalAmount = BigDecimal.valueOf(10000);
+			} else if(BpaConstants.G_GBAC.equals(mostRestrictiveFarHelper.getSubtype().getCode()) || 
+					BpaConstants.G_GBZP.equals(mostRestrictiveFarHelper.getSubtype().getCode())){
+				totalAmount = BigDecimal.valueOf(10000);
 			}
-		}
+		}*/
 		else {
 			totalAmount = BigDecimal.valueOf(10000);
 		}
@@ -653,12 +656,16 @@ public class OccupancyCertificateFeeService {
 		} else {
 			multiplier = TWENTY_FIVE_HUNDRED;
 		}
+		
+		System.out.println("Multipler Value Labour Cess :" + multiplier);
 
 		if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
 			if (ocPlan.getDrawingPreference().getInFeets()) {
+				System.out.println("Inside OC Plan value in feets :" + ocPlan.getDrawingPreference().getInFeets());
 				estimatedAmount = estimatedAmount
 						.add(ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess)
 								.getDeviation().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+				System.out.println("Estimated Amount after ocplan In feets :" + estimatedAmount);
 
 			}
 
@@ -672,7 +679,7 @@ public class OccupancyCertificateFeeService {
 										.map(overhang -> overhang.getArea()).collect(Collectors.toList());
 								totalCajjaAreaOc = totalCajjaAreaOc.add(areas.stream().filter(Objects::nonNull)
 										.reduce(BigDecimal.ZERO, BigDecimal::add));
-
+								System.out.println("Total totalCajjaAreaOc :" + totalCajjaAreaOc);
 							}
 						}
 					}
@@ -681,6 +688,7 @@ public class OccupancyCertificateFeeService {
 					if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
 						totalMumtyAreaOc = totalMumtyAreaOc
 								.add(b.getStairCoversArea().stream().reduce(BigDecimal::add).get());
+						System.out.println("Total totalMumtyAreaOc :" + totalMumtyAreaOc);						
 					}
 
 				}
@@ -694,6 +702,8 @@ public class OccupancyCertificateFeeService {
 											.map(overhang -> overhang.getArea()).collect(Collectors.toList());
 									totalCajjaAreaBpa = totalCajjaAreaBpa.add(areas.stream().filter(Objects::nonNull)
 											.reduce(BigDecimal.ZERO, BigDecimal::add));
+									
+									System.out.println("Total totalCajjaAreaBpa :" + totalCajjaAreaBpa);
 								}
 							}
 						}
@@ -702,6 +712,7 @@ public class OccupancyCertificateFeeService {
 						if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
 							totalMumtyAreaBpa = totalMumtyAreaBpa
 									.add(b.getStairCoversArea().stream().reduce(BigDecimal::add).get());
+							System.out.println("Total totalMumtyAreaBpa :" + totalMumtyAreaBpa);
 						}
 
 					}
@@ -710,21 +721,28 @@ public class OccupancyCertificateFeeService {
 			}
 			totalCajjaAreaDeviation = (totalCajjaAreaOc.subtract(totalCajjaAreaBpa)).divide(SQINCH_SQFT_DIVIDER, 2,
 					RoundingMode.HALF_UP);
+			System.out.println("totalCajjaAreaDeviation :" + totalCajjaAreaDeviation);
 			totalMumtyAreaDeviation = totalMumtyAreaOc.subtract(totalMumtyAreaBpa);
+			System.out.println("totalMumtyAreaDeviation :" + totalMumtyAreaDeviation);
 			estimatedAmount = estimatedAmount
 					.add(totalCajjaAreaDeviation.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP)
 							.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+			System.out.println("Estimated Amount totalCajjaAreaDeviation :" + estimatedAmount);
 			estimatedAmount = estimatedAmount
 					.add(totalMumtyAreaDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+			System.out.println("Estimated Amount totalMumtyAreaDeviation :" + estimatedAmount);
 			if (estimatedAmount.compareTo(BigDecimal.ZERO) > 0) {
 				totalAmount = totalAmount.add((estimatedAmount.divide(HUNDRED)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				System.out.println("Total Aomunt after totalCajjaAreaDeviation and totalMumtyAreaDeviation : " + totalAmount);
 			}
 		}
 		
-		if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
+		/*if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
 				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
 			totalAmount = totalAmount.divide(GST,2, BigDecimal.ROUND_HALF_UP);
-		}
+			
+			System.out.println("Total Amount Final :" + totalAmount);
+		}*/
 		return totalAmount;
 	}
 
@@ -799,6 +817,8 @@ public class OccupancyCertificateFeeService {
 			totalAmount = totalAmount.add(floor0Deviation.multiply(GF_MULTIPLIER));
 			totalAmount = totalAmount.add(floor1Deviation.multiply(FF_MULTIPLIER));
 			totalAmount = totalAmount.add(floor2Deviation.multiply(SF_MULTIPLIER));
+			
+			System.out.println("Total Amount of getTotalAdditionalFee" + totalAmount);
 		}
 		return totalAmount;
 	}
@@ -821,8 +841,10 @@ public class OccupancyCertificateFeeService {
 							if (ocPlan.getDrawingPreference().getInFeets()) {
 								totalAdditinalArea = totalAdditinalArea
 										.add(buildupAreaDeviation.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP));
+								System.out.println("totalAdditinalArea if : " + totalAdditinalArea);
 							} else {
 								totalAdditinalArea = totalAdditinalArea.add(buildupAreaDeviation);
+								System.out.println("totalAdditinalArea else : " + totalAdditinalArea);
 							}
 						}
 					}
@@ -832,15 +854,21 @@ public class OccupancyCertificateFeeService {
 		double additonalAreaFar = 0.0;
 		try {
 			additonalAreaFar = totalAdditinalArea.divide(plotArea, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+			System.out.println("additonalAreaFar try :" + additonalAreaFar);
 		} catch (Exception e) {
 
 		}
 		double oldFar = newFar - additonalAreaFar;
 
+		System.out.println("oldFar :" + oldFar);
+		System.out.println("presentCollectorRate :" + presentCollectorRate);
 		totalAmount = presentCollectorRate.multiply(new BigDecimal("0.35")).multiply(totalAdditinalArea);
+		System.out.println("totalAmount :" + totalAmount);
 		if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 			totalAmount = totalAmount.divide(new BigDecimal(oldFar + ""), BigDecimal.ROUND_HALF_UP);
 			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+			
+			System.out.println("Total Amount Final getTotalAmountForAdditionalCoverageForSCO :" + totalAmount);
 		}
 
 		return totalAmount;

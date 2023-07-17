@@ -404,7 +404,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode())
+											|| BpaConstants.G_GBZP.equals(mostRestrictiveFarHelper.getType().getCode()))
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
@@ -431,7 +432,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode())
+											|| BpaConstants.G_GBZP.equals(mostRestrictiveFarHelper.getType().getCode()))
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
 								}
 							}

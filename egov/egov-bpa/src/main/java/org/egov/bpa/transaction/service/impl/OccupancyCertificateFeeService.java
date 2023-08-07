@@ -239,10 +239,16 @@ public class OccupancyCertificateFeeService {
 			}
 
 			if (amount.compareTo(BigDecimal.ZERO) > 0) {
-				amount = amount.add(amount.multiply(GST).setScale(2, BigDecimal.ROUND_HALF_UP));
-				ocFee.getApplicationFee()
-						.addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
-				feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
+				if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					System.out.println("Labour cess & Additional Charges");
+					ocFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
+					feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
+				} else {
+					System.out.println("Other than Labour cess & Additional Charges");
+					amount = amount.add(amount.multiply(GST).setScale(2, BigDecimal.ROUND_HALF_UP));
+					ocFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
+					feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
+				}				
 			}
 		}
 		return feeDetails;
@@ -778,7 +784,8 @@ public class OccupancyCertificateFeeService {
 
 		OccupancyTypeHelper typeHelper = ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())) {
+		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())
+				|| BpaConstants.G_GBZP.equals(typeHelper.getSubtype().getCode())) {
 			return getTotalAmountForAdditionalCoverageForSCO(ocPlan, isAdditionalCovApplicable);
 		}
 

@@ -178,6 +178,8 @@ public class PermitNocApplicationService {
 
     public void initiateNoc(BpaApplication application) {
         Map<String, String> edcrNocMandatory = getEdcrNocMandatory(application.geteDcrNumber());
+        
+        System.out.println("EDCR Mandatory List : " + edcrNocMandatory.toString());
         for (PermitNocDocument nocDocument : application.getPermitNocDocuments()) {
         	if(nocDocument.getNocDocument().getNocSupportDocs().isEmpty()) {
 	            PermitNocApplication permitNoc = new PermitNocApplication();

@@ -203,6 +203,14 @@ public class FeeCalculationUtils {
 //										}
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
 									}
+								} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal totalAmount = permitFeeCalculationService
+											.getTotalConstructionAndDemolisionFee(plan, lpAreas);
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
+												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+									}
 								} else if (BpaConstants.LABOURCESS
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal totalAmount = permitFeeCalculationService.getTotalAmountOfLabourCess(
@@ -216,6 +224,8 @@ public class FeeCalculationUtils {
 //										totalGstApplicable = totalGstApplicable.add(totalAmount);
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									
+									System.out.println("-------- Inside Rule 5 Loop of fee calculation during apply --------");
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
@@ -247,11 +257,17 @@ public class FeeCalculationUtils {
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
 
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									/*if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))*/
+									System.out.println("BPA constant type :" + mostRestrictiveFarHelper.getType().getCode());
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())){
+										System.out.println("Total amount without GST Rule 5:" + totalAmount);
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
-
+										System.out.println("Total amount with GST Rule 5:" + totalGstApplicable);
+									}
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									
+									System.out.println("-------- Inside Additional Coverage Fee Loop of fee calculation during apply --------");
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
@@ -279,8 +295,13 @@ public class FeeCalculationUtils {
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									/*if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))*/
+									System.out.println("BPA constant type :" + mostRestrictiveFarHelper.getType().getCode());
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())) {
+										System.out.println("Total amount without GST Additional coverage fee :" + totalAmount);
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
+										System.out.println("Total amount with GST Additional coverage fee :" + totalGstApplicable);
+									}
 								}
 							}
 						}

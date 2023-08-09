@@ -156,6 +156,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	@Override
 	public BigDecimal calculateAdmissionFeeAmount(Long applicationTypeId, String edcrNo) {
 		BigDecimal amount = BigDecimal.ZERO;
+		System.out.println("-------- Inside calculateAdmissionFeeAmount Method -----------");
 		if (null != edcrNo && !"".equals(edcrNo)) {
 			Plan plan = applicationBpaService.getPlanInfo(edcrNo);
 			if (null != plan) {
@@ -175,6 +176,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	protected PermitFee getbpaFee(final BpaApplication application) {
 		PermitFee permitFee = null;
+		System.out.println("-------- Inside getbpaFee Method -----------");
 		if (application != null) {
 			List<PermitFee> permitFeeList = permitFeeService.getPermitFeeListByApplicationId(application.getId());
 			if (permitFeeList.isEmpty()) {
@@ -194,6 +196,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		List<Long> serviceTypeList = new ArrayList<>();
 		// getting all service type and amenities to retrieve fee details
 		serviceTypeList.add(application.getServiceType().getId());
+		System.out.println("-------- Inside calculateBpaSanctionFees Method -----------");
 		if (!application.getApplicationAmenity().isEmpty()) {
 			for (ServiceType serviceType : application.getApplicationAmenity()) {
 				serviceTypeList.add(serviceType.getId());
@@ -211,6 +214,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public void calculateFeeByCityGrade(final BpaApplication application, final List<Long> serviceTypeList,
 			final PermitFee permitFee) {
+		
+		System.out.println("-------- Inside calculateFeeByCityGrade Method -----------");
 		if (application != null) {
 			Plan plan = applicationBpaService.getPlanInfo(application.geteDcrNumber());
 			if (null != plan) {
@@ -281,8 +286,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 							if (BpaConstants.GST_18.equals(fee.getBpaFeeCommon().getDescription())
 									&& (fee.getServiceType().getDescription().equalsIgnoreCase(NEW_CONSTRUCTION)
 											|| fee.getServiceType().getDescription().equalsIgnoreCase(RECONSTRUCTION)
-											|| fee.getServiceType().getDescription()
-													.equalsIgnoreCase(ADDING_OF_EXTENSION)
+											|| fee.getServiceType().getDescription().equalsIgnoreCase(ADDING_OF_EXTENSION)
 											|| fee.getServiceType().getDescription().equalsIgnoreCase(ALTERATION))) {
 								bpaGST = fee;
 							}
@@ -372,9 +376,18 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 //											|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
 //										totalGstApplicable = totalAmount;
 //									}
+								} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
+												bpaFee, permitFee.getApplicationFee(), totalAmount));
+									}
 								} else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
+									
+									System.out.println("Inside Rule 5 Calculation Method");
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
 											if (lprArea.getFeeName()
@@ -404,11 +417,15 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									System.out.println("BPA Type in Additional Coverage Fee : " + mostRestrictiveFarHelper.getType().getCode());
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode())){
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
+										System.out.println("GST Addes in Rule 5 Fee : " + totalGstApplicable + "BPA Type : " + mostRestrictiveFarHelper.getType().getCode());
+									}
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
+									System.out.println("Inside Additional Coverage Fee Calculation Method");
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
 											if (lprArea.getFeeName()
@@ -431,8 +448,13 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									
+									System.out.println("BPA Type in Additional Coverage Fee : " + mostRestrictiveFarHelper.getType().getCode());
+									//if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()) || BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()))
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode()))	{
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
+										System.out.println("GST Addes in Additional Coverage Fee : " + totalGstApplicable + "BPA Type : " + mostRestrictiveFarHelper.getType().getCode());
+									}
 								}
 							}
 						}
@@ -451,6 +473,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	@Override
 	public Map<String, String> calculateAllFees(final BpaApplication application) {
 		Map<String, String> fees = new HashMap<String, String>();
+		
+		System.out.println("-------- Inside calculateAllFees Method -----------");
 		if (application != null) {
 			List<Long> serviceTypeList = new ArrayList<>();
 			serviceTypeList.add(application.getServiceType().getId());
@@ -612,9 +636,17 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									}
 //									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
 //										totalGstApplicable = totalGstApplicable.add(totalAmount);
-								} else if (BpaConstants.RULE_5_FEE
+								}  else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
+										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
+												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
+									}
+								}  else if (BpaConstants.RULE_5_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal rule5ExtraArea = BigDecimal.ZERO;
+									System.out.println("Inside Rule 5 Method");
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
 											if (lprArea.getFeeName()
@@ -644,11 +676,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									System.out.println("BPA Type in Rule 5 : " + mostRestrictiveFarHelper.getType().getCode());
+									//if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()) || BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()))
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode()))	{
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
+									    System.out.println("GST Addes in Rule 5 : " + totalGstApplicable + "BPA Type : " + mostRestrictiveFarHelper.getType().getCode());
+									}
 								} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal addCovExtraArea = BigDecimal.ZERO;
+									System.out.println("Inside Additional Coverage Fee Method");
 									if (null != lpRecifiedAreas) {
 										for (LetterToPartyFees lprArea : lpRecifiedAreas) {
 											if (lprArea.getFeeName()
@@ -671,8 +708,12 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
-									if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()))
+									System.out.println("BPA Type in Additional Coverage Fee : " + mostRestrictiveFarHelper.getType().getCode());
+									//if (BpaConstants.F.equals(mostRestrictiveFarHelper.getType().getCode()) || BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode()))
+									if (!BpaConstants.A.equals(mostRestrictiveFarHelper.getType().getCode()))	{
 										totalGstApplicable = totalGstApplicable.add(totalAmount);
+										System.out.println("GST Addes in Additional Coverage Fee : " + totalGstApplicable + "BPA Type : " + mostRestrictiveFarHelper.getType().getCode());
+									}
 								}
 							}
 						}
@@ -694,6 +735,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	public List<LetterToPartyFees> populateLPExtAreas(BpaApplication application) {
 		List<LetterToPartyFeeDetails> letterToPartyFeeDetails = lettertoPartyFeeService
 				.getLPFeeDetailsByApplication(application);
+		
+		System.out.println("-------- Inside populateLPExtAreas Method -----------");
 		if (null != letterToPartyFeeDetails) {
 			List<LetterToPartyFees> lpAreas = new ArrayList<>();
 			for (LetterToPartyFeeDetails feeDetails : letterToPartyFeeDetails) {
@@ -710,6 +753,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	protected ApplicationFeeDetail buildApplicationFeeDetail(final BpaFeeMapping bpaFee,
 			final ApplicationFee applicationFee, BigDecimal amount) {
+		
+		System.out.println("-------- Inside buildApplicationFeeDetail Method -----------");
 		ApplicationFeeDetail feeDetail = new ApplicationFeeDetail();
 		feeDetail.setAmount(amount.setScale(0, BigDecimal.ROUND_HALF_UP));
 		feeDetail.setBpaFeeMapping(bpaFee);
@@ -718,6 +763,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	}
 
 	protected BigDecimal calculatePermitFee(BigDecimal inputArea, BigDecimal feeAmount, Boolean isCharitable) {
+		System.out.println("-------- Inside calculatePermitFee Method -----------");
 		if (isCharitable)
 			return inputArea.multiply(feeAmount).multiply(BigDecimal.valueOf(50)).divide(BigDecimal.valueOf(100));
 		else
@@ -729,10 +775,12 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	 * @return is work already started or not ?
 	 */
 	protected Boolean checkIsWorkAlreadyStarted(final BpaApplication application) {
+		System.out.println("-------- Inside checkIsWorkAlreadyStarted Method -----------");
 		return application.getSiteDetail().get(0).getIsappForRegularization();
 	}
 
 	protected Boolean checkIsWorkInProgress(final BpaApplication application) {
+		System.out.println("-------- Inside checkIsWorkInProgress Method -----------");
 		String constStage = (null != application.getSiteDetail().get(0).getConstStages())
 				? application.getSiteDetail().get(0).getConstStages().getCode()
 				: EMPTY;
@@ -743,6 +791,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			final String serviceTypeCode) {
 		BigDecimal inputUnit = BigDecimal.ZERO;
 
+		System.out.println("-------- Inside getBuiltUpInputUnitForEachServiceType Method -----------");
 		if (BpaConstants.getBpaFeeCateory1().contains(serviceTypeCode)) {
 			inputUnit = getTotalBuiltUpArea(application);
 		} else if (BpaConstants.getBpaFeeCateory2().contains(serviceTypeCode)) { // Sub-Division
@@ -777,6 +826,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	 */
 
 	public BigDecimal calculateAreaForAdditionalFeeCalculation(final BpaApplication application) {
+		System.out.println("-------- Inside calculateAreaForAdditionalFeeCalculation Method -----------");
 		BigDecimal extentOfLand = application.getSiteDetail().get(0).getExtentinsqmts();
 		BigDecimal minimumFARWithOutAdditionalFee;
 		BigDecimal minimumFARWithAdditionalFee;
@@ -837,6 +887,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	}
 
 	public BigDecimal calculateBuiltUpAreaForAdditionalFeeCalculation(final BpaApplication application) {
+		
+		System.out.println("-------- Inside calculateBuiltUpAreaForAdditionalFeeCalculation Method -----------");
 		BigDecimal extentOfLand = application.getSiteDetail().get(0).getExtentinsqmts();
 		BigDecimal minimumFARWithOutAdditionalFee;
 		BigDecimal minimumFARWithAdditionalFee;
@@ -904,6 +956,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	 */
 	// Floor Area considered here.
 	public Map<SubOccupancy, BigDecimal> getOccupancyWiseFloorArea(List<BuildingDetail> buildingDetails) {
+		System.out.println("-------- Inside getOccupancyWiseFloorArea Method -----------");
 		Map<SubOccupancy, BigDecimal> occupancyWiseFloorArea = new ConcurrentHashMap<>();
 		for (BuildingDetail building : buildingDetails) {
 			for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
@@ -919,6 +972,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	}
 
 	public Map<SubOccupancy, BigDecimal> getOccupancyWiseBuiltUpArea(List<BuildingDetail> buildingDetails) {
+		System.out.println("-------- Inside getOccupancyWiseBuiltUpArea Method -----------");
 		Map<SubOccupancy, BigDecimal> occupancyWiseBuiltUpArea = new ConcurrentHashMap<>();
 		for (BuildingDetail building : buildingDetails) {
 			for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
@@ -935,6 +989,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public Map<SubOccupancy, BigDecimal> getExistBldgOccupancyWiseBuiltUpArea(
 			List<ExistingBuildingDetail> existBldgDtls) {
+		System.out.println("-------- Inside getExistBldgOccupancyWiseBuiltUpArea Method -----------");
 		Map<SubOccupancy, BigDecimal> occupancyWiseFloorArea = new ConcurrentHashMap<>();
 		for (ExistingBuildingDetail building : existBldgDtls) {
 			for (ExistingBuildingFloorDetail floor : building.getExistingBuildingFloorDetails()) {
@@ -958,6 +1013,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	// Floor Area considered here.
 	public Map<SubOccupancy, BigDecimal> getExistBldgOccupancyWiseFloorArea(
 			List<ExistingBuildingDetail> existBldgDtls) {
+		System.out.println("-------- Inside getExistBldgOccupancyWiseFloorArea Method -----------");
 		Map<SubOccupancy, BigDecimal> occupancyWiseFloorArea = new ConcurrentHashMap<>();
 		for (ExistingBuildingDetail building : existBldgDtls) {
 			for (ExistingBuildingFloorDetail floor : building.getExistingBuildingFloorDetails()) {
@@ -975,6 +1031,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	public Map<String, Map<SubOccupancy, BigDecimal>> groupBlockOccupancyFloorArea(
 			List<BuildingDetail> buildingDetails) {
 		Map<String, Map<SubOccupancy, BigDecimal>> groupByBlkOccupancyFloorArea = new ConcurrentHashMap<>();
+		System.out.println("-------- Inside groupBlockOccupancyFloorArea Method -----------");
 		for (BuildingDetail building : buildingDetails) {
 			Map<SubOccupancy, BigDecimal> subMap = new ConcurrentHashMap<>();
 			for (ApplicationFloorDetail floor : building.getApplicationFloorDetails()) {
@@ -991,6 +1048,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public Map<String, Map<SubOccupancy, BigDecimal>> groupBlockOccupancyBuiltUpArea(
 			List<BuildingDetail> buildingDetails) {
+		System.out.println("-------- Inside groupBlockOccupancyBuiltUpArea Method -----------");
 		Map<String, Map<SubOccupancy, BigDecimal>> groupByBlkOccupancyFloorArea = new ConcurrentHashMap<>();
 		for (BuildingDetail building : buildingDetails) {
 			Map<SubOccupancy, BigDecimal> subMap = new ConcurrentHashMap<>();
@@ -1008,6 +1066,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalBuiltUpArea(final BpaApplication application) {
 		BigDecimal totalBuiltUpArea = BigDecimal.ZERO;
+		System.out.println("-------- Inside getTotalBuiltUpArea Method -----------");
 		for (BuildingDetail buildingDetail : application.getBuildingDetail())
 			for (ApplicationFloorDetail floorDetails : buildingDetail.getApplicationFloorDetails())
 				totalBuiltUpArea = totalBuiltUpArea.add(floorDetails.getPlinthArea());
@@ -1016,6 +1075,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getExistBldgTotalBuiltUpArea(final BpaApplication application) {
 		BigDecimal totalBuiltUpArea = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getExistBldgTotalBuiltUpArea Method -----------");
 		if (!application.getExistingBuildingDetails().isEmpty()
 				&& application.getExistingBuildingDetails().get(0).getTotalPlintArea() != null)
 			for (ExistingBuildingFloorDetail floor : application.getExistingBuildingDetails().get(0)
@@ -1033,6 +1094,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	 */
 	public BigDecimal minimumFARWithoutAdditionalFee(final BpaApplication application) {
 		List<BigDecimal> minimumFARs = new ArrayList<>();
+		System.out.println("-------- Inside minimumFARWithoutAdditionalFee Method -----------");
 		for (BuildingDetail bldg : application.getBuildingDetail()) {
 			for (ApplicationFloorDetail floor : bldg.getApplicationFloorDetails()) {
 				minimumFARs.add(floor.getSubOccupancy().getMinFar());
@@ -1054,6 +1116,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	 */
 	public BigDecimal minimumFARWithAdditionalFee(final BpaApplication application) {
 		List<BigDecimal> maximumFARs = new ArrayList<>();
+		
+		System.out.println("-------- Inside minimumFARWithAdditionalFee Method -----------");
 		for (BuildingDetail bldg : application.getBuildingDetail()) {
 			for (ApplicationFloorDetail floor : bldg.getApplicationFloorDetails()) {
 				maximumFARs.add(floor.getSubOccupancy().getMaxFar());
@@ -1077,6 +1141,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			Map<SubOccupancy, BigDecimal> existBldgOccupancyWiseFloorArea) {
 		BigDecimal maxPermittedFloorArea = BigDecimal.ZERO;
 		BigDecimal sumOfFloorArea = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside weightageAverageFarWithoutAdditionalFee Method -----------");
 		for (Entry<SubOccupancy, BigDecimal> setOfOccupancy : occupancyWiseFloorArea.entrySet()) {
 			maxPermittedFloorArea = maxPermittedFloorArea
 					.add(setOfOccupancy.getKey().getMinFar().multiply(setOfOccupancy.getValue()));
@@ -1107,6 +1173,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		BigDecimal maxPermittedFloorArea = BigDecimal.ZERO;
 		BigDecimal sumOfFloorArea = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside weightageAverageFarWithAdditionalFee Method -----------");
 		for (Entry<SubOccupancy, BigDecimal> setOfOccupancy : occupancyWiseFloorArea.entrySet()) {
 			maxPermittedFloorArea = maxPermittedFloorArea
 					.add(setOfOccupancy.getKey().getMaxFar().multiply(setOfOccupancy.getValue()));
@@ -1132,6 +1200,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 //			applicationFeeService.setPermitFee(application, feeDetails);
 //		}
 
+		System.out.println("-------- Inside createDemand Method -----------");
 		EgDemand egDemand = null;
 		final Installment installment = installmentDao.getInsatllmentByModuleForGivenDateAndInstallmentType(
 				moduleService.getModuleByName(BpaConstants.EGMODULE_NAME), new Date(), BpaConstants.YEARLY);
@@ -1162,6 +1231,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public EgDemand createDemandWhenFeeCollectionNotRequire(BpaApplication application) {
 
+		System.out.println("-------- Inside createDemandWhenFeeCollectionNotRequire Method -----------");
 		EgDemand egDemand = new EgDemand();
 		final Set<EgDemandDetails> dmdDetailSet = new HashSet<>();
 
@@ -1192,6 +1262,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	private EgDemandDetails createDemandDetails(final BigDecimal amount, final String demandReason,
 			final Installment installment) {
+		
+		System.out.println("-------- Inside createDemandDetails Method -----------");
 		final EgDemandReason demandReasonObj = bpaDemandService.getDemandReasonByCodeAndInstallment(demandReason,
 				installment);
 		final EgDemandDetails demandDetail = new EgDemandDetails();
@@ -1206,6 +1278,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalScruitnyFee(Plan plan, List<BuildingDetail> buildingDetails, BigDecimal multiplier,
 			List<LetterToPartyFees> letterToPartyFees) {
+		
+		System.out.println("-------- Inside getTotalScruitnyFee Method -----------");
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalAreaINSqft = BigDecimal.ZERO;
 		BigDecimal totalProposedAreaInSqft = BigDecimal.ZERO;
@@ -1274,6 +1348,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalScruitnyFeeRural(Plan plan) {
 		boolean isCommercial = false;
+		
+		System.out.println("-------- Inside getTotalScruitnyFeeRural Method -----------");
 		for (Occupancy occupancy : plan.getOccupancies()) {
 			OccupancyTypeHelper occupancyTypeHelper = occupancy.getTypeHelper();
 			if (occupancyTypeHelper != null && occupancyTypeHelper.getType() != null
@@ -1290,6 +1366,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalAmountOfGST(BigDecimal amount) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalAmountOfGST Method -----------");
 		if (amount.compareTo(BigDecimal.ZERO) > 0) {
 			totalAmount = totalAmount
 					.add((amount.multiply(EIGHTEEN).divide(HUNDRED)).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -1301,6 +1379,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			OccupancyTypeHelper mostRestrictiveFarHelper, List<LetterToPartyFees> letterToPartyFees) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalAmountOfLabourCess Method -----------");
 		if (BpaConstants.IT_MCL.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.IT_MCM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.IT_MCS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -1469,6 +1549,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	private BigDecimal getFloorArea(Floor floor, DrawingPreference drawingPreference) {
 		BigDecimal flrArea = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getFloorArea Method -----------");
 		for (Occupancy occupancy : floor.getOccupancies()) {
 			if (occupancy.getTypeHelper() != null && occupancy.getTypeHelper().getSubtype() != null
 					&& BpaConstants.A_R5.equals(occupancy.getTypeHelper().getSubtype().getCode())) {
@@ -1490,6 +1572,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalRoadAreaInFeet = BigDecimal.ZERO;
 		BigDecimal totalRoadTwoAreaInFeet = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalDevelopmentChargesOfRoads Method -----------");
 		if (null != plan.getPlanInformation().getRoadLength() && null != plan.getPlanInformation().getRoadWidth()) {
 			if (plan.getDrawingPreference().getInFeets()) {
 				totalRoadAreaInFeet = plan.getPlanInformation().getRoadLength()
@@ -1535,6 +1619,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	public BigDecimal getTotalConversionCharges(Plan plan, List<LetterToPartyFees> letterToPartyFees) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal conversionChagesAreaInSqF = plan.getPlanInformation().getConversionChargesArea();
+		
+		System.out.println("-------- Inside getTotalConversionCharges Method -----------");
 		if (letterToPartyFees != null)
 			for (LetterToPartyFees letterToPartyFee : letterToPartyFees) {
 				if (BpaConstants.LPF_CONVERSION_CHARGES.equals(letterToPartyFee.getFeeName())) {
@@ -1556,6 +1642,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalTransferFee(Plan plan, List<LetterToPartyFees> letterToPartyFees) {
 		String lpStatus = null;
+		
+		System.out.println("-------- Inside getTotalTransferFee Method -----------");
 		if (letterToPartyFees != null)
 			for (LetterToPartyFees letterToPartyFee : letterToPartyFees) {
 				if (BpaConstants.LPF_TRANSFER_FEES.equals(letterToPartyFee.getFeeName())) {
@@ -1587,6 +1675,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalConstructionAndDemolisionFee(Plan plan, List<LetterToPartyFees> letterToPartyFees) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalConstructionAndDemolisionFee Method -----------");
 		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())) {
 //			BigDecimal plotAreaInSqm = plan.getPlanInformation().getPlotArea();
 //			if (plan.getDrawingPreference().getInFeets()) {
@@ -1664,6 +1754,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 	public BigDecimal getTotalAllotmentOfNewNumberFee(Plan plan, List<LetterToPartyFees> letterToPartyFees) {
 		String lpStatus = null;
+		
+		System.out.println("-------- Inside getTotalAllotmentOfNewNumberFee Method -----------");
 		if (letterToPartyFees != null)
 			for (LetterToPartyFees letterToPartyFee : letterToPartyFees) {
 				if (BpaConstants.LPF_ALLOTMENT_OF_NEW_NUMBER.equals(letterToPartyFee.getFeeName())) {
@@ -1698,6 +1790,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal FF_MULTIPLIER = BigDecimal.ZERO;
 		BigDecimal SF_MULTIPLIER = BigDecimal.ZERO;
 		BigDecimal plotSizeInSQF = plan.getPlanInformation().getPlotArea();
+		
+		System.out.println("-------- Inside getTotalAmountForAdditionalCoverage Method -----------");
 		if (plan.getDrawingPreference().getInMeters()) {
 			plotSizeInSQF = plotSizeInSQF.multiply(SQMT_SQFT_MULTIPLIER);
 		}
@@ -1723,7 +1817,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		OccupancyTypeHelper typeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())) {
+		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) || BpaConstants.G_GBZP.equals(typeHelper.getSubtype().getCode())) {
 			return getTotalAmountForAdditionalCoverageForSCO(plan, buildingDetails, letterToPartyFees,
 					isAdditionalCovApplicable);
 		}
@@ -1806,6 +1900,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			List<LetterToPartyFees> letterToPartyFees, boolean isAdditionalCovApplicable) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 
+		System.out.println("-------- Inside getTotalAmountForAdditionalCoverageForSCO Method -----------");
 		Double newFar = plan.getFarDetails().getProvidedFar();
 		BigDecimal plotArea = plan.getPlot().getArea();
 		BigDecimal totalAdditinalArea = BigDecimal.ZERO;
@@ -1852,6 +1947,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			OccupancyTypeHelper mostRestrictiveFarHelper, boolean isWorkInProgress, BigDecimal totalConstructedArea) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalArea = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalAmountOfRule5 Method -----------");
 		if (!isWorkInProgress) {
 			BigDecimal totalCoveredArea = BigDecimal.ZERO;
 			BigDecimal totalBasementArea = BigDecimal.ZERO;
@@ -1933,6 +2030,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 	}
 
 	private BigDecimal getTotalAreaForRule5(Plan plan) {
+		
+		System.out.println("-------- Inside getTotalAreaForRule5 Method -----------");
 		BigDecimal totalArea = BigDecimal.ZERO;
 		for (Block block : plan.getBlocks()) {
 			for (Floor floor : block.getBuilding().getFloors()) {
@@ -1958,6 +2057,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalArea = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.ZERO;
+		
+		System.out.println("-------- Inside getTotalAmountOfRule5New Method -----------");
 		if (BpaConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())
 				|| BpaConstants.RECONSTRUCTION.equals(plan.getServiceType()))
 			multiplier = new BigDecimal("5");
@@ -1997,6 +2098,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal multiplier = BigDecimal.ZERO;
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		
+		System.out.println("-------- Inside getTotalSecurityFee Method -----------");
 		String SecurityFeeStatus = plan.getPlanInformation().getIsSecurityFeeApplicable();
 		if (lpRecifiedAreas != null)
 			for (LetterToPartyFees letterToPartyFee : lpRecifiedAreas) {
@@ -2052,6 +2154,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalAdditionalHeightArea = plan.getPlanInformation().getAreaForAdditionalHeight();
 
+		System.out.println("-------- Inside getAdditionalHeightFee Method -----------");
 		if (totalAdditionalHeightArea.compareTo(BigDecimal.ZERO) > 0) {
 			totalAmount = totalAdditionalHeightArea.multiply(new BigDecimal("50"));
 			totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_UP);

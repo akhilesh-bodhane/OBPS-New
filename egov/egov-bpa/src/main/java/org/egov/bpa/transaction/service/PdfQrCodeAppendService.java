@@ -371,8 +371,11 @@ public class PdfQrCodeAppendService {
                     .getAllReviewersList(application);
 
             for (Map<String, String> nameAndDesignation : reviewersNameAndDesignationMapList) {
-                reviewersList.add(nameAndDesignation.get("name") + " " + "("
-                        + nameAndDesignation.get(DESIGNATION) + ")");
+				/*
+				 * reviewersList.add(nameAndDesignation.get("name") + " " + "(" +
+				 * nameAndDesignation.get(DESIGNATION) + ")");
+				 */
+            	reviewersList.add(nameAndDesignation.get(DESIGNATION));
             }
 
             List<String> listOfAuthorities = new ArrayList<>(reviewersList);
@@ -538,8 +541,11 @@ public class PdfQrCodeAppendService {
                     .getAllOcReviewersList(oc);
 
             for (Map<String, String> nameAndDesignation : reviewersNameAndDesignationMapList) {
-                reviewersList.add(nameAndDesignation.get("name") + " " + "("
-                        + nameAndDesignation.get(DESIGNATION) + ")");
+				/*
+				 * reviewersList.add(nameAndDesignation.get("name") + " " + "(" +
+				 * nameAndDesignation.get(DESIGNATION) + ")");
+				 */
+            	 reviewersList.add(nameAndDesignation.get(DESIGNATION));
             }
 
             List<String> listOfAuthorities = new ArrayList<>(reviewersList);

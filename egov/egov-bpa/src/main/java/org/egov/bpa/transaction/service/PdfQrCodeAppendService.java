@@ -349,11 +349,15 @@ public class PdfQrCodeAppendService {
             x1 = x + (140 - (approvedBy.length() / 2f));
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase6, x1, y - 75, 0);
 
-            String approverName = bpaNoticeUtil.getApproverName(application) + "("
-                    + bpaNoticeUtil
-                            .getApproverDesignation(application.getApproverPosition())
-
-                    + ")";
+			/*
+			 * String approverName = bpaNoticeUtil.getApproverName(application) + "(" +
+			 * bpaNoticeUtil .getApproverDesignation(application.getApproverPosition())
+			 * 
+			 * + ")";
+			 */
+            
+            String approverName = bpaNoticeUtil.getApproverDesignation(application.getApproverPosition());
+            
             Phrase phrase7 = new Phrase(approverName, font1);
             x1 = x + (140 - (approverName.length() / 2f));
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase7, x1, y - 90, 0);
@@ -514,8 +518,13 @@ public class PdfQrCodeAppendService {
             x1 = x + (140 - (approvedBy.length() / 2f));
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase6, x1, y - 75, 0);
 
-            String approverName = bpaNoticeUtil.getOcApproverName(oc) + "(" + bpaNoticeUtil
-                    .getApproverDesignation(oc.getApproverPosition()) + ")";
+			/*
+			 * String approverName = bpaNoticeUtil.getOcApproverName(oc) + "(" +
+			 * bpaNoticeUtil .getApproverDesignation(oc.getApproverPosition()) + ")";
+			 */
+            
+            String approverName =  bpaNoticeUtil.getApproverDesignation(oc.getApproverPosition());
+            
             Phrase phrase7 = new Phrase(approverName, font1);
             x1 = x + (140 - (approverName.length() / 2f));
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase7, x1, y - 90, 0);

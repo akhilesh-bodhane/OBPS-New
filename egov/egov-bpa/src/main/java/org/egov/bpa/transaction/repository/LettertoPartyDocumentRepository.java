@@ -43,5 +43,7 @@ public interface LettertoPartyDocumentRepository extends JpaRepository<LetterToP
     List<LetterToPartyDocumentCommon> findByIsRequestedTrueAndLetterToPartyOrderByIdAsc(LetterToPartyCommon lettertoParty);
 
     List<LetterToPartyDocumentCommon> findByIsRequestedTrueAndIsSubmittedTrueAndLetterToPartyOrderByIdAsc(LetterToPartyCommon lettertoParty);
+    
+    List<LetterToPartyDocumentCommon> findByIsRequestedTrueAndIsSubmittedTrueAndLetterToPartyOrderByIdDesc(LetterToPartyCommon lettertoParty);
 
 }

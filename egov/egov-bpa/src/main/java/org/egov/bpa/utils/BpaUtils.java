@@ -777,6 +777,10 @@ public class BpaUtils {
 	public void addQrCodeToPdfDocuments(FileStoreMapper fileMapper, BpaApplication application) {
 		pdfQrCodeAppend.addStamp(fileMapper, application);
 	}
+	
+	public void addQrCodeToPdfLPDocuments(FileStoreMapper fileMapper, BpaApplication application) {
+		pdfQrCodeAppend.addStampForLP(fileMapper, application);
+	}
 
 	public void addQrCodeToOcPdfDocuments(FileStoreMapper fileMapper, OccupancyCertificate oc) {
 		pdfQrCodeAppend.addStampForOc(fileMapper, oc);

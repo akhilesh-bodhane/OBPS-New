@@ -82,6 +82,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -123,9 +124,12 @@ import org.egov.bpa.transaction.entity.PermitCoApplicant;
 import org.egov.bpa.transaction.entity.PermitDcrDocument;
 import org.egov.bpa.transaction.entity.PermitDocument;
 import org.egov.bpa.transaction.entity.PermitFee;
+import org.egov.bpa.transaction.entity.PermitLetterToParty;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.common.DcrDocument;
 import org.egov.bpa.transaction.entity.common.GeneralDocument;
+import org.egov.bpa.transaction.entity.common.LetterToPartyCommon;
+import org.egov.bpa.transaction.entity.common.LetterToPartyDocumentCommon;
 import org.egov.bpa.transaction.entity.common.NocDocument;
 import org.egov.bpa.transaction.entity.common.NoticeCondition;
 import org.egov.bpa.transaction.entity.common.StoreDcrFiles;
@@ -137,6 +141,8 @@ import org.egov.bpa.transaction.notice.PermitApplicationNoticesFormat;
 import org.egov.bpa.transaction.notice.impl.DemandDetailsFormatImpl;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
 import org.egov.bpa.transaction.repository.DcrDocumentRepository;
+import org.egov.bpa.transaction.repository.LettertoPartyDocumentRepository;
+import org.egov.bpa.transaction.repository.LettertoPartyRepository;
 import org.egov.bpa.transaction.repository.PermitFeeRepository;
 import org.egov.bpa.transaction.service.collection.ApplicationBpaBillService;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
@@ -144,6 +150,7 @@ import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
 import org.egov.bpa.transaction.service.messaging.BPASmsAndEmailService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.common.entity.bpa.Checklist;
 import org.egov.common.entity.bpa.Occupancy;
 import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
@@ -257,6 +264,13 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private ApplicantService applicantService;
     @Autowired
     private DcrDocumentRepository dcrDocumentRepository;
+    
+    @Autowired
+    private LettertoPartyDocumentRepository lpRepository;
+    
+    @Autowired
+    private LettertoPartyDocumentRepository lpdocumentRepository;
+    
     @Autowired
     private AppConfigValueService appConfigValuesService;
     @Autowired
@@ -499,6 +513,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     @Transactional
     public void saveAndFlushApplication(final BpaApplication application) {
         appendQrCodeWithDcrDocuments(application);
+        appendQrCodeWithLPDocuments(application);
         persistBpaNocDocuments(application);
         buildPermitConditions(application);
         // persistPostalAddress(application);
@@ -560,7 +575,9 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         // persistPostalAddress(application);
         buildSchemeLandUsage(application);
         // For one day permit
+        LOG.info("#### BpaApplication in updateApplication method ####", application);
         appendQrCodeWithDcrDocuments(application);
+        appendQrCodeWithLPDocuments(application);
         if (workFlowAction.equals(BpaConstants.GENERATEREVOCATIONNOTICE)) {
             PermitRevocation permitRevocation = new PermitRevocation();
             permitRevocation.setRevocationNumber(revocationNumberGenerator.generatePermitRevocationNumber());
@@ -674,6 +691,12 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     }
 
     private void appendQrCodeWithDcrDocuments(BpaApplication application) {
+    	
+System.out.println("#### BpaApplication ####"+application);
+    	
+System.out.println("#### BpaApplication idd ####"+application.getId());
+    	
+    	LOG.info("#### BpaApplication ####", application);
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
                 && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
@@ -690,6 +713,72 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 }
             }
         }
+    }
+    
+    private void appendQrCodeWithLPDocuments(BpaApplication application) {
+    	
+    	System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments ####"+application);
+    	
+    	System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments id ####"+application.getId());
+    	
+    	//LOG.info("#### BpaApplication in appendQrCodeWithLPDocuments ####", application.getId());
+    	
+    	if(application.getPermitLetterToParties().size()>0) {
+    		System.out.println("#### BpaApplication in application.getPermitLetterToParties() ####"+application.getPermitLetterToParties());
+    		List<PermitLetterToParty> permitLetterToParties = application.getPermitLetterToParties();
+    		
+    		//System.out.println("#### BpaApplication in letterToParty ####"+letterToParty);
+    		//System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if id ####"+letterToParty.getId());	
+    		//System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if LPNO ####"+letterToParty.getLpNumber());		
+    	//LOG.info("#### BpaApplication in appendQrCodeWithLPDocuments lp data ####", application.getPermitLetterToParties().get(0).getLetterToParty());
+    		List<LetterToPartyDocumentCommon> lpdocuments=null;
+        if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
+                PDF_QR_ENBLD).get(0).getValue())
+                && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
+                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
+                && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
+            //List<LetterToPartyDocumentCommon> dcrDocuments = dcrDocumentRepository.findByApplication(application.);
+        	for (Iterator iterator = permitLetterToParties.iterator(); iterator.hasNext();) {
+				PermitLetterToParty permitLetterToParty = (PermitLetterToParty) iterator.next();
+				LetterToPartyCommon letterToParty = permitLetterToParty.getLetterToParty();
+				System.out.println("#### BpaApplication in letterToParty ####"+letterToParty);
+	    		System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if id ####"+letterToParty.getId());	
+	    		System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if LPNO ####"+letterToParty.getLpNumber());
+	    		lpdocuments = lpRepository.findByIsRequestedTrueAndIsSubmittedTrueAndLetterToPartyOrderByIdDesc(letterToParty);
+			}     	 
+        	 //LOG.info("#### LP documents ####", lpdocuments);       	 
+        	 System.out.println("#### LP documents ####" + lpdocuments);      	 
+        	for (LetterToPartyDocumentCommon lp :lpdocuments) {   
+        		 System.out.println("#### LP ####"+lp);
+        		 //LOG.info("#### LP ####", lp);
+        		 ChecklistServiceTypeMapping serviceChecklist = lp.getServiceChecklist();
+        		 System.out.println("#### serviceChecklist ####"+serviceChecklist);
+        		 //LOG.info("#### serviceChecklist ####", serviceChecklist);
+        		 Checklist checklist = serviceChecklist.getChecklist(); 
+        		 System.out.println("#### checklist ####" +checklist);
+        		 //LOG.info("#### checklist ####", checklist);
+        		 String code = checklist.getCode();
+        		 System.out.println("#### code ####"+code);
+        		 //LOG.info("#### code ####", code);
+        		if("LTP-01".equals(code) || "LTP-02".equals(code) || "LTP-03".equals(code) || "LTP-04".equals(code)
+        			|| "LTP-05".equals(code) || "LTP-06".equals(code) || "LTP-07".equals(code) || "LTP-08".equals(code) || "LTP-10".equals(code) 
+        			|| "LTP-32".equals(code) || "LTP-33".equals(code) || "LTP-34".equals(code) || "LTP-35".equals(code)){       		
+        		if (LOG.isInfoEnabled())
+        			System.out.println("#### lp Document ####"+lp.getId());
+                    //LOG.info("#### lp Document ####", lp.getId());    		
+        		for(FileStoreMapper file:lp.getSupportDocs()) {
+        			 if (LOG.isInfoEnabled())
+        				 System.out.println("#### file1111 ####"+file.getId());
+                         //LOG.info("#### file1111 ####", file.getId());
+        			 bpaUtils.addQrCodeToPdfLPDocuments(file, application);
+        		}
+        		}
+        		
+        	}
+        	
+        	
+        }
+    	}
     }
 
     public void persistOrUpdateApplicationDocument(final BpaApplication bpaApplication) {

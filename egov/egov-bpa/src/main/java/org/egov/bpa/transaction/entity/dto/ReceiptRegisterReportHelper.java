@@ -31,6 +31,27 @@ public class ReceiptRegisterReportHelper extends DataTableSearchRequest {
     private Double totalWithoutLaboutCess=new Double(0.0);
     private Double total = new Double(0.0);
     
+    private Double additionalHeightFee = new Double(0.0);  
+	private Double constructionDemolision = new Double(0.0);
+    private Double conversionCharges = new Double(0.0);
+    private Double developmentChargesRoads = new Double(0.0);
+    private Double DPCCertificateMissingFee = new Double(0.0);
+    private Double falseCeilingFee = new Double(0.0);
+    private Double additionalHeightSCFConvertSCOFee = new Double(0.0);
+    private Double barsatiFloorHeightFee = new Double(0.0);
+    private Double excessCoverageAreaFee = new Double(0.0);
+    private Double excessCoverageBeyondRoning6Fee = new Double(0.0);
+    private Double glazingVerandahFee = new Double(0.0);
+    private Double internalChangesConstruction = new Double(0.0);
+    private Double stairHeadwayHeightFee = new Double(0.0);
+    private Double waterTankLocationFee = new Double(0.0);
+    private Double loftsFee = new Double(0.0);
+    private Double minorChangesDoorsWindowsFee = new Double(0.0);
+    private Double nichesCommonWallFee = new Double(0.0);
+    private Double nonStdGateFee = new Double(0.0);
+    private Double transferFee = new Double(0.0);
+    private Double transferBuildingPlanFee = new Double(0.0);
+    
     
 
     public String getApplicationNumber() {
@@ -171,5 +192,166 @@ public class ReceiptRegisterReportHelper extends DataTableSearchRequest {
 		this.total = total;
 	}
 
+	public Double getAdditionalHeightFee() {
+		return additionalHeightFee;
+	}
+
+	public void setAdditionalHeightFee(Double additionalHeightFee) {
+		this.additionalHeightFee = additionalHeightFee;
+	}
+
+	public Double getConstructionDemolision() {
+		return constructionDemolision;
+	}
+
+	public void setConstructionDemolision(Double constructionDemolision) {
+		this.constructionDemolision = constructionDemolision;
+	}
+
+	public Double getConversionCharges() {
+		return conversionCharges;
+	}
+
+	public void setConversionCharges(Double conversionCharges) {
+		this.conversionCharges = conversionCharges;
+	}
+
+	public Double getDevelopmentChargesRoads() {
+		return developmentChargesRoads;
+	}
+
+	public void setDevelopmentChargesRoads(Double developmentChargesRoads) {
+		this.developmentChargesRoads = developmentChargesRoads;
+	}
+
+	public Double getDPCCertificateMissingFee() {
+		return DPCCertificateMissingFee;
+	}
+
+	public void setDPCCertificateMissingFee(Double dPCCertificateMissingFee) {
+		DPCCertificateMissingFee = dPCCertificateMissingFee;
+	}
+
+	public Double getFalseCeilingFee() {
+		return falseCeilingFee;
+	}
+
+	public void setFalseCeilingFee(Double falseCeilingFee) {
+		this.falseCeilingFee = falseCeilingFee;
+	}
+
+	public Double getAdditionalHeightSCFConvertSCOFee() {
+		return additionalHeightSCFConvertSCOFee;
+	}
+
+	public void setAdditionalHeightSCFConvertSCOFee(
+			Double additionalHeightSCFConvertSCOFee) {
+		this.additionalHeightSCFConvertSCOFee = additionalHeightSCFConvertSCOFee;
+	}
+
+	public Double getBarsatiFloorHeightFee() {
+		return barsatiFloorHeightFee;
+	}
+
+	public void setBarsatiFloorHeightFee(Double barsatiFloorHeightFee) {
+		this.barsatiFloorHeightFee = barsatiFloorHeightFee;
+	}
+
+	public Double getExcessCoverageAreaFee() {
+		return excessCoverageAreaFee;
+	}
+
+	public void setExcessCoverageAreaFee(Double excessCoverageAreaFee) {
+		this.excessCoverageAreaFee = excessCoverageAreaFee;
+	}
+
+	public Double getExcessCoverageBeyondRoning6Fee() {
+		return excessCoverageBeyondRoning6Fee;
+	}
+
+	public void setExcessCoverageBeyondRoning6Fee(
+			Double excessCoverageBeyondRoning6Fee) {
+		this.excessCoverageBeyondRoning6Fee = excessCoverageBeyondRoning6Fee;
+	}
+
+	public Double getGlazingVerandahFee() {
+		return glazingVerandahFee;
+	}
+
+	public void setGlazingVerandahFee(Double glazingVerandahFee) {
+		this.glazingVerandahFee = glazingVerandahFee;
+	}
+
+	public Double getInternalChangesConstruction() {
+		return internalChangesConstruction;
+	}
+
+	public void setInternalChangesConstruction(Double internalChangesConstruction) {
+		this.internalChangesConstruction = internalChangesConstruction;
+	}
+
+	public Double getStairHeadwayHeightFee() {
+		return stairHeadwayHeightFee;
+	}
+
+	public void setStairHeadwayHeightFee(Double stairHeadwayHeightFee) {
+		this.stairHeadwayHeightFee = stairHeadwayHeightFee;
+	}
+
+	public Double getWaterTankLocationFee() {
+		return waterTankLocationFee;
+	}
+
+	public void setWaterTankLocationFee(Double waterTankLocationFee) {
+		this.waterTankLocationFee = waterTankLocationFee;
+	}
+
+	public Double getLoftsFee() {
+		return loftsFee;
+	}
+
+	public void setLoftsFee(Double loftsFee) {
+		this.loftsFee = loftsFee;
+	}
+
+	public Double getMinorChangesDoorsWindowsFee() {
+		return minorChangesDoorsWindowsFee;
+	}
+
+	public void setMinorChangesDoorsWindowsFee(Double minorChangesDoorsWindowsFee) {
+		this.minorChangesDoorsWindowsFee = minorChangesDoorsWindowsFee;
+	}
+
+	public Double getNichesCommonWallFee() {
+		return nichesCommonWallFee;
+	}
+
+	public void setNichesCommonWallFee(Double nichesCommonWallFee) {
+		this.nichesCommonWallFee = nichesCommonWallFee;
+	}
+
+	public Double getNonStdGateFee() {
+		return nonStdGateFee;
+	}
+
+	public void setNonStdGateFee(Double nonStdGateFee) {
+		this.nonStdGateFee = nonStdGateFee;
+	}
+
+	public Double getTransferFee() {
+		return transferFee;
+	}
+
+	public void setTransferFee(Double transferFee) {
+		this.transferFee = transferFee;
+	}
+
+	public Double getTransferBuildingPlanFee() {
+		return transferBuildingPlanFee;
+	}
+
+	public void setTransferBuildingPlanFee(Double transferBuildingPlanFee) {
+		this.transferBuildingPlanFee = transferBuildingPlanFee;
+	}
 
 }

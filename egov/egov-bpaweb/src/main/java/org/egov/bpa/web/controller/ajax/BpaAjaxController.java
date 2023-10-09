@@ -1130,6 +1130,7 @@ public class BpaAjaxController {
 		System.out.println("EDCR NO:" + ocedcr);
 		System.out.println("service type:" + ocserviceType);
 		System.out.println("Pemrit No:" + permitNo);
+		System.out.println("Response : "+ response.toString());
 		OccupancyCertificate oc = new OccupancyCertificate();
 		OccupancyFee occupancyFee = new OccupancyFee();
 		oc.seteDcrNumber(ocedcr);

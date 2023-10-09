@@ -38,7 +38,28 @@ public class ReceiptRegisterReportAdaptor implements DataTableJsonAdapter<Receip
             baseRegisterJson.addProperty("totalWithoutLabourCess", baseForm.getTotalWithoutLaboutCess());
             baseRegisterJson.addProperty("sector", baseForm.getSector());
             baseRegisterJson.addProperty("plotNumber", baseForm.getPlotNumber());
-
+            
+            baseRegisterJson.addProperty("additionalHeightFee", baseForm.getAdditionalHeightFee());
+            baseRegisterJson.addProperty("constructionDemolision", baseForm.getConstructionDemolision());
+            baseRegisterJson.addProperty("conversionCharges", baseForm.getConversionCharges());
+            baseRegisterJson.addProperty("developmentChargesRoads", baseForm.getDevelopmentChargesRoads());
+            baseRegisterJson.addProperty("DPCCertificateMissingFee", baseForm.getDPCCertificateMissingFee());
+            baseRegisterJson.addProperty("falseCeilingFee", baseForm.getFalseCeilingFee());
+            baseRegisterJson.addProperty("additionalHeightSCFConvertSCOFee", baseForm.getAdditionalHeightSCFConvertSCOFee());
+            baseRegisterJson.addProperty("barsatiFloorHeightFee", baseForm.getBarsatiFloorHeightFee());
+            baseRegisterJson.addProperty("excessCoverageAreaFee", baseForm.getExcessCoverageAreaFee());
+            baseRegisterJson.addProperty("excessCoverageBeyondRoning6Fee", baseForm.getExcessCoverageBeyondRoning6Fee());
+            baseRegisterJson.addProperty("glazingVerandahFee", baseForm.getGlazingVerandahFee());
+            baseRegisterJson.addProperty("internalChangesConstruction", baseForm.getInternalChangesConstruction());
+            baseRegisterJson.addProperty("stairHeadwayHeightFee", baseForm.getStairHeadwayHeightFee());
+            baseRegisterJson.addProperty("waterTankLocationFee", baseForm.getWaterTankLocationFee());            
+            baseRegisterJson.addProperty("loftsFee", baseForm.getLoftsFee());
+            baseRegisterJson.addProperty("minorChangesDoorsWindowsFee", baseForm.getMinorChangesDoorsWindowsFee());
+            baseRegisterJson.addProperty("nichesCommonWallFee", baseForm.getNichesCommonWallFee());
+            baseRegisterJson.addProperty("nonStdGateFee", baseForm.getNonStdGateFee());
+            baseRegisterJson.addProperty("transferFee", baseForm.getTransferFee());
+            baseRegisterJson.addProperty("transferBuildingPlanFee", baseForm.getTransferBuildingPlanFee());     
+            
             baseRegisterResultData.add(baseRegisterJson);
         });
         return enhance(baseRegisterResultData, baseRegisterResponse);

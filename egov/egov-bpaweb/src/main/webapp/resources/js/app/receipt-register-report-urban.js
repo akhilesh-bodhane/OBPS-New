@@ -173,12 +173,100 @@
 			{
 				"data": "securityFee",
 				"sClass": "text-left"
+			},	
+			
+			
+			
+			
+			{
+				"data": "additionalHeightFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "constructionDemolision",
+				"sClass": "text-left"
+			},
+			{
+				"data": "conversionCharges",
+				"sClass": "text-left"
+			},
+			{
+				"data": "developmentChargesRoads",
+				"sClass": "text-left"
+			},
+			{
+				"data": "DPCCertificateMissingFee",
+				"sClass": "text-left"
 			},
 			
+			{
+				"data": "falseCeilingFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "additionalHeightSCFConvertSCOFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "barsatiFloorHeightFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "excessCoverageAreaFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "excessCoverageBeyondRoning6Fee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "glazingVerandahFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "internalChangesConstruction",
+				"sClass": "text-left"
+			},	
+			
+			
+			{
+				"data": "stairHeadwayHeightFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "waterTankLocationFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "loftsFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "minorChangesDoorsWindowsFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "nichesCommonWallFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "nonStdGateFee",
+				"sClass": "text-left"
+			},	
+			
+			{
+				"data": "transferFee",
+				"sClass": "text-left"
+			},
+			{
+				"data": "transferBuildingPlanFee",
+				"sClass": "text-left"
+			},	
 			{
 				"data": "totalWithoutLabourCess",
 				"sClass": "text-left"
 			},
+			
 			{
 				"data": "total",
 				"sClass": "text-left"

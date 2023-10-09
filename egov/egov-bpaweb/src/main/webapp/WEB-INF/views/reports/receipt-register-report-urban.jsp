@@ -143,10 +143,30 @@
                         <th><spring:message code="lbl.rule5.fee"/></th>
                         <th><spring:message code="lbl.gst"/></th>
                         <th><spring:message code="lbl.security.fee"/></th>
-                        <th><spring:message code="lbl.total.withoutlabourcess"/></th>
+                        <th><spring:message code="lbl.additional.height.fee"/></th>
+						<th><spring:message code="lbl.construction.demolition.fee"/></th>
+						<th><spring:message code="lbl.conversion.fee"/></th>
+						<th><spring:message code="lbl.development.charges.roads"/></th>
+						<th><spring:message code="lbl.dpc.missing.fee"/></th>
+						<th><spring:message code="lbl.false.ceiling.fee"/></th>
+						<th><spring:message code="lbl.additional.height.second.floor.fee"/></th>
+						<th><spring:message code="lbl.barsati.floor.height.fee"/></th>
+						<th><spring:message code="lbl.excess.coverage.area.fee"/></th>
+						<th><spring:message code="lbl.excess.coverage.zone6.fee"/></th>
+						<th><spring:message code="lbl.glazing.verandah.fee"/></th>
+						<th><spring:message code="lbl.internal.changes.construction.fee"/></th>
+						<th><spring:message code="lbl.stair.headway.height.fee"/></th>
+						<th><spring:message code="lbl.water.tank.location.fee"/></th>
+						<th><spring:message code="lbl.lofts.fee"/></th>
+						<th><spring:message code="lbl.minor.doors.windows.fee"/></th>
+						<th><spring:message code="lbl.niches.wall.fee"/></th>
+						<th><spring:message code="lbl.nonstd.gate.fee"/></th>
+						<th><spring:message code="lbl.transfer.fee"/></th>
+						<th><spring:message code="lbl.transfer.bp.fee"/></th>
+						<th><spring:message code="lbl.total.withoutlabourcess"/></th>
                         <th><spring:message code="lbl.total"/></th>
-                        
-                    </tr>
+						                        
+						</tr>
                     </thead>
                 </table>
 	</div>

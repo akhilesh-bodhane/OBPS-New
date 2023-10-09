@@ -398,11 +398,80 @@ public class BpaReportsService {
     				 receiptReport.setAdditionFee(fee.getAdditionFee());
     			 if(fee.getRule5()!=null && fee.getRule5()!=0)
     				 receiptReport.setRule5(fee.getRule5());
+    			 
+    			 if(fee.getAdditionalHeightFee() != null && fee.getAdditionalHeightFee() != 0)
+    				 receiptReport.setAdditionalHeightFee(fee.getAdditionalHeightFee());
+    			 if(fee.getConstructionDemolision() != null && fee.getConstructionDemolision() != 0)
+    				 receiptReport.setConstructionDemolision(fee.getConstructionDemolision());
+    			 if(fee.getConversionCharges() != null && fee.getConversionCharges() != 0)
+    				 receiptReport.setConversionCharges(fee.getConversionCharges());
+    			 if(fee.getDevelopmentChargesRoads() != null && fee.getDevelopmentChargesRoads() != 0)
+    				 receiptReport.setDevelopmentChargesRoads(fee.getDevelopmentChargesRoads());
+    			 if(fee.getDPCCertificateMissingFee() != null && fee.getDPCCertificateMissingFee() != 0)
+    				 receiptReport.setDPCCertificateMissingFee(fee.getDPCCertificateMissingFee());
+    			 if(fee.getFalseCeilingFee() != null && fee.getFalseCeilingFee() != 0)
+    				 receiptReport.setFalseCeilingFee(fee.getFalseCeilingFee());
+    			 
+    			 if(fee.getAdditionalHeightSCFConvertSCOFee() != null && fee.getAdditionalHeightSCFConvertSCOFee() != 0)
+    				 receiptReport.setAdditionalHeightSCFConvertSCOFee(fee.getAdditionalHeightSCFConvertSCOFee());
+    			 if(fee.getBarsatiFloorHeightFee() != null && fee.getBarsatiFloorHeightFee() != 0)
+    				 receiptReport.setBarsatiFloorHeightFee(fee.getBarsatiFloorHeightFee());
+    			 if(fee.getExcessCoverageAreaFee() != null && fee.getExcessCoverageAreaFee() != 0)
+    				 receiptReport.setExcessCoverageAreaFee(fee.getExcessCoverageAreaFee());
+    			 if(fee.getExcessCoverageBeyondRoning6Fee() != null && fee.getExcessCoverageBeyondRoning6Fee() != 0)
+    				 receiptReport.setExcessCoverageBeyondRoning6Fee(fee.getExcessCoverageBeyondRoning6Fee());
+    			 if(fee.getGlazingVerandahFee() != null && fee.getGlazingVerandahFee() != 0)
+    				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
+    			 if(fee.getInternalChangesConstruction() != null && fee.getInternalChangesConstruction() != 0)
+    				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
+    			
+    			 if(fee.getStairHeadwayHeightFee() != null && fee.getStairHeadwayHeightFee() != 0)
+    				 receiptReport.setStairHeadwayHeightFee(fee.getStairHeadwayHeightFee());
+    			 if(fee.getWaterTankLocationFee() != null && fee.getWaterTankLocationFee() != 0)
+    				 receiptReport.setWaterTankLocationFee(fee.getWaterTankLocationFee());
+    			 if(fee.getLoftsFee() != null && fee.getLoftsFee() != 0)
+    				 receiptReport.setLoftsFee(fee.getLoftsFee());
+    			 if(fee.getMinorChangesDoorsWindowsFee() != null && fee.getMinorChangesDoorsWindowsFee() != 0)
+    				 receiptReport.setMinorChangesDoorsWindowsFee(fee.getMinorChangesDoorsWindowsFee());
+    			 if(fee.getNichesCommonWallFee() != null && fee.getNichesCommonWallFee() != 0)
+    				 receiptReport.setNichesCommonWallFee(fee.getNichesCommonWallFee());
+    			 if(fee.getNonStdGateFee() != null && fee.getNonStdGateFee() != 0)
+    				 receiptReport.setNonStdGateFee(fee.getNonStdGateFee());
+    			 if(fee.getTransferFee() != null && fee.getTransferFee() != 0)
+    				 receiptReport.setTransferFee(fee.getTransferFee());
+    			 if(fee.getTransferBuildingPlanFee() != null && fee.getTransferBuildingPlanFee() != 0)
+    				 receiptReport.setTransferBuildingPlanFee(fee.getTransferBuildingPlanFee());
+
     		 });
-    		 receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
-           Double.sum(receiptReport.getSecurityFee(),
-           		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));
-    		 receiptReport.setTotal(Double.sum(receiptReport.getTotalWithoutLaboutCess(), receiptReport.getLabourCess()));
+					receiptReport.setTotalWithoutLaboutCess(
+							Double.sum(receiptReport.getScrutinyFee(),
+									Double.sum(receiptReport.getSecurityFee(), 
+											Double.sum(receiptReport.getRule5(), 
+													Double.sum(receiptReport.getAdditionalHeightFee(),
+															Double.sum(receiptReport.getConstructionDemolision(),
+																	Double.sum(receiptReport.getConversionCharges(),
+																			Double.sum(receiptReport.getDevelopmentChargesRoads(),
+																					Double.sum(receiptReport.getDPCCertificateMissingFee(),
+																							Double.sum(receiptReport.getFalseCeilingFee(),
+																									Double.sum(receiptReport.getAdditionalHeightSCFConvertSCOFee(),
+																											Double.sum(receiptReport.getBarsatiFloorHeightFee(),
+																													Double.sum(receiptReport.getExcessCoverageAreaFee(),
+																															Double.sum(receiptReport.getExcessCoverageBeyondRoning6Fee(),
+																																	Double.sum(receiptReport.getGlazingVerandahFee(),
+																																			Double.sum(receiptReport.getInternalChangesConstruction(),
+																																					Double.sum(receiptReport.getStairHeadwayHeightFee(),
+																																							Double.sum(receiptReport.getWaterTankLocationFee(),
+																																									Double.sum(receiptReport.getLoftsFee(),
+																																											Double.sum(receiptReport.getMinorChangesDoorsWindowsFee(),
+																																													Double.sum(receiptReport.getNichesCommonWallFee(),
+																																															Double.sum(receiptReport.getNonStdGateFee(),
+																																																	Double.sum(receiptReport.getTransferFee(),
+																																																			Double.sum(receiptReport.getTransferBuildingPlanFee(),
+													Double.sum(receiptReport.getAdditionFee(),
+															receiptReport.getGst())))))))))))))))))))))))));
+					receiptReport.setTotal(Double.sum(
+							receiptReport.getTotalWithoutLaboutCess(),
+							receiptReport.getLabourCess()));
 
     	 });
 //        return receiptRegisterReportList;
@@ -433,10 +502,80 @@ public class BpaReportsService {
    				 receiptReport.setAdditionFee(fee.getAdditionFee());
    			 if(fee.getRule5()!=null && fee.getRule5()!=0)
    				 receiptReport.setRule5(fee.getRule5());
+   			 
+   			if(fee.getAdditionalHeightFee() != null && fee.getAdditionalHeightFee() != 0)
+				 receiptReport.setAdditionalHeightFee(fee.getAdditionalHeightFee());
+			 if(fee.getConstructionDemolision() != null && fee.getConstructionDemolision() != 0)
+				 receiptReport.setConstructionDemolision(fee.getConstructionDemolision());
+			 if(fee.getConversionCharges() != null && fee.getConversionCharges() != 0)
+				 receiptReport.setConversionCharges(fee.getConversionCharges());
+			 if(fee.getDevelopmentChargesRoads() != null && fee.getDevelopmentChargesRoads() != 0)
+				 receiptReport.setDevelopmentChargesRoads(fee.getDevelopmentChargesRoads());
+			 if(fee.getDPCCertificateMissingFee() != null && fee.getDPCCertificateMissingFee() != 0)
+				 receiptReport.setDPCCertificateMissingFee(fee.getDPCCertificateMissingFee());
+			 if(fee.getFalseCeilingFee() != null && fee.getFalseCeilingFee() != 0)
+				 receiptReport.setFalseCeilingFee(fee.getFalseCeilingFee());
+			 
+			 if(fee.getAdditionalHeightSCFConvertSCOFee() != null && fee.getAdditionalHeightSCFConvertSCOFee() != 0)
+				 receiptReport.setAdditionalHeightSCFConvertSCOFee(fee.getAdditionalHeightSCFConvertSCOFee());
+			 if(fee.getBarsatiFloorHeightFee() != null && fee.getBarsatiFloorHeightFee() != 0)
+				 receiptReport.setBarsatiFloorHeightFee(fee.getBarsatiFloorHeightFee());
+			 if(fee.getExcessCoverageAreaFee() != null && fee.getExcessCoverageAreaFee() != 0)
+				 receiptReport.setExcessCoverageAreaFee(fee.getExcessCoverageAreaFee());
+			 if(fee.getExcessCoverageBeyondRoning6Fee() != null && fee.getExcessCoverageBeyondRoning6Fee() != 0)
+				 receiptReport.setExcessCoverageBeyondRoning6Fee(fee.getExcessCoverageBeyondRoning6Fee());
+			 if(fee.getGlazingVerandahFee() != null && fee.getGlazingVerandahFee() != 0)
+				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
+			 if(fee.getInternalChangesConstruction() != null && fee.getInternalChangesConstruction() != 0)
+				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
+			
+			 if(fee.getStairHeadwayHeightFee() != null && fee.getStairHeadwayHeightFee() != 0)
+				 receiptReport.setStairHeadwayHeightFee(fee.getStairHeadwayHeightFee());
+			 if(fee.getWaterTankLocationFee() != null && fee.getWaterTankLocationFee() != 0)
+				 receiptReport.setWaterTankLocationFee(fee.getWaterTankLocationFee());
+			 if(fee.getLoftsFee() != null && fee.getLoftsFee() != 0)
+				 receiptReport.setLoftsFee(fee.getLoftsFee());
+			 if(fee.getMinorChangesDoorsWindowsFee() != null && fee.getMinorChangesDoorsWindowsFee() != 0)
+				 receiptReport.setMinorChangesDoorsWindowsFee(fee.getMinorChangesDoorsWindowsFee());
+			 if(fee.getNichesCommonWallFee() != null && fee.getNichesCommonWallFee() != 0)
+				 receiptReport.setNichesCommonWallFee(fee.getNichesCommonWallFee());
+			 if(fee.getNonStdGateFee() != null && fee.getNonStdGateFee() != 0)
+				 receiptReport.setNonStdGateFee(fee.getNonStdGateFee());
+			 if(fee.getTransferFee() != null && fee.getTransferFee() != 0)
+				 receiptReport.setTransferFee(fee.getTransferFee());
+			 if(fee.getTransferBuildingPlanFee() != null && fee.getTransferBuildingPlanFee() != 0)
+				 receiptReport.setTransferBuildingPlanFee(fee.getTransferBuildingPlanFee());
    		 });
-   		 receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
+   		 
+   		receiptReport.setTotalWithoutLaboutCess(
+				Double.sum(receiptReport.getScrutinyFee(),
+						Double.sum(receiptReport.getSecurityFee(), 
+								Double.sum(receiptReport.getRule5(), 
+										Double.sum(receiptReport.getAdditionalHeightFee(),
+												Double.sum(receiptReport.getConstructionDemolision(),
+														Double.sum(receiptReport.getConversionCharges(),
+																Double.sum(receiptReport.getDevelopmentChargesRoads(),
+																		Double.sum(receiptReport.getDPCCertificateMissingFee(),
+																				Double.sum(receiptReport.getFalseCeilingFee(),
+																						Double.sum(receiptReport.getAdditionalHeightSCFConvertSCOFee(),
+																								Double.sum(receiptReport.getBarsatiFloorHeightFee(),
+																										Double.sum(receiptReport.getExcessCoverageAreaFee(),
+																												Double.sum(receiptReport.getExcessCoverageBeyondRoning6Fee(),
+																														Double.sum(receiptReport.getGlazingVerandahFee(),
+																																Double.sum(receiptReport.getInternalChangesConstruction(),
+																																		Double.sum(receiptReport.getStairHeadwayHeightFee(),
+																																				Double.sum(receiptReport.getWaterTankLocationFee(),
+																																						Double.sum(receiptReport.getLoftsFee(),
+																																								Double.sum(receiptReport.getMinorChangesDoorsWindowsFee(),
+																																										Double.sum(receiptReport.getNichesCommonWallFee(),
+																																												Double.sum(receiptReport.getNonStdGateFee(),
+																																														Double.sum(receiptReport.getTransferFee(),
+																																																Double.sum(receiptReport.getTransferBuildingPlanFee(),
+										Double.sum(receiptReport.getAdditionFee(),
+												receiptReport.getGst())))))))))))))))))))))))));
+   		 /*receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
           Double.sum(receiptReport.getSecurityFee(),
-          		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));
+          		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));*/
    		 receiptReport.setTotal(Double.sum(receiptReport.getTotalWithoutLaboutCess(), receiptReport.getLabourCess()));
 
    	 });
@@ -660,7 +799,7 @@ public class BpaReportsService {
         	     " EGCL_COLLECTIONHEADER.RECEIPTDATE,"+
         	     " EGCL_COLLECTIONHEADER.RECEIPTNUMBER,"+
         	     " EG_DEPARTMENT.NAME");
-        
+        System.out.println("AppTypeList : " + appTypeList.toString());
         if(appTypeList!=null) {
         	whereQueryStr.append("EGBPA_APPLICATION.APPLICATIONSUBTYPE in ( :appTypeList)");
         }
@@ -813,11 +952,31 @@ public class BpaReportsService {
     			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%GST%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS gst,"+
     			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Additional Coverage fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS AdditionFee,"+
     			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Labour cess%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS LabourCess,"+
-    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Rule 5%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS Rule5 "+
-
-    		" FROM EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS "
+    			"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Rule 5%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS Rule5, "+    			
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Additional height fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS additionalHeightFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Construction & Demolision%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS constructionDemolision,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Conversion charges%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS conversionCharges,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Development charges of roads%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS developmentChargesRoads,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%DPC certificate missing fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS DPCCertificateMissingFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%False Ceiling Fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS falseCeilingFee, "+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for additional height on second floor of SCFs converted into SCOs%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS additionalHeightSCFConvertSCOFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for barsati floor height%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS barsatiFloorHeightFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for excess coverage area%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS excessCoverageAreaFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for excess coverage beyond zoning 6%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS excessCoverageBeyondRoning6Fee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for glazing of verandah%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS glazingVerandahFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for internal changes during construction%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS internalChangesConstruction, "+				
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for stair headway height%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS stairHeadwayHeightFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for water tank location%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS waterTankLocationFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Lofts fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS loftsFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Minor changes in doors and windows fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS minorChangesDoorsWindowsFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Niches on the common wall fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS nichesCommonWallFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Non standard gate fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS nonStdGateFee, "+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Transfer fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS transferFee,"+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Transfer of building plan fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS transferBuildingPlanFee "+
+				" FROM EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS "
     		
-    		  );       	  
+    		  );      
+      
       final StringBuilder whereQueryStr = new StringBuilder(" WHERE EGCL_COLLECTIONDETAILS.ISACTUALDEMAND = true and EGCL_COLLECTIONDETAILS.COLLECTIONHEADER="+id);
       
 
@@ -834,6 +993,30 @@ public class BpaReportsService {
               .addScalar("LabourCess", DoubleType.INSTANCE)
               .addScalar("Rule5", DoubleType.INSTANCE)
               
+              .addScalar("additionalHeightFee", DoubleType.INSTANCE)
+    		  .addScalar("constructionDemolision", DoubleType.INSTANCE)
+    		  .addScalar("conversionCharges", DoubleType.INSTANCE)
+    		  .addScalar("AdditionFee", DoubleType.INSTANCE)
+              .addScalar("developmentChargesRoads", DoubleType.INSTANCE)
+              .addScalar("DPCCertificateMissingFee", DoubleType.INSTANCE)
+              
+              .addScalar("falseCeilingFee", DoubleType.INSTANCE)
+    		  .addScalar("additionalHeightSCFConvertSCOFee", DoubleType.INSTANCE)
+    		  .addScalar("barsatiFloorHeightFee", DoubleType.INSTANCE)
+    		  .addScalar("excessCoverageAreaFee", DoubleType.INSTANCE)
+              .addScalar("excessCoverageBeyondRoning6Fee", DoubleType.INSTANCE)
+              .addScalar("glazingVerandahFee", DoubleType.INSTANCE)
+
+              .addScalar("internalChangesConstruction", DoubleType.INSTANCE)
+    		  .addScalar("stairHeadwayHeightFee", DoubleType.INSTANCE)
+    		  .addScalar("waterTankLocationFee", DoubleType.INSTANCE)
+    		  .addScalar("loftsFee", DoubleType.INSTANCE)
+              .addScalar("minorChangesDoorsWindowsFee", DoubleType.INSTANCE)
+              .addScalar("nichesCommonWallFee", DoubleType.INSTANCE)
+
+              .addScalar("nonStdGateFee", DoubleType.INSTANCE)
+    		  .addScalar("transferFee", DoubleType.INSTANCE)
+    		  .addScalar("transferBuildingPlanFee", DoubleType.INSTANCE)              
               .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
 
       List<ReceiptRegisterReportHelper> feeList = populateQueryResults(feeQuery.list());
@@ -856,6 +1039,53 @@ public class BpaReportsService {
                 	receiptRegisterReportHelper.setGst(0.0);
                 if (receiptRegisterReportHelper.getRule5() == null)
                 	receiptRegisterReportHelper.setRule5(0.0);
+                if (receiptRegisterReportHelper.getAdditionalHeightFee()== null)
+                	receiptRegisterReportHelper.setAdditionalHeightFee(0.0);
+                
+                
+                if (receiptRegisterReportHelper.getAdditionalHeightFee()== null)
+                	receiptRegisterReportHelper.setAdditionalHeightFee(0.0);
+                if (receiptRegisterReportHelper.getConstructionDemolision()== null)
+                	receiptRegisterReportHelper.setConstructionDemolision(0.0);
+                if (receiptRegisterReportHelper.getConversionCharges()== null)
+                	receiptRegisterReportHelper.setConversionCharges(0.0);
+                if (receiptRegisterReportHelper.getDevelopmentChargesRoads()== null)
+                	receiptRegisterReportHelper.setDevelopmentChargesRoads(0.0);
+                if (receiptRegisterReportHelper.getDPCCertificateMissingFee()== null)
+                	receiptRegisterReportHelper.setDPCCertificateMissingFee(0.0);  
+                
+                if (receiptRegisterReportHelper.getFalseCeilingFee()== null)
+                	receiptRegisterReportHelper.setFalseCeilingFee(0.0);
+                if (receiptRegisterReportHelper.getAdditionalHeightSCFConvertSCOFee()== null)
+                	receiptRegisterReportHelper.setAdditionalHeightSCFConvertSCOFee(0.0);
+                if (receiptRegisterReportHelper.getBarsatiFloorHeightFee()== null)
+                	receiptRegisterReportHelper.setBarsatiFloorHeightFee(0.0);
+                if (receiptRegisterReportHelper.getExcessCoverageAreaFee()== null)
+                	receiptRegisterReportHelper.setExcessCoverageAreaFee(0.0);
+                if (receiptRegisterReportHelper.getExcessCoverageBeyondRoning6Fee()== null)
+                	receiptRegisterReportHelper.setExcessCoverageBeyondRoning6Fee(0.0); 
+                
+                if (receiptRegisterReportHelper.getGlazingVerandahFee()== null)
+                	receiptRegisterReportHelper.setGlazingVerandahFee(0.0);
+                if (receiptRegisterReportHelper.getInternalChangesConstruction()== null)
+                	receiptRegisterReportHelper.setInternalChangesConstruction(0.0);
+                if (receiptRegisterReportHelper.getStairHeadwayHeightFee()== null)
+                	receiptRegisterReportHelper.setStairHeadwayHeightFee(0.0);
+                if (receiptRegisterReportHelper.getWaterTankLocationFee()== null)
+                	receiptRegisterReportHelper.setWaterTankLocationFee(0.0);
+                if (receiptRegisterReportHelper.getLoftsFee()== null)
+                	receiptRegisterReportHelper.setLoftsFee(0.0);
+                
+                if (receiptRegisterReportHelper.getMinorChangesDoorsWindowsFee()== null)
+                	receiptRegisterReportHelper.setMinorChangesDoorsWindowsFee(0.0);
+                if (receiptRegisterReportHelper.getNichesCommonWallFee()== null)
+                	receiptRegisterReportHelper.setNichesCommonWallFee(0.0);
+                if (receiptRegisterReportHelper.getNonStdGateFee()== null)
+                	receiptRegisterReportHelper.setNonStdGateFee(0.0);
+                if (receiptRegisterReportHelper.getTransferFee()== null)
+                	receiptRegisterReportHelper.setTransferFee(0.0);
+                if (receiptRegisterReportHelper.getTransferBuildingPlanFee()== null)
+                	receiptRegisterReportHelper.setTransferBuildingPlanFee(0.0);
             
 //            receiptRegisterReportHelper.setTotalWithoutLaboutCess(Double.sum(receiptRegisterReportHelper.getScrutinyFee(),
 //                    Double.sum(receiptRegisterReportHelper.getSecurityFee(),

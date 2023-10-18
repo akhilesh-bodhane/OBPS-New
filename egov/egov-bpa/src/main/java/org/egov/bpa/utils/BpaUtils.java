@@ -62,6 +62,7 @@ import org.egov.bpa.transaction.entity.oc.OCFloor;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.PdfQrCodeAppendService;
 import org.egov.bpa.transaction.service.messaging.BPASmsAndEmailService;
 import org.egov.bpa.transaction.workflow.BpaApplicationWorkflowCustomDefaultImpl;
@@ -71,6 +72,7 @@ import org.egov.bpa.transaction.workflow.pl.PlinthLevelCertificateWorkflowCustom
 import org.egov.collection.integration.models.BillReceiptInfo;
 import org.egov.collection.integration.services.CollectionIntegrationService;
 import org.egov.common.entity.bpa.SubOccupancy;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.common.entity.edcr.OccupancyTypeHelper;
 import org.egov.demand.model.EgDemand;
 import org.egov.demand.model.EgDemandDetails;
@@ -103,6 +105,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 @Transactional(readOnly = true)
@@ -165,6 +169,9 @@ public class BpaUtils {
 	private AppConfigValueService appConfigValuesService;
 	@Autowired
 	private ApplicationSubTypeService applicationTypeService;
+	
+	@Autowired
+    private DcrRestService drcRestService;
 
 	@Autowired
 	public BpaUtils(@Value("${filestore.base.dir}") String fileStoreDir) {
@@ -355,10 +362,37 @@ public class BpaUtils {
 		Module module = moduleService.getModuleByName(EGMODULE_NAME);
 		boolean isResolved = false;
 		String url = "/bpa/application/citizen/occupancy-certificate/update/" + oc.getApplicationNumber();
-		final PortalInboxBuilder portalInboxBuilder = new PortalInboxBuilder(module,
-				oc.getParent().getOwner().getName(), oc.getApplicationType(), oc.getApplicationNumber(),
-				oc.getOccupancyCertificateNumber(), oc.getId(), SUCCESS, SUCCESS, url, isResolved, status, new Date(),
-				oc.getState(), portalInboxUser);
+		
+		String geteDcrNumber = oc.geteDcrNumber();       	
+		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+		 System.out.println("createPortalUserinbox odcrPlanInfo"+odcrPlanInfo);   		 
+		 String ownerName = odcrPlanInfo.getOwnerName();    		 
+		 System.out.println("createPortalUserinbox owner name"+ownerName);
+		 System.out.println("createPortalUserinbox get name"+oc.getParent().getOwner().getName());
+		 System.out.println("createPortalUserinbox add owner"+odcrPlanInfo.getAddowner());
+		  PortalInboxBuilder portalInboxBuilder = null;
+		 if(odcrPlanInfo.getAddowner() == true && "Occupancy certificate".equals(odcrPlanInfo.getApplicationType())) {
+			 System.out.println("showOCUpdateForm if condition get add owner"+odcrPlanInfo.getAddowner());
+		   //oc.getParent().getOwner().setName(ownerName);		   
+		   portalInboxBuilder = new PortalInboxBuilder(module,
+				   ownerName, oc.getApplicationType(), oc.getApplicationNumber(),
+					oc.getOccupancyCertificateNumber(), oc.getId(), SUCCESS, SUCCESS, url, isResolved, status, new Date(),
+					oc.getState(), portalInboxUser);		   
+		 }else {
+			 portalInboxBuilder = new PortalInboxBuilder(module,
+						oc.getParent().getOwner().getName(), oc.getApplicationType(), oc.getApplicationNumber(),
+						oc.getOccupancyCertificateNumber(), oc.getId(), SUCCESS, SUCCESS, url, isResolved, status, new Date(),
+						oc.getState(), portalInboxUser);	 
+		 }
+		
+			/*
+			 * final PortalInboxBuilder portalInboxBuilder = new PortalInboxBuilder(module,
+			 * oc.getParent().getOwner().getName(), oc.getApplicationType(),
+			 * oc.getApplicationNumber(), oc.getOccupancyCertificateNumber(), oc.getId(),
+			 * SUCCESS, SUCCESS, url, isResolved, status, new Date(), oc.getState(),
+			 * portalInboxUser);
+			 */
 
 		final PortalInbox portalInbox = portalInboxBuilder.build();
 		portalInboxService.pushInboxMessage(portalInbox);

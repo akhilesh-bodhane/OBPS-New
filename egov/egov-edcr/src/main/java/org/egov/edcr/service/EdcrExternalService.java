@@ -110,6 +110,7 @@ public class EdcrExternalService {
                 : applicationDetail.getApplication().getServiceType());
         applicationInfo.setOwnerName(applicationDetail.getApplication().getApplicantName() == null ? "N/A"
                 : applicationDetail.getApplication().getApplicantName());
+        applicationInfo.setAddowner(applicationDetail.getApplication().getAddowner());
         if (applicationDetail.getPlanDetailFileStore() != null)
             applicationInfo.setPlanDetailFileStore(applicationDetail.getPlanDetailFileStore().getId());
 

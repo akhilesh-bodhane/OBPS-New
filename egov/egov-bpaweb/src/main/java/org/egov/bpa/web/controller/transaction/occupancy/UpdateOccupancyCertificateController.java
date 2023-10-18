@@ -122,6 +122,7 @@ import org.egov.bpa.transaction.notice.impl.OccupancyRejectionFormatImpl;
 import org.egov.bpa.transaction.notice.impl.PermitRejectionFormatImpl;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.BpaStatusService;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.NocStatusService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.oc.OCAppointmentScheduleService;
@@ -134,6 +135,7 @@ import org.egov.bpa.transaction.service.oc.OccupancyFeeService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.eis.entity.Assignment;
 import org.egov.eis.service.PositionMasterService;
 import org.egov.eis.web.contract.WorkflowContainer;
@@ -159,6 +161,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -211,6 +215,9 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     @Autowired
     private OCAppointmentScheduleService ocAppointmentScheduleService;
     
+    @Autowired
+    private DcrRestService drcRestService;
+    
     private static final String APPOINTMENT_SCHEDULED_LIST = "appointmentScheduledList";
     
     @Autowired
@@ -221,6 +228,22 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     public String editOccupancyCertificateApplication(@PathVariable final String applicationNumber, final Model model,
             final HttpServletRequest request) {
         OccupancyCertificate oc = occupancyCertificateService.findByApplicationNumber(applicationNumber);
+        
+         String geteDcrNumber = oc.geteDcrNumber();       	
+		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+		 System.out.println("editOccupancyCertificateApplication odcrPlanInfo"+odcrPlanInfo);   		 
+		 String ownerName = odcrPlanInfo.getOwnerName();    		 
+		 System.out.println("editOccupancyCertificateApplication owner name"+ownerName);
+		 System.out.println("editOccupancyCertificateApplication get name"+oc.getParent().getOwner().getName());
+		 System.out.println("editOccupancyCertificateApplication add owner"+odcrPlanInfo.getAddowner());
+		 System.out.println("editOccupancyCertificateApplication Application type"+odcrPlanInfo.getApplicationType());
+		 if(odcrPlanInfo.getAddowner() == true && "Occupancy certificate".equals(odcrPlanInfo.getApplicationType())) {
+			 System.out.println("editOccupancyCertificateApplication if condition get add owner"+odcrPlanInfo.getAddowner());
+			 System.out.println("editOccupancyCertificateApplication if condition get Application type"+odcrPlanInfo.getApplicationType());		
+			 model.addAttribute("addowner", odcrPlanInfo);
+		 }
+		 
         setCityName(model, request);
         prepareFormData(oc, model);
         loadData(oc, model);
@@ -754,6 +777,21 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         List<OccupancyNocApplication> nocApplication = ocNocService.findByOCApplicationNumber(applicationNumber);
 
         model.addAttribute("nocApplication", nocApplication);
+        
+        String geteDcrNumber = oc.geteDcrNumber();       	
+		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+		 System.out.println("success odcrPlanInfo"+odcrPlanInfo);   		 
+		 String ownerName = odcrPlanInfo.getOwnerName();    		 
+		 System.out.println("success owner name"+ownerName);
+		 System.out.println("success get name"+oc.getParent().getOwner().getName());
+		 System.out.println("success add owner"+odcrPlanInfo.getAddowner());
+		 System.out.println("success Application type"+odcrPlanInfo.getApplicationType());
+		 if(odcrPlanInfo.getAddowner() == true && "Occupancy certificate".equals(odcrPlanInfo.getApplicationType())) {
+			 System.out.println("success if condition get add owner"+odcrPlanInfo.getAddowner());
+			 System.out.println("success if condition get Application type"+odcrPlanInfo.getApplicationType());		
+			 model.addAttribute("addowner", odcrPlanInfo);
+		 }
 
         for (OCNocDocuments nocDocument : oc.getNocDocuments()) {
             for (OccupancyNocApplication ona : nocApplication) {

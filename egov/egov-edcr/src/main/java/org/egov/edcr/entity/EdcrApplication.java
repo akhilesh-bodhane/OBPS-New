@@ -110,6 +110,13 @@ public class EdcrApplication extends AbstractAuditable {
 
     @SafeHtml
     private transient String permitDateTemp;
+    
+    @SafeHtml
+    private  Boolean addowner;
+    
+
+    @SafeHtml
+    private transient String newOwner;
 
     @Override
     public Long getId() {
@@ -296,5 +303,25 @@ public class EdcrApplication extends AbstractAuditable {
 	public void setThirdPartyUserTenant(String thirdPartyUserTenant) {
 		this.thirdPartyUserTenant = thirdPartyUserTenant;
 	}
+
+	
+	  public String getNewOwner() { 
+		  return newOwner; 
+		  
+	  }
+	  
+	  public void setNewOwner(String newOwner) { 
+		  this.newOwner = newOwner; 
+		  }
+	  
+	  public Boolean getAddowner() { 
+		  return addowner; 
+		  }
+	  
+	  public void setAddowner(Boolean addowner) { 
+		  this.addowner = addowner; 
+		  }
+	 
+	
     
 }

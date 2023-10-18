@@ -77,6 +77,7 @@ public class EdcrApplicationInfo implements Serializable {
     private String amenities;
     private String architectInformation;
     private Boolean crzZoneArea;
+    private Boolean addowner;
     // To handle error
     private ErrorDetail errorDetail;
 
@@ -283,4 +284,13 @@ public class EdcrApplicationInfo implements Serializable {
     public void setPlanScrutinyPdfs(Map<String, List<FileStoreMapper>> planScrutinyPdfs) {
         this.planScrutinyPdfs = planScrutinyPdfs;
     }
+
+	public Boolean getAddowner() {
+		return addowner;
+	}
+
+	public void setAddowner(Boolean addowner) {
+		this.addowner = addowner;
+	}
+    
 }

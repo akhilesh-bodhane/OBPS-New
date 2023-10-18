@@ -113,10 +113,19 @@
 			<c:otherwise>
 		            <div class="col-sm-3 add-margin">
 						<spring:message code="lbl.applicant.name"/>
+					</div>				
+					<c:choose>
+					<c:when test="${addowner.addowner eq true}">
+					<div class="col-sm-3 add-margin view-content">
+						<c:out value="${addowner.ownerName}" default="N/A"></c:out>
 					</div>
+					</c:when>
+					<c:otherwise>
 					<div class="col-sm-3 add-margin view-content">
 						<c:out value="${occupancyCertificate.parent.owner.name}" default="N/A"></c:out>
 					</div>
+					</c:otherwise>
+					</c:choose>
 					<div class="col-sm-3 add-margin">
 						<spring:message code="lbl.owner.address"/>
 					</div>

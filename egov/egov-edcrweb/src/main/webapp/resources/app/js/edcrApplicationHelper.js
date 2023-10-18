@@ -208,6 +208,15 @@ $(document)
             	getBpaApplicationByPermitNo($('#planPermitNumber').val());
                 getActiveOwnershipRenewalAppByPermitNo($('#planPermitNumber').val());
             });
+            
+            $('#addowner').change(function() { 
+	         if(this.checked){
+		   $('#newownerdivid').show();
+	       }else{
+		   $('#newownerdivid').hide();
+	      }
+	
+            });
 
      });
 

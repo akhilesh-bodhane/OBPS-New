@@ -60,6 +60,8 @@ import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;
 import org.egov.bpa.transaction.notice.util.OCNoticeUtil;
+import org.egov.bpa.transaction.service.DcrRestService;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.filestore.service.FileStoreService;
@@ -71,6 +73,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /*
  * This is default implementation of all. This can be overridden by state, district, ulb and grade level.
@@ -93,6 +97,9 @@ public class OccupancyCertificateFormatImpl implements OccupancyCertificateNotic
     protected ReportService reportService;
     @Autowired
     protected OCNoticeUtil ocNoticeService;
+    
+    @Autowired
+    private DcrRestService drcRestService;
 
     @Override
     public ReportOutput generateNotice(final OccupancyCertificate oc) {
@@ -100,7 +107,17 @@ public class OccupancyCertificateFormatImpl implements OccupancyCertificateNotic
         ReportRequest reportInput = null;
         OCNotice ocNotice = ocNoticeService.findByOcAndNoticeType(oc, OCCUPANCY_CERTIFICATE_NOTICE_TYPE);
         if (ocNotice == null || ocNotice.getNoticeCommon().getNoticeFileStore() == null) {
-            Map<String, Object> reportParams = ocNoticeService.buildParametersForOc(oc);
+        	
+         String geteDcrNumber = oc.geteDcrNumber();       	
+   		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+   		 RequestContextHolder.getRequestAttributes()).getRequest());  		 
+   		 System.out.println("odcrPlanInfo"+odcrPlanInfo);  		 
+   		 String ownerName = odcrPlanInfo.getOwnerName();
+   		 Boolean addowner=   odcrPlanInfo.getAddowner();
+		 System.out.println("final occupancy certificate addowner"+addowner);
+   		 System.out.println("occupancy certificate owner name"+ownerName);
+        	
+            Map<String, Object> reportParams = ocNoticeService.buildParametersForOc(oc,ownerName,addowner);
             reportInput = new ReportRequest(REPORT_FILE_NAME, oc == null
                     ? new OccupancyCertificate()
                     : oc, reportParams);

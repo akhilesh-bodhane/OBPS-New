@@ -87,12 +87,14 @@ import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCNoticeConditions;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.oc.OcNoticeRepository;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.oc.OCNoticeConditionsService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.transaction.workflow.BpaWorkFlowService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.common.entity.bpa.Usage;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.commons.Installment;
 import org.egov.demand.model.EgDemandDetails;
 import org.egov.infra.admin.master.service.CityService;
@@ -112,6 +114,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -154,6 +158,9 @@ public class OCNoticeUtil {
     private BpaUtils bpaUtils;
     @Autowired
     private OCNoticeConditionsService ocNoticeConditionsService;
+    
+    @Autowired
+    private DcrRestService drcRestService;
 
     public OCNotice findByOcAndNoticeType(OccupancyCertificate oc, String noticeType) {
         return ocNoticeRepository.findByOcAndNoticeType(oc, noticeType);
@@ -163,7 +170,18 @@ public class OCNoticeUtil {
             String ocrejectionfilename, String fileName, String ocRejectionNoticeType) throws IOException {
     	ReportOutput reportOutput = new ReportOutput();
         if (ocNotice == null || ocNotice.getNoticeCommon().getNoticeFileStore() == null) {
-            final Map<String, Object> reportParams = buildParametersForOc(occupancyCertificate);
+        	
+         String geteDcrNumber = occupancyCertificate.geteDcrNumber();       	
+   		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+   		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+   		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+   		 String ownerName = odcrPlanInfo.getOwnerName();
+   		 Boolean addowner=   odcrPlanInfo.getAddowner();
+   		 System.out.println("final occupancy certificate addowner"+addowner);
+   		 System.out.println("final occupancy certificate owner name"+ownerName);
+   		
+   		 
+            final Map<String, Object> reportParams = buildParametersForOc(occupancyCertificate,ownerName,addowner);
             reportParams.putAll(getUlbDetails());
             reportParams.putAll(buildParametersForDemandDetails(occupancyCertificate));
             ReportRequest reportInput = new ReportRequest(ocrejectionfilename, occupancyCertificate, reportParams);
@@ -192,7 +210,7 @@ public class OCNoticeUtil {
         return ocNotice;
     }
 
-    public Map<String, Object> buildParametersForOc(OccupancyCertificate oc) {
+    public Map<String, Object> buildParametersForOc(OccupancyCertificate oc,String ownerName,Boolean addowner) {
         Map<String, Object> reportParams = new HashMap<>();
         reportParams.put("ocdemandtitle", WordUtils.capitalize(BPADEMANDNOTICETITLE));
         reportParams.put("cityName", ApplicationThreadLocals.getCityName());
@@ -205,7 +223,6 @@ public class OCNoticeUtil {
         reportParams.put("ocNumber", oc.getOccupancyCertificateNumber() == null ? EMPTY : oc.getOccupancyCertificateNumber());
         reportParams.put("approvalDate", DateUtils.getDefaultFormattedDate(oc.getApprovalDate()));
         reportParams.put("currentDate", currentDateToDefaultDateFormat());
-        reportParams.put("applicantName", oc.getParent().getOwner().getName());
         reportParams.put("approverName", getApproverName(oc));
         StakeHolder stakeholder = oc.getParent().getStakeHolder().get(0).getStakeHolder();
         reportParams.put("supervisedBy",
@@ -226,7 +243,11 @@ public class OCNoticeUtil {
         reportParams.put("applicantAddress",
                 oc.getParent().getOwner() == null ? "Not Mentioned" : oc.getParent().getOwner().getAddress());
         reportParams.put("parent", oc.getParent());
-        
+        if(addowner==true) {
+        reportParams.put("applicantName", ownerName);
+        reportParams.put("coApplicantName", "");
+        }else {
+        reportParams.put("applicantName", oc.getParent().getOwner().getName());     
         String coApplicantNames = "";        
         if(null != oc.getParent().getCoApplicants()) {
         	for(PermitCoApplicant coApplicant:oc.getParent().getCoApplicants()) {
@@ -234,6 +255,7 @@ public class OCNoticeUtil {
         	}
         }
         reportParams.put("coApplicantName", coApplicantNames);
+        }
         reportParams.put("mobileNo", oc.getParent().getOwner().getUser().getMobileNumber());
         
         if (!oc.getParent().getSiteDetail().isEmpty()) {

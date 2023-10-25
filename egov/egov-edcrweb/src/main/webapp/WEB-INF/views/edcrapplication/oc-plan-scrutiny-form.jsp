@@ -87,6 +87,7 @@
 	</div>
 
 	<div class="form-group">
+	<div>
 		<label class="col-sm-3 control-label text-right planPermitNumber"><spring:message
 				code="lbl.permit.no" /> <span class="mandatory"></span></label>
 		<div class="col-sm-3 add-margin">
@@ -96,6 +97,14 @@
 				placeholder="Please enter plan permit number" maxlength="29"
 				id="planPermitNumber" required="required" />
 			<form:errors path="planPermitNumber" cssClass="error-msg" />
+		</div>
+		<label class="col-sm-2 control-label text-right"><spring:message
+					code="lbl.add.new.owner.checkbox" /></label>
+		<div class="col-sm-3 add-margin">
+				<input type="checkbox"  id="addowner"
+					name="addowner"/>
+				<form:errors path="addowner" cssClass="add-margin error-msg"/>
+			</div>
 		</div>
 	</div>
 	<div class="form-group">
@@ -120,6 +129,18 @@
 					required="required" readonly="true" />
 				<form:errors path="serviceType" cssClass="add-margin error-msg" />
 			</div>
+		</div>
+	</div>
+<div class="form-group" id="newownerdivid" style="display: none;">
+		<label class="col-sm-3 control-label text-right"><spring:message
+				code="lbl.add.new.owner" /></label>
+		<div class="col-sm-3 add-margin">
+			<input type="text"
+				Class="form-control newOwner resetValues"
+				name="newOwner"
+				placeholder="Please enter new owner" maxlength="150"
+				id="newOwner"/>
+			<form:errors path="newOwner" cssClass="error-msg" />
 		</div>
 	</div>
 	<%--<div class="form-group">

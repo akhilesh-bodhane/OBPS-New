@@ -483,6 +483,7 @@ $(document).ready(
                     	if($('#mode').val() === 'new') {
                     		var ocdcrNo = $('#ocEDcrNumber').val();
                     		getApplicationByPermitNo(response.planPermitNumber);
+                    		$('.applicantName').val(response.ownerName);
                     	    getOwnershipByPermitNo(response.planPermitNumber, ocdcrNo);
                     		var areaCategory = $('#areaCategory').val();
                     		var zoneOrLocation = $('#zoneOrLocation').val();

@@ -91,6 +91,7 @@ import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.OwnershipTransferService;
 import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
 import org.egov.bpa.transaction.service.oc.OCAppointmentScheduleService;
@@ -102,6 +103,7 @@ import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.commons.service.SubOccupancyService;
 import org.egov.eis.service.PositionMasterService;
 import org.egov.infra.admin.master.entity.User;
@@ -121,6 +123,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Controller
 @RequestMapping(value = "/application/citizen")
@@ -162,11 +166,30 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
     private OccupancyCertificateUtils occupancyCertificateUtils;
     @Autowired
     private OwnershipTransferService ownershipTransferService;
+    
+    @Autowired
+    private DcrRestService drcRestService;
 
     @GetMapping("/occupancy-certificate/update/{applicationNumber}")
     public String showOCUpdateForm(@PathVariable final String applicationNumber, final Model model,
             final HttpServletRequest request) {
         OccupancyCertificate oc = occupancyCertificateService.findByApplicationNumber(applicationNumber);
+		
+		  String geteDcrNumber = oc.geteDcrNumber(); 
+		  EdcrApplicationInfo odcrPlanInfo=drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+		  RequestContextHolder.getRequestAttributes()).getRequest());
+		  System.out.println("showOCUpdateForm odcrPlanInfo"+odcrPlanInfo); 
+		  String ownerName = odcrPlanInfo.getOwnerName();
+		  System.out.println("showOCUpdateForm owner name"+ownerName);
+		  System.out.println("showOCUpdateForm get name"+oc.getParent().getOwner().getName());
+		  System.out.println("showOCUpdateForm add owner"+odcrPlanInfo.getAddowner());
+		  System.out.println("showOCUpdateForm Application type"+odcrPlanInfo.getApplicationType());
+		  if(odcrPlanInfo.getAddowner() == true && "Occupancy certificate".equals(odcrPlanInfo.getApplicationType())) {
+		  System.out.println("showOCUpdateForm if condition get add owner"+odcrPlanInfo.getAddowner()); 		  
+		  System.out.println("showOCUpdateForm if condition get Application type"+odcrPlanInfo.getApplicationType()); 		  	  
+		  model.addAttribute("addowner", odcrPlanInfo);		  	  
+		  }
+		 
         prepareFormData(model);
         setCityName(model, request);
         prepareFormData(oc, model);

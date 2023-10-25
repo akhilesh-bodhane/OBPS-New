@@ -97,6 +97,14 @@ public class EdcrApplicationService {
         edcrApplication.setApplicationNumber(applicationNumberGenerator.generate());
         edcrApplication.setSavedDxfFile(saveDXF(edcrApplication));
         edcrApplication.setStatus(ABORTED);
+        if(edcrApplication.getAddowner()==null) {
+        	edcrApplication.setAddowner(false);
+        }
+        if(edcrApplication.getAddowner()==true) {
+        	edcrApplication.setApplicantName(edcrApplication.getNewOwner());
+        }else {
+        	edcrApplication.setApplicantName(edcrApplication.getApplicantName());	
+        }
 
         edcrApplicationRepository.save(edcrApplication);
 

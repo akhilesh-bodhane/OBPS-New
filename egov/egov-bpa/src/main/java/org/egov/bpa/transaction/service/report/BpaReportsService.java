@@ -527,7 +527,7 @@ public class BpaReportsService {
 			 if(fee.getGlazingVerandahFee() != null && fee.getGlazingVerandahFee() != 0)
 				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
 			 if(fee.getInternalChangesConstruction() != null && fee.getInternalChangesConstruction() != 0)
-				 receiptReport.setGlazingVerandahFee(fee.getGlazingVerandahFee());
+				 receiptReport.setInternalChangesConstruction(fee.getInternalChangesConstruction());
 			
 			 if(fee.getStairHeadwayHeightFee() != null && fee.getStairHeadwayHeightFee() != 0)
 				 receiptReport.setStairHeadwayHeightFee(fee.getStairHeadwayHeightFee());

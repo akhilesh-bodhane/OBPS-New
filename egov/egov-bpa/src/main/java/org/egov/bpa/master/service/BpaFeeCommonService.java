@@ -144,6 +144,7 @@ public class BpaFeeCommonService {
 		feeCrit.add(Restrictions.eq("servicetypeObj.id", serviceType));
 		feeCrit.add(Restrictions.eq("bpafeeMap.applicationType", FeeApplicationType.OCCUPANCY_CERTIFICATE));
 		feeCrit.add(Restrictions.eq("bpafeeMap.feeSubType",FeeSubType.SANCTION_FEE));
+		System.out.println("Fee Criteria : " + feeCrit.list().toString());
 		return feeCrit.list();
 	}
 

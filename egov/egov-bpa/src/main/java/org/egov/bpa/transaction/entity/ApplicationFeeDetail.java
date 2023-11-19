@@ -29,6 +29,8 @@
  */
 package org.egov.bpa.transaction.entity;
 
+import groovy.transform.ToString;
+
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
@@ -50,6 +52,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 @Entity
+@ToString
 @Table(name = "EGBPA_APPLICATION_FEEDETAILS")
 @SequenceGenerator(name = ApplicationFeeDetail.SEQ_APPLICATIONFEE_DETAIL, sequenceName = ApplicationFeeDetail.SEQ_APPLICATIONFEE_DETAIL, allocationSize = 1)
 @AuditOverrides({ @AuditOverride(forClass = AbstractAuditable.class, name = "lastModifiedBy"),

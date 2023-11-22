@@ -39,6 +39,8 @@
  */
 package org.egov.bpa.transaction.entity;
 
+import groovy.transform.ToString;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +65,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
+@ToString
 @Table(name = "EGBPA_APPLICATION_FEE")
 @SequenceGenerator(name = ApplicationFee.SEQ_APPLICATIONFEE, sequenceName = ApplicationFee.SEQ_APPLICATIONFEE, allocationSize = 1)
 public class ApplicationFee extends StateAware<Position> {

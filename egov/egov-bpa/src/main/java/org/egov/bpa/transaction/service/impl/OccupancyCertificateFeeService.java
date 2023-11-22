@@ -176,81 +176,137 @@ public class OccupancyCertificateFeeService {
 
 	public Map<String, String> calculateFeeByServiceType(OccupancyCertificate oc, Plan bpaPlan, Plan ocPlan,
 			OccupancyFee ocFee, OccupancyTypeHelper mostRestrictiveFarHelper, Map<String, String> feeDetails) {
+		//BigDecimal amount = BigDecimal.ZERO;
+		System.out.println("Inside calculateFeeByServiceType");
 		List<BpaFeeMapping> bpaFees = bpaFeeCommonService
 				.getOCFeeForListOfServices(oc.getParent().getServiceType().getId());
-		for (BpaFeeMapping bpaFee : bpaFees) {
-			BigDecimal amount = BigDecimal.ZERO;
-			if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalLabourCess(bpaPlan, ocPlan, mostRestrictiveFarHelper));
-			} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalAdditionalFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.RULE_5_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalRuleFiveFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.INTERNAL_CHANGES_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalInternalChangesFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.EXCESS_COVERAGE_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalExcessCoverageFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.GLAZING_OF_VERANDAH_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalGlazingVerandahFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.ADDITIONAL_HEIGHT_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalAdditionalHeightFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.PARTITIONS_ON_GROUND_FLOOR_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalPartitionsOnGroundFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.BARSATI_FLOOR_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalBarsatiFloorFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.STAIR_HEADWAY_HEIGHT_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalStairHeadwayFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.WATER_TANK_LOCATION_FEE.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalWaterTankFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.EXCESS_COVERAGE_BEYOND_ZONING_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalCoverageBeyondZoningFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.MINOR_CHANGES_IN_DOORS_AND_WINDOWS_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalMinorChangesInDoorsAndWindowsFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.LOFTS_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalLoftsFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.NON_STANDARD_GATE_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalNonStandardGateFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.NICHES_ON_THE_COMMON_WALL_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalNichesOnTheCommonWallFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.DPC_CERTIFICATE_MISSING_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				if(ocPlan.getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.NO) || ocPlan.getPlanInformation().getIsDPCCertificateAvailable().equals(BpaConstants.NA)) {
-					amount = amount.add(getTotalDPCCertificateMissingFee(oc, ocPlan, mostRestrictiveFarHelper));
-				}
-			} else if (BpaConstants.FALSE_CEILING_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				amount = amount.add(getTotalFalseCeilingFee(bpaPlan, ocPlan));
-			} else if (BpaConstants.SECURITY_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				if(ocPlan.getPlanInformation().getIsThisACaseOfOwnershipChange().equalsIgnoreCase(BpaConstants.YES)) {
-					amount = amount.add(getTotalSecurityFee(ocPlan, mostRestrictiveFarHelper));
-				}
-			} else if (BpaConstants.TRANSFER_OF_BUILDING_PLAN_FEE
-					.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-				if(ocPlan.getPlanInformation().getIsThisACaseOfOwnershipChange().equalsIgnoreCase(BpaConstants.YES)) {
-					amount = amount.add(getTotalTransferOfBuildingPlanFee(oc, mostRestrictiveFarHelper));
-				}
-			}
+		System.out.println("BPA Fees : " + bpaFees.toString());		
 
-			if (amount.compareTo(BigDecimal.ZERO) > 0) {
-				if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
-					System.out.println("Labour cess & Additional Charges");
-					ocFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
-					feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
-				} else {
-					System.out.println("Other than Labour cess & Additional Charges");
-					amount = amount.add(amount.multiply(GST).setScale(2, BigDecimal.ROUND_HALF_UP));
-					ocFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(bpaFee, ocFee.getApplicationFee(), amount));
-					feeDetails.put(bpaFee.getBpaFeeCommon().getName(), String.valueOf(amount));
-				}				
+		System.out.println("Is Rural Check : " + ocPlan.isRural());
+		if(!ocPlan.isRural()){
+			System.out.println("Inside Urban Fees Calculation Method");
+			for (BpaFeeMapping bpaFee : bpaFees) {
+				BigDecimal amount = BigDecimal.ZERO;
+				if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					System.out.println("Inside LABOURCESS condition");
+					amount = amount.add(getTotalLabourCess(bpaPlan, ocPlan,
+							mostRestrictiveFarHelper));
+					System.out.println("Labour Cess Amount : " + amount);
+				} else if (BpaConstants.ADDITIONAL_COVERAGE_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalAdditionalFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.RULE_5_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalRuleFiveFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.INTERNAL_CHANGES_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					System.out.println("Inside Internal Charges Fee Method");
+					amount = amount
+							.add(getTotalInternalChangesFee(bpaPlan, ocPlan));
+					System.out.println("Internal charges fee : " + amount);
+				} else if (BpaConstants.EXCESS_COVERAGE_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalExcessCoverageFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.GLAZING_OF_VERANDAH_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount
+							.add(getTotalGlazingVerandahFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.ADDITIONAL_HEIGHT_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount
+							.add(getTotalAdditionalHeightFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.PARTITIONS_ON_GROUND_FLOOR_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalPartitionsOnGroundFee(bpaPlan,
+							ocPlan));
+				} else if (BpaConstants.BARSATI_FLOOR_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalBarsatiFloorFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.STAIR_HEADWAY_HEIGHT_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalStairHeadwayFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.WATER_TANK_LOCATION_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalWaterTankFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.EXCESS_COVERAGE_BEYOND_ZONING_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalCoverageBeyondZoningFee(bpaPlan,
+							ocPlan));
+				} else if (BpaConstants.MINOR_CHANGES_IN_DOORS_AND_WINDOWS_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalMinorChangesInDoorsAndWindowsFee(
+							bpaPlan, ocPlan));
+				} else if (BpaConstants.LOFTS_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalLoftsFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.NON_STANDARD_GATE_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount
+							.add(getTotalNonStandardGateFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.NICHES_ON_THE_COMMON_WALL_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalNichesOnTheCommonWallFee(bpaPlan,
+							ocPlan));
+				} else if (BpaConstants.DPC_CERTIFICATE_MISSING_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					if (ocPlan.getPlanInformation().getIsDPCCertificateAvailable()
+							.equals(BpaConstants.NO)
+							|| ocPlan.getPlanInformation()
+									.getIsDPCCertificateAvailable()
+									.equals(BpaConstants.NA)) {
+						amount = amount.add(getTotalDPCCertificateMissingFee(oc,
+								ocPlan, mostRestrictiveFarHelper));
+					}
+				} else if (BpaConstants.FALSE_CEILING_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					amount = amount.add(getTotalFalseCeilingFee(bpaPlan, ocPlan));
+				} else if (BpaConstants.SECURITY_FEE.equalsIgnoreCase(bpaFee
+						.getBpaFeeCommon().getName())) {
+					if (ocPlan.getPlanInformation()
+							.getIsThisACaseOfOwnershipChange()
+							.equalsIgnoreCase(BpaConstants.YES)) {
+						amount = amount.add(getTotalSecurityFee(ocPlan,
+								mostRestrictiveFarHelper));
+					}
+				} else if (BpaConstants.TRANSFER_OF_BUILDING_PLAN_FEE
+						.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getName())) {
+					if (ocPlan.getPlanInformation()
+							.getIsThisACaseOfOwnershipChange()
+							.equalsIgnoreCase(BpaConstants.YES)) {
+						amount = amount.add(getTotalTransferOfBuildingPlanFee(oc,
+								mostRestrictiveFarHelper));
+					}
+				}
+
+				if (amount.compareTo(BigDecimal.ZERO) > 0) {
+					if (BpaConstants.LABOURCESS.equalsIgnoreCase(bpaFee
+							.getBpaFeeCommon().getName())) {
+						System.out.println("Labour cess & Additional Charges");
+						ocFee.getApplicationFee().addApplicationFeeDetail(
+								buildApplicationFeeDetail(bpaFee,
+										ocFee.getApplicationFee(), amount));
+						feeDetails.put(bpaFee.getBpaFeeCommon().getName(),
+								String.valueOf(amount));
+						System.out.println("Amount Labour Cess Method : " + amount);
+						System.out.println("Fees Details Labour Cess Method : " + feeDetails.toString());
+					} else {
+						System.out
+								.println("Other than Labour cess & Additional Charges");
+						amount = amount.add(amount.multiply(GST).setScale(2,
+								BigDecimal.ROUND_HALF_UP));
+						ocFee.getApplicationFee().addApplicationFeeDetail(
+								buildApplicationFeeDetail(bpaFee,
+										ocFee.getApplicationFee(), amount));
+						feeDetails.put(bpaFee.getBpaFeeCommon().getName(),
+								String.valueOf(amount));
+						System.out.println("Amount Others Method : " + amount);
+						System.out.println("Fees Details Others Method : " + feeDetails.toString());
+					}
+				}
 			}
 		}
+		
 		return feeDetails;
 	}
 
@@ -501,6 +557,8 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalAdditionalHeightFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.valueOf(50);
+		//BigDecimal totalAdditionalHeightArea = BigDecimal.ZERO;
+		//commented for rural prod issue
 		BigDecimal totalAdditionalHeightArea = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Additional_height_on_second_floor_of_SCFs_converted_into_SCOs).getDeviation();
 
@@ -514,6 +572,8 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalPartitionsOnGroundFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.ZERO;
+		//BigDecimal oc = BigDecimal.ZERO;
+		//commented for rural prod issue
 		BigDecimal oc = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops).getDeviation();
 
@@ -525,6 +585,9 @@ public class OccupancyCertificateFeeService {
 			multiplier = BigDecimal.valueOf(80);
 			totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}
+		
+		multiplier = BigDecimal.valueOf(80);
+		totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 
 		return totalAmount;
 	}
@@ -532,6 +595,8 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalBarsatiFloorFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal adder = BigDecimal.valueOf(500);
+		//BigDecimal deviation = BigDecimal.ZERO;
+		//commentted for rural prod issue
 		BigDecimal deviation = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Barsati_Floor)
 				.getDeviation();
 
@@ -555,20 +620,30 @@ public class OccupancyCertificateFeeService {
 					}
 			}
 		}
+		System.out.println("Floor count : " + floorCount);
 		totalAmount = multiplier.multiply(floorCount).setScale(2, BigDecimal.ROUND_HALF_UP);
+		System.out.println("Total amount middle : " + totalAmount);
 		/*BigDecimal minorChangesDeviation = ocPlan.getOcdataComparison().getOcdataComparison()
-				.get(OCDataComparison.Minor_Internal_Changes_During_Construction).getDeviation();
+				.get(OCDataComparison.Minor_Internal_Changes_During_Construction).getDeviation();*/
 
-		if (minorChangesDeviation.compareTo(BigDecimal.ZERO) > 0) {
-			totalAmount = minorChangesDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
+		//System.out.println("Minor Chnage Deviation : " + minorChangesDeviation);
+		System.out.println("Multiplier : " + multiplier);
+		/*if (minorChangesDeviation.compareTo(BigDecimal.ZERO) > 0) {
+			System.out.println("Inside minor chnages deviation compare condition");
+			totalAmount = totalAmount.add(minorChangesDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 		}*/
+		System.out.println("Total amount internal fee end : " + totalAmount);
 		return totalAmount;
 	}
 
 	public BigDecimal getTotalExcessCoverageFee(Plan bpaPlan, Plan ocPlan) {
+		System.out.println("Inside getTotalExcessCoverageFee Method");
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.valueOf(100);
-		BigDecimal additionalCoverageDeviation = ocPlan.getOcdataComparison().getOcdataComparison()
+		BigDecimal additionalCoverageDeviation = BigDecimal.ZERO;
+		
+		//Commented to check rural application production issue
+		additionalCoverageDeviation = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Additional_Coverage_In_RearCourtyard).getDeviation();
 
 		if (additionalCoverageDeviation.compareTo(BigDecimal.valueOf(150)) < 0) {
@@ -580,6 +655,7 @@ public class OccupancyCertificateFeeService {
 	public BigDecimal getTotalGlazingVerandahFee(Plan bpaPlan, Plan ocPlan) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal Multiplier = BigDecimal.ZERO;
+		//BigDecimal noOfGlazingVerandah = BigDecimal.ZERO;
 		
 		OccupancyTypeHelper typeHelper = ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
@@ -587,10 +663,12 @@ public class OccupancyCertificateFeeService {
 			Multiplier = BigDecimal.valueOf(500);
 		}
 		
+		//commented for rural application prod issue
 		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode()) && (ocPlan.getPlanInformation().getSectorNumber().equals("22A") || ocPlan.getPlanInformation().getSectorNumber().equals("22B") || ocPlan.getPlanInformation().getSectorNumber().equals("22C") || ocPlan.getPlanInformation().getSectorNumber().equals("22D") || ocPlan.getPlanInformation().getSectorNumber().equals("22"))) {
 			Multiplier = BigDecimal.valueOf(200);
 		}
 
+		
 		BigDecimal noOfGlazingVerandah = ocPlan.getPlanInformation().getNumberOfGlazingOfVerandah();
 		totalAmount = noOfGlazingVerandah.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return totalAmount;
@@ -666,11 +744,12 @@ public class OccupancyCertificateFeeService {
 		System.out.println("Multipler Value Labour Cess :" + multiplier);
 
 		if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
+			//Commented to check rural application production issue
 			if (ocPlan.getDrawingPreference().getInFeets()) {
-				System.out.println("Inside OC Plan value in feets :" + ocPlan.getDrawingPreference().getInFeets());
+				System.out.println("Inside OC Plan value in feets :" + ocPlan.getDrawingPreference().getInFeets().toString());
 				estimatedAmount = estimatedAmount
 						.add(ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess)
-								.getDeviation().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+								.getDeviation().multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 				System.out.println("Estimated Amount after ocplan In feets :" + estimatedAmount);
 
 			}
@@ -907,6 +986,7 @@ public class OccupancyCertificateFeeService {
 				multiplier = new BigDecimal("5");
 		}
 
+		// commented to resolve rural production issue
 		totalArea = ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.RULE5).getDeviation();
 
 		if (totalArea.compareTo(BigDecimal.ZERO) > 0 && multiplier.compareTo(BigDecimal.ZERO) > 0) {
@@ -950,6 +1030,7 @@ public class OccupancyCertificateFeeService {
 		feeDetail.setAmount(amount.setScale(0, BigDecimal.ROUND_HALF_UP));
 		feeDetail.setBpaFeeMapping(bpaFee);
 		feeDetail.setApplicationFee(applicationFee);
+		System.out.println("Fee Details Inside buildApplicationFeeDetail : "+ "Amount : " +feeDetail.getAmount() + "BPA Fee Mapping : " + feeDetail.getBpaFeeMapping() + "Application Fee : " + feeDetail.getApplicationFee());
 		return feeDetail;
 	}
 }

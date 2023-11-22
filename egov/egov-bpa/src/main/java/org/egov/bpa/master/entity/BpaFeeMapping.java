@@ -29,6 +29,8 @@
  */
 package org.egov.bpa.master.entity;
 
+import groovy.transform.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +53,7 @@ import org.egov.bpa.master.entity.enums.FeeSubType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 
 @Entity
+@ToString
 @Table(name = "EGBPA_MSTR_BPAFEEMAPPING")
 @SequenceGenerator(name = BpaFeeMapping.SEQ_BPAFEEMAPPING, sequenceName = BpaFeeMapping.SEQ_BPAFEEMAPPING, allocationSize = 1)
 public class BpaFeeMapping extends AbstractAuditable {

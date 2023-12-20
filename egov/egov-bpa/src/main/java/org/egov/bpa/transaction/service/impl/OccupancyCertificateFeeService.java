@@ -111,7 +111,7 @@ public class OccupancyCertificateFeeService {
 	private static final BigDecimal EIGHTEEN = BigDecimal.valueOf(18);
 	private static final BigDecimal SQMT_SQFT_MULTIPLIER = BigDecimal.valueOf(10.764);
 	private static final BigDecimal HALF_ACRE_IN_SQMT = BigDecimal.valueOf(2023.43);
-	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("1");
+	private static final BigDecimal SQINCH_SQFT_DIVIDER = new BigDecimal("144");
 	private static final BigDecimal HALF_ACRE_FROM_SQFT = new BigDecimal("21780");
 	private static final BigDecimal SEVEN_HUNDRED_FIFTY = BigDecimal.valueOf(750);
 	private static final BigDecimal GST = BigDecimal.valueOf(0.18);
@@ -685,7 +685,7 @@ public class OccupancyCertificateFeeService {
 //		return totalAmount;
 //	}
 
-	public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+	/*public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal multiplier = BigDecimal.ZERO;
 		BigDecimal estimatedAmount = BigDecimal.ZERO;
@@ -746,7 +746,9 @@ public class OccupancyCertificateFeeService {
 		if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
 			//Commented to check rural application production issue
 			if (ocPlan.getDrawingPreference().getInFeets()) {
-				System.out.println("Inside OC Plan value in feets :" + ocPlan.getDrawingPreference().getInFeets().toString());
+		    if (ocPlan.getDrawingPreference().getInMeters()) {
+				System.out.println("Inside OC Plan Get Deviation :" + ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess).getDeviation());
+				System.out.println("Estimated Amount : " + estimatedAmount);
 				estimatedAmount = estimatedAmount
 						.add(ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess)
 								.getDeviation().multiply(SQMT_SQFT_MULTIPLIER).multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -755,6 +757,7 @@ public class OccupancyCertificateFeeService {
 			}
 
 			if (ocPlan.getDrawingPreference().getInFeets()) {
+		    if (ocPlan.getDrawingPreference().getInMeters()) {
 				for (Block b : ocPlan.getBlocks()) {
 					Building building = b.getBuilding();
 					if (building != null) {
@@ -777,6 +780,8 @@ public class OccupancyCertificateFeeService {
 					}
 
 				}
+				
+				
 				if (bpaPlan.getDrawingPreference().getInFeets()) {
 					for (Block b : bpaPlan.getBlocks()) {
 						Building building = b.getBuilding();
@@ -822,14 +827,166 @@ public class OccupancyCertificateFeeService {
 			}
 		}
 		
-		/*if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
+		if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
 				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
 			totalAmount = totalAmount.divide(GST,2, BigDecimal.ROUND_HALF_UP);
 			
 			System.out.println("Total Amount Final :" + totalAmount);
-		}*/
+		}
 		return totalAmount;
-	}
+	}*/
+	
+	public BigDecimal getTotalLabourCess(Plan bpaPlan, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal multiplier = BigDecimal.ZERO;
+        BigDecimal estimatedAmount = BigDecimal.ZERO;
+        BigDecimal totalCajjaAreaBpa = BigDecimal.ZERO;
+        BigDecimal totalMumtyAreaBpa = BigDecimal.ZERO;
+        BigDecimal totalCajjaAreaOc = BigDecimal.ZERO;
+        BigDecimal totalMumtyAreaOc = BigDecimal.ZERO;
+        BigDecimal totalCajjaAreaDeviation = BigDecimal.ZERO;
+        BigDecimal totalMumtyAreaDeviation = BigDecimal.ZERO;
+        if (BpaConstants.IT_MCL.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.IT_MCM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.IT_MCS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.R1.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_M.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_TCIM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_BH.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_BBM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_TS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_PP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_CD.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.G_GBAC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.G_GBZP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_D.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_F.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_N.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_CC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_SS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_CNA.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.P_R.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.B_EC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.B_HEI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.B_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.ITH_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.ITH_C.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.ITH_CC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.ITH_R.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.ITH_GH.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.IP_I.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.IP_R.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.IP_C.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+            multiplier = TWENTY_FIVE_HUNDRED;
+        } else if (BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+            multiplier = THOUSAND;
+        } else if (BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.A_G.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_CFI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
+            multiplier = FIFTEEN_HUNDRED;
+        } else {
+            multiplier = TWENTY_FIVE_HUNDRED;
+        }
+        
+        System.out.println("Labour cess multiplier : " + multiplier);
+
+        if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
+            if (ocPlan.getDrawingPreference().getInFeets()) {
+            	System.out.println("OC Plan deviation : " + ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess)
+                                .getDeviation().doubleValue());
+                estimatedAmount = estimatedAmount
+                        .add(ocPlan.getOcdataComparison().getOcdataComparison().get(OCDataComparison.Labour_Cess)
+                                .getDeviation().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+                System.out.println("Labour cess estimated amount : " + estimatedAmount);
+
+            }
+
+            if (ocPlan.getDrawingPreference().getInFeets()) {
+                for (Block b : ocPlan.getBlocks()) {
+                    Building building = b.getBuilding();
+                    if (building != null) {
+                        for (Floor floor : building.getFloors()) {
+                            if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
+                                List<BigDecimal> areas = floor.getOverHangs().stream()
+                                        .map(overhang -> overhang.getArea()).collect(Collectors.toList());
+                                totalCajjaAreaOc = totalCajjaAreaOc.add(areas.stream().filter(Objects::nonNull)
+                                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+                                System.out.println("Labour cess area : " + areas);
+                                System.out.println("totalCajjaAreaOc : " + totalCajjaAreaOc);
+                            }
+                        }
+                    }
+
+                    // Adding mumty area
+                    if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
+                        totalMumtyAreaOc = totalMumtyAreaOc
+                                .add(b.getStairCoversArea().stream().reduce(BigDecimal::add).get());
+                        System.out.println("totalMumtyAreaOc : " + totalMumtyAreaOc);
+                    }
+
+                }
+                if (bpaPlan.getDrawingPreference().getInFeets()) {
+                    for (Block b : bpaPlan.getBlocks()) {
+                        Building building = b.getBuilding();
+                        if (building != null) {
+                            for (Floor floor : building.getFloors()) {
+                                if (floor.getOverHangs() != null && !floor.getOverHangs().isEmpty()) {
+                                    List<BigDecimal> areas = floor.getOverHangs().stream()
+                                            .map(overhang -> overhang.getArea()).collect(Collectors.toList());
+                                    totalCajjaAreaBpa = totalCajjaAreaBpa.add(areas.stream().filter(Objects::nonNull)
+                                            .reduce(BigDecimal.ZERO, BigDecimal::add));
+                                    System.out.println("labour cess areas : " + areas);
+                                    System.out.println("totalCajjaAreaBpa : " + totalCajjaAreaBpa);
+                                }
+                            }
+                        }
+
+                        // Adding mumty area
+                        if (!CollectionUtils.isEmpty(b.getStairCoversArea())) {
+                            totalMumtyAreaBpa = totalMumtyAreaBpa
+                                    .add(b.getStairCoversArea().stream().reduce(BigDecimal::add).get());
+                            System.out.println("totalMumtyAreaBpa : " + totalMumtyAreaBpa);
+                        }
+
+                    }
+
+                }
+            }
+            totalCajjaAreaDeviation = (totalCajjaAreaOc.subtract(totalCajjaAreaBpa)).divide(SQINCH_SQFT_DIVIDER, 2,
+                    RoundingMode.HALF_UP);
+            totalMumtyAreaDeviation = totalMumtyAreaOc.subtract(totalMumtyAreaBpa);
+            System.out.println("totalCajjaAreaDeviation : " + totalCajjaAreaDeviation);
+            System.out.println("totalMumtyAreaDeviation : " + totalMumtyAreaDeviation);
+            
+            if ((BigDecimal.ZERO.compareTo(totalCajjaAreaDeviation) < 0)){
+            	estimatedAmount = estimatedAmount
+                        .add(totalCajjaAreaDeviation.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP)
+                                .multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+            	System.out.println("inside totalCajjaAreaDeviation labour cess estimatedAmount : " + estimatedAmount);
+            } 
+            
+            if ((BigDecimal.ZERO.compareTo(totalMumtyAreaDeviation) < 0)){
+            	estimatedAmount = estimatedAmount
+                        .add(totalMumtyAreaDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+                System.out.println("inside totalMumtyAreaDeviation labour cess estimatedAmount : " + estimatedAmount);
+            }
+            
+            if (estimatedAmount.compareTo(BigDecimal.ZERO) > 0) {
+                totalAmount = totalAmount.add((estimatedAmount.divide(HUNDRED)).setScale(2, BigDecimal.ROUND_HALF_UP));
+                System.out.println("Inside if condition estimated amount : " + estimatedAmount);
+            }
+        }
+        
+        /*if(BpaConstants.F_B.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) 
+                || BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode()) ){
+            totalAmount = totalAmount.divide(GST,2, BigDecimal.ROUND_HALF_UP);
+        }*/
+        return totalAmount;
+    }
 
 	public BigDecimal getTotalAdditionalFee(Plan bpaPlan, Plan ocPlan) {
 		Boolean isAdditionalCovApplicable = true;

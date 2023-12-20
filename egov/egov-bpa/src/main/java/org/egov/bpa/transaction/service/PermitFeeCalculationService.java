@@ -1817,7 +1817,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 		OccupancyTypeHelper typeHelper = plan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
-		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) || BpaConstants.G_GBZP.equals(typeHelper.getSubtype().getCode())) {
+		if (BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) || BpaConstants.G_GBZP.equals(typeHelper.getSubtype().getCode()) || BpaConstants.G_GBAC.equals(typeHelper.getSubtype().getCode())) {
 			return getTotalAmountForAdditionalCoverageForSCO(plan, buildingDetails, letterToPartyFees,
 					isAdditionalCovApplicable);
 		}

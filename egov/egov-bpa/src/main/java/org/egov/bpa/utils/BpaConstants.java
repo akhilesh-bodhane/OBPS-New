@@ -130,7 +130,7 @@ public class BpaConstants {
 	public static final String F_PP = "F-PP"; // Petrol Pump
 	public static final String F_CD = "F-CD"; // Coal Depot
 
-	public static final String G_GBAC = "G-BACG-";// Governed by Architectural Controls
+	public static final String G_GBAC = "G-GBAC";// Governed by Architectural Controls
 	public static final String G_GBZP = "G-GBZP";// Governed by Zoning Plans
 
 	public static final String P_D = "P-D"; // Dispensary

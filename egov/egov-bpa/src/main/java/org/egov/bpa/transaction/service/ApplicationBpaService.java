@@ -903,6 +903,12 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
     public BpaApplication getApplicationByDemand(final EgDemand demand) {
         return applicationBpaRepository.findByDemand(demand);
     }
+    
+    @Transactional
+    public void updateApplicationEdcrNo(String edcrNo, String bpaApplicationNo) {
+    	System.out.println("Inside update method of BPA application");
+        applicationBpaRepository.update(edcrNo, bpaApplicationNo);
+    }
 
     public BpaApplication findByApplicationNumber(final String applicationNumber) {
         return applicationBpaRepository.findByApplicationNumber(applicationNumber);

@@ -1138,6 +1138,7 @@ public class BpaAjaxController {
 		occupancyFee.setOc(oc);
 		BpaApplication parent = applicationBpaService.findByPermitNumber(permitNo);
 		oc.setParent(parent);
+		System.out.println("OC details : " + oc.toString());
 		Map<String, String> map = occupancyCertificateFeeService.calculateOCFees(oc,occupancyFee);
 		final List<JSONObject> jsonObjects = new ArrayList<>();
 		for (Map.Entry<String, String> entry : map.entrySet()) {

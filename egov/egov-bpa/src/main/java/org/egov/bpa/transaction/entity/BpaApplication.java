@@ -307,6 +307,10 @@ public class BpaApplication extends StateAware<Position> {
     @OrderBy("id DESC")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", fetch = FetchType.LAZY)
     private List<PermitRenewal> permitRenewals = new ArrayList<>();
+    
+    @OrderBy(ORDER_BY_ID_ASC)
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PropertyOwnerDetails> propertyOwnerDetails = new ArrayList<>();
 
     private transient MultipartFile[] files;
     private transient Long approvalDepartment;
@@ -350,6 +354,24 @@ public class BpaApplication extends StateAware<Position> {
 	private String sector;
 	
 	private Boolean isPreviousPlan = false;
+	
+	@SafeHtml
+	@Column(name="property_file_type")
+	private String propertyFileType;
+	
+	@SafeHtml
+	@Column(name="property_file_number")
+	private String propertyFileNumber;
+	
+	@SafeHtml
+	@Column(name="property_plot_number")
+	private String propertyPlotNumber;
+	
+	@SafeHtml
+	@Column(name="property_sector_number")
+	private String propertySectorNumber;
+	
+	private transient String jsonData;
 	
     @Override
     public Long getId() {
@@ -1295,4 +1317,56 @@ public class BpaApplication extends StateAware<Position> {
 	public void setIsPreviousPlan(Boolean isPreviousPlan) {
 		this.isPreviousPlan = isPreviousPlan;
 	}
+
+	
+
+	public String getPropertyFileType() {
+		return propertyFileType;
+	}
+
+	public void setPropertyFileType(String propertyFileType) {
+		this.propertyFileType = propertyFileType;
+	}
+
+	public String getPropertyFileNumber() {
+		return propertyFileNumber;
+	}
+
+	public void setPropertyFileNumber(String propertyFileNumber) {
+		this.propertyFileNumber = propertyFileNumber;
+	}
+
+	public String getPropertyPlotNumber() {
+		return propertyPlotNumber;
+	}
+
+	public void setPropertyPlotNumber(String propertyPlotNumber) {
+		this.propertyPlotNumber = propertyPlotNumber;
+	}
+
+	public String getPropertySectorNumber() {
+		return propertySectorNumber;
+	}
+
+	public void setPropertySectorNumber(String propertySectorNumber) {
+		this.propertySectorNumber = propertySectorNumber;
+	}
+
+	public List<PropertyOwnerDetails> getPropertyOwnerDetails() {
+		return propertyOwnerDetails;
+	}
+
+	public void setPropertyOwnerDetails(List<PropertyOwnerDetails> propertyOwnerDetails) {
+		this.propertyOwnerDetails = propertyOwnerDetails;
+	}
+
+	public String getJsonData() {
+		return jsonData;
+	}
+
+	public void setJsonData(String jsonData) {
+		this.jsonData = jsonData;
+	}
+	
+	
 }

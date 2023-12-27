@@ -239,6 +239,7 @@ public class BpaTaxCollection extends TaxCollection {
         bpaUtils.sendSmsEmailOnCitizenSubmit(application);
         LOGGER.debug("******** Application : " +application.getApplicationNumber() + " after sending to sms or email ********");
     }
+    
 
     @Transactional
     public void updateCollForRcptCreate(final EgDemand demand, final BillReceiptInfo billRcptInfo,

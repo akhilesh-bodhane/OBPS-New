@@ -148,6 +148,9 @@
 						</jsp:include>
 					</div>
 					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="propertydetails.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
 						<jsp:include page="siteDetail.jsp"></jsp:include>
 					</div>
 					<div class="panel panel-primary demolitionDetails"

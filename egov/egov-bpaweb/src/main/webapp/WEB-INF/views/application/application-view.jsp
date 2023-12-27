@@ -172,6 +172,11 @@
 							<jsp:include page="view-co-applicant-details.jsp"></jsp:include>							
 						</c:if>
 					</div>
+					<c:if test="${not empty bpaApplication.propertyFileType || not empty bpaApplication.propertyFileNumber}">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="view-propertydetails.jsp"></jsp:include>																		
+					</div>
+					</c:if>
                     <div class="panel panel-primary" data-collapsed="0">
 	                    <jsp:include page="../common/generic-boundary-view.jsp">
 	                    <jsp:param name="boundaryData" value="${bpaApplication.adminBoundary}:${bpaApplication.revenueBoundary}:${bpaApplication.locationBoundary}" />

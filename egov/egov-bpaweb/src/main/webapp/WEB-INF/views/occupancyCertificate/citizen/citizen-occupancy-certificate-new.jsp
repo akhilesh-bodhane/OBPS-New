@@ -118,6 +118,9 @@
 						<jsp:include
 							page="../../common/boundary-view.jsp"></jsp:include>
 					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../oc-propertydetails.jsp"></jsp:include>
+					</div>
 					<div class="panel panel-primary existingbuildingdetails" data-collapsed="0">
 						<jsp:include page="../oc-edcr-existing-bldg-details.jsp" />
 					</div>

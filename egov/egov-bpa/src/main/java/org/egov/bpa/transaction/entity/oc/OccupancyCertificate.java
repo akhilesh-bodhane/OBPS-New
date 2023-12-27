@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -73,6 +74,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
+import org.egov.bpa.transaction.entity.PropertyOwnerDetails;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.common.WorkflowFile;
 import org.egov.commons.entity.Source;
@@ -235,6 +237,11 @@ public class OccupancyCertificate extends StateAware<Position> {
     @OrderBy(ORDER_BY_ID_ASC)
     @OneToMany(mappedBy = "oc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OCNoticeConditions> additionalNoticeConditions = new ArrayList<>(0);
+    
+    
+    @OrderBy(ORDER_BY_ID_ASC)
+    @OneToMany(mappedBy = "oc", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OCPropertyOwnerDetails> ocPropertyOwnerDetails = new ArrayList<>();
 
     private transient WorkflowBean workflowBean;
     private transient Set<Receipt> receipts = new HashSet<>();
@@ -250,6 +257,24 @@ public class OccupancyCertificate extends StateAware<Position> {
     
     private transient WorkflowFile workflowFile = new WorkflowFile();	
     private transient String wfFileRefId;
+    
+	@SafeHtml
+	@Column(name="property_file_type")
+	private String propertyFileType;
+	
+	@SafeHtml
+	@Column(name="property_file_number")
+	private String propertyFileNumber;
+	
+	@SafeHtml
+	@Column(name="property_plot_number")
+	private String propertyPlotNumber;
+	
+	@SafeHtml
+	@Column(name="property_sector_number")
+	private String propertySectorNumber;
+	
+	private transient String jsonData;
 
     @Override
     public Long getId() {
@@ -727,4 +752,54 @@ public class OccupancyCertificate extends StateAware<Position> {
 	public void setWfFileRefId(String wfFileRefId) {
 		this.wfFileRefId = wfFileRefId;
 	}
+
+	public String getPropertyFileType() {
+		return propertyFileType;
+	}
+
+	public void setPropertyFileType(String propertyFileType) {
+		this.propertyFileType = propertyFileType;
+	}
+
+	public String getPropertyFileNumber() {
+		return propertyFileNumber;
+	}
+
+	public void setPropertyFileNumber(String propertyFileNumber) {
+		this.propertyFileNumber = propertyFileNumber;
+	}
+
+	public String getPropertyPlotNumber() {
+		return propertyPlotNumber;
+	}
+
+	public void setPropertyPlotNumber(String propertyPlotNumber) {
+		this.propertyPlotNumber = propertyPlotNumber;
+	}
+
+	public String getPropertySectorNumber() {
+		return propertySectorNumber;
+	}
+
+	public void setPropertySectorNumber(String propertySectorNumber) {
+		this.propertySectorNumber = propertySectorNumber;
+	}
+
+	public String getJsonData() {
+		return jsonData;
+	}
+
+	public void setJsonData(String jsonData) {
+		this.jsonData = jsonData;
+	}
+
+	public List<OCPropertyOwnerDetails> getOcPropertyOwnerDetails() {
+		return ocPropertyOwnerDetails;
+	}
+
+	public void setOcPropertyOwnerDetails(List<OCPropertyOwnerDetails> ocPropertyOwnerDetails) {
+		this.ocPropertyOwnerDetails = ocPropertyOwnerDetails;
+	}
+	
+	
 }

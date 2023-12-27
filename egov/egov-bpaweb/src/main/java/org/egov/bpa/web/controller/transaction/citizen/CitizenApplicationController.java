@@ -64,6 +64,7 @@ import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SEND_BUTTON;
 import static org.egov.infra.persistence.entity.enums.UserType.BUSINESS;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +75,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
@@ -91,6 +97,8 @@ import org.egov.bpa.transaction.entity.ExistingBuildingFloorDetail;
 import org.egov.bpa.transaction.entity.PermitDcrDocument;
 import org.egov.bpa.transaction.entity.PermitDocument;
 import org.egov.bpa.transaction.entity.PermitNocDocument;
+import org.egov.bpa.transaction.entity.PropertyFileDetails;
+import org.egov.bpa.transaction.entity.PropertyOwnerDetails;
 import org.egov.bpa.transaction.entity.common.DcrDocument;
 import org.egov.bpa.transaction.entity.common.GeneralDocument;
 import org.egov.bpa.transaction.entity.common.NocDocument;
@@ -388,8 +396,16 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
     @PostMapping("/application-create")
     public String createNewConnection(@Valid @ModelAttribute final BpaApplication bpaApplication,
             final HttpServletRequest request, final Model model, final BindingResult errors,
-            final RedirectAttributes redirectAttributes) {
+            final RedirectAttributes redirectAttributes) throws JsonParseException, JsonMappingException, IOException {
         String onedaypermit = BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT.toUpperCase();
+        
+        List<PropertyOwnerDetails> propertyOwnerDetails=null;
+        
+    	ObjectMapper objectMapper=new ObjectMapper();
+    	propertyOwnerDetails = objectMapper.readValue(bpaApplication.getJsonData(), new TypeReference<List<PropertyOwnerDetails>>() {});
+		
+		bpaApplication.setPropertyOwnerDetails(propertyOwnerDetails);
+		       
         List<ApplicationSubType> riskBasedAppTypes = applicationTypeService.getRiskBasedApplicationTypes();
         if (errors.hasErrors()) {
             buildingFloorDetailsService.buildNewlyAddedFloorDetails(bpaApplication);

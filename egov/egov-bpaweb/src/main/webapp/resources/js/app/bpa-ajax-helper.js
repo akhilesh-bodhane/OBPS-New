@@ -771,3 +771,66 @@ $(document).ready(
 	    });
 		return isExist;
 	}
+	
+		
+		$(document).ready(
+			   function ($) {
+			      $('#filetype').change(function () {
+			         $.ajax({
+			            url: "/bpa/propertyDetails/getAllFiles",
+			            type: "GET",
+			            data: {
+			               fileType: $('#filetype').val()
+			            },
+			            cache: false,
+			            dataType: "json",
+			            success: function (response) {
+				            //alert("Response :::"+response);
+			                $('#FileNumber').html("");
+			               $('#FileNumber').append("<option value=''>Select</option>");
+			               $.each(response, function (index, value) {
+				               //alert("value :::"+value.fileNumber);
+			                  $('#FileNumber').append(
+			                     $('<option>').text(value.fileNumber).attr('value', value.fileNumber));
+			               }); 
+			            },
+			            error: function (response) {
+			               $('#FileNumber').html("");
+			               $('#FileNumber').append("<option value=''>Select</option>"); 
+			            }
+			         });
+			      });
+			      
+			      
+			       $('#FileNumber').change(function () {
+				   $('#propertyownerdetails').empty();
+			         $.ajax({
+			            url: "/bpa/propertyDetails/getAllFilesByFileNumber",
+			            type: "GET",
+			            data: {
+			               fileType: $('#filetype').val(),
+			               fileNumber: $('#FileNumber').val()
+			            },
+			            cache: false,
+			            dataType: "json",
+			            success: function (response) {
+				          //alert("Response :::"+response);
+				          $('#propertyownerdetails').empty();
+				          var trHTML = '';
+                      $.each(response, function (i, item) {
+                      /*trHTML += '<tr><td><input type="text" name="CategoryOfProperty" value=' +item.currentCategory+ '/></td><td><input type="text" name="TenureType" value=' +item.tenureType+ '/></td><td><input type="text" name="NameOfOwners" value=' +item.ownerName+ '/></td><td><input type="text" name="OwnersShare" value=' +item.share+ '/></td></tr>';*/
+                      trHTML += '<tr><td><input type="text" class="CategoryOfProperty" name="categoryOfProperty" value="' + item.currentCategory + '"></td><td><input type="text" class="TenureType" name="tenureType" value="' + item.tenureType + '"></td><td><input type="text" class="NameOfOwners" name="nameOfOwners" value="' + item.ownerName + '"></td><td><input type="text" class="OwnersShare" name="ownersShare" value="' + item.share + '"></td></tr>';
+                       //alert("trHTML :::"+trHTML);
+                      });
+                      $('#propertyownerdetails').append(trHTML);
+			            },
+			            error: function (response) {
+				        //alert("Error Response :::"+response);
+				           $('#propertyownerdetails').empty();
+			               $('#propertyownerdetails').append("No Records Found");
+			            }
+			         });
+			      });
+
+
+			   });

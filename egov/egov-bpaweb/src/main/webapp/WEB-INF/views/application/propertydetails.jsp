@@ -72,7 +72,7 @@
 			</form:select>
 		</div>
 		<label class="col-sm-2 control-label text-right"><spring:message
-				code="lbl.file.number" /><span class="mandatory"></span> </label>
+				code="lbl.file.number" /></label>
 		<div class="col-sm-3 add-margin">
 			<form:select name="propertyFileNumber" id="FileNumber"
 				path="" cssClass="form-control"
@@ -85,20 +85,20 @@
 	                                             
 	<div class="form-group">
 		<label class="col-sm-3 control-label text-right"><spring:message
-				code="lbl.plot.no" /><span class="mandatory"></span></label>
+				code="lbl.plot.no" /></label>
 		<div class="col-sm-3 add-margin">
 			<form:input class="form-control patternvalidation" name="propertyPlotNumber" maxlength="20"
 				data-pattern="alphanumericspecialcharacters"  id="plotno"
-				path="" required="required" />	
+				path=""/>	
 			<form:errors path=""
 				cssClass="add-margin error-msg" />
 		</div>
 		<label class="col-sm-2 control-label text-right"><spring:message
-				code="lbl.sector.no" /><span class="mandatory"></span> </label>
+				code="lbl.sector.no" /></label>
 		<div class="col-sm-3 add-margin">
 			<form:input class="form-control patternvalidation" name="propertySectorNumber" maxlength="20"
 				data-pattern="alphanumericspecialcharacters"  id="sectorno"
-				path="" required="required" />
+				path=""/>
 			<form:errors path=""
 				cssClass="add-margin error-msg"/>
 		</div>

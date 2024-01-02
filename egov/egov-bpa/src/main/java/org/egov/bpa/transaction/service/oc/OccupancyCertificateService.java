@@ -258,6 +258,9 @@ public class OccupancyCertificateService {
             oc.setStatus(
                     applicationBpaService.getStatusByCodeAndModuleType(APPLICATION_STATUS_CANCELLED));
         }
+        
+        oc.getOcPropertyOwnerDetails().forEach(ocownerDetails -> ocownerDetails.setOc(oc));
+        
         OccupancyCertificate ocResult = occupancyCertificateRepository.saveAndFlush(oc);
         ocResult.setDcrDocuments(persistApplnDCRDocuments(ocResult, ocDcrDocuments));
         occupancyCertificateRepository.save(ocResult);

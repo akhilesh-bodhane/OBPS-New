@@ -128,6 +128,10 @@ public class LetterToPartyCommon extends AbstractAuditable {
     @SafeHtml
     @Length(min = 1, max = 1024)
     private String lpReplyRemarks;
+    
+    @SafeHtml
+    @Length(min = 1, max = 1024)
+    private String edcrRescrutinyNumber;
 
     @SafeHtml
     @Length(min = 1, max = 1024)
@@ -350,5 +354,13 @@ public class LetterToPartyCommon extends AbstractAuditable {
 
 	public void setCurrentApplnStatus(BpaStatus currentApplnStatus) {
 		this.currentApplnStatus = currentApplnStatus;
+	}
+
+	public String getEdcrRescrutinyNumber() {
+		return edcrRescrutinyNumber;
+	}
+
+	public void setEdcrRescrutinyNumber(String edcrRescrutinyNumber) {
+		this.edcrRescrutinyNumber = edcrRescrutinyNumber;
 	}
 }

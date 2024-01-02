@@ -52,6 +52,7 @@ import static org.egov.bpa.utils.BpaConstants.CREATE_ADDITIONAL_RULE_CREATE_OC;
 import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -61,13 +62,20 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.egov.bpa.master.entity.NocConfiguration;
 import org.egov.bpa.master.service.NocConfigurationService;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.PropertyOwnerDetails;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationInitiationEnum;
 import org.egov.bpa.transaction.entity.enums.NocIntegrationTypeEnum;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
+import org.egov.bpa.transaction.entity.oc.OCPropertyOwnerDetails;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateNocService;
@@ -159,10 +167,18 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
     @PostMapping("/occupancy-certificate/submit")
     public String submitOCDetails(@Valid @ModelAttribute final OccupancyCertificate occupancyCertificate,
             final HttpServletRequest request, final Model model,
-            final BindingResult errors, final RedirectAttributes redirectAttributes) {
+            final BindingResult errors, final RedirectAttributes redirectAttributes) throws JsonParseException, JsonMappingException, IOException {
         if (errors.hasErrors()) {
             return CITIZEN_OCCUPANCY_CERTIFICATE_NEW;
         }
+        
+        List<OCPropertyOwnerDetails> propertyOwnerDetails=null;
+        
+    	ObjectMapper objectMapper=new ObjectMapper();
+    	propertyOwnerDetails = objectMapper.readValue(occupancyCertificate.getJsonData(), new TypeReference<List<OCPropertyOwnerDetails>>() {});
+		
+    	occupancyCertificate.setOcPropertyOwnerDetails(propertyOwnerDetails);
+        
         occupancyCertificateService.validateProposedAndExistingBuildings(occupancyCertificate);
         OccupancyCertificateValidationService ocService =  (OccupancyCertificateValidationService) specificNoticeService
                 .find(OccupancyCertificateValidationService.class, specificNoticeService.getCityDetails());

@@ -43,17 +43,24 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
@@ -81,9 +88,12 @@ import org.egov.bpa.master.service.StakeHolderService;
 import org.egov.bpa.master.service.StakeholderTypeService;
 import org.egov.bpa.transaction.entity.ApplicationFee;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.FileData;
+import org.egov.bpa.transaction.entity.FileDetails;
 import org.egov.bpa.transaction.entity.OwnershipTransfer;
 import org.egov.bpa.transaction.entity.PermitInspectionApplication;
 import org.egov.bpa.transaction.entity.PermitRenewal;
+import org.egov.bpa.transaction.entity.PropertyFileDetails;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyFee;
 import org.egov.bpa.transaction.notice.util.BpaNoticeUtil;
@@ -129,15 +139,21 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -145,6 +161,13 @@ import com.google.gson.reflect.TypeToken;
 
 @Controller
 public class BpaAjaxController {
+	
+	private final RestTemplate restTemplate;
+
+    @Autowired
+    public BpaAjaxController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     private static final String MATERIALPATH = "materialpath";
     private static final String MANDATORY = "mandatory";
@@ -1138,6 +1161,7 @@ public class BpaAjaxController {
 		occupancyFee.setOc(oc);
 		BpaApplication parent = applicationBpaService.findByPermitNumber(permitNo);
 		oc.setParent(parent);
+		System.out.println("OC details : " + oc.toString());
 		Map<String, String> map = occupancyCertificateFeeService.calculateOCFees(oc,occupancyFee);
 		final List<JSONObject> jsonObjects = new ArrayList<>();
 		for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -1148,6 +1172,87 @@ public class BpaAjaxController {
 		}
 		IOUtils.write(jsonObjects.toString(), response.getWriter());
 
+	}
+	
+	@GetMapping(value = "/propertyDetails/getAllFiles")
+	@ResponseBody
+    public  List<FileDetails> getAllFiles(@RequestParam String fileType) throws IOException, NoSuchAlgorithmException {
+		
+		System.out.println ("FileType ******************" +fileType);
+		List<FileDetails> fileDetailsList=null;
+		String jsonString = null;
+		try {
+			SSLContextCert();
+		
+		String apiUrl = "https://estateoffice.chd.gov.in/eodataapi/api/GetallFiles?FileType="+fileType;
+				
+		ResponseEntity<String> response = restTemplate.exchange(apiUrl,HttpMethod.GET,null,String.class);
+		
+		jsonString = response.getBody();
+		
+		ObjectMapper objectMapper=new ObjectMapper();
+		fileDetailsList = objectMapper.readValue(jsonString, new TypeReference<List<FileDetails>>() {});
+		           
+        System.out.println ("jsonString getAllFiles method******************" +jsonString);
+           
+		 } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+        
+		return fileDetailsList;
+		
+    }
+	
+	@GetMapping(value = "/propertyDetails/getAllFilesByFileNumber")
+	@ResponseBody
+    public  List<PropertyFileDetails> getAllFilesByFineNumber(@RequestParam String fileType,@RequestParam String fileNumber) throws IOException, NoSuchAlgorithmException {
+		
+		System.out.println ("FileType ******************" +fileType);
+		System.out.println ("fileNumber ******************" +fileNumber);
+		List<PropertyFileDetails> fileDetailsList=null;
+		String jsonString = null;
+		try {			
+			SSLContextCert();
+		
+		String apiUrl = "https://estateoffice.chd.gov.in/eodataapi/api/GetFileOwnershipDetails?FileType="+fileType+"&FileNo="+fileNumber;
+				
+		ResponseEntity<String> response = restTemplate.exchange(apiUrl,HttpMethod.GET,null,String.class);
+		
+		jsonString = response.getBody();
+		
+		ObjectMapper objectMapper=new ObjectMapper();
+		fileDetailsList = objectMapper.readValue(jsonString, new TypeReference<List<PropertyFileDetails>>() {});
+		           
+        System.out.println ("jsonString getAllFilesByFineNumber method ******************" +jsonString);
+           
+		 } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+        
+		return fileDetailsList;
+		
+    }
+	
+	public void SSLContextCert () {		
+		try {
+		TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+            };		 
+	 SSLContext sslContext = SSLContext.getInstance("SSL");
+     sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+     HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+     
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
 }

@@ -273,6 +273,36 @@ jQuery(document).ready(function ($) {
     $('#bpaCreate').click(function (e) {
         var msg = getValidationMessageOnCreate();
         var button = $('#bpaCreate').val();
+            
+    var dataArray = [];
+
+    // Use the each loop to iterate over each row in the table
+    $('#propertyownerdetailstblid tbody tr').each(function () {
+	//alert("enterrrrr.........");
+      // Within each row, find the input elements and get their values
+      var CategoryOfProperty = $(this).find('.CategoryOfProperty').val();
+      var TenureType = $(this).find('.TenureType').val();     
+      var NameOfOwners = $(this).find('.NameOfOwners').val();
+      var OwnersShare = $(this).find('.OwnersShare').val();
+     
+      // Create an object or array with the values, and push it to the dataArray
+      var rowValues = {
+        CategoryOfProperty: CategoryOfProperty,
+        TenureType: TenureType,
+        NameOfOwners: NameOfOwners,
+        OwnersShare: OwnersShare
+        // Add more properties as needed
+      };
+
+      dataArray.push(rowValues);
+    });
+    //alert("dataArray::"+dataArray);
+    // Convert the dataArray to a JSON string
+    var jsonData = JSON.stringify(dataArray);
+    //alert("jsonData::"+jsonData);
+    // Set the JSON data to the hidden input value
+    $("#jsonData").val(jsonData);
+        
         if (validateFormOnSubmit(button, validator)) {
             bootbox
                 .dialog({
@@ -281,7 +311,7 @@ jQuery(document).ready(function ($) {
                         'confirm': {
                             label: 'Yes',
                             className: 'btn-primary',
-                            callback: function (result) {
+                            callback: function (result) {	
                                 removeDisabledAttribute();
                                 $('#newCitizenApplicationform').trigger('submit');
                             }

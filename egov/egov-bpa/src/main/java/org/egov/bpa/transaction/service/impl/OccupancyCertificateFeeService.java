@@ -380,9 +380,13 @@ public class OccupancyCertificateFeeService {
 	}
 
 	private BigDecimal getTotalDPCCertificateMissingFee(OccupancyCertificate oc, Plan ocPlan, OccupancyTypeHelper mostRestrictiveFarHelper) {
+		System.out.println("------------------------ Inside getTotalDPCCertificateMissingFee Method ---------------------------------------- ");
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		String plotType = ocPlan.getPlanInfoProperties().get(BpaConstants.PLOT_TYPE);
 		
+		
+		System.out.println("Occupancy Type : " + mostRestrictiveFarHelper.getType().getCode());
+		System.out.println("Occupancy Sub Type : " + mostRestrictiveFarHelper.getSubtype().getCode());
 		if (BpaConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 			if(BpaConstants.MARLA.equals(plotType)) {
 				totalAmount = BigDecimal.valueOf(2500);
@@ -399,6 +403,9 @@ public class OccupancyCertificateFeeService {
 			if (BpaConstants.P_CNA.equals(mostRestrictiveFarHelper.getSubtype().getCode())
 					|| BpaConstants.B_HEI.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
 				totalAmount = BigDecimal.valueOf(7500);
+			} else {
+				System.out.println("Inside P else condition");
+				totalAmount = BigDecimal.valueOf(10000);
 			}
 		}
 		/*else if (BpaConstants.G.equals(mostRestrictiveFarHelper.getType().getCode())) {
@@ -410,6 +417,7 @@ public class OccupancyCertificateFeeService {
 			}
 		}*/
 		else {
+			System.out.println("Inside getTotalDPCCertificateMissingFee else condition");
 			totalAmount = BigDecimal.valueOf(10000);
 		}
 		

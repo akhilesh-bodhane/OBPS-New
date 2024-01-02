@@ -114,22 +114,55 @@
 
 					<div class="row add-border">
 						<div class="col-sm-3 add-margin">
-							<spring:message code="lbl.lpreplydate" /><span class="mandatory"></span>
+							<spring:message code="lbl.lpreplydate" />
+							<span class="mandatory"></span>
 						</div>
 						<div class="col-sm-3 add-margin">
-							<form:input path="letterToParty.replyDate" class="form-control datepicker"
-								data-date-end-date="0d" id="replyDate"
-								data-inputmask="'mask': 'd/m/y'" required="required" />
-							<form:errors path="letterToParty.replyDate" cssClass="add-margin error-msg" />
+							<form:input path="letterToParty.replyDate"
+								class="form-control datepicker" data-date-end-date="0d"
+								id="replyDate" data-inputmask="'mask': 'd/m/y'"
+								required="required" />
+							<form:errors path="letterToParty.replyDate"
+								cssClass="add-margin error-msg" />
 						</div>
 						<label class="col-sm-2 control-label text-right"><spring:message
-										code="lbl.lpReplyRemarks" /></label>
+								code="lbl.lpReplyRemarks" /></label>
+						<div class="col-sm-3 add-margin">
+							<form:textarea path="letterToParty.lpReplyRemarks"
+								class="form-control patternvalidation"
+								data-pattern="alphanumericspecialcharacters" rows="5"
+								id="lpDesc" maxlength="1016" />
+							<form:errors path="letterToParty.lpReplyRemarks"
+								cssClass="error-msg" />
+						</div>
+
+						<c:forEach items="${permitLetterToParty.letterToParty.lpReason}"
+							var="lpReason" varStatus="status">
+							<c:if test="${lpReason.description eq 'Building Plan Scrutiny'}">
 								<div class="col-sm-3 add-margin">
-									<form:textarea path="letterToParty.lpReplyRemarks"
-										class="form-control patternvalidation" data-pattern="alphanumericspecialcharacters"
-										rows="5" id="lpDesc" maxlength="1016" />
-									<form:errors path="letterToParty.lpReplyRemarks" cssClass="error-msg" />
+									<spring:message code="lbl.bp.rescrutiny" />
+									<span class="mandatory"></span>
 								</div>
+								<div class="col-sm-3 add-margin">
+
+									<%-- <button type='submit' class='btn btn-primary'
+										id="btnBPRescrutiny">
+										<spring:message code='lbl.bp.rescrutiny' />
+									</button> --%>
+
+
+									<form:input type="text"
+										cssClass="form-control addremoverequired patternvalidation"
+										data-pattern="alphabetspecialcharacters" data-role="tagsinput"
+										path="letterToParty.edcrRescrutinyNumber" maxlength="100"
+										id="edcrRescrutinyNumber" required="required" />
+									<form:errors path="letterToParty.edcrRescrutinyNumber"
+										cssClass="error-msg" />
+
+
+								</div>
+							</c:if>
+						</c:forEach>
 					</div>
 				</div>
 			</div>
@@ -339,6 +372,7 @@
 			<spring:message code='lbl.reply' />
 		</button>
 
+		
 		<%-- <button type="submit" class="btn btn-primary"
 			onclick="return getUrlToPring()">
 			<spring:message code="lbl.print.lettertoparty" />

@@ -44,6 +44,7 @@ import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.demand.model.EgDemand;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -56,6 +57,10 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
 
     @Query("select app from BpaApplication app where app.demand=:demand")
 	BpaApplication findByDemand(@Param("demand") EgDemand demand);
+    
+    @Modifying
+    @Query("update BpaApplication app set app.eDcrNumber = :edcrNo where app.applicationNumber =:bpaApplicationNo")
+	void update(@Param("edcrNo") String edcrRescrutinyNumber, @Param("bpaApplicationNo") String applicationBpaNumber);
 
 	BpaApplication findByApplicationNumber(String applicationNumber);
 	List<BpaApplication> findApplicationByEDcrNumberOrderByIdDesc(String eDcrNumber);
@@ -80,4 +85,6 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
     
     @Query("select app from BpaApplication app where app.status.code=:status and app.createdDate>=:today")
     List<BpaApplication> findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
+    
+    
 }

@@ -358,6 +358,9 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         buildDefaultPermitConditionsList(application);
         BpaApplication bpaApplicationResponse = applicationBpaRepository.saveAndFlush(application);
         application.setPermitDcrDocuments(persistApplnDCRDocuments(permitDcrDocuments));
+        
+        application.getPropertyOwnerDetails().forEach(ownerDetails -> ownerDetails.setApplication(application));
+        
         applicationBpaRepository.save(bpaApplicationResponse);
         
 //        ApplicationBpaFeeCalculation feeCalculation = (ApplicationBpaFeeCalculation) specificNoticeService
@@ -902,6 +905,12 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
 
     public BpaApplication getApplicationByDemand(final EgDemand demand) {
         return applicationBpaRepository.findByDemand(demand);
+    }
+    
+    @Transactional
+    public void updateApplicationEdcrNo(String edcrNo, String bpaApplicationNo) {
+    	System.out.println("Inside update method of BPA application");
+        applicationBpaRepository.update(edcrNo, bpaApplicationNo);
     }
 
     public BpaApplication findByApplicationNumber(final String applicationNumber) {

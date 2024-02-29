@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bpa_occupancy_certificate" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="923d3ab1-1460-4218-a5fa-27826c902134">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<import value="org.egov.infra.reporting.util.ReportUtil"/>
@@ -88,9 +88,9 @@
 				<text><![CDATA[To,]]></text>
 			</staticText>
 		</band>
-		<band height="79">
+		<band height="98">
 			<textField>
-				<reportElement x="1" y="4" width="554" height="75" uuid="b6d4471d-09fe-4edc-bd99-8be325ab642e"/>
+				<reportElement x="1" y="4" width="554" height="94" uuid="b6d4471d-09fe-4edc-bd99-8be325ab642e"/>
 				<textElement>
 					<font size="11"/>
 				</textElement>
@@ -99,14 +99,14 @@
 		</band>
 		<band height="81">
 			<textField>
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="40" width="554" height="19" uuid="cd7df634-08b4-46a9-acc8-da785522a1fb"/>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="29" width="554" height="19" uuid="cd7df634-08b4-46a9-acc8-da785522a1fb"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+" , Chandigarh"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="61" width="554" height="20" uuid="7291a0f5-d57a-4ece-97e0-1e700208e94a">
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="51" width="554" height="20" uuid="7291a0f5-d57a-4ece-97e0-1e700208e94a">
 					<printWhenExpression><![CDATA[!$P{subheader}.isEmpty()]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -115,7 +115,7 @@
 				<textFieldExpression><![CDATA[$P{subheader}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="19" width="339" height="17" uuid="195614fe-819b-43f4-8709-6c3b981c793e"/>
+				<reportElement x="1" y="9" width="339" height="17" uuid="195614fe-819b-43f4-8709-6c3b981c793e"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="11" isBold="false"/>
 				</textElement>
@@ -137,7 +137,7 @@ Chief Administrator, UT- Chandigarh)]]></text>
 	<pageFooter>
 		<band height="82">
 			<image>
-				<reportElement x="330" y="2" width="222" height="80" uuid="b60cbe9c-686e-4c35-af2f-c6827bbb25fc"/>
+				<reportElement x="330" y="5" width="222" height="72" uuid="b60cbe9c-686e-4c35-af2f-c6827bbb25fc"/>
 				<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
 			</image>
 		</band>

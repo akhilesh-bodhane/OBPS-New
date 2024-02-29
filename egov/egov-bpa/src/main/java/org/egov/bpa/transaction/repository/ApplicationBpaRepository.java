@@ -61,8 +61,13 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
     @Modifying
     @Query("update BpaApplication app set app.eDcrNumber = :edcrNo where app.applicationNumber =:bpaApplicationNo")
 	void update(@Param("edcrNo") String edcrRescrutinyNumber, @Param("bpaApplicationNo") String applicationBpaNumber);
+    
+    @Modifying
+    @Query("update BpaApplication app set app.state.id = null where app.applicationNumber =:appNo")
+	void updateApplicationState(@Param("appNo") String appNo);
 
 	BpaApplication findByApplicationNumber(String applicationNumber);
+	
 	List<BpaApplication> findApplicationByEDcrNumberOrderByIdDesc(String eDcrNumber);
 
 	BpaApplication findById(Long id);

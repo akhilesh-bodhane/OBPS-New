@@ -230,7 +230,7 @@ public class PermitRevocationService {
                     new String[] { application.getPlanPermissionNumber() }, null);
         }
         if (isNotBlank(mobileNo) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (isNotBlank(email) && isNotBlank(body) && reportOutput != null)
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, "permit_revocation" + PDFEXTN,
                     reportOutput.getReportOutputData());

@@ -60,6 +60,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#btnLPReply").click(function(e){
+    	
         if ($('#lettertoPartyReplyform').valid() && validateUploadFilesMandatory()) {
             return true;
         } else {
@@ -148,4 +149,3 @@ jQuery(document).ready(function($) {
 			}
 		}
 	}
-

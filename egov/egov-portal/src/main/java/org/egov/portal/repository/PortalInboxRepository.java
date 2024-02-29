@@ -49,6 +49,7 @@ package org.egov.portal.repository;
 
 import org.egov.portal.entity.PortalInbox;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -63,5 +64,9 @@ public interface PortalInboxRepository extends JpaRepository<PortalInbox, Long> 
 
     @Query("select count(*) from PortalInbox")
     Long getPortalInboxCount();
+    
+    @Modifying
+    @Query("update PortalInbox pi set pi.status = 'Cancelled', pi.resolved = true where pi.applicationNumber =:nocAppNo")
+	void updateNocAppInboxStatus(@Param("nocAppNo") String nocAppNo);
 
 }

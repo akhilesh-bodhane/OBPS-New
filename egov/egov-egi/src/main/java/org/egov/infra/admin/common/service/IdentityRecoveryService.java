@@ -102,12 +102,14 @@ public class IdentityRecoveryService {
 
     @Transactional
     public boolean generateAndSendUserPasswordRecovery(String identity, String urlToSent, boolean byOTP) {
+    	System.out.println("Password recovery method OTP");
         Optional<User> user = userService.checkUserWithIdentity(identity);
+        String templateId = "1007607864214422493"; 
         if (user.isPresent()) {
             IdentityRecovery identityRecovery = generate(user.get(), new DateTime().plusMinutes(5).toDate(), byOTP);
             if (byOTP) {
-                String message = "Your OTP for recovering password is " + identityRecovery.getToken();
-                notificationService.sendSMS(user.get().getMobileNumber(), message, HIGH);
+                String message = "Your OTP for recovering password is " + identityRecovery.getToken()+ ". Chandigarh Smart City Ltd.";
+                notificationService.sendSMS(user.get().getMobileNumber(), message, HIGH, templateId);
                 notificationService.sendEmail(user.get().getEmailId(), "Password Reset", message);
             } else {
                 notificationService.sendEmail(identityRecovery.getUser(), "Password Recovery",

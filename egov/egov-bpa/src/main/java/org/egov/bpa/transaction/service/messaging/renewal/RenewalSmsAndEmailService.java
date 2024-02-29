@@ -185,7 +185,7 @@ public class RenewalSmsAndEmailService {
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_RENEWAL_REJECT, renewal.getApplicationNumber());
         } 
         if (mobileNo != null && smsMsg != null)
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (email != null && body != null && reportOutput != null && fileName != null) {
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, fileName,
                     reportOutput.getReportOutputData());
@@ -216,7 +216,7 @@ public class RenewalSmsAndEmailService {
         String body = buildMsgDetailsOnRenewalOrderGeneration(renewal, name, EMLB_KEY_RO);
         String subject = buildEmailSubjectOnRenewalOrderGeneration(renewal, EMLS_KEY_RO);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         }
         if (isNotBlank(emailId) && isNotBlank(body)) {
             notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF,
@@ -235,19 +235,20 @@ public class RenewalSmsAndEmailService {
     }
     
     public void sendSmsForCollection(BigDecimal totalAmount, PermitRenewal renewal, BillReceiptInfo billRcptInfo) {
+    	String templateId = "1007768507942256240";
         if (isSmsEnabled()) {
             String msg = buildSmsMsgDetailsForCollection(totalAmount, renewal, billRcptInfo);
             ApplicationStakeHolder applnStakeHolder = renewal.getParent().getStakeHolder().get(0);
             if (applnStakeHolder.getApplication() != null && applnStakeHolder.getApplication().getOwner() != null) {
                 Applicant owner = applnStakeHolder.getApplication().getOwner();
                 if (isNotBlank(owner.getUser().getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(owner.getUser().getMobileNumber(), msg);
+                    notificationService.sendSMS(owner.getUser().getMobileNumber(), msg, templateId);
                 }
             }
             if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
                 StakeHolder stakeHolder = applnStakeHolder.getStakeHolder();
                 if (isNotBlank(stakeHolder.getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(stakeHolder.getMobileNumber(), msg);
+                    notificationService.sendSMS(stakeHolder.getMobileNumber(), msg, templateId);
                 }
                 if (isEmailEnabled() && isNotBlank(stakeHolder.getEmailId()))
                     notificationService.sendEmail(stakeHolder.getEmailId(),
@@ -282,7 +283,7 @@ public class RenewalSmsAndEmailService {
             String emailId, ReportOutput reportOutput) {
         String smsMsg = "";
         String body = "";
-
+        String templateId = "1007422580712728748";
         Boolean feeExists = renewal.getDemand().getBaseDemand().subtract(renewal.getDemand().getAmtCollected())
                 .compareTo(BigDecimal.ZERO) > 0 ? Boolean.TRUE : Boolean.FALSE;
 
@@ -295,7 +296,7 @@ public class RenewalSmsAndEmailService {
         }
         String subject = buildMsgDetailsForEmailSubjectOnRenewalApproval(renewal, EMLS_KEY_APRVL);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            notificationService.sendSMS(mobileNumber, smsMsg, templateId);
         }
         if (isNotBlank(emailId) && isNotBlank(body))
                 notificationService.sendEmail(emailId, subject, body);

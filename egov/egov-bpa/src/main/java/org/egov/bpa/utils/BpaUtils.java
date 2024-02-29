@@ -274,6 +274,7 @@ public class BpaUtils {
 		Module module = moduleService.getModuleByName(EGMODULE_NAME);
 		boolean isResolved = false;
 		String status;
+		System.out.println("inside updatePortalUserinbox");
 		if (APPLICATION_STATUS_SUBMITTED.equals(application.getStatus().getCode())
 				&& checkAnyTaxIsPendingToCollect(application.getDemand()))
 			status = APPLICATION_FEE_PAYMENT_PENDING;

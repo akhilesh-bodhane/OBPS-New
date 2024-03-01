@@ -76,6 +76,7 @@ public class BpaDcrService {
 
     private static final String NOT_EXPIRED = "Not expired";
     private static final String IS_EXISTS = "isExists";
+    private static final String NOT_STARTS_WITH = "notStartsWith";
     private static final String TRUE = "true";
     private static final String FALSE = "false";
     private static final String IS_EXPIRED = "isExpired";
@@ -131,15 +132,19 @@ public class BpaDcrService {
 		if (eDcrNumber != null) {
 			List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByEDCRNumber(eDcrNumber);
 			if (bpaApplications.isEmpty()) {
+				System.out.println("Inside bpa app empty check if condition");
 				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 				eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 			} else {
+				System.out.println("Inside bpa app empty check else condition");
 				if (bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
 						&& BpaConstants.APPLICATION_STATUS_CANCELLED
 								.equals(bpaApplications.get(0).getStatus().getCode())) {
+					System.out.println("Inside bpa app empty check else condition if");
 					eDcrApplicationDetails.put(IS_EXISTS, FALSE);
 					eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
 				} else {
+					System.out.println("Inside bpa app empty check else condition if");
 					String message = bpaMessageSource.getMessage("msg.dcr.exist.with.appln",
 							new String[] { securityUtils.getCurrentUser().getName(),
 									bpaApplications.get(0).geteDcrNumber(),
@@ -151,6 +156,46 @@ public class BpaDcrService {
 				}
 			}
 		}
+        return eDcrApplicationDetails;
+    }
+    
+    public Map<String, String> checkIsEdcrUsedInBpaApplicationlp(final String eDcrNumber) {
+        Map<String, String> eDcrApplicationDetails = new HashMap<>();
+		if (eDcrNumber != null) {
+			List<BpaApplication> bpaApplications = applicationBpaService.findApplicationByEDCRNumber(eDcrNumber);
+			
+			if(!eDcrNumber.startsWith("DCR")){
+				System.out.println("Inside else if condition DCR check");
+				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
+				eDcrApplicationDetails.put(NOT_STARTS_WITH, TRUE);
+			} else if (bpaApplications.isEmpty()) {
+				System.out.println("Inside bpa app empty check if condition");
+				eDcrApplicationDetails.put(IS_EXISTS, FALSE);
+				eDcrApplicationDetails.put(NOT_STARTS_WITH, FALSE);
+				eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
+			} else {
+				System.out.println("Inside bpa app empty check else condition");
+				if (bpaApplications.get(0) != null && bpaApplications.get(0).getStatus() != null
+						&& BpaConstants.APPLICATION_STATUS_CANCELLED
+								.equals(bpaApplications.get(0).getStatus().getCode())) {
+					System.out.println("Inside bpa app empty check else condition if");
+					eDcrApplicationDetails.put(IS_EXISTS, FALSE);
+					eDcrApplicationDetails.put(NOT_STARTS_WITH, FALSE);
+					eDcrApplicationDetails.put(BpaConstants.MESSAGE, "Not used");
+				} else {
+					System.out.println("Inside bpa app empty check else condition else");
+					String message = bpaMessageSource.getMessage("msg.dcr.exist.with.appln",
+							new String[] { securityUtils.getCurrentUser().getName(),
+									bpaApplications.get(0).geteDcrNumber(),
+									bpaApplications.get(0).getApplicationNumber() },
+							null);
+					eDcrApplicationDetails.put(IS_EXISTS, TRUE);
+					eDcrApplicationDetails.put(NOT_STARTS_WITH, FALSE);
+					eDcrApplicationDetails.put("applnNoUsedEdcr", bpaApplications.get(0).getApplicationNumber());
+					eDcrApplicationDetails.put(BpaConstants.MESSAGE, message);
+				}
+			}
+		} 
         return eDcrApplicationDetails;
     }
 

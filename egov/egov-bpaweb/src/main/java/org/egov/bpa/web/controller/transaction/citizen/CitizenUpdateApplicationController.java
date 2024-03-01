@@ -143,7 +143,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private static final String COLLECT_FEE_VALIDATE = "collectFeeValidate";
     private static final String IS_CITIZEN = "isCitizen";
     private static final String CITIZEN_VIEW = "citizen-view";
-    private static final String BPAAPP_CITIZEN_FORM = "bpaapp-citizenForm";
+	private static final String BPAAPP_CITIZEN_FORM = "bpaapp-citizenForm";
     private static final String MESSAGE = "message";
     private static final String BPA_APPLICATION = "bpaApplication";
     private static final String APPLICATION_HISTORY = "applicationHistory";
@@ -423,6 +423,8 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             @PathVariable final String applicationNumber, final BindingResult resultBinder,
             final HttpServletRequest request, final Model model, final RedirectAttributes redirectAttributes,
             @RequestParam("files") final MultipartFile... files) {
+    	
+    	System.out.println("Inside Citizen Update Submit Method");
         if (resultBinder.hasErrors()) {
             prepareCommonModelAttribute(model, bpaApplication.isCitizenAccepted());
             return loadViewdata(model, bpaApplication);
@@ -436,20 +438,26 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
 
 		}
         if (bpaApplication.getIsOneDayPermitApplication())
+        System.out.println("getIsOneDayPermitApplication: Yes");
             bpaApplication.setApplicationType(
                     applicationTypeService.findByName(BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT.toUpperCase()));
 
         bpaUtils.saveOrUpdateBoundary(bpaApplication);
+        System.out.println("BPA Application Detail 1 : " + bpaApplication);
         String workFlowAction = request.getParameter("workFlowAction");
         Long approvalPosition = 0l;
         final WorkFlowMatrix wfMatrix = bpaUtils.getWfMatrixByCurrentState(
                 bpaApplication.getIsOneDayPermitApplication(), bpaApplication.getStateType(), WF_NEW_STATE,
                 bpaApplication.getApplicationType().getName());
-        if (wfMatrix != null)
+        if (wfMatrix != null){
+        	System.out.println("wfmatrix not null");
             approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
                     bpaUtils.getBoundaryForWorkflow(bpaApplication.getSiteDetail().get(0)).getId());
+            System.out.println("approvalPosition : " + approvalPosition);
+        }
         if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)
                 && (approvalPosition == 0 || approvalPosition == null)) {
+        	System.out.println("Inside wf submit button method");
             model.addAttribute("noJAORSAMessage", messageSource.getMessage("msg.official.not.exist",
                     new String[] { ApplicationThreadLocals.getMunicipalityName() }, LocaleContextHolder.getLocale()));
             prepareCommonModelAttribute(model, bpaApplication.isCitizenAccepted());
@@ -500,14 +508,17 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         boolean isEdcrIntegrationRequire = bpaDcrService
                 .isEdcrIntegrationRequireByService(bpaApplication.getServiceType().getCode());
         if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)) {
+        	System.out.println("Inside wf submit button method");
             final BpaStatus bpaStatus = applicationBpaService
                     .getStatusByCodeAndModuleType(APPLICATION_STATUS_SUBMITTED);
             bpaApplication.setStatus(bpaStatus);
             bpaApplication.setApplicationDate(new Date());
-            if (isEdcrIntegrationRequire)
+            if (isEdcrIntegrationRequire){
+            	System.out.println("Initiate NOC application");
                 permitNocService.initiateNoc(bpaApplication);
-
+            }
         } else if (workFlowAction != null && WF_CANCELAPPLICATION_BUTTON.equalsIgnoreCase(workFlowAction))
+        	System.out.println("Inside wf cancel button method");
             bpaApplication.setStatus(applicationBpaService.getStatusByCodeAndModuleType(APPLICATION_STATUS_CANCELLED));
 
         if (bpaApplication.getOwner().getUser() != null && bpaApplication.getOwner().getUser().getId() == null)
@@ -517,6 +528,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         List<ApplicationSubType> riskBasedAppTypes = applicationTypeService.getRiskBasedApplicationTypes();
 
         if (!isEdcrIntegrationRequire && riskBasedAppTypes.contains(bpaApplication.getApplicationType())) {
+        	System.out.println("Inside riskBasedAppTypes method");
         	String rootBoundaryType = BpaConstants.URBAN;
         	String plotType = BpaConstants.ABOVE_TWO_KANAL;
         	Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());	    		
@@ -541,13 +553,19 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         applicationBpaService.saveAndFlushApplication(bpaApplication, workFlowAction);
 
         if (citizenOrBusinessUser) {
-            if (isCitizen)
+        	System.out.println("Inside citizen/business user portal inbox update method");
+            if (isCitizen){
+            	System.out.println("Inside is citizen check if condition portal inbox update");
                 bpaUtils.updatePortalUserinbox(bpaApplication, null);
-            else {
+            } else {
+            	System.out.println("Inside is citizen check else condition portal inbox update");
                 if (workFlowAction.equals(WF_SAVE_BUTTON)) {
+                	System.out.println("inside if condition");
                     bpaUtils.updatePortalUserinbox(bpaApplication, null);
-                } else
+                } else {
+                	System.out.println("inside else condition");
                     bpaUtils.updatePortalUserinbox(bpaApplication, bpaApplication.getOwner().getUser());
+                }
             }
         }
         if (workFlowAction.equals(WF_LBE_SUBMIT_BUTTON))
@@ -562,6 +580,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         else if (workFlowAction != null && workFlowAction.equals(WF_LBE_SUBMIT_BUTTON)
                 && !bpaUtils.checkAnyTaxIsPendingToCollect(bpaApplication.getDemand())
                 && !bpaUtils.logedInuserIsCitizen()) {
+        	System.out.println("Inside WF_LBE_SUBMIT_BUTTON method");
             String remarks = null;
             if (bpaApplication.getAuthorizedToSubmitPlan())
                 remarks = AUTH_TO_SUBMIT_PLAN;
@@ -590,11 +609,18 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
                 message = message.concat(DISCLIMER_MESSAGE_ONSAVE);
 
             redirectAttributes.addFlashAttribute(MESSAGE, message);
-        } else if (workFlowAction != null && workFlowAction.equals(WF_CANCELAPPLICATION_BUTTON))
+        } else if (workFlowAction != null && workFlowAction.equals(WF_CANCELAPPLICATION_BUTTON)){
+        	System.out.println("Inside WF_CANCELAPPLICATION_BUTTON method");
+        	List<PermitNocApplication> nocApplication = permitNocService.findByPermitApplicationNumber(applicationNumber);  
+        	
+        	System.out.println("Application Number Passed :  " + applicationNumber);
+        	System.out.println("NOC Application Number Passed :  " + nocApplication);
+        	permitNocService.updateNocApplicationNumberStatus(nocApplication);
+        	applicationBpaService.updateApplicationState(applicationNumber);
             redirectAttributes.addFlashAttribute(MESSAGE,
                     messageSource.getMessage("msg.cancel.applnby.applicantitself.success",
                             new String[] { bpaApplication.getApplicationNumber() }, null));
-        else if (workFlowAction != null && workFlowAction.equals(WF_SAVE_BUTTON)
+        } else if (workFlowAction != null && workFlowAction.equals(WF_SAVE_BUTTON)
                 && bpaUtils.isCitizenAcceptanceRequired() && bpaApplication.isCitizenAccepted()
                 && bpaUtils.logedInuserIsCitizen()) {
             String successMessage = messageSource.getMessage("msg.appln.accepted.succes",

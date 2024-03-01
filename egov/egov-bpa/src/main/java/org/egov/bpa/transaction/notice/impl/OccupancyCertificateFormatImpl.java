@@ -102,7 +102,7 @@ public class OccupancyCertificateFormatImpl implements OccupancyCertificateNotic
     private DcrRestService drcRestService;
 
     @Override
-    public ReportOutput generateNotice(final OccupancyCertificate oc) {
+    public ReportOutput generateNotice(final OccupancyCertificate oc) {//are u on call?
         ReportOutput reportOutput = new ReportOutput();
         ReportRequest reportInput = null;
         OCNotice ocNotice = ocNoticeService.findByOcAndNoticeType(oc, OCCUPANCY_CERTIFICATE_NOTICE_TYPE);

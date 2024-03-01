@@ -74,6 +74,7 @@ import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.persistence.entity.enums.UserType;
 import org.egov.infra.utils.ApplicationConstant;
+import org.egov.portal.repository.PortalInboxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +109,8 @@ public class PermitNocApplicationService {
     private BpaStatusRepository bpaStatusRepository;
     @Autowired
     private BpaNocApplicationHistoryRepository bpaNocApplicationHistoryRepository;
+    @Autowired
+    private PortalInboxRepository portalInboxRepository;
 
     @Transactional
     public PermitNocApplication save(final PermitNocApplication permitNoc) {
@@ -121,6 +124,19 @@ public class PermitNocApplicationService {
 
     public PermitNocApplication findByNocApplicationNumber(String appNo) {
         return permitNocRepository.findByNocApplicationNumber(appNo);
+    }
+    
+    @Transactional
+    public void updateNocApplicationNumberStatus(final List<PermitNocApplication> appNo) {
+    	String nocAppNo = null;
+    	for(PermitNocApplication nocUpdate : appNo){
+    		System.out.println("Noc Application Number : " + nocUpdate);
+    		nocAppNo = nocUpdate.getBpaNocApplication().getNocApplicationNumber();
+    		System.out.println("Noc App No : " + nocAppNo);
+    		bpaNocApplicationRepository.updateNocApplicationStatus(nocAppNo);
+    		bpaNocApplicationHistoryRepository.updateNocApplicationStatus(nocAppNo);
+    		portalInboxRepository.updateNocAppInboxStatus(nocAppNo);
+    	}
     }
 
     public List<PermitNocApplication> findByPermitApplicationNumber(String appNo) {

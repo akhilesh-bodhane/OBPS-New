@@ -71,6 +71,8 @@
 				value="${occupancyCertificate.status.code}">
 			<input type="hidden" id="serviceTypeCode"
 				value="${occupancyCertificate.parent.serviceType.code}" />
+			<input type="hidden" id="cancelAppln"
+				value="<spring:message code='msg.confirm.cancel.appln'/>" />
 			<input type="hidden" id="drawingPreference" value="${occupancyCertificate.drawingPreference}">
 			<div class="text-right text-info view-content col-sm-12" style="font-size: 14px;color: #e4841b;">
 			    <span id="drawPref"></span>
@@ -230,6 +232,14 @@
 								onclick="window.open('/bpa/application/occupancy-certificate/demandnotice/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 									Print Demand Notice </a>&nbsp;</td>
 						</c:if>
+						<td><%-- <c:if
+								test="${citizenOrBusinessUser && bpaApplication.id != null && bpaApplication.state == null && bpaApplication.status.code ne 'Cancelled'
+								    && (validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && !citizenDisclaimerAccepted)}"> --%>
+								<form:button type="button" id="buttonCancel"
+									class="btn btn-danger" value="Cancel Application">
+									<spring:message code='lbl.btn.cancel.application' />
+								</form:button>&nbsp;
+							<%-- </c:if> --%></td>
 						<c:if
 							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && !isFinalOCGenerated }">
 							<td><a

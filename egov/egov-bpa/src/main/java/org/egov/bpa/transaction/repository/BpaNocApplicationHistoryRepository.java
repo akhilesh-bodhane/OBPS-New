@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.egov.bpa.transaction.entity.BpaNocApplicationHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +18,9 @@ public interface BpaNocApplicationHistoryRepository extends JpaRepository<BpaNoc
 
 	@Query("select noc from BpaNocApplicationHistory noc where noc.nocApplicationNumber =:nocAppNo")
 	List<BpaNocApplicationHistory> findByNocApplicationNumber(@Param("nocAppNo") String nocAppNo);
+	
+	@Modifying
+	@Query("update BpaNocApplicationHistory noc set noc.status = '62' where noc.nocApplicationNumber =:nocAppNo")
+	void updateNocApplicationStatus(@Param("nocAppNo") String nocAppNo);
 
 }

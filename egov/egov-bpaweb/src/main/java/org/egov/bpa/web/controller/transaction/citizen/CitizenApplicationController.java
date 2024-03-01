@@ -298,7 +298,7 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
             exstBldg.setNumber(0);
             bpaApplication.getExistingBuildingDetails().add(exstBldg);
         }
-        return "citizenApplication-form";
+		return "citizenApplication-form";
     }
 
     private boolean validateStakeholderIsEligibleSubmitAppln(Model model, String serviceCode, StakeHolder stkHldr) {

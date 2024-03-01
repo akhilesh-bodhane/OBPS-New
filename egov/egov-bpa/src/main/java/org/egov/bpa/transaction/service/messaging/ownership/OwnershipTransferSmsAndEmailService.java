@@ -130,7 +130,7 @@ public class OwnershipTransferSmsAndEmailService {
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_OWNERSHIP_REJECT, ownership.getApplicationNumber());
         }
         if (mobileNo != null && smsMsg != null)
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (email != null && body != null && reportOutput != null && fileName != null) {
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, fileName,
                     reportOutput.getReportOutputData());

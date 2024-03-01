@@ -315,8 +315,7 @@
 							</a>&nbsp;</td>
 						</c:if>
 						<td><c:if
-								test="${citizenOrBusinessUser && bpaApplication.id != null && bpaApplication.state == null && bpaApplication.status.code ne 'Cancelled'
-								    && (validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && !citizenDisclaimerAccepted &&  bpaApplication.sentToCitizen)}">
+								test="${(bpaApplication.status.code ne 'Cancelled' || bpaApplication.status.code ne 'Rejected') && !isFeeCollected}">
 								<form:button type="button" id="buttonCancel"
 									class="btn btn-danger" value="Cancel Application">
 									<spring:message code='lbl.btn.cancel.application' />
@@ -344,7 +343,7 @@
 
 
 						<c:if
-							test="${bpaApplication.status.code eq 'Cancelled' && bpaApplication.state ne null}">
+							test="${bpaApplication.status.code eq 'Rejected' && bpaApplication.state ne null}">
 							<td><a
 								href="/bpa/application/rejectionnotice/${bpaApplication.applicationNumber}"
 								target="popup" class="btn btn-primary"

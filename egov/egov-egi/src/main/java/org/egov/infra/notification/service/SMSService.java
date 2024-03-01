@@ -54,12 +54,14 @@ import static org.egov.infra.notification.entity.NotificationPriority.MEDIUM;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.JMSException;
+import javax.net.ssl.SSLContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -67,6 +69,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.egov.infra.notification.entity.NotificationPriority;
@@ -134,36 +138,51 @@ public class SMSService {
 	@Value("${sms.sender.securekey.req.param.name}")
 	private String securekeyParameterName;
 
-	public boolean sendSMS(String mobileNumber, String message) throws JMSException {
-		return sendSMS(mobileNumber, message, MEDIUM);
-	}
+	public boolean sendSMS(String mobileNumber, String message, String templateId) {
+        return sendSMS(mobileNumber, message, MEDIUM,templateId);
+    }
 
-	public boolean sendSMS(String mobileNumber, String message, NotificationPriority priority) throws JMSException {
-		try {
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost(smsProviderURL);
-			String encryptedPassword = MD5(senderPassword);
-			String genratedhashKey = hashGenerator(senderUserName, sender, message, secureKey);
-
-			List<NameValuePair> urlParameters = new ArrayList<>();
-			urlParameters.add(new BasicNameValuePair(senderUserNameReqParamName, senderUserName));
-			// urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName,
-			// senderPassword));
-			urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName, encryptedPassword));
-			urlParameters.add(new BasicNameValuePair(senderReqParamName, sender));
-			urlParameters.add(new BasicNameValuePair(mobileNumberReqParamName, countryCode() + mobileNumber));
-			urlParameters.add(new BasicNameValuePair(messageReqParamName, message));
-			urlParameters.add(new BasicNameValuePair(securekeyParameterName, genratedhashKey));
-			setAdditionalParameters(urlParameters, priority);
-			post.setEntity(new UrlEncodedFormEntity(urlParameters, encoding()));
-			HttpResponse response = client.execute(post);
-			String responseCode = IOUtils.toString(response.getEntity().getContent(), encoding());
-			return smsErrorCodes.parallelStream().noneMatch(responseCode::startsWith);
-		} catch (UnsupportedOperationException | IOException | NoSuchAlgorithmException e) {
-			LOGGER.error("Error occurred while sending SMS [%s]", e);
-			throw new JMSException(e.getMessage());
+    public boolean sendSMS(String mobileNumber, String message, NotificationPriority priority,String templateId) {
+    	LOGGER.info("Template ID :::"+templateId);
+    	LOGGER.info("original pattern  ::: Dear {#var#} Members, {#var#} {#var#} Meeting scheduled on {#var#} at {#var#} at {#var#}. Agenda sent to your mail. Chandigarh Smart City Ltd.");
+    	LOGGER.info("creted poattern  :::"+message);
+    	SSLSocketFactory sf=null;
+		SSLContext context=null;
+        try {
+        	context=SSLContext.getInstance("TLSv1.2"); // Use this line for Java version 7 and above
+			context.init(null, null, null);
+			sf=new SSLSocketFactory(context, SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+			Scheme scheme=new Scheme("https",443,sf);
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost post = new HttpPost(smsProviderURL);
+            List<NameValuePair> urlParameters = new ArrayList<>();
+            String genratedhashKey = hashGenerator(senderUserName, sender, message, secureKey);
+            urlParameters.add(new BasicNameValuePair(senderUserNameReqParamName, senderUserName));
+            urlParameters.add(new BasicNameValuePair(senderPasswordReqParamName, senderPassword));
+            urlParameters.add(new BasicNameValuePair(senderReqParamName, sender));
+            urlParameters.add(new BasicNameValuePair(mobileNumberReqParamName, countryCode() + mobileNumber));
+            urlParameters.add(new BasicNameValuePair(messageReqParamName, message));
+            urlParameters.add(new BasicNameValuePair("smsservicetype", "singlemsg"));
+            urlParameters.add(new BasicNameValuePair("key", genratedhashKey));
+            urlParameters.add(new BasicNameValuePair("templateid", templateId));
+            //setAdditionalParameters(urlParameters, priority);
+            post.setEntity(new UrlEncodedFormEntity(urlParameters, encoding()));
+            HttpResponse response = client.execute(post);
+            String responseCode = IOUtils.toString(response.getEntity().getContent(), encoding());
+            if (LOGGER.isInfoEnabled())
+                LOGGER.info("SMS :- Mobile Number : {} Response : {}", mobileNumber, responseCode);
+            return smsErrorCodes.parallelStream().noneMatch(responseCode::startsWith);
+        } catch (UnsupportedOperationException | IOException e) {
+            LOGGER.error("Error occurred while sending SMS [{}]", mobileNumber, e);
+        } catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	}
+        return false;
+    }
 
 	private void setAdditionalParameters(List<NameValuePair> urlParameters, NotificationPriority priority) {
 		if (!extraRequestParams.isEmpty()) {
@@ -173,59 +192,35 @@ public class SMSService {
 			}
 		}
 
-		if (smsPriorityEnabled) {
-			urlParameters.add(new BasicNameValuePair(smsPriorityParamName,
-					environment.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString()))));
-		}
-	}
-
-	private static String convertedToHex(byte[] data) {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < data.length; i++) {
-			int halfOfByte = (data[i] >>> 4) & 0x0F;
-			int twoHalfBytes = 0;
-			do {
-				if ((0 <= halfOfByte) && (halfOfByte <= 9)) {
-					buf.append((char) ('0' + halfOfByte));
-				} else {
-					buf.append((char) ('a' + (halfOfByte - 10)));
-				}
-				halfOfByte = data[i] & 0x0F;
-			} while (twoHalfBytes++ < 1);
-		}
-		return buf.toString();
-	}
-
-	/****
-	 * Method to convert Normal Plain Text Password to MD5 encrypted password
-	 ***/
-
-	private static String MD5(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		MessageDigest md;
-		md = MessageDigest.getInstance(PASSWORD_ENCRYPTION_ALGO);
-		byte[] md5 = new byte[64];
-		md.update(text.getBytes(CHARSET), 0, text.length());
-		md5 = md.digest();
-		return convertedToHex(md5);
-	}
-
-	private String hashGenerator(String userName, String senderId, String content, String secureKey)
-			throws NoSuchAlgorithmException {
-		StringBuffer finalString = new StringBuffer();
+        if (smsPriorityEnabled) {
+            urlParameters.add(new BasicNameValuePair(smsPriorityParamName,
+                    environment.getProperty(String.format(SMS_PRIORITY_PARAM_VALUE, priority.toString()))
+            ));
+        }
+    }
+    
+    protected String hashGenerator(String userName, String senderId, String content, String secureKey) {
+		// TODO Auto-generated method stub
+		StringBuffer finalString=new StringBuffer();
 		finalString.append(userName.trim()).append(senderId.trim()).append(content.trim()).append(secureKey.trim());
 		// logger.info("Parameters for SHA-512 : "+finalString);
 		String hashGen = finalString.toString();
 		StringBuffer sb = null;
 		MessageDigest md;
-		md = MessageDigest.getInstance(SECURITY_KEY_HASHING_ALGO);
-		md.update(hashGen.getBytes());
-		byte byteData[] = md.digest();
-		// convert the byte to hex format method 1
-		sb = new StringBuffer();
-		for (int i = 0; i < byteData.length; i++) {
-			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-		}
+		try {
+			md = MessageDigest.getInstance("SHA-512");
+			md.update(hashGen.getBytes());
+			byte byteData[] = md.digest();
+			//convert the byte to hex format method 1
+			sb = new StringBuffer();
+			for (int i = 0; i < byteData.length; i++) {
+				sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+			}
 
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return sb.toString();
 	}
 

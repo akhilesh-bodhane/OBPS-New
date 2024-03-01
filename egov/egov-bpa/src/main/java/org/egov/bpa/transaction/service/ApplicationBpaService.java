@@ -567,6 +567,12 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         existingBuildingFloorDetailsService.buildExistingBuildingFloorDetails(application);
         buildingFloorDetailsService.buildProposedBuildingFloorDetails(application);
     }
+    
+    @Transactional
+    public void updateApplicationState(String appNo){
+    	System.out.println("updateApplicationState appNo : " + appNo);
+    	applicationBpaRepository.updateApplicationState(appNo);
+    }
 
     @Transactional
     public BpaApplication updateApplication(final BpaApplication application, Long approvalPosition,

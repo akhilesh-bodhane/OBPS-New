@@ -105,13 +105,14 @@ public class CitizenService {
 
     @Transactional
     public void create(Citizen citizen) {
+    	String templateId = null;
         citizen.addRole(roleService.getRoleByName(CITIZEN_ROLE_NAME));
         citizen.updateNextPwdExpiryDate(environmentSettings.userPasswordExpiryInDays());
         citizen.setPassword(passwordEncoder.encode(citizen.getPassword()));
         citizen.setActive(true);
         citizen.setTenantId(ApplicationConstant.STATE_TENANTID);
         citizenRepository.saveAndFlush(citizen);
-        notificationService.sendSMS(citizen.getMobileNumber(), getMessage("citizen.reg.sms"));
+        notificationService.sendSMS(citizen.getMobileNumber(), getMessage("citizen.reg.sms"), templateId);
         notificationService.sendEmail(citizen.getEmailId(), getMessage("citizen.reg.mail.subject"),
                 getMessage("citizen.reg.mail.body", citizen.getName(),
                         format(CITY_LOGIN_URL, getDomainURL()), getMunicipalityName()));
@@ -146,16 +147,18 @@ public class CitizenService {
     @Transactional
     public boolean sendOTPMessage(String mobileNumber) {
         String otp = randomNumeric(5);
+        String templateId = null;
         tokenService.generate(otp, mobileNumber, CITIZEN_REG_SERVICE);
-        notificationService.sendSMS(mobileNumber, getMessage("citizen.reg.otp.sms", otp), HIGH);
+        notificationService.sendSMS(mobileNumber, getMessage("citizen.reg.otp.sms", otp), HIGH,templateId);
         return TRUE;
     }
 
     @Transactional
     public boolean sendOTPMessage(String mobileNumber,String emailId) {
         String otp = randomNumeric(5);
+        String templateId = null;
         tokenService.generate(otp, mobileNumber, CITIZEN_REG_SERVICE);
-        notificationService.sendSMS(mobileNumber, getMessage("citizen.reg.otp.sms", otp), HIGH);
+        notificationService.sendSMS(mobileNumber, getMessage("citizen.reg.otp.sms", otp), HIGH, templateId);
         if(emailId != null) {
             notificationService.sendEmail(emailId, getMessage("citizen.reg.otp.email.sub"), getMessage("citizen.reg.otp.email.body",otp));
         }

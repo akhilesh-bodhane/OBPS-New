@@ -250,42 +250,66 @@ public class Parking extends FeatureProcess {
         ParkingHelper helper = new ParkingHelper();
         // checkDimensionForCarParking(pl, helper);
 
+        System.out.println("Inside process parking method");
         OccupancyTypeHelper mostRestrictiveOccupancy = pl.getVirtualBuilding() != null
                 ? pl.getVirtualBuilding().getMostRestrictiveFarHelper()
                 : null;
-             if(mostRestrictiveOccupancy==null || mostRestrictiveOccupancy.getSubtype()==null)
+             if(mostRestrictiveOccupancy==null || mostRestrictiveOccupancy.getSubtype()==null){
+            	 System.out.println("1st if condition ");
             	 return;
+             }
+            	 
          
-              if(DxfFileConstants.P_N.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
-            	  return;
+             if(DxfFileConstants.P_N.equals(mostRestrictiveOccupancy.getSubtype().getCode())){//is not applicable because parking area is  excluded
+            	 System.out.println("2nd if condition F_SCO");
+            	 return; 
+             }
+            	 
               
-              if(DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
+             if(DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode())){//is not applicable because parking area is  excluded
+            	  System.out.println("3rd if condition F_SCO");
             	  return;
-              
-              if(DxfFileConstants.F_B.equals(mostRestrictiveOccupancy.getSubtype().getCode()))//is not applicable because parking area is  excluded
+             }
+             
+             if(DxfFileConstants.F_B.equals(mostRestrictiveOccupancy.getSubtype().getCode())){//is not applicable because parking area is  excluded
+            	  System.out.println("4th if condition F_B");
             	  return;
-            		  
+             }
+             
         BigDecimal totalBuiltupArea = pl.getOccupancies().stream().map(Occupancy::getBuiltUpArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal coverParkingArea = BigDecimal.ZERO;
         BigDecimal basementParkingArea = BigDecimal.ZERO;
         BigDecimal visitorParking=BigDecimal.ZERO;
+        System.out.println("Total Built up Area : " + totalBuiltupArea);
         for (Block block : pl.getBlocks()) {
             for (Floor floor : block.getBuilding().getFloors()) {
                 coverParkingArea = coverParkingArea.add(floor.getParking().getCoverCars().stream().map(Measurement::getArea)
                         .reduce(BigDecimal.ZERO, BigDecimal::add));
+                System.out.println("Coverage Area Parking : " + coverParkingArea);
+                
                 basementParkingArea = basementParkingArea
                         .add(floor.getParking().getBasementCars().stream().map(Measurement::getArea)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add));
+                System.out.println("Basement Parking Area : " + basementParkingArea);
                 
                 visitorParking = visitorParking
                         .add(floor.getParking().getVisitors().stream().map(Measurement::getArea)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add));
                 
+                System.out.println("Visitor Parking : " + visitorParking);
+                
             }
         }
+        
+        pl.getParkingDetails().getOpenCars().stream().forEach(m -> System.out.println("Get Plan Area : " + m.getArea()));
+        
+        System.out.println("Actual Open Parking Area : " +  pl.getParkingDetails().getOpenCars().stream().map(Measurement::getArea).toString());
+        
         BigDecimal openParkingArea = pl.getParkingDetails().getOpenCars().stream().map(Measurement::getArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        System.out.println("Open Parking Area After Reduce : " + openParkingArea);
 
         BigDecimal totalProvidedCarParkArea = openParkingArea.add(coverParkingArea).add(basementParkingArea);
         helper.totalRequiredCarParking += openParkingArea.doubleValue() / OPEN_ECS;
@@ -293,12 +317,15 @@ public class Parking extends FeatureProcess {
         helper.totalRequiredCarParking += basementParkingArea.doubleValue() / BSMNT_ECS;
         helper.visitorParking +=visitorParking.doubleValue()/OPEN_ECS;
         
+        System.out.println("Helper Visitor Parking : " + helper.visitorParking);
+        
         Double requiredCarParkArea = 0d;
         Double requiredVisitorParkArea = 0d;
 
         BigDecimal providedVisitorParkArea =pl.getParkingDetails().getVisitors().stream().map(Measurement::getArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        System.out.println("Provided Visitor Parking Area : " + providedVisitorParkArea);
      //   validateSpecialParking(pl, helper, totalBuiltupArea);
         
         String plotType=pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE);
@@ -308,6 +335,7 @@ public class Parking extends FeatureProcess {
 
             if (mostRestrictiveOccupancy != null && A_P.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
             	
+            	System.out.println("Inside A_P check condition");
             	BigDecimal plotAreaInMeter=pl.getPlot().getArea();
             	if(pl.getDrawingPreference().getInFeets()) {
             		plotAreaInMeter=CDGAdditionalService.feetToMeterArea(plotAreaInMeter);
@@ -323,24 +351,33 @@ public class Parking extends FeatureProcess {
                 else if (plotAreaInMeter.doubleValue()>=836) {
                     requiredCarParkArea += OPEN_ECS * 6;
                 }
+                System.out.println("Plot Area in Meter : " + plotAreaInMeter);
+                System.out.println("Required Car Parking Area : " + requiredCarParkArea);
                 
             }else if(mostRestrictiveOccupancy != null && DxfFileConstants.A_G.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+            	System.out.println("Inside A_G check condition");
             	double ec=getResidentialGroupedDU(pl);
             	double vec=0d;
             	requiredCarParkArea += OPEN_ECS * ec;
             	
             	vec=(ec*10)/100;
             	requiredVisitorParkArea +=OPEN_ECS * vec;
+            	
+            	System.out.println("Required Visitor Parking :  " + requiredVisitorParkArea);
             }else if(mostRestrictiveOccupancy != null && DxfFileConstants.F_H.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+            	System.out.println("Inside F_H check condition");
             	BigDecimal buildUpArea=pl.getVirtualBuilding().getTotalBuitUpArea();
             	if(pl.getDrawingPreference().getInFeets()) {
             		buildUpArea=CDGAdditionalService.inchToMeterArea(buildUpArea);
             	}
             	BigDecimal ecs=buildUpArea.multiply(new BigDecimal("0.02"));
             	
+            	System.out.println("Builtup Area : " + buildUpArea);
+            	System.out.println("ecs : " + ecs);
             	//requiredCarParkArea
             	
             }else if(mostRestrictiveOccupancy != null && DxfFileConstants.P_R.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+            	System.out.println("Inside P_R check condition");
             	BigDecimal buildUpArea=pl.getVirtualBuilding().getTotalBuitUpArea();
             	BigDecimal plotArea=pl.getPlot().getArea();
             	if(pl.getDrawingPreference().getInFeets()) {
@@ -348,9 +385,12 @@ public class Parking extends FeatureProcess {
             	}
             	 requiredCarParkArea=plotArea.multiply(new BigDecimal("0.2")).doubleValue();
             	
+            	 System.out.println("Plot Area : " + plotArea);
+                 System.out.println("Required Car Parking Area : " + requiredCarParkArea);
             	//requiredCarParkArea
             	
             }else if(mostRestrictiveOccupancy!=null && DxfFileConstants.IT.equals(mostRestrictiveOccupancy.getType().getCode())) {
+            	System.out.println("Inside IT check condition");
             	BigDecimal totalCoveredArea=pl.getVirtualBuilding().getTotalCoverageArea();
             	if(pl.getDrawingPreference().getInFeets()) {
             		totalCoveredArea=CDGAdditionalService.inchToMeterArea(totalCoveredArea);
@@ -361,33 +401,69 @@ public class Parking extends FeatureProcess {
             	if(basementParkingArea.compareTo(totalProvidedCarParkArea.multiply(new BigDecimal("0.80")))<0) {
             		pl.addError("basment parking", "Basement parking should be more then 80% of Total parking area");
             	}
+            	System.out.println("Total Covered Area : " + totalCoveredArea);
+            	System.out.println("Required Car Park Area : " + requiredCarParkArea);
+            	System.out.println("Basement Parking Area : " + basementParkingArea);
             	
             }else if(mostRestrictiveOccupancy!=null && DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancy.getSubtype().getCode())) {
+            	System.out.println("Inside F_SCO check condition");
             	requiredCarParkArea=0d;
             	requiredVisitorParkArea=0d;
             	
+            } else if(mostRestrictiveOccupancy!=null && DxfFileConstants.B.equals(mostRestrictiveOccupancy.getType().getCode())) {
+            	System.out.println("Inside B check condition");
+            	BigDecimal plotArea=pl.getPlot().getArea();
+            	if(pl.getDrawingPreference().getInFeets()) {
+            		plotArea=CDGAdditionalService.feetToMeterArea(plotArea);
+            	}
+            	requiredCarParkArea=plotArea.multiply(new BigDecimal("0.2")).doubleValue();
+            	BigDecimal ecs=plotArea.multiply(new BigDecimal("0.02"));
+            	
+            	System.out.println("Plot Area : " + plotArea);
+            	System.out.println("Builtup Area : " + requiredCarParkArea);
+            	System.out.println("ECS : " + ecs);
             }
             else {
+            	System.out.println("Inside last else condition");
             	BigDecimal totalBuiltupAreaInMeter=totalBuiltupArea;
+            	System.out.println("Total Builtup Area : " + totalBuiltupArea);
             	if(pl.getDrawingPreference().getInFeets()) {
             		totalBuiltupAreaInMeter=CDGAdditionalService.inchToMeterArea(totalBuiltupAreaInMeter);
+            		System.out.println("Total Builtup Area in Meter : " + totalBuiltupAreaInMeter);
             	}
                 BigDecimal builtupArea = totalBuiltupAreaInMeter.subtract(totalBuiltupAreaInMeter.multiply(BigDecimal.valueOf(0.15)));
                 double requiredEcs = builtupArea.divide(BigDecimal.valueOf(100)).multiply(BigDecimal.valueOf(2))
                         .setScale(0, RoundingMode.UP).doubleValue();
-                if (openParkingArea.doubleValue() > 0 && coverParkingArea.doubleValue() > 0)
+                System.out.println("Built up Area : " + builtupArea);
+                System.out.println("Required ecs : " + requiredEcs);
+                if (openParkingArea.doubleValue() > 0 && coverParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 1");
                     requiredCarParkArea += COVER_ECS * requiredEcs;
-                else if (openParkingArea.doubleValue() > 0 && basementParkingArea.doubleValue() > 0)
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                } else if (openParkingArea.doubleValue() > 0 && basementParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 2");
                     requiredCarParkArea += BSMNT_ECS * requiredEcs;
-                else if (coverParkingArea.doubleValue() > 0 && basementParkingArea.doubleValue() > 0)
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                } else if (coverParkingArea.doubleValue() > 0 && basementParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 3");
                     requiredCarParkArea += BSMNT_ECS * requiredEcs;
-                else if (coverParkingArea.doubleValue() > 0)
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                } else if (coverParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 4");
                     requiredCarParkArea += COVER_ECS * requiredEcs;
-                else if (basementParkingArea.doubleValue() > 0)
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                } else if (basementParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 5");
                     requiredCarParkArea += BSMNT_ECS * requiredEcs;
-                else if (openParkingArea.doubleValue() > 0)
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                } else if (openParkingArea.doubleValue() > 0){
+                	System.out.println("Inside condition 6");
                     requiredCarParkArea += OPEN_ECS * requiredEcs;
+                    System.out.println("Required Car Park Area : " + requiredCarParkArea);
+                }
             }
+            
+            
        } 
  //           else {
 //            providedVisitorParkArea = pl.getParkingDetails().getVisitors().stream().map(Measurement::getArea)
@@ -423,6 +499,9 @@ public class Parking extends FeatureProcess {
             totalProvidedCarParkingArea = Util.roundOffTwoDecimal(totalProvidedCarParkArea);
             requiredVisitorParkingArea = Util.roundOffTwoDecimal(BigDecimal.valueOf(requiredVisitorParkArea));
             providedVisitorParkingArea = Util.roundOffTwoDecimal(providedVisitorParkArea);
+            
+            System.out.println("Required Visitor Parking Area 2 : " + requiredVisitorParkingArea);
+            System.out.println("Provided Visitor Parking Area 2 : " + providedVisitorParkingArea);
        }
         
         if(pl.getDrawingPreference().getInFeets()) {
@@ -430,17 +509,22 @@ public class Parking extends FeatureProcess {
         	requiredVisitorParkingArea=CDGAdditionalService.meterToFootArea(new BigDecimal(requiredVisitorParkArea));
         	totalProvidedCarParkingArea=CDGAdditionalService.inchtoFeetArea(totalProvidedCarParkArea);
         	providedVisitorParkingArea=CDGAdditionalService.inchtoFeetArea(providedVisitorParkArea);
+        	System.out.println("Required Visitor Parking Area 3 : " + requiredVisitorParkingArea);
+            System.out.println("Provided Visitor Parking Area 3 : " + providedVisitorParkingArea);
         }
         
         //checkDimensionForTwoWheelerParking(pl, helper);
        //  checkAreaForLoadUnloadSpaces(pl);
         if (totalProvidedCarParkArea.doubleValue() == 0) {
+        	System.out.println("Inside total provided car park area check if condition");
             pl.addError(SUB_RULE_40_2_DESCRIPTION,
                     getLocaleMessage("msg.error.not.defined", SUB_RULE_40_2_DESCRIPTION));
         } else if (requiredCarParkArea > 0 && totalProvidedCarParkingArea.compareTo(requiredCarParkingArea) < 0) {
+        	System.out.println("Inside total provided car park area check else if condition");
             setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
                     CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Not_Accepted.getResultVal());
         } else {
+        	System.out.println("Inside total provided car park area check else condition");
             setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING), SUB_RULE_40_2_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredCarParkingArea),
             		CDGAdditionalService.viewArea(pl, totalProvidedCarParkingArea), Result.Accepted.getResultVal());
         }
@@ -452,16 +536,19 @@ public class Parking extends FeatureProcess {
 				setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
 						SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
 						CDGAdditionalService.viewArea(pl, providedVisitorParkingArea), Result.Accepted.getResultVal());
+				System.out.println("Inside if condition of requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0 method");
 			} else {
 				setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
 						SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
 						CDGAdditionalService.viewArea(pl, providedVisitorParkingArea),
 						Result.Not_Accepted.getResultVal());
+				System.out.println("Inside else condition of requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0 method");
 			}
 		} else if (requiredVisitorParkArea > 0) {
 			setReportOutputDetails(pl, CDGAdditionalService.getByLaws(pl, CDGAConstant.PARKING),
 					SUB_RULE_40_10_DESCRIPTION, CDGAdditionalService.viewArea(pl, requiredVisitorParkingArea),
 					CDGAdditionalService.viewArea(pl, providedVisitorParkingArea), Result.Accepted.getResultVal());
+			System.out.println("Inside else if condition of requiredVisitorParkArea > 0 && providedVisitorParkingArea.compareTo(requiredVisitorParkingArea) < 0 method");
 		}
 
         LOGGER.info("******************Require no of Car Parking***************" + helper.totalRequiredCarParking);
@@ -479,12 +566,16 @@ public class Parking extends FeatureProcess {
     					floorUnitAreaInMeter=CDGAdditionalService.inchToMeterArea(floorUnitAreaInMeter);
     				}
     				if(floorUnitAreaInMeter.compareTo(new BigDecimal("111.48"))<=0) {
+    					System.out.println("Condition 1");
     					ecs=ecs+1.5d;
     				}else if(floorUnitAreaInMeter.compareTo(new BigDecimal("278.70"))<=0) {
+    					System.out.println("Condition 2");
     					ecs=ecs+2d;
     				}else if(floorUnitAreaInMeter.compareTo(new BigDecimal("278.70"))>0) {
+    					System.out.println("Condition 3");
     					ecs=ecs+3d;
     				} 
+    				System.out.println("Floor Unit Area in meter : " + floorUnitAreaInMeter);
     			}
                  
              }

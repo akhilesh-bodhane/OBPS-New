@@ -207,7 +207,7 @@ public class BPASmsAndEmailService {
             }
         }
         if (isSmsEnabled() && stakeHolder.getMobileNumber() != null) {
-            notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
+            //notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
         }
     }
 
@@ -217,7 +217,7 @@ public class BPASmsAndEmailService {
             String message = bpaMessageSource.getMessage(msgKey, new String[] { stakeHolder.getCode(),
                     stakeHolder.getStakeHolderType().getName(), stakeHolder.getComments(), getMunicipalityName() },
                     null);
-            notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
+            //notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
         }
     }
 
@@ -285,7 +285,7 @@ public class BPASmsAndEmailService {
         if (isSmsEnabled() && stakeHolder.getMobileNumber() != null) {
             String message = bpaMessageSource.getMessage(msgKey, new String[] { getMunicipalityName() },
                     null);
-            notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
+            //notificationService.sendSMS(stakeHolder.getMobileNumber(), message);
         }
         if (isEmailEnabled() && stakeHolder.getEmailId() != null) {
             final String body = bpaMessageSource.getMessage(bodyKey,
@@ -368,11 +368,14 @@ public class BPASmsAndEmailService {
         String subject = EMPTY;
         String smsCode;
         String mailCode;
+        String templateId = EMPTY;
         if ((APPLICATION_STATUS_REGISTERED).equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
             if (bpaApplication.isMailPwdRequired() && isNotBlank(password)) {
+            	templateId= "1007423281620931016";
                 smsCode = MSG_KEY_SMS_BPA_APPLN_STC_FALSE;
                 mailCode = BODY_KEY_EMAIL_BPA_APPLN_STC_FALSE;
             } else {
+            	templateId = "1007944990885408163";
                 smsCode = MSG_KEY_SMS_BPA_APPLN_STC_SUBMIT;
                 mailCode = BODY_KEY_EMAIL_BPA_APPLN_NEW;
             }
@@ -382,12 +385,19 @@ public class BPASmsAndEmailService {
                     bpaApplication, SMSEMAILTYPENEWBPAREGISTERED, loginUserName, password);
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_BPA_APPLN_NEW, bpaApplication.getApplicationNumber());
         } else if (CREATEDLETTERTOPARTY.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
+        	templateId = "1007810739779101853";
+        	System.out.println("BPA Letter to party Triggered");
             smsMsg = smsBodyByCodeAndArgsWithType(MSG_KEY_SMS_LETTERTOPARTY, applicantName,
                     bpaApplication, SMSEMAILTYPELETTERTOPARTY, EMPTY, EMPTY);
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_LETTERTOPARTY, applicantName,
                     bpaApplication, SMSEMAILTYPELETTERTOPARTY, EMPTY, EMPTY);
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_LETTERTOPARTY, bpaApplication.getApplicationNumber());
+            if (mobileNo != null && smsMsg != null){
+            	System.out.println("BPA LTP sms : mobile no. : " + mobileNo + " Message : " + smsMsg + " template id : " + templateId);
+                notificationService.sendSMS(mobileNo, smsMsg, templateId);
+            }           	
         } else if (APPLICATION_STATUS_CANCELLED.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
+        	templateId = "1007658066229186439";
             smsMsg = smsBodyByCodeAndArgsWithType(MSG_KEY_SMS_CANCELL_APPLN, applicantName,
                     bpaApplication, APPLICATION_STATUS_CANCELLED, EMPTY, EMPTY);
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_CANCELL_APPLN, applicantName,
@@ -395,6 +405,7 @@ public class BPASmsAndEmailService {
             subject = emailSubjectforEmailByCodeAndArgs(SUBJECT_KEY_EMAIL_CANCELL_APPLN, bpaApplication.getApplicationNumber());
         } else if (BpaConstants.APPLICATION_STATUS_CREATED.equalsIgnoreCase(bpaApplication.getStatus().getCode())
         			|| BpaConstants.APPLICATION_STATUS_SUBMITTED.equalsIgnoreCase(bpaApplication.getStatus().getCode())) {
+        	templateId = "1007423281620931016";
             smsMsg = smsBodyByCodeAndArgsWithType(MSG_KEY_SMS_BPA_APPLN_STC_TRUE, applicantName, bpaApplication,
                     SMSEMAILTYPENEWBPAREGISTERED, loginUserName, password);
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_BPA_APPLN_NEW_PAWD, applicantName,
@@ -403,7 +414,8 @@ public class BPASmsAndEmailService {
                     bpaApplication.getApplicationNumber());
         }
         if (mobileNo != null && smsMsg != null)
-            notificationService.sendSMS(mobileNo, smsMsg);
+        	System.out.println("BPA LTP sms : mobile no. : " + mobileNo + " Message : " + smsMsg + " template id : " + templateId);
+            notificationService.sendSMS(mobileNo, smsMsg, templateId);
         if (email != null && body != null && reportOutput != null && fileName != null) {
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, fileName,
                     reportOutput.getReportOutputData());
@@ -546,7 +558,7 @@ public class BPASmsAndEmailService {
             subject = emailSubjectforEmailForScheduleAppointmentForScrutiny(SUB_KEY_EMAIL_BPA_DOCUMENT_SCRUTINY);
         }
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -630,7 +642,7 @@ public class BPASmsAndEmailService {
             String emailId, ReportOutput reportOutput) {
         String smsMsg = "";
         String body = "";
-
+        String templateId = "1007422580712728748";
         Boolean isPermitFeeExist = application.getDemand().getBaseDemand().subtract(application.getDemand().getAmtCollected())
                 .compareTo(BigDecimal.ZERO) > 0 ? Boolean.TRUE : Boolean.FALSE;
 
@@ -643,7 +655,7 @@ public class BPASmsAndEmailService {
         }
         String subject = buildMsgDetailsForEmailSubjectOnApplicationApproval(application, EMLS_KEY_APRVL);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            notificationService.sendSMS(mobileNumber, smsMsg, templateId);
         }
         if (isNotBlank(emailId) && isNotBlank(body))
             if (isPermitFeeExist)
@@ -688,7 +700,7 @@ public class BPASmsAndEmailService {
         String body = buildMsgDetailsOnPermitOrderGeneration(application, name, EMLB_KEY_PO);
         String subject = buildEmailSubjectOnPermitOrderGeneration(application, EMLS_KEY_PO);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         }
         if (isNotBlank(emailId) && isNotBlank(body)) {
             notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF,
@@ -709,19 +721,20 @@ public class BPASmsAndEmailService {
     //////
 
     public void sendSmsForCollection(BigDecimal totalAmount, BpaApplication application, BillReceiptInfo billRcptInfo) {
+    	String templateId = "1007768507942256240";
         if (isSmsEnabled()) {
             String msg = buildSmsMsgDetailsForCollection(totalAmount, application, billRcptInfo);
             ApplicationStakeHolder applnStakeHolder = application.getStakeHolder().get(0);
             if (applnStakeHolder.getApplication() != null && applnStakeHolder.getApplication().getOwner() != null) {
                 Applicant owner = applnStakeHolder.getApplication().getOwner();
                 if (isNotBlank(owner.getUser().getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(owner.getUser().getMobileNumber(), msg);
+                    notificationService.sendSMS(owner.getUser().getMobileNumber(), msg, templateId);
                 }
             }
             if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
                 StakeHolder stakeHolder = applnStakeHolder.getStakeHolder();
                 if (isNotBlank(stakeHolder.getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(stakeHolder.getMobileNumber(), msg);
+                    notificationService.sendSMS(stakeHolder.getMobileNumber(), msg, templateId);
                 }
                 if (isEmailEnabled() && isNotBlank(stakeHolder.getEmailId()))
                     notificationService.sendEmail(stakeHolder.getEmailId(),
@@ -740,7 +753,7 @@ public class BPASmsAndEmailService {
                             ApplicationThreadLocals.getDomainURL() },
                     null);
             if (isNotBlank(stakeHolder.getMobileNumber()) && isNotBlank(smsMsg)) {
-                notificationService.sendSMS(stakeHolder.getMobileNumber(), smsMsg);
+                //notificationService.sendSMS(stakeHolder.getMobileNumber(), smsMsg);
             }
         }
         if (isEmailEnabled() && isNotBlank(stakeHolder.getEmailId())) {
@@ -818,7 +831,7 @@ public class BPASmsAndEmailService {
                 new String[] { name, noc.getNocType(), noc.getNocType(), getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_DEEMED_APPROVE, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -846,7 +859,7 @@ public class BPASmsAndEmailService {
             }
         }
         if (isNotBlank(mobileNo) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (isNotBlank(email) && isNotBlank(body))
             notificationService.sendEmail(email, subject, body);
     }
@@ -924,7 +937,7 @@ public class BPASmsAndEmailService {
             }
         }
         if (isNotBlank(mobileNo) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (isNotBlank(email) && isNotBlank(body))
             notificationService.sendEmail(email, subject, body);
     }
@@ -1057,7 +1070,7 @@ public class BPASmsAndEmailService {
             subject = emailSubjectforEmailByCodeAndArgs("msg.inspection.app.email.sub", bpaApplication.getApplicationNumber());
         }
         if (mobileNo != null && smsMsg != null)
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (email != null && body != null && reportOutput != null && fileName != null) {
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, fileName,
                     reportOutput.getReportOutputData());
@@ -1171,7 +1184,7 @@ public class BPASmsAndEmailService {
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno , getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_INITIATION, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -1186,7 +1199,7 @@ public class BPASmsAndEmailService {
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno , getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_APPROVE, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -1201,7 +1214,7 @@ public class BPASmsAndEmailService {
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno ,noc.getRemarks(),noc.getNocType(),getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_REJECT, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+           // notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -1216,7 +1229,7 @@ public class BPASmsAndEmailService {
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno ,noc.getRemarks(),noc.getNocType(),getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_SEND_OBSERVATIONS, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -1231,7 +1244,7 @@ public class BPASmsAndEmailService {
                 new String[] { name,noc.getNocApplicationNumber(),bpaApplno , getMunicipalityName() }, null);
         subject = bpaMessageSource.getMessage(SUB_BPA_NOC_RE_INITIATION, new String[] { getMunicipalityName() }, null);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }

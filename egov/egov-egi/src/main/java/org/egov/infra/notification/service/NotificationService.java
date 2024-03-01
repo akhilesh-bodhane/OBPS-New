@@ -67,8 +67,11 @@ import static org.egov.infra.notification.NotificationConstants.FILENAME;
 import static org.egov.infra.notification.NotificationConstants.FILETYPE;
 import static org.egov.infra.notification.NotificationConstants.MESSAGE;
 import static org.egov.infra.notification.NotificationConstants.MOBILE;
+import static org.egov.infra.notification.NotificationConstants.TEMPLATEID;
 import static org.egov.infra.notification.NotificationConstants.PRIORITY;
 import static org.egov.infra.notification.NotificationConstants.SUBJECT;
+import static org.egov.infra.notification.entity.NotificationPriority.MEDIUM;
+import static org.egov.infra.notification.entity.NotificationPriority.HIGH;
 import static org.egov.infra.notification.entity.NotificationPriority.MEDIUM;
 
 @Service
@@ -126,22 +129,25 @@ public class NotificationService {
             });
     }
 
-    public void sendSMS(String mobileNo, String message) {
-        sendSMS(mobileNo, message, MEDIUM);
+    public void sendSMS(String mobileNo, String message,String templateId) {
+        sendSMS(mobileNo, message, MEDIUM, templateId);
     }
 
     public void sendSMS(User user, String templateName, Object... messageValues) {
         sendSMS(user.getMobileNumber(), messageTemplateService.realizeMessage(
-                messageTemplateService.getByTemplateName(templateName), messageValues), MEDIUM);
+                messageTemplateService.getByTemplateName(templateName), messageValues), MEDIUM,null);
     }
 
-    public void sendSMS(String mobileNo, String message, NotificationPriority priority) {
+    public void sendSMS(String mobileNo, String message, NotificationPriority priority,String templateId) {
+    	System.out.println("f");
+    	System.out.println("Mobile No. : " + mobileNo + " Message : " + message + " Template Id : " + templateId);
         if (smsEnabled && isNoneBlank(mobileNo, message))
-            jmsTemplate.send(smsQueue, session -> {
+        	jmsTemplate.send(smsQueue, session -> {
                 MapMessage mapMessage = session.createMapMessage();
                 mapMessage.setString(MOBILE, mobileNo);
                 mapMessage.setString(MESSAGE, message);
                 mapMessage.setString(PRIORITY, priority.name());
+                mapMessage.setString(TEMPLATEID, templateId);
                 return mapMessage;
             });
     }

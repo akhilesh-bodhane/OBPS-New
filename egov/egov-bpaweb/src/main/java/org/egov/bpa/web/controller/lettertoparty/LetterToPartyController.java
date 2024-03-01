@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,12 +67,15 @@ import org.egov.bpa.transaction.notice.LetterToPartyFormat;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyCreateFormatImpl;
 import org.egov.bpa.transaction.notice.impl.LetterToPartyReplyFormatImpl;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
+import org.egov.bpa.transaction.service.BpaDcrService;
+import org.egov.bpa.transaction.service.BuildingFloorDetailsService;
 import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.LettertoPartyDocumentService;
 import org.egov.bpa.transaction.service.LettertoPartyFeeService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.bpa.web.controller.transaction.citizen.CitizenUpdateApplicationController;
 import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.infra.admin.master.entity.User;
@@ -143,6 +147,15 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 
 	@Autowired
 	private DcrRestService drcRestService;
+	
+	@Autowired
+    private BpaDcrService bpaDcrService;
+	
+	@Autowired
+	private BuildingFloorDetailsService buildingFloorDetailsService;
+	
+	@Autowired
+	private CitizenUpdateApplicationController citizenUpdateApplicationController;
 
 	@ModelAttribute("lpReasonList")
 	public List<LpReason> getLpReasonList() {
@@ -399,8 +412,11 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 	@GetMapping("/result/{id}")
 	public String resultLettertoParty(@PathVariable final Long id,
 			final Model model) {
+		System.out.println("-------Inside LTP Result Page --------");
 		model.addAttribute(LETTERTO_PARTY, lettertoPartyService.findById(id));
 		PermitLetterToParty lettertoParty = lettertoPartyService.findById(id);
+		bpaSmsAndEmailService
+		   .sendSMSAndEmailToApplicantForLettertoparty(lettertoParty.getApplication());
 		model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty
 				.getLetterToParty().getLetterToPartyDocuments());
 		model.addAttribute(LETTERTOPARTYLIST, lettertoPartyService
@@ -520,6 +536,25 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 				.getLPFeeDetailsByLetterToParty(lettertoParty));
 		return LETTERTOPARTY_LPREPLY;
 	}
+	
+	public String loadNewForm(final Long id, final Model model){
+		PermitLetterToParty lettertoParty = lettertoPartyService.findById(id);
+		Plan plan = applicationBpaService.getPlanInfo(lettertoParty
+				.getApplication().geteDcrNumber());
+		String areaCategory = plan.isRural() ? BpaConstants.RURAL
+				: BpaConstants.URBAN;
+		model.addAttribute(LETTERTO_PARTY, lettertoParty);
+		model.addAttribute(LETTERTOPARTYDOC_LIST, lettertoParty
+				.getLetterToParty().getLetterToPartyDocuments());
+		model.addAttribute(BPA_APPLICATION, lettertoParty.getApplication());
+		model.addAttribute(
+				CHECK_LIST_DETAIL_LIST,
+				getCheckListDetailList(lettertoParty.getApplication()
+						.getServiceType().getId(), areaCategory));
+		model.addAttribute(LETTERTO_PARTY_FEE_LIST, lettertoPartyFeeService
+				.getLPFeeDetailsByLetterToParty(lettertoParty));
+		return LETTERTOPARTY_LPREPLY;
+	}
 
 	@PostMapping("/lettertopartyreply")
 	public String createLettertoPartyReply(
@@ -531,19 +566,34 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 		processAndStoreLetterToPartyDocuments(lettertoparty);
 		List<LetterToPartyFeeDetails> lpFeeDetails = populateLPFeeDetails(lettertoparty
 				.getLetterToPartyFeeDetails());
-		PermitLetterToParty lettertopartyRes = lettertoPartyService.save(
-				lettertoparty, lettertoparty.getApplication().getState()
-						.getOwnerPosition().getId());
-		lettertoPartyFeeService.saveFeeDetails(lpFeeDetails);
+		
 		System.out.println("Inside letter to party reply method");
 		if(lettertoparty.getLetterToParty().getEdcrRescrutinyNumber()!= null){
 			String prevEdcrNo = bpaApplication.geteDcrNumber();
 			String newEdcrNo = lettertoparty.getLetterToParty().getEdcrRescrutinyNumber();
 			String applicationNumber = bpaApplication.getApplicationNumber();
+			String messageWrongScruitnyNo = "You have entered incorrect E-DCR scrutiny number. Please check and enter the correct scrutiny number."; 
 			System.out.println("Previous EDCR no. : " + prevEdcrNo + " New EDCR No. : " + newEdcrNo);
+			Map<String, String> eDcrApplDetails = bpaDcrService.checkIsEdcrUsedInBpaApplicationlp(newEdcrNo);
+	        if(!eDcrApplDetails.isEmpty())
+	        	if (eDcrApplDetails.get("isExists").equals("true")) {
+		            model.addAttribute("eDcrApplExistsMessage", eDcrApplDetails.get(BpaConstants.MESSAGE));
+		            Long lpId = lettertoparty.getId();
+		            System.out.println("Letter to party id 1 : " + lpId);
+		            return loadNewForm(lpId, model);
+		        } else if(eDcrApplDetails.get("notStartsWith").equals("true")){
+		        	model.addAttribute("eDcrApplExistsMessage", messageWrongScruitnyNo);
+		        	Long lpId = lettertoparty.getId();
+		        	System.out.println("Letter to party id 2 : " + lpId);
+		            return loadNewForm(lpId, model);
+		        }	        
 			applicationBpaService.updateApplicationEdcrNo(newEdcrNo, applicationNumber);
-		}
+		}		
 		
+		PermitLetterToParty lettertopartyRes = lettertoPartyService.save(
+				lettertoparty, lettertoparty.getApplication().getState()
+						.getOwnerPosition().getId());
+		lettertoPartyFeeService.saveFeeDetails(lpFeeDetails);
 		bpaUtils.updatePortalUserinbox(lettertopartyRes.getApplication(), null);
 		redirectAttributes.addFlashAttribute(MESSAGE, messageSource.getMessage(
 				MSG_LETTERTOPARTY_REPLY_SUCCESS, null, null));

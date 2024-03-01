@@ -199,7 +199,7 @@ public class OcSmsAndEmailService {
             subject = emailSubjectforEmailForScheduleAppointmentForScrutiny(SUB_KEY_EMAIL_BPA_DOCUMENT_SCRUTINY);
         }
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         if (isNotBlank(emailId) && isNotBlank(body))
             notificationService.sendEmail(emailId, subject, body);
     }
@@ -316,13 +316,13 @@ public class OcSmsAndEmailService {
             if (applnStakeHolder.getApplication() != null && applnStakeHolder.getApplication().getOwner() != null) {
                 Applicant owner = applnStakeHolder.getApplication().getOwner();
                 if (isNotBlank(owner.getUser().getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(owner.getUser().getMobileNumber(), msg);
+                    //notificationService.sendSMS(owner.getUser().getMobileNumber(), msg);
                 }
             }
             if (applnStakeHolder.getStakeHolder() != null && applnStakeHolder.getStakeHolder().isActive()) {
                 StakeHolder stakeHolder = applnStakeHolder.getStakeHolder();
                 if (isNotBlank(stakeHolder.getMobileNumber()) && isNotBlank(msg)) {
-                    notificationService.sendSMS(stakeHolder.getMobileNumber(), msg);
+                    //notificationService.sendSMS(stakeHolder.getMobileNumber(), msg);
                 }
                 if (isEmailEnabled() && isNotBlank(stakeHolder.getEmailId()))
                     notificationService.sendEmail(stakeHolder.getEmailId(),
@@ -378,11 +378,14 @@ public class OcSmsAndEmailService {
         String subject = EMPTY;
         String smsCode;
         String mailCode;
+        String templateId = EMPTY;
         if ((APPLICATION_STATUS_REGISTERED).equalsIgnoreCase(occupancyCertificate.getStatus().getCode())) {
             if (isNotBlank(password)) {
+            	templateId = "1007388947285956181";
                 smsCode = MSG_KEY_SMS_OC_APPLN_NEW_CZN;
                 mailCode = BODY_KEY_EMAIL_OC_APPLN_NEW_CZN;
             } else {
+            	templateId = "";
                 smsCode = MSG_KEY_SMS_OC_APPLN_NEW;
                 mailCode = BODY_KEY_EMAIL_OC_APPLN_NEW;
             }
@@ -394,6 +397,8 @@ public class OcSmsAndEmailService {
                     occupancyCertificate.getApplicationNumber());
 
         } else if (CREATEDLETTERTOPARTY.equalsIgnoreCase(occupancyCertificate.getStatus().getCode())) {
+        	System.out.println("Letter to Party SMS triggered");
+        	templateId = "1007810739779101853";
             smsMsg = smsBodyByCodeAndArgsWithType(MSG_KEY_SMS_LETTERTOPARTY, applicantName,
                     occupancyCertificate, SMSEMAILTYPELETTERTOPARTY, EMPTY, EMPTY);
             body = emailBodyByCodeAndArgsWithType(BODY_KEY_EMAIL_LETTERTOPARTY, applicantName,
@@ -409,7 +414,8 @@ public class OcSmsAndEmailService {
                     occupancyCertificate.getApplicationNumber());
         }
         if (mobileNo != null && smsMsg != null)
-            notificationService.sendSMS(mobileNo, smsMsg);
+        	System.out.println("LTP sms : Mobile no. : " + mobileNo + " message : " + smsMsg + " templateId : " + templateId);
+            notificationService.sendSMS(mobileNo, smsMsg, templateId);
         if (email != null && body != null && reportOutput != null && fileName != null) {
             notificationService.sendEmailWithAttachment(email, subject, body, APP_PDF, fileName,
                     reportOutput.getReportOutputData());
@@ -482,8 +488,9 @@ public class OcSmsAndEmailService {
         String smsMsg = buildMsgDetailsOnApplicationApproval(oc, name, SMS_KEY_APRVL);
         String body = buildMsgDetailsOnApplicationApproval(oc, name, EMLB_KEY_APRVL);
         String subject = buildMsgDetailsForEmailSubjectOnApplicationApproval(oc, EMLS_KEY_APRVL);
+        String templateId = "1007422580712728748";
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            notificationService.sendSMS(mobileNumber, smsMsg, templateId);
         }
         if (isNotBlank(emailId) && isNotBlank(body)) {
             notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF, OCDEMANDFILENAME + PDFEXTN,
@@ -549,7 +556,7 @@ public class OcSmsAndEmailService {
         String body = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, EMLB_KEY_PO);
         String subject = buildEmailSubjectOnPermitOrderGeneration(occupancyCertificate, EMLS_KEY_PO);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         }
         if (isNotBlank(emailId) && isNotBlank(body)) {
             notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF,
@@ -564,7 +571,7 @@ public class OcSmsAndEmailService {
         String body = buildMsgDetailsOnPermitOrderGeneration(occupancyCertificate, name, EMLB_KEY_FC);
         String subject = buildEmailSubjectOnPermitOrderGeneration(occupancyCertificate, EMLS_KEY_FC);
         if (isNotBlank(mobileNumber) && isNotBlank(smsMsg)) {
-            notificationService.sendSMS(mobileNumber, smsMsg);
+            //notificationService.sendSMS(mobileNumber, smsMsg);
         }
         if (isNotBlank(emailId) && isNotBlank(body)) {
             notificationService.sendEmailWithAttachment(emailId, subject, body, APP_PDF,
@@ -608,7 +615,7 @@ public class OcSmsAndEmailService {
             }
         }
         if (isNotBlank(mobileNo) && isNotBlank(smsMsg))
-            notificationService.sendSMS(mobileNo, smsMsg);
+            //notificationService.sendSMS(mobileNo, smsMsg);
         if (isNotBlank(email) && isNotBlank(body))
             notificationService.sendEmail(email, subject, body);
     }

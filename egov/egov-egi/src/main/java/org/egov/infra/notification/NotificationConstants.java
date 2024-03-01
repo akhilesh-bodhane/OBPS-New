@@ -58,6 +58,7 @@ public final class NotificationConstants {
     public static final String ATTACHMENT = "attachment";
     public static final String FILETYPE = "filetype";
     public static final String FILENAME = "filename";
+    public static final String TEMPLATEID = "templateId";
 
     private NotificationConstants() {
         //only constants

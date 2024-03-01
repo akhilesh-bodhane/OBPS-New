@@ -51,6 +51,7 @@ package org.egov.infra.config.notification.listener;
 import static org.egov.infra.notification.NotificationConstants.MESSAGE;
 import static org.egov.infra.notification.NotificationConstants.MOBILE;
 import static org.egov.infra.notification.NotificationConstants.PRIORITY;
+import static org.egov.infra.notification.NotificationConstants.TEMPLATEID;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -74,7 +75,7 @@ public class SMSNotificationListener {
 		try {
 			final MapMessage emailMessage = (MapMessage) message;
 			smsService.sendSMS(emailMessage.getString(MOBILE), emailMessage.getString(MESSAGE),
-					NotificationPriority.valueOf(emailMessage.getString(PRIORITY)));
+					NotificationPriority.valueOf(emailMessage.getString(PRIORITY)), emailMessage.getString(TEMPLATEID));
 		} catch (final JMSException e) {
 			throw JmsUtils.convertJmsAccessException(e);
 		}

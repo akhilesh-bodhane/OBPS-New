@@ -45,6 +45,14 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+
+<c:if test="${eDcrApplExistsMessage ne null}">
+	<div class="panel-heading custom_form_panel_heading">
+		<div class="panel-title text-center no-float">
+			<strong class="error-msg">${eDcrApplExistsMessage}</strong>
+		</div>
+	</div>
+</c:if>
 <form:form role="form" action="/bpa/lettertoparty/lettertopartyreply"
 	method="post" modelAttribute="permitLetterToParty" id="lettertoPartyReplyform"
 	cssClass="form-horizontal form-groups-bordered"
@@ -440,3 +448,5 @@
 	src="<cdn:url value='/resources/js/app/lettertoparty.js?rnd=${app_release_no}'/> "></script>
 <script
 		src="<cdn:url value='/resources/js/app/document-upload-helper.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/edcr-helper.js?rnd=${app_release_no}'/>"></script>

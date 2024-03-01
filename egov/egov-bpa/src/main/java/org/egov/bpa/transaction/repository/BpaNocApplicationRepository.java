@@ -41,6 +41,7 @@ package org.egov.bpa.transaction.repository;
 
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -50,5 +51,9 @@ public interface BpaNocApplicationRepository extends JpaRepository<BpaNocApplica
 	
 	@Query("select noc from BpaNocApplication noc where noc.nocApplicationNumber =:nocAppNo")
 	BpaNocApplication findByNocApplicationNumber(@Param("nocAppNo") String nocAppNo);
+	
+	@Modifying
+	@Query("update BpaNocApplication noc set noc.status = '62' where noc.nocApplicationNumber =:nocAppNo")
+	void updateNocApplicationStatus(@Param("nocAppNo") String nocAppNo);
 	  
 }

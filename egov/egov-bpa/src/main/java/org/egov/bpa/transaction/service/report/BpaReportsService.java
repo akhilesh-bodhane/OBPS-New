@@ -441,6 +441,9 @@ public class BpaReportsService {
     				 receiptReport.setTransferFee(fee.getTransferFee());
     			 if(fee.getTransferBuildingPlanFee() != null && fee.getTransferBuildingPlanFee() != 0)
     				 receiptReport.setTransferBuildingPlanFee(fee.getTransferBuildingPlanFee());
+    			 if(fee.getTotalPartitionsOnGroundFee()!= null && fee.getTotalPartitionsOnGroundFee() != 0){
+    				 receiptReport.setTotalPartitionsOnGroundFee(fee.getTotalPartitionsOnGroundFee());
+    			 }
 
     		 });
 					receiptReport.setTotalWithoutLaboutCess(
@@ -467,8 +470,9 @@ public class BpaReportsService {
 																																															Double.sum(receiptReport.getNonStdGateFee(),
 																																																	Double.sum(receiptReport.getTransferFee(),
 																																																			Double.sum(receiptReport.getTransferBuildingPlanFee(),
+																																																					Double.sum(receiptReport.getTotalPartitionsOnGroundFee(),
 													Double.sum(receiptReport.getAdditionFee(),
-															receiptReport.getGst())))))))))))))))))))))))));
+															receiptReport.getGst()))))))))))))))))))))))))));
 					receiptReport.setTotal(Double.sum(
 							receiptReport.getTotalWithoutLaboutCess(),
 							receiptReport.getLabourCess()));
@@ -545,6 +549,9 @@ public class BpaReportsService {
 				 receiptReport.setTransferFee(fee.getTransferFee());
 			 if(fee.getTransferBuildingPlanFee() != null && fee.getTransferBuildingPlanFee() != 0)
 				 receiptReport.setTransferBuildingPlanFee(fee.getTransferBuildingPlanFee());
+			 if(fee.getTotalPartitionsOnGroundFee()!= null && fee.getTotalPartitionsOnGroundFee() != 0){
+				 receiptReport.setTotalPartitionsOnGroundFee(fee.getTotalPartitionsOnGroundFee());
+			 }
    		 });
    		 
    		receiptReport.setTotalWithoutLaboutCess(
@@ -571,8 +578,9 @@ public class BpaReportsService {
 																																												Double.sum(receiptReport.getNonStdGateFee(),
 																																														Double.sum(receiptReport.getTransferFee(),
 																																																Double.sum(receiptReport.getTransferBuildingPlanFee(),
+																																																		Double.sum(receiptReport.getTotalPartitionsOnGroundFee(),
 										Double.sum(receiptReport.getAdditionFee(),
-												receiptReport.getGst())))))))))))))))))))))))));
+												receiptReport.getGst()))))))))))))))))))))))))));
    		 /*receiptReport.setTotalWithoutLaboutCess(Double.sum(receiptReport.getScrutinyFee(),
           Double.sum(receiptReport.getSecurityFee(),
           		Double.sum(receiptReport.getRule5(),Double.sum(receiptReport.getAdditionFee(),receiptReport.getGst())))));*/
@@ -972,7 +980,8 @@ public class BpaReportsService {
 				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Niches on the common wall fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS nichesCommonWallFee,"+
 				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Non standard gate fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS nonStdGateFee, "+
 				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Transfer fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS transferFee,"+
-				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Transfer of building plan fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS transferBuildingPlanFee "+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Transfer of building plan fee%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS transferBuildingPlanFee, "+
+				"(CASE WHEN EGCL_COLLECTIONDETAILS.DESCRIPTION like '%Fee for partitions on ground floor on multibays shops%' THEN EGCL_COLLECTIONDETAILS.actualcramounttobepaid END) AS totalPartitionsOnGroundFee "+
 				" FROM EGCL_COLLECTIONDETAILS EGCL_COLLECTIONDETAILS "
     		
     		  );      
@@ -1016,7 +1025,8 @@ public class BpaReportsService {
 
               .addScalar("nonStdGateFee", DoubleType.INSTANCE)
     		  .addScalar("transferFee", DoubleType.INSTANCE)
-    		  .addScalar("transferBuildingPlanFee", DoubleType.INSTANCE)              
+    		  .addScalar("transferBuildingPlanFee", DoubleType.INSTANCE)
+    		  .addScalar("totalPartitionsOnGroundFee", DoubleType.INSTANCE)
               .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
 
       List<ReceiptRegisterReportHelper> feeList = populateQueryResults(feeQuery.list());
@@ -1086,6 +1096,9 @@ public class BpaReportsService {
                 	receiptRegisterReportHelper.setTransferFee(0.0);
                 if (receiptRegisterReportHelper.getTransferBuildingPlanFee()== null)
                 	receiptRegisterReportHelper.setTransferBuildingPlanFee(0.0);
+                if (receiptRegisterReportHelper.getTotalPartitionsOnGroundFee()== null)
+                	receiptRegisterReportHelper.setTotalPartitionsOnGroundFee(0.0);
+                
             
 //            receiptRegisterReportHelper.setTotalWithoutLaboutCess(Double.sum(receiptRegisterReportHelper.getScrutinyFee(),
 //                    Double.sum(receiptRegisterReportHelper.getSecurityFee(),

@@ -54,6 +54,11 @@
         <put-attribute name="page-title" value="title.edcrapplication.new" cascade="true"/>
         <put-attribute name="body" value="/WEB-INF/views/edcrapplication/edcrapplication-new.jsp"/>
     </definition>
+    
+    <definition name="edcrmaster-upload" extends="base_layout">
+        <put-attribute name="page-title" value="title.edcrmaster.upload" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/master/edcrmaster-upload.jsp"/>
+    </definition>
 
     <definition name="edcrapplication-view" extends="base_layout">
         <put-attribute name="page-title" value="title.edcrapplication.view" cascade="true"/>
@@ -100,10 +105,13 @@
         <put-attribute name="body" value="/WEB-INF/views/edcrapplication/view-edcr-pdf.jsp"/>
     </definition>
     <definition name="dcr-acknowledgement" extends="base_layout">
-        <put-attribute name="page-title" value="title.ack.msg"
-                       cascade="true" />
-        <put-attribute name="body"
-                       value="/WEB-INF/views/common/dcr-acknowledgement.jsp" />
+        <put-attribute name="page-title" value="title.ack.msg" cascade="true" />
+        <put-attribute name="body" value="/WEB-INF/views/common/dcr-acknowledgement.jsp" />
+    </definition>
+    
+    <definition name="dcr-master-acknowledgement" extends="base_layout">
+        <put-attribute name="page-title" value="title.edcrmaster.upload" cascade="true" />
+        <put-attribute name="body" value="/WEB-INF/views/common/dcr-master-acknowledgement.jsp" />
     </definition>
     <definition name="oc-plan-scrutiny-new" extends="base_layout">
         <put-attribute name="page-title" value="title.edr.oc.scrutiny.submit" cascade="true"/>

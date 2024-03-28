@@ -58,7 +58,8 @@ public class ReceiptRegisterReportAdaptor implements DataTableJsonAdapter<Receip
             baseRegisterJson.addProperty("nichesCommonWallFee", baseForm.getNichesCommonWallFee());
             baseRegisterJson.addProperty("nonStdGateFee", baseForm.getNonStdGateFee());
             baseRegisterJson.addProperty("transferFee", baseForm.getTransferFee());
-            baseRegisterJson.addProperty("transferBuildingPlanFee", baseForm.getTransferBuildingPlanFee());     
+            baseRegisterJson.addProperty("transferBuildingPlanFee", baseForm.getTransferBuildingPlanFee());   
+            baseRegisterJson.addProperty("totalPartitionsOnGroundFee", baseForm.getTotalPartitionsOnGroundFee());
             
             baseRegisterResultData.add(baseRegisterJson);
         });

@@ -180,13 +180,14 @@ public class GeneralStair extends FeatureProcess {
 
 						}
 					}
-
-					if (block.getBuilding().getFloors().size() > 1 && !stairAbsent.isEmpty()) {
+					
+					
+					/*if ((block.getBuilding().getFloors().size()-1) > 1 && !stairAbsent.isEmpty()) {
 						for (String error : stairAbsent) {
 							errors.put("General Stair " + error, "General stair not defined in " + error);
 							plan.addErrors(errors);
 						}
-					}
+					}*/
 
 					if (block.getBuilding().getFloors().size() > 1 && generalStairCount == 0) {
 						errors.put("General Stair not defined in blk " + block.getNumber(),
@@ -400,7 +401,10 @@ public class GeneralStair extends FeatureProcess {
 			ScrutinyDetail scrutinyDetail3, ScrutinyDetail scrutinyDetailRise, 
 			OccupancyTypeHelper mostRestrictiveOccupancyType, Floor floor, Map<String, Object> typicalFloorValues,
 			org.egov.common.entity.edcr.GeneralStair generalStair) {
+		
+		System.out.println("----------Inside Staircase validate Flight Method ----------");
 		if (!generalStair.getFlights().isEmpty()) {
+			System.out.println("If condition staircase");
 			for (Flight flight : generalStair.getFlights()) {
 				List<Measurement> flightPolyLines = flight.getFlights();
 				List<BigDecimal> flightLengths = flight.getLengthOfFlights();
@@ -476,6 +480,7 @@ public class GeneralStair extends FeatureProcess {
 
 			}
 		} else {
+			System.out.println("Else method staircase");
 			String error = String.format(FLIGHT_NOT_DEFINED_DESCRIPTION, block.getNumber(), floor.getNumber());
 			errors.put(error, error);
 			plan.addErrors(errors);

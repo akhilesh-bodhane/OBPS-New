@@ -163,6 +163,7 @@
 						<th><spring:message code="lbl.nonstd.gate.fee"/></th>
 						<th><spring:message code="lbl.transfer.fee"/></th>
 						<th><spring:message code="lbl.transfer.bp.fee"/></th>
+						<th><spring:message code="lbl.total.partitions.on.ground.fee"/></th>
 						<th><spring:message code="lbl.total.withoutlabourcess"/></th>
                         <th><spring:message code="lbl.total"/></th>
 						                        

@@ -270,9 +270,15 @@
 			},	
 			
 			{
+				"data": "totalPartitionsOnGroundFee",
+				"sClass": "text-left"
+			},
+			
+			{
 				"data": "totalWithoutLabourCess",
 				"sClass": "text-left"
 			},
+						
 			{
 				"data": "total",
 				"sClass": "text-left"

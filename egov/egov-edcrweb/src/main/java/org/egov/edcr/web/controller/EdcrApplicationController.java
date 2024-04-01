@@ -37,7 +37,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.JsonObject;
@@ -50,13 +52,15 @@ public class EdcrApplicationController {
     private static final String MSG_EDCRAPPLICATION_SUCCESS = "msg.edcrapplication.success";
     private static final String REDIRECT_APPLICATION_RESULT = "redirect:/edcrapplication/result/";
     private static final String EDCRAPPLICATION_NEW = "edcrapplication-new";
+    private static final String EDCRMASTER_UPLOAD = "edcrmaster-upload";
     private static final String EDCRAPPLICATION_RESULT = "edcrapplication-result";
     private static final String EDCRAPPLICATION_EDIT = "edcrapplication-edit";
     private static final String EDCRAPPLICATION_VIEW = "edcrapplication-view";
     private static final String EDCRAPPLICATION_SEARCH = "edcrapplication-search";
     private static final String EDCRAPPLICATION_RE_UPLOAD = "edcr-reupload-form";
     private static final String EDCRAPPLICATION_CONVERTED_PDF = "view-edcr-pdf";
-    private static final String DCR_ACKNOWLEDGEMENT = "dcr-acknowledgement";
+    private static final String DCR_ACKNOWLEDGEMENT = "dcr-acknowledgement";    
+    private static final String DCR_MASTER_ACKNOWLEDGEMENT = "dcr-master-acknowledgement";
     private static final String OC_PLAN_SCRUTINY_NEW = "oc-plan-scrutiny-new";
     private static final String OC_PLAN_SCRUTINY_RESUBMIT = "oc-resubmit-plan-scrutiny-form";
     private static final String OC_PLAN_SCRUTINY_RESULT = "oc-plan-scrutiny-result";
@@ -102,7 +106,7 @@ public class EdcrApplicationController {
 
         return EDCRAPPLICATION_NEW;
     }
-
+    
     @PostMapping("/edcrapplication/create")
     public String create(@ModelAttribute final EdcrApplication edcrApplication, final BindingResult errors,
             final Model model, final RedirectAttributes redirectAttrs, HttpServletRequest request) {
@@ -119,6 +123,39 @@ public class EdcrApplicationController {
         redirectAttrs.addFlashAttribute(MESSAGE, messageSource.getMessage(MSG_EDCRAPPLICATION_SUCCESS, null, null));
         return REDIRECT_APPLICATION_RESULT + edcrApplication.getApplicationNumber();
     }
+    
+    @GetMapping("/edcrmaster/new")
+    public String masterFormUpload(final Model model, HttpServletRequest request) {
+        prepareNewForm(model, request);
+        User loginUser = securityUtils.getCurrentUser();
+        ErrorDetail errorDetail = edcrBpaRestService.validateStakeholder(loginUser.getId(), request);
+        if (errorDetail != null && StringUtils.isNotBlank(errorDetail.getErrorMessage())) {
+            if (FEE_PENDING.equalsIgnoreCase(errorDetail.getErrorMessage()))
+                model.addAttribute(USER_ID, loginUser.getId());
+            else
+                model.addAttribute(MESSAGE, errorDetail.getErrorMessage());
+            return DCR_ACKNOWLEDGEMENT;
+        }
+        EdcrApplication edcrApplication = new EdcrApplication();
+        edcrApplication.setArchitectInformation(loginUser.getName());
+
+        model.addAttribute(EDCR_APPLICATION, edcrApplication);
+
+        return EDCRMASTER_UPLOAD;
+    }
+    
+    @PostMapping("/edcrmaster/upload")
+    public String createMaster(@ModelAttribute final EdcrApplication edcrApplication, final BindingResult errors,
+            final Model model, final RedirectAttributes redirectAttrs, HttpServletRequest request) {
+        if (errors.hasErrors()) {
+            prepareNewForm(model, request);
+            return EDCRAPPLICATION_NEW;
+        }
+        System.out.println("Inside edcr upload method");
+        model.addAttribute(MESSAGE, "Master data uploaded successfully");
+        return DCR_MASTER_ACKNOWLEDGEMENT;
+    }
+    
 
     @GetMapping("/edcrapplication/edit/{applicationNumber}")
     public String edit(@PathVariable("id") final String applicationNumber, Model model, HttpServletRequest request) {

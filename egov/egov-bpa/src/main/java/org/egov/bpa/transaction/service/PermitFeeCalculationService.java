@@ -364,6 +364,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 									}
 								} else if (BpaConstants.LABOURCESS
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
+									System.out.println("Inside Labour Ces Condition");
 									BigDecimal totalAmount = getTotalAmountOfLabourCess(application.getBuildingDetail(),
 											plan, mostRestrictiveFarHelper, lpRecifiedAreas);
 									if (totalAmount.compareTo(BigDecimal.ZERO) >= 0) {
@@ -1426,6 +1427,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		} else {
 			multiplier = TWENTY_FIVE_HUNDRED;
 		}
+		
+		System.out.println("Labour Cess Multiplier : " + multiplier);
 
 		if (multiplier.compareTo(BigDecimal.ZERO) > 0) {
 			BigDecimal estimatedAmount = BigDecimal.ZERO;
@@ -1443,14 +1446,17 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 //				}
 				for (Block block : plan.getBlocks()) {
 					for (Floor floor : block.getBuilding().getFloors()) {
+						System.out.println("Floor number : " + floor.getNumber());
 						if (floor.getNumber() >= 0) {
 							estimatedAmount = estimatedAmount
 									.add(getFloorArea(floor, plan.getDrawingPreference()).multiply(SQMT_SQFT_MULTIPLIER)
 											.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							System.out.println("Estimated amount if floor > 0 : " + estimatedAmount);
 						} else {
 							estimatedAmount = estimatedAmount
 									.add(getFloorArea(floor, plan.getDrawingPreference()).multiply(SQMT_SQFT_MULTIPLIER)
 											.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							System.out.println("Estimated amount else floor < 0 : " + estimatedAmount);
 						}
 					}
 				}
@@ -1458,6 +1464,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				for (LetterToPartyFees fees : letterToPartyFees) {
 					estimatedAmount = estimatedAmount.add(fees.getFloorarea().multiply(SQMT_SQFT_MULTIPLIER)
 							.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					System.out.println("Estimated amount if Letter to Party 1 : " + estimatedAmount);
 				}
 			} else if (plan.getDrawingPreference().getInFeets()) {
 //				for (BuildingDetail building : buildingDetails) {
@@ -1474,12 +1481,15 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 
 				for (Block block : plan.getBlocks()) {
 					for (Floor floor : block.getBuilding().getFloors()) {
+						System.out.println("Floor number : " + floor.getNumber());
 						if (floor.getNumber() >= 0) {
 							estimatedAmount = estimatedAmount.add(getFloorArea(floor, plan.getDrawingPreference())
 									.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							System.out.println("Estimated amount if Block => 0 : " + estimatedAmount);
 						} else {
 							estimatedAmount = estimatedAmount.add(getFloorArea(floor, plan.getDrawingPreference())
 									.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+							System.out.println("Estimated amount else Block <= 0 : " + estimatedAmount);
 						}
 					}
 				}
@@ -1487,6 +1497,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				for (LetterToPartyFees fees : letterToPartyFees) {
 					estimatedAmount = estimatedAmount
 							.add(fees.getFloorarea().multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+					System.out.println("Estimated amount if Letter to Party 2 : " + estimatedAmount);
 				}
 			}
 
@@ -1502,6 +1513,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 										.reduce(BigDecimal.ZERO, BigDecimal::add);
 								estimatedAmount = estimatedAmount.add(totalCajjaArea.multiply(SQMT_SQFT_MULTIPLIER)
 										.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+								System.out.println("Floor totalCajjaArea in Meters : " + totalCajjaArea);
+								System.out.println("Floor Estimated Amount ; " + estimatedAmount);
 							}
 						}
 					}
@@ -1511,6 +1524,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
 						estimatedAmount = estimatedAmount.add(totalMumtyArea.multiply(SQMT_SQFT_MULTIPLIER)
 								.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						System.out.println("Floor totalMumtyArea in Meters : " + totalMumtyArea);
+						System.out.println("Floor estimatedAmount : " + estimatedAmount);
 					}
 
 				}
@@ -1527,6 +1542,8 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								estimatedAmount = estimatedAmount
 										.add(totalCajjaArea.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP)
 												.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+								System.out.println("Floor totalCajjaArea in Feets : " + totalCajjaArea);
+								System.out.println("Floor Estimated Amount ; " + estimatedAmount);
 							}
 						}
 					}
@@ -1536,12 +1553,15 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 						BigDecimal totalMumtyArea = b.getStairCoversArea().stream().reduce(BigDecimal::add).get();
 						estimatedAmount = estimatedAmount
 								.add(totalMumtyArea.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+						System.out.println("Floor totalMumtyArea in Feets : " + totalMumtyArea);
+						System.out.println("Floor estimatedAmount : " + estimatedAmount);
 					}
 
 				}
 			}
 			if (estimatedAmount.compareTo(BigDecimal.ZERO) > 0) {
 				totalAmount = totalAmount.add((estimatedAmount.divide(HUNDRED)).setScale(2, BigDecimal.ROUND_HALF_UP));
+				System.out.println("Total Amount : " + totalAmount);
 			}
 		}
 		return totalAmount;
@@ -1686,6 +1706,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			BigDecimal plotAreaInSqm = BigDecimal.ZERO;
 			for (Block block : plan.getBlocks()) {
 				for (Floor floor : block.getBuilding().getFloors()) {
+					System.out.println("Floor number : " + floor.getNumber());
 					for (Occupancy occupancy : floor.getOccupancies()) {
 						if (occupancy != null && occupancy.getFloorArea() != null) {
 							BigDecimal floorAreaInSqm=occupancy.getFloorArea();
@@ -1706,7 +1727,10 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			
 //			totalAmount = plotAreaInSqm.multiply(new BigDecimal("22")).setScale(2,BigDecimal.ROUND_HALF_UP);
 //			totalAmount = plotAreaInSqm.multiply(new BigDecimal("24.2")).setScale(2, BigDecimal.ROUND_HALF_UP);
-			totalAmount = plotAreaInSqm.multiply(new BigDecimal("21")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			//old rate for demolision
+			//totalAmount = plotAreaInSqm.multiply(new BigDecimal("21")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			
+			totalAmount = plotAreaInSqm.multiply(new BigDecimal("22.05")).setScale(2, BigDecimal.ROUND_HALF_UP);
 			System.out.println("Total amount new construction ConstructionAndDemolisionFee : " + totalAmount);
 		} else {
 			BigDecimal demolitionAreaInSqm = plan.getPlanInformation().getDemolitionArea();
@@ -1727,36 +1751,62 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			BigDecimal totalProposedAreaInSqm = BigDecimal.ZERO;
 			for (Block block : plan.getBlocks()) {
 				for (Floor floor : block.getBuilding().getFloors()) {
-					for (Occupancy occupancy : floor.getOccupancies()) {
-						if (occupancy != null && occupancy.getTypeHelper() != null
-								&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
-							BigDecimal floorAreaInSqm = occupancy.getFloorArea();
-							System.out.println("floorAreaInSqm 1 : " + floorAreaInSqm);
-							if (plan.getDrawingPreference().getInFeets()) {
-								floorAreaInSqm = floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
-								System.out.println("floorAreaInSqm 2 after divided by 144 : " + floorAreaInSqm);
-								floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
-								System.out.println("floorAreaInSqm 3 after divided by 10.764 : " + floorAreaInSqm);
+					System.out.println("Floor number : " + floor.getNumber());
+					
+					if(floor.getNumber() >= 0){
+						for (Occupancy occupancy : floor.getOccupancies()) {
+							if (occupancy != null && occupancy.getTypeHelper() != null
+									&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
+								BigDecimal floorAreaInSqm = occupancy.getFloorArea();
+								System.out.println("floorAreaInSqm 1 : " + floorAreaInSqm);
+								if (plan.getDrawingPreference().getInFeets()) {
+									floorAreaInSqm = floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
+									System.out.println("floorAreaInSqm 2 after divided by 144 : " + floorAreaInSqm);
+									floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+									System.out.println("floorAreaInSqm 3 after divided by 10.764 : " + floorAreaInSqm);
+								}
+								totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorAreaInSqm).setScale(2,
+										BigDecimal.ROUND_HALF_UP);
+								System.out.println("totalProposedAreaInSqm : " + totalProposedAreaInSqm);
 							}
-							totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorAreaInSqm).setScale(2,
-									BigDecimal.ROUND_HALF_UP);
-							System.out.println("totalProposedAreaInSqm : " + totalProposedAreaInSqm);
+						}
+					} else {
+						for (Occupancy occupancy : floor.getOccupancies()) {
+							if (occupancy != null && occupancy.getTypeHelper() != null
+									&& !BpaUtils.isOccupancyExcludedFromFar(occupancy.getTypeHelper())) {
+								BigDecimal floorAreaInSqm = occupancy.getBuiltUpArea();
+								System.out.println("floorAreaInSqm 1 : " + floorAreaInSqm);
+								if (plan.getDrawingPreference().getInFeets()) {
+									floorAreaInSqm = floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
+									System.out.println("floorAreaInSqm 2 after divided by 144 : " + floorAreaInSqm);
+									floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
+									System.out.println("floorAreaInSqm 3 after divided by 10.764 : " + floorAreaInSqm);
+								}
+								totalProposedAreaInSqm = totalProposedAreaInSqm.add(floorAreaInSqm).setScale(2,
+										BigDecimal.ROUND_HALF_UP);
+								System.out.println("totalProposedAreaInSqm : " + totalProposedAreaInSqm);
+							}
 						}
 					}
+					
 				}
 			}
 
 			// totalAmount = demolitionAreaInSqm.multiply(new
 			// BigDecimal("176")).setScale(2,BigDecimal.ROUND_HALF_UP);
 			//totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("193.6")).setScale(2, BigDecimal.ROUND_HALF_UP);
-			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("178.5")).setScale(2, BigDecimal.ROUND_HALF_UP);
-			System.out.println("totalAmount on multiply demolitionAreaInSqm with 178.5 : " + totalAmount);
-			BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
-					BigDecimal.ROUND_HALF_UP);
-			System.out.println("leftProposedAreaInSqm 1 : " + leftProposedAreaInSqm);
+			
+			//old rate demolitiona area
+			//totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("178.5")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			
+			totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("187.4")).setScale(2, BigDecimal.ROUND_HALF_UP);
+			System.out.println("totalAmount on multiply demolitionAreaInSqm with 187.4 : " + totalAmount);
+			/*BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
+					BigDecimal.ROUND_HALF_UP);*/
+			/*System.out.println("leftProposedAreaInSqm 1 : " + leftProposedAreaInSqm);
 			if (leftProposedAreaInSqm.compareTo(BigDecimal.ZERO) <= 0) {
 				leftProposedAreaInSqm = BigDecimal.ZERO;
-			}
+			}*/
 //			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("22"))).setScale(2,
 //					BigDecimal.ROUND_HALF_UP);
 //			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("24.2"))).setScale(2,
@@ -1764,9 +1814,17 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			/*totalProposedAreaInSqm = totalProposedAreaInSqm.add(leftProposedAreaInSqm).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
 			System.out.println("totalProposedAreaInSqm after adding leftProposedAreaInSqm : " + totalProposedAreaInSqm);*/
-			totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
+			
+			/*totalAmount = totalAmount.add(leftProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
+					BigDecimal.ROUND_HALF_UP);*/
+			
+			//old rate of c&d
+			/*totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
+					BigDecimal.ROUND_HALF_UP);*/
+			
+			totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("22.05"))).setScale(2,
 					BigDecimal.ROUND_HALF_UP);
-			System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 21 : " + totalAmount);
+			System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 22.05 : " + totalAmount);
 		}
 		return totalAmount;
 	}

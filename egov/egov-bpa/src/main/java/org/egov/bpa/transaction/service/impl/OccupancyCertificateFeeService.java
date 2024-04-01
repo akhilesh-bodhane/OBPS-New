@@ -972,8 +972,7 @@ public class OccupancyCertificateFeeService {
             
             if ((BigDecimal.ZERO.compareTo(totalCajjaAreaDeviation) < 0)){
             	estimatedAmount = estimatedAmount
-                        .add(totalCajjaAreaDeviation.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP)
-                                .multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
+                        .add(totalCajjaAreaDeviation.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
             	System.out.println("inside totalCajjaAreaDeviation labour cess estimatedAmount : " + estimatedAmount);
             } 
             

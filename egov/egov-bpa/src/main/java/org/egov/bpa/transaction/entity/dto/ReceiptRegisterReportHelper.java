@@ -51,7 +51,7 @@ public class ReceiptRegisterReportHelper extends DataTableSearchRequest {
     private Double nonStdGateFee = new Double(0.0);
     private Double transferFee = new Double(0.0);
     private Double transferBuildingPlanFee = new Double(0.0);
-    
+    private Double totalPartitionsOnGroundFee = new Double(0.0);
     
 
     public String getApplicationNumber() {
@@ -352,6 +352,14 @@ public class ReceiptRegisterReportHelper extends DataTableSearchRequest {
 
 	public void setTransferBuildingPlanFee(Double transferBuildingPlanFee) {
 		this.transferBuildingPlanFee = transferBuildingPlanFee;
+	}
+
+	public Double getTotalPartitionsOnGroundFee() {
+		return totalPartitionsOnGroundFee;
+	}
+
+	public void setTotalPartitionsOnGroundFee(Double totalPartitionsOnGroundFee) {
+		this.totalPartitionsOnGroundFee = totalPartitionsOnGroundFee;
 	}
 
 }

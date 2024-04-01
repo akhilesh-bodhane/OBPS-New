@@ -173,9 +173,7 @@
 			{
 				"data": "securityFee",
 				"sClass": "text-left"
-			},	
-			
-			
+			},		
 			
 			
 			{
@@ -262,11 +260,17 @@
 				"data": "transferBuildingPlanFee",
 				"sClass": "text-left"
 			},	
+			
+			{
+				"data": "totalPartitionsOnGroundFee",
+				"sClass": "text-left"
+			},
+			
 			{
 				"data": "totalWithoutLabourCess",
 				"sClass": "text-left"
 			},
-			
+						
 			{
 				"data": "total",
 				"sClass": "text-left"

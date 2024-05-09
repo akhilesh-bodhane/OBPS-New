@@ -48,6 +48,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -58,11 +59,13 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
     @Query("select app from BpaApplication app where app.demand=:demand")
 	BpaApplication findByDemand(@Param("demand") EgDemand demand);
     
-    @Modifying
-    @Query("update BpaApplication app set app.eDcrNumber = :edcrNo where app.applicationNumber =:bpaApplicationNo")
-	void update(@Param("edcrNo") String edcrRescrutinyNumber, @Param("bpaApplicationNo") String applicationBpaNumber);
+    /*@Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("update BpaApplication app set app.eDcrNumber =:edcrNo where app.applicationNumber =:bpaApplicationNo")
+	void update(@Param("edcrNo") String edcrNo, @Param("bpaApplicationNo") String bpaApplicationNo);*/
     
-    @Modifying
+    @Transactional
+    @Modifying(clearAutomatically = true)
     @Query("update BpaApplication app set app.state.id = null where app.applicationNumber =:appNo")
 	void updateApplicationState(@Param("appNo") String appNo);
 

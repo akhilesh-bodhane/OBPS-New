@@ -916,7 +916,11 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
     @Transactional
     public void updateApplicationEdcrNo(String edcrNo, String bpaApplicationNo) {
     	System.out.println("Inside update method of BPA application");
-        applicationBpaRepository.update(edcrNo, bpaApplicationNo);
+    	System.out.println("New Edcr No : " + edcrNo + "BPA Application No : " + bpaApplicationNo);
+    	BpaApplication appBpa = applicationBpaRepository.findByApplicationNumber(bpaApplicationNo);
+    	appBpa.seteDcrNumber(edcrNo);
+    	System.out.println("App BPA : " + appBpa.toString());
+        applicationBpaRepository.save(appBpa);
     }
 
     public BpaApplication findByApplicationNumber(final String applicationNumber) {

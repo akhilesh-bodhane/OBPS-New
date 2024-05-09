@@ -573,7 +573,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 			String newEdcrNo = lettertoparty.getLetterToParty().getEdcrRescrutinyNumber();
 			String applicationNumber = bpaApplication.getApplicationNumber();
 			String messageWrongScruitnyNo = "You have entered incorrect E-DCR scrutiny number. Please check and enter the correct scrutiny number."; 
-			System.out.println("Previous EDCR no. : " + prevEdcrNo + " New EDCR No. : " + newEdcrNo);
+			System.out.println("Previous EDCR no. : " + prevEdcrNo + " New EDCR No. : " + newEdcrNo + "Application Number : " + applicationNumber);
 			Map<String, String> eDcrApplDetails = bpaDcrService.checkIsEdcrUsedInBpaApplicationlp(newEdcrNo);
 	        if(!eDcrApplDetails.isEmpty())
 	        	if (eDcrApplDetails.get("isExists").equals("true")) {

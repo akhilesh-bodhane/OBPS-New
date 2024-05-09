@@ -150,6 +150,9 @@
 			<ul class="tutorial-list color-black" >
 				
 				<li class="bpa-common-text tutorial-item">
+					<a href="/egi/resources/guide/bpaHelpDocumentECBC.jsp" target="_blank"><span class = "color-black bpa-common-text">CHECBC and CHECBCR - 2024</span></a>
+				</li>
+				<li class="bpa-common-text tutorial-item">
 					<a href="/egi/resources/guide/assets/docs/User Manual for Architects.pdf" target="_blank"><span class = "color-black bpa-common-text">User Manual for Architects</span></a>
 				</li>
 				<li class="bpa-common-text tutorial-item">

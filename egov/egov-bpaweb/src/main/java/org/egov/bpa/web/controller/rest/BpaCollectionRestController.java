@@ -132,6 +132,7 @@ public class BpaCollectionRestController {
 			
 			try {
 				response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
+				System.out.println("NIUA Dashboard Response : " + response.toString());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

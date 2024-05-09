@@ -216,24 +216,43 @@ public class PdfQrCodeAppendService {
         String applicationNumber = "APPLICATION NUMBER : " + application.getApplicationNumber();
         Phrase phrase5 = new Phrase(applicationNumber, font);
         ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase5, 17, 27.5f, 0);
+        
+        //Added owner and house/sector no in stamp        
+        if(application.getOwner().getName() != null){
+        	String ownerName = "OWMNER NAME : " + application.getOwner().getName();
+        	Phrase phrase6 = new Phrase(ownerName, font);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase6, 17, 27.5f, 0);
+        }
+        
+        if(application.getPlotNumber() != null){
+        	String houseNo = "HOUSE NUMBER : " + application.getPlotNumber();
+        	Phrase phrase7 = new Phrase(houseNo, font);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase7, 17, 27.5f, 0);
+        }
+        
+        if(application.getSector() != null){
+        	String sector = "SECTOR : " + application.getSector();
+            Phrase phrase8 = new Phrase(sector, font);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase8, 17, 27.5f, 0);
+        }        
 
         Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 3f, Font.NORMAL, BaseColor.BLACK);
 
         String approvedBy = "APPROVED BY :";
-        Phrase phrase6 = new Phrase(approvedBy, font2);
-        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase6, 24, 24.5f, 0);
+        Phrase phrase9 = new Phrase(approvedBy, font2);
+        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase9, 24, 24.5f, 0);
 
         String approverName = bpaNoticeUtil.getApproverName(application).toUpperCase() + "("
                 + bpaNoticeUtil
                         .getApproverDesignation(application.getApproverPosition())
                         .toUpperCase()
                 + ")";
-        Phrase phrase7 = new Phrase(approverName, font);
-        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase7,
+        Phrase phrase10 = new Phrase(approverName, font);
+        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase10,
                 ((pageWidth / 2f) - ((approverName.length() / 2f) * 1.25f)), 21.5f, 0);
         String reviewedBy = "REVIEWED BY :";
-        Phrase phrase8 = new Phrase(reviewedBy, font2);
-        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase8, 24, 18.5f, 0);
+        Phrase phrase11 = new Phrase(reviewedBy, font2);
+        ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase11, 24, 18.5f, 0);
         List<Map<String, String>> reviewersNameAndDesignationMapList = bpaNoticeUtil
                 .getAllReviewersList(application);
         LinkedHashSet<String> reviewersList = new LinkedHashSet<>();
@@ -245,8 +264,8 @@ public class PdfQrCodeAppendService {
         Float y = 18f;
         y = y - 2.5f;
         for (String reviewer : reviewersList) {
-            Phrase phrase9 = new Phrase(reviewer, font);
-            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase9,
+            Phrase phrase12 = new Phrase(reviewer, font);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase12,
                     ((pageWidth / 2f) - ((reviewer.length() / 2f) * 1.25f)), y, 0);
             y = y - 2.5f;
         }

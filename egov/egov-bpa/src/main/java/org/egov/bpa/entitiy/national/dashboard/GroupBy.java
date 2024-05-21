@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 
 
 public class GroupBy {
+	
 	private String groupBy;
 	private List<JSONObject> buckets;
 	
@@ -21,5 +22,10 @@ public class GroupBy {
 	}
 	public void setBuckets(List<JSONObject> buckets) {
 		this.buckets = buckets;
+	}
+	
+	@Override
+	public String toString() {
+		return "GroupBy [groupBy=" + groupBy + ", buckets=" + buckets + "]";
 	}
 }

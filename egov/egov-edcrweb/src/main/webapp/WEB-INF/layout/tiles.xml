@@ -59,6 +59,11 @@
         <put-attribute name="page-title" value="title.edcrmaster.upload" cascade="true"/>
         <put-attribute name="body" value="/WEB-INF/views/master/edcrmaster-upload.jsp"/>
     </definition>
+    
+    <definition name="edcrmaster-search" extends="base_layout">
+        <put-attribute name="page-title" value="title.edcrmaster.search" cascade="true"/>
+        <put-attribute name="body" value="/WEB-INF/views/master/edcrmaster-search.jsp"/>
+    </definition>
 
     <definition name="edcrapplication-view" extends="base_layout">
         <put-attribute name="page-title" value="title.edcrapplication.view" cascade="true"/>

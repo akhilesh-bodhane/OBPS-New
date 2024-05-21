@@ -215,10 +215,20 @@
 					</div>
 				</c:if>
             </div>
-            <div class="buttonbottom" align="center">
+
+			<div class="buttonbottom" align="center">
                 <table>
                     <tr>
-                        <td><input type="button" name="button2" id="button2" value="Close"
+						<td><c:if
+								test="${bpaApplication.status.code eq 'Order Issued to Applicant' || bpaApplication.status.code eq 'Revocation cancelled'}">
+								<td><a
+									href="/bpa/application/generatepermitorder/${bpaApplication.applicationNumber}"
+									target="popup" class="btn btn-primary"
+									onclick="window.open('/bpa/application/generatepermitorder/${bpaApplication.applicationNumber}','popup','width=1100,height=700'); return false;">
+										<spring:message code='lbl.btn.print.permit.order' />
+								</a>&nbsp;</td>
+							</c:if></td>
+						<td><input type="button" name="button2" id="button2" value="Close"
                                    class="btn btn-default" onclick="window.close();"/>
                         </td>
                     </tr>

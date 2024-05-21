@@ -16,7 +16,7 @@ public class Metrics {
 
 	@JsonProperty("ocPlansScrutinized")
 	private int ocPlansScrutinized;
-	
+
 	@JsonProperty("plansScrutinized")
 	private int plansScrutinized;
 	
@@ -224,6 +224,32 @@ public class Metrics {
 
 	public void setPlansScrutinized(int plansScrutinized) {
 		this.plansScrutinized = plansScrutinized;
+	}
+	
+	@Override
+	public String toString() {
+		return "Metrics [ocPlansScrutinized=" + ocPlansScrutinized
+				+ ", plansScrutinized=" + plansScrutinized
+				+ ", applicationsSubmitted=" + applicationsSubmitted
+				+ ", ocSubmitted=" + ocSubmitted + ", ocIssued=" + ocIssued
+				+ ", landAreaAppliedInSystemForBPA="
+				+ landAreaAppliedInSystemForBPA + ", averageDaysToIssuePermit="
+				+ averageDaysToIssuePermit + ", averageDaysToIssueOC="
+				+ averageDaysToIssueOC + ", todaysClosedApplicationsOC="
+				+ todaysClosedApplicationsOC
+				+ ", todaysCompletedApplicationsWithinSLAOC="
+				+ todaysCompletedApplicationsWithinSLAOC
+				+ ", todaysClosedApplicationsPermit="
+				+ todaysClosedApplicationsPermit
+				+ ", todaysCompletedApplicationsWithinSLAPermit="
+				+ todaysCompletedApplicationsWithinSLAPermit
+				+ ", slaComplianceOC=" + slaComplianceOC
+				+ ", slaCompliancePermit=" + slaCompliancePermit
+				+ ", applicationsWithDeviation=" + applicationsWithDeviation
+				+ ", averageDeviation=" + averageDeviation
+				+ ", ocWithDeviation=" + ocWithDeviation
+				+ ", todaysCollection=" + todaysCollection + ", permitsIssued="
+				+ permitsIssued + "]";
 	}
 
 }

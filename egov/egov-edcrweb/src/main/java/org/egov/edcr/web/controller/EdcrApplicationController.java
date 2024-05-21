@@ -17,6 +17,7 @@ import org.egov.commons.service.OccupancyService;
 import org.egov.edcr.entity.ApplicationType;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
+import org.egov.edcr.entity.EdcrMasterData;
 import org.egov.edcr.entity.EdcrPdfDetail;
 import org.egov.edcr.service.EdcrApplicationService;
 import org.egov.edcr.service.EdcrBpaRestService;
@@ -49,6 +50,7 @@ public class EdcrApplicationController {
     private static final String USER_ID = "userId";
     private static final String FEE_PENDING = "Fee Pending";
     private static final String EDCR_APPLICATION = "edcrApplication";
+    private static final String EDCR_MASTER_DATA = "edcrMasterData";
     private static final String MSG_EDCRAPPLICATION_SUCCESS = "msg.edcrapplication.success";
     private static final String REDIRECT_APPLICATION_RESULT = "redirect:/edcrapplication/result/";
     private static final String EDCRAPPLICATION_NEW = "edcrapplication-new";
@@ -56,7 +58,8 @@ public class EdcrApplicationController {
     private static final String EDCRAPPLICATION_RESULT = "edcrapplication-result";
     private static final String EDCRAPPLICATION_EDIT = "edcrapplication-edit";
     private static final String EDCRAPPLICATION_VIEW = "edcrapplication-view";
-    private static final String EDCRAPPLICATION_SEARCH = "edcrapplication-search";
+	private static final String EDCRAPPLICATION_SEARCH = "edcrapplication-search";
+	private static final String EDCRAPPLICATION_MASTER_SEARCH = "edcrmaster-search";
     private static final String EDCRAPPLICATION_RE_UPLOAD = "edcr-reupload-form";
     private static final String EDCRAPPLICATION_CONVERTED_PDF = "view-edcr-pdf";
     private static final String DCR_ACKNOWLEDGEMENT = "dcr-acknowledgement";    
@@ -307,6 +310,15 @@ public class EdcrApplicationController {
         return EDCRAPPLICATION_SEARCH;
 
     }
+    
+   /* @GetMapping("/edcrapplication/searchMaster")
+    public String searchMaster(Model model, HttpServletRequest request) {
+    	EdcrMasterData edcrMasterData = new EdcrMasterData();
+        prepareNewForm(model, request);
+        model.addAttribute(EDCR_MASTER_DATA, edcrMasterData);
+        return EDCRAPPLICATION_MASTER_SEARCH;
+
+    }*/
 
     @GetMapping(value = "/edcrapplication/get-information/{applicationNumber}/{applicationType}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

@@ -166,7 +166,23 @@
 				</div>
 			</c:if>
 		</div>
-
+		<c:choose>
+			<c:when
+				test="${occupancyCertificate.status.code eq 'Order Issued to Applicant'}">
+				<div class="buttonbottom" align="center">
+					<a
+						href="/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+						target="popup" class="btn btn-primary"
+						onclick="window.open('/bpa/application/occupancy-certificate/generate-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+						Print Provisional Occupancy Certificate </a> <a
+						href="/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}"
+						target="popup" class="btn btn-primary"
+						onclick="window.open('/bpa/application/occupancy-certificate/generate-final-occupancy-certificate/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
+						Print Occupancy Certificate </a> <!-- <input type="button" name="button2"
+						value="Close" class="btn btn-default" onclick="window.close();" /> -->
+				</div>
+			</c:when>
+		</c:choose>
 		<div class="buttonbottom" align="center">
 			<input type="button" name="button2" value="Close"
 				class="btn btn-default" onclick="window.close();" />

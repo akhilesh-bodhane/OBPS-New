@@ -5,6 +5,7 @@ package org.egov.bpa.entitiy.national.dashboard;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NationalDashboardResponse {
+
 	@JsonProperty("date")
 	private String date;
 	
@@ -81,6 +82,13 @@ public class NationalDashboardResponse {
 
 	public void setMetrics(Metrics metrics) {
 		this.metrics = metrics;
+	}
+	
+	@Override
+	public String toString() {
+		return "NationalDashboardResponse [date=" + date + ", module=" + module
+				+ ", ward=" + ward + ", ulb=" + ulb + ", region=" + region
+				+ ", state=" + state + ", metrics=" + metrics + "]";
 	}
 
 }

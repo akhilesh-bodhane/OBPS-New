@@ -63,6 +63,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.config.reports.properties.BpaApplicationReportProperties;
+import org.egov.bpa.transaction.entity.PermitCoApplicant;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.PermitRenewalConditions;
 import org.egov.bpa.transaction.entity.PermitRenewalNotice;
@@ -138,13 +139,29 @@ public class RenewalNoticeUtil {
             reportParams.putAll(getUlbDetails());
             reportParams.put("refusalFormat", bpaApplicationReportProperties.getPermitRefusalFormat());
             reportParams.put("applicationNumber", permitRenewal.getApplicationNumber());
+            if(permitRenewal.getParent().getCoApplicants()== null){
+            	reportParams.put("coApplicantName", "");
+            } else {
+            	reportParams.put("applicantName", permitRenewal.getParent().getOwner().getName());     
+                String coApplicantNames = "";        
+                if(null != permitRenewal.getParent().getCoApplicants()) {
+                	for(PermitCoApplicant coApplicant:permitRenewal.getParent().getCoApplicants()) {
+                		coApplicantNames = coApplicantNames + coApplicant.getCoApplicant().getName() + ",";
+                	}
+                }
+                reportParams.put("coApplicantName", coApplicantNames);
+            }            
             reportParams.put("rejectionReasons", buildRejectionReasons(permitRenewal));
             reportParams.put("approverName", getRejector(permitRenewal));
             reportParams.put("permitOrderTitle", "GENERAL BUILDING PERMIT RENEWAL");
             reportParams.put("subHeaderTitle", "Building permit renewal to construct,");
             reportParams.put("renewalNumber", permitRenewal.getRenewalNumber());
             reportParams.put("expiryDate",DateUtils.toDefaultDateFormat(permitRenewal.getPermitRenewalExpiryDate()));
-        
+            reportParams.put("extensionDate",DateUtils.toDefaultDateFormat(permitRenewal.getPlanExtensionDate()));
+            reportParams.put("plotNo", permitRenewal.getParent().getPlotNumber());
+            reportParams.put("sector", permitRenewal.getParent().getSector());
+            reportParams.put("totalPendingAmt", permitRenewal.getDemand().getBaseDemand());
+            
             ReportRequest reportInput = new ReportRequest(rejectionfilename, permitRenewal, reportParams);
             reportOutput = reportService.createReport(reportInput);
             saveRenewalNotice(permitRenewal, fileName, reportOutput, null, rejectionNoticeType);

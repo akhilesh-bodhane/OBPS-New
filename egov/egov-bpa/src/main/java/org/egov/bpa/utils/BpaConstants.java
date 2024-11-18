@@ -98,6 +98,7 @@ public class BpaConstants {
 	public static final String OC_MIC = "OC-MIC";// Minor Internal Changes
 	public static final String A_P = "A-P";// Plotted
 	public static final String A_G = "A-G";// Grouped
+	public static final String A_H = "A-H";// High Rises Building
 	public static final String F_CIR = "F-CIR";// commercial in rural
 
 	public static final String A_SQ = "A-SQ";// Servant quarter
@@ -288,6 +289,10 @@ public class BpaConstants {
 	public static final String WF_BA_FINAL_APPROVAL_PROCESS_INITIATED = "Final Approval Process initiated";
 	public static final String WF_BA_AEE_APPLICATION_APPROVAL_PENDING = "AEE Application Approval Pending";
 	public static final String WF_BA_FORWARD_TO_SDO_BUILDING = "Forward to SDO Building";
+	
+	public static final String WF_REVERT_TO_AEO = "Reverted to Assistant Estate Officer";
+	public static final String WF_REVERT_TO_BA = "Revert to Building Assistant";
+	public static final String WF_REVERTED_TO_AEO = "Reverted to Building Assistant";
 
 	public static final String WF_BA_APPROVED_WITH_FEE_COLLECTION_PENDING = "Approved with fee collection pending";
 	public static final String WF_BA_FORWARDED_TO_GENERATE_OCCUPANCY_CERTIFICATE = "Forwarded to generate Occupancy Certificate";
@@ -398,6 +403,7 @@ public class BpaConstants {
 	public static final String IMAGE_CONTEXT_PATH = "/egi";
 	public static final String BPADEMANDNOTICETITLE = "Demand Notice";
 	public static final String DEMANDNOCFILENAME = "bpaDemandNotice";
+	public static final String PERMITRENEWALDEMANDNOCFILENAME = "permitrenewaldemandnotice";
 	public static final String STRING_BPA_FUCNTION_CODE = "5100";
 	public static final String ROLE_BILLCOLLECTOR = "Collection Operator";
 	public static final String BPA_DEPARTMENT_CODE = "BPA_DEPARTMENT_CODE";
@@ -559,6 +565,7 @@ public class BpaConstants {
 	public static final String BPAREVOCATIONFILENAME = "bparevocationnotice";
 	public static final String PERMIT_ORDER_NOTICE_TYPE = "PermitOrder";
 	public static final String BPA_DEMAND_NOTICE_TYPE = "DemandNotice";
+	public static final String PERMIRENEWAL_DEMAND_NOTICE_TYPE = "PermitRenewalDemandNotice";
 	public static final String BPA_REJECTION_NOTICE_TYPE = "RejectionNotice";
 	public static final String BPA_REVOCATION_NOTICE_TYPE = "RevocationNotice";
 	public static final String OCREJECTIONFILENAME = "ocrejectionnotice";

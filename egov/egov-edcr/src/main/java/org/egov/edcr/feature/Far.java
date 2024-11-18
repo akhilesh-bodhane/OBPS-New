@@ -52,6 +52,7 @@ import static org.egov.edcr.constants.DxfFileConstants.A2;
 import static org.egov.edcr.constants.DxfFileConstants.A_AF;
 import static org.egov.edcr.constants.DxfFileConstants.A_P;
 import static org.egov.edcr.constants.DxfFileConstants.A_G;
+import static org.egov.edcr.constants.DxfFileConstants.A_H;
 import static org.egov.edcr.constants.DxfFileConstants.A_FH;
 import static org.egov.edcr.constants.DxfFileConstants.A_R;
 import static org.egov.edcr.constants.DxfFileConstants.A_SA;
@@ -1744,6 +1745,8 @@ public class Far extends FeatureProcess {
 			return codesMap.get(A_P);
 		else if (codes.contains(A_G))
 			return codesMap.get(A_G);
+		else if (codes.contains(A_H))
+			return codesMap.get(A_H);
 		else if (codes.contains(DxfFileConstants.B_HEI))
 			return codesMap.get(DxfFileConstants.B_HEI);
 		else if (codes.contains(DxfFileConstants.B_EC))

@@ -61,10 +61,12 @@ public class FeeCalculationUtils {
 				}
 
 				if (plan.isRural()) {
+					System.out.println("Plan Rural");
 					for (Long serviceTypeId : serviceTypeList) {
 						for (BpaFeeMapping bpaFee : bpaFeeMappingService.getPermitFeesByAppType(application,
 								serviceTypeId)) {
 							if (bpaFee != null) {
+								System.out.println("BPA Fee Common : " + bpaFee.getBpaFeeCommon().getDescription());
 								if (BpaConstants.SECURITY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal securityFeeAmount = permitFeeCalculationService
@@ -121,6 +123,7 @@ public class FeeCalculationUtils {
 				}
 
 				for (Long serviceTypeId : serviceTypeList) {
+					System.out.println("Plan Urban");
 					BpaFeeMapping bpaGST = null;
 					for (BpaFeeMapping fee : bpaFeeMappingService.getPermitFeesByAppType(application, serviceTypeId)) {
 						if (fee != null) {
@@ -155,7 +158,7 @@ public class FeeCalculationUtils {
 										}
 									}
 								}
-
+								System.out.println("BPA Fee Common : " + bpaFee.getBpaFeeCommon().getDescription());
 								if (BpaConstants.SECURITY_FEE
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal securityFeeAmount = permitFeeCalculationService.getTotalSecurityFee(plan,

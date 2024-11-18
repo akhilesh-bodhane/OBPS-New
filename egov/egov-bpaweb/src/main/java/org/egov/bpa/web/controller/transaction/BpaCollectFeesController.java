@@ -140,6 +140,7 @@ public class BpaCollectFeesController {
         PermitRenewal renewal = permitRenewalService.findByApplicationNumber(applicationCode);
         Boolean bpaDuePresent = bpaUtils.checkAnyTaxIsPendingToCollect(renewal.getDemand());
         if (bpaDuePresent) {
+        	System.out.println("Inside bill generation method");
             return genericBillGeneratorService.generateBillAndRedirectToCollection(renewal, model);
         } else {
             model.addAttribute(MESSAGE, messageSource.getMessage(MSG_NOAMOUNT_TOCOLLECT, null, null));

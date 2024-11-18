@@ -55,7 +55,8 @@ public class GateService  extends FeatureProcess {
 				expectedWidthMainGate=new BigDecimal("4.88");
 				expectedHeightWicketGate=new BigDecimal("1.80");
 				expectedWidthWicketGate=new BigDecimal("1.13");
-			}else if(DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
+			}else if(DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode()) 
+					|| DxfFileConstants.A_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 				expectedHeighMainGate=new BigDecimal("1.8");
 				expectedWidthMainGate=new BigDecimal("4.88");
 				expectedHeightWicketGate=new BigDecimal("1.80");

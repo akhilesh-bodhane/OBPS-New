@@ -88,6 +88,9 @@ public class PermitRenewalIndex {
 
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String permitApplication;
+    
+    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+    private String bpaApplicationNumber;
 
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String applicationNumber;
@@ -106,11 +109,11 @@ public class PermitRenewalIndex {
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String status;
 
-    @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+    /*@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
     private String constructionStatus;
 
     @Field(type = FieldType.String, index = FieldIndex.not_analyzed)
-    private String constructionStage;
+    private String constructionStage;*/
 
     @Field(type = FieldType.Double)
     private BigDecimal permitRenewalFee;
@@ -182,7 +185,15 @@ public class PermitRenewalIndex {
         this.applicationNumber = applicationNumber;
     }
 
-    public Date getApplicationDate() {
+    public String getBpaApplicationNumber() {
+		return bpaApplicationNumber;
+	}
+
+	public void setBpaApplicationNumber(String bpaApplicationNumber) {
+		this.bpaApplicationNumber = bpaApplicationNumber;
+	}
+
+	public Date getApplicationDate() {
         return applicationDate;
     }
 
@@ -206,13 +217,13 @@ public class PermitRenewalIndex {
         this.renewalApprovalDate = renewalApprovalDate;
     }
 
-    public String getConstructionStatus() {
+    /*public String getConstructionStatus() {
         return constructionStatus;
     }
 
     public void setConstructionStatus(String constructionStatus) {
         this.constructionStatus = constructionStatus;
-    }
+    }*/
 
     public String getStatus() {
         return status;
@@ -222,13 +233,13 @@ public class PermitRenewalIndex {
         this.status = status;
     }
 
-    public String getConstructionStage() {
+    /*public String getConstructionStage() {
         return constructionStage;
     }
 
     public void setConstructionStage(String constructionStage) {
         this.constructionStage = constructionStage;
-    }
+    }*/
 
     public BigDecimal getPermitRenewalFee() {
         return permitRenewalFee;

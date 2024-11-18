@@ -68,6 +68,7 @@
 			<input type="hidden" id="workFlowAction" name="workFlowAction" />
 			<input type="hidden" id="permitRenewal" name="permitRenewal" value="${permitRenewal.id}" />
 			<input type="hidden" id="id" name="id" value="${permitRenewal.id}" />
+
 			<div class="panel panel-primary" data-collapsed="0">
 
 				<div class="panel-heading custom_form_panel_heading">
@@ -104,10 +105,10 @@
 						<label class="col-sm-3 control-label text-right"><spring:message
 								code="lbl.build.plan.permission.date" /> </label>
 						<div class="col-sm-3 add-margin">
-							<input type="text" name="planPermissionDate"
-								id="planPermissionDate"
+							<input type="text" name="bpaPlanApprovalDate"
+								id="bpaPlanApprovalDate"
 								class="form-control planPermissionDate resetValues"
-								value="${permitRenewal.parent.planPermissionDate}"
+								<%-- value="${permitRenewal.bpaPlanApprovalDate}" --%>
 								readonly="readonly">
 						</div>
 						<label class="col-sm-2 control-label text-right"><spring:message
@@ -135,6 +136,27 @@
 								readonly="readonly">
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label text-right"><spring:message
+								code="lbl.applicant.mobilenumber" /> </label>
+						<div class="col-sm-3 add-margin">
+							<input type="text" name="mobileNumber" id="mobileNumber"
+								class="form-control mobileNumber resetValues"
+								value="${permitRenewal.parent.owner.user.mobileNumber}"
+								readonly="readonly">
+						</div>
+						<label class="col-sm-2 control-label text-right"><spring:message
+								code="lbl.applicationnumber" /> </label>
+						<div class="col-sm-3 add-margin">
+							<input type="text" name="bpaApplicationNumber"
+								id="bpaApplicationNumber"
+								class="form-control bpaApplicationNumber resetValues"
+								value="${permitRenewal.parent.applicationNumber}"
+								readonly="readonly">
+						</div>
+					</div>
+
 					<div class="form-group">
 						<label class="col-sm-3 control-label text-right"><spring:message
 								code="lbl.extentin.sqmts" /> </label>
@@ -147,13 +169,28 @@
 						<label class="col-sm-2 control-label text-right"><spring:message
 								code="lbl.exist.permit.expiry" /> </label>
 						<div class="col-sm-3 add-margin">
-							<input type="text" name="" id="existingPermitExpiryDate"
-								class="form-control existingPermitExpiryDate resetValues"
-								value="${permitExpiryDate}" readonly="readonly">
+							<form:input path="planValidTillDate"
+								class="form-control datepicker" data-date-end-date="0d"
+								id="planValidTillDate" data-inputmask="'mask': 'd/m/y'"
+								disabled="true" />
+							<form:errors path="planValidTillDate"
+								cssClass="add-margin error-msg" />
 						</div>
 					</div>
 
 					<div class="form-group">
+						<label class="col-sm-3 control-label text-right"><spring:message
+								code="lbl.plan.extension.date" /> </label>
+						<div class="col-sm-3 add-margin">
+							<form:input path="planExtensionDate"
+								class="form-control datepicker" id="planExtensionDate"
+								data-inputmask="'mask': 'd/m/y'" />
+							<form:errors path="planExtensionDate"
+								cssClass="add-margin error-msg" />
+						</div>
+					</div>
+
+					<%-- <div class="form-group">
 						<label class="col-sm-3 control-label text-right constStages"><spring:message
 								code="lbl.cons.stages" /><span class="mandatory"></span></label>
 						<div class="col-sm-3 add-margin">
@@ -179,7 +216,7 @@
 							<form:errors path="constructionStatus"
 								cssClass="add-margin error-msg" />
 						</div>
-					</div>
+					</div> --%>
 
 					<div class="form-group">
 						<label class="col-sm-3 control-label text-right"><spring:message
@@ -217,14 +254,14 @@
 
 				</div>
 			</div>
-			<div class="panel panel-primary" data-collapsed="0">
+			<%-- <div class="panel panel-primary" data-collapsed="0">
 				<jsp:include page="permit-renewal-disclaimer.jsp" />
-			</div>
+			</div> --%>
 			<div align="center">
-				<form:button type="submit" id="prSave" class="btn btn-primary"
+				<%-- <form:button type="submit" id="prSave" class="btn btn-primary"
 					value="Save">
 					<spring:message code="lbl.save" />
-				</form:button>
+				</form:button> --%>
 				<form:button type="submit" id="prSubmit" class="btn btn-primary"
 					value="Submit">
 					<spring:message code="lbl.submit" />

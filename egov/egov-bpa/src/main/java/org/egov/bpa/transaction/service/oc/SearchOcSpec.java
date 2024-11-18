@@ -39,6 +39,10 @@
  */
 package org.egov.bpa.transaction.service.oc;
 
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_APPROVED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REGISTERED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SUBMITTED;
+
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.Slot;
@@ -47,6 +51,7 @@ import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.demand.model.EgDemand;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -62,6 +67,7 @@ public class SearchOcSpec {
 	final private static Long RURAL_APPLICATION_NUMBER = 4L;
 	final private static String OC_END_STATE = "Order Issued to Applicant";
 	final private static String CANCELLED = "Cancelled";
+	private static final String STATUS = "status";
     public static Specification<OccupancyCertificate> search(final SearchBpaApplicationForm requestForm) {
         return (root, query, builder) -> {
             final Predicate predicate = builder.conjunction();
@@ -250,6 +256,48 @@ public class SearchOcSpec {
                   .add(builder.equal(bpaApplication.get("sector"), requestForm.getSector()));
 		
 	}
+    
+    private static void commonSpecForOCSearchDemand(SearchBpaApplicationForm requestForm, Root<OccupancyCertificate> root,
+			CriteriaBuilder builder, Predicate predicate) {
+        Join<OccupancyCertificate, BpaApplication> bpaApplication = root.join("parent");
+//      Join<BpaApplication, SiteDetail> siteDetailJoin = bpaApplication.join("siteDetail");
+//      Join<SiteDetail, Boundary> adminBoundaryJoin = siteDetailJoin.join("adminBoundary");
+      if (requestForm.getApplicationNumber() != null)
+          predicate.getExpressions()
+                           .add(builder.like(root.get("applicationNumber"), requestForm.getApplicationNumber()+"%"));
+      if (requestForm.getApplicantName() != null)
+          predicate.getExpressions()
+                  .add(builder.like(bpaApplication.get("owner").get("name"),
+                          requestForm.getApplicantName()+"%"));
+//      if(requestForm.getStatusId() !=null)
+//      	predicate.getExpressions()
+//          .add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+      
+      if (requestForm.getServiceTypeId() != null)
+          predicate.getExpressions()
+                  .add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
+      if (requestForm.getServiceType() != null)
+          predicate.getExpressions()
+                  .add(builder.equal(bpaApplication.get("serviceType").get("description"),
+                          requestForm.getServiceTypeId()));
+
+      
+      if (requestForm.getFromDate() != null)
+          predicate.getExpressions()
+                  .add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
+      if (requestForm.getToDate() != null)
+          predicate.getExpressions()
+                  .add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
+      
+      if (requestForm.getPlotNumber() != null)
+          predicate.getExpressions()
+                  .add(builder.equal(bpaApplication.get("plotNumber"), requestForm.getPlotNumber()));
+      
+      if (requestForm.getSector() != null)
+          predicate.getExpressions()
+                  .add(builder.equal(bpaApplication.get("sector"), requestForm.getSector()));
+		
+	}
 
 	public static Specification<OCSlot> hasDocumentScrutinyPendingSpecificationForOc(final SearchBpaApplicationForm requestForm) {
         return (root, query, builder) -> {
@@ -359,5 +407,20 @@ public class SearchOcSpec {
 	            return predicate;
 	        };
 	}
+	
+	public static Specification<OccupancyCertificate> hasCollectionPendingSpecification(final SearchBpaApplicationForm requestForm) {
+        return (root, query, builder) -> {
+            final Predicate predicate = builder.conjunction();
+            predicate.getExpressions()
+                    .add(root.get(STATUS).get("code").in(APPLICATION_STATUS_SUBMITTED, APPLICATION_STATUS_REGISTERED,
+                            APPLICATION_STATUS_APPROVED));
+            Join<OccupancyCertificate, EgDemand> demandJoin = root.join("demand");
+            predicate.getExpressions().add(builder.lessThan(demandJoin.get("amtCollected"), demandJoin.get("baseDemand")));
+            commonSpecForOCSearchDemand(requestForm, root, builder, predicate);
+            //siteDetailSpec(requestForm, root, builder, predicate);
+            query.distinct(true);
+            return predicate;
+        };
+    }
 
 }

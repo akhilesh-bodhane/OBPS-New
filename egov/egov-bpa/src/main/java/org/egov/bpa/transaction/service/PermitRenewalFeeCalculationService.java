@@ -42,6 +42,15 @@ package org.egov.bpa.transaction.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,11 +82,74 @@ public class PermitRenewalFeeCalculationService {
     private BpaNoticeUtil bpaNoticeUtil;
 
     public Map<String, BigDecimal> calculateRenewalFee(final PermitRenewal permitRenewal) {
+    	System.out.println("Inside Calculation Fee Method Permit Renewal");
         Map<String, BigDecimal> demandReasonAndAmt = new ConcurrentHashMap<>();
         BigDecimal totalPermitRenewalFee = BigDecimal.ZERO;
         BigDecimal totalPermitFee = getPermitFee(permitRenewal);
         String demandReasonCode = "PEF";
-        Date permitExpiryDate = DateUtils.toDateUsingDefaultPattern(bpaNoticeUtil.calculateCertExpryDate(
+        
+        
+        
+        /*try {
+			Date planValidTillDate1 = sdf.parse(permitRenewal.getPlanValidTillDate().toString());
+			Date planExtensionDate1 = sdf.parse(permitRenewal.getPlanExtensionDate().toString());
+			long difference_In_Time = planExtensionDate1.getTime() - planValidTillDate1.getTime();
+			long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+			System.out.println("difference_In_Days : " + difference_In_Days);
+			long finalDays = difference_In_Days/365;
+	        finalDays = finalDays * 1000;
+	        System.out.println("finalDays : " + finalDays);
+	        if(finalDays < 0 && finalDays > 1){
+	        	finalDays = 1;
+	        }
+	        System.out.println("finalDays : " + finalDays);
+	        totalPermitRenewalFee = totalPermitRenewalFee.add(BigDecimal.valueOf(finalDays));
+	        System.out.println("totalPermitRenewalFee : " + totalPermitRenewalFee);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+        
+        System.out.println("Plan Valid Till Date : " + permitRenewal.getPlanValidTillDate());
+        System.out.println("Plan Extension Date : " + permitRenewal.getPlanExtensionDate());
+        
+        LocalDate planValidTillDate = LocalDate.parse(permitRenewal.getPlanValidTillDate().toString());//LocalDate.parse(permitRenewal.getPlanValidTillDate().toString());
+        int validTillYear = planValidTillDate.getYear();
+        System.out.println("validTillYear : " + validTillYear);
+        
+        LocalDate planExtensionDate = LocalDate.parse(permitRenewal.getPlanExtensionDate().toString());//LocalDate.parse(permitRenewal.getPlanExtensionDate().toString());
+        int extensionYear = planExtensionDate.getYear();
+        System.out.println("extensionYear : " + extensionYear);
+        
+        System.out.println("planValidTillDate : " + planValidTillDate);
+        System.out.println("planExtensionDate : " + planExtensionDate);
+         
+        //long noOfDays = Duration.between(planExtensionDate, planValidTillDate).toDays();
+        //int yearExtension = (extensionYear - validTillYear) * 1000;  
+        
+        
+        long daysBetween = ChronoUnit.DAYS.between(planValidTillDate, planExtensionDate);
+        System.out.println("daysBetween : " + daysBetween);
+        
+        long finalDays = daysBetween/365;
+        System.out.println("finalDays : " + finalDays);
+        if(finalDays < 0 && finalDays > 1){
+        	finalDays = 1;
+        }
+        
+        if(daysBetween%365 != 0){
+        	System.out.println("Inside modular method");
+        	finalDays = finalDays + 1;
+        }
+        
+        finalDays = finalDays * 1000;
+        
+        System.out.println("finalDays : " + finalDays);
+        totalPermitRenewalFee = totalPermitRenewalFee.add(BigDecimal.valueOf(finalDays));
+        System.out.println("totalPermitRenewalFee : " + totalPermitRenewalFee);
+        
+        demandReasonCode = "PRF";
+        /*Date permitExpiryDate = DateUtils.toDateUsingDefaultPattern(bpaNoticeUtil.calculateCertExpryDate(
                 new DateTime(permitRenewal.getParent().getPlanPermissionDate()),
                 permitRenewal.getParent().getServiceType().getValidity()));
         Date minAllowedRenewalDate = DateUtils.toDateUsingDefaultPattern(
@@ -96,7 +168,99 @@ public class PermitRenewalFeeCalculationService {
             totalPermitRenewalFee = totalPermitFee.multiply(permitRenewalFeeInPercent)
                     .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             demandReasonCode = "PRF";
+        }*/
+        demandReasonAndAmt.put(demandReasonCode, totalPermitRenewalFee.setScale(0, BigDecimal.ROUND_HALF_UP));
+        return demandReasonAndAmt;
+    }
+    
+    public Map<String, BigDecimal> calculateRenewalFeeNew(final PermitRenewal permitRenewal, String planValidTillDate1, String planExtensionDate1) {
+    	System.out.println("Inside Calculation Fee Method Permit Renewal");
+        Map<String, BigDecimal> demandReasonAndAmt = new ConcurrentHashMap<>();
+        BigDecimal totalPermitRenewalFee = BigDecimal.ZERO;
+        BigDecimal totalPermitFee = getPermitFee(permitRenewal);
+        String demandReasonCode = "PEF";
+        
+        
+        
+        /*try {
+			Date planValidTillDate1 = sdf.parse(permitRenewal.getPlanValidTillDate().toString());
+			Date planExtensionDate1 = sdf.parse(permitRenewal.getPlanExtensionDate().toString());
+			long difference_In_Time = planExtensionDate1.getTime() - planValidTillDate1.getTime();
+			long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+			System.out.println("difference_In_Days : " + difference_In_Days);
+			long finalDays = difference_In_Days/365;
+	        finalDays = finalDays * 1000;
+	        System.out.println("finalDays : " + finalDays);
+	        if(finalDays < 0 && finalDays > 1){
+	        	finalDays = 1;
+	        }
+	        System.out.println("finalDays : " + finalDays);
+	        totalPermitRenewalFee = totalPermitRenewalFee.add(BigDecimal.valueOf(finalDays));
+	        System.out.println("totalPermitRenewalFee : " + totalPermitRenewalFee);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+        
+        System.out.println("Plan Valid Till Date1 : " + planValidTillDate1);
+        System.out.println("Plan Extension Date1 : " + planExtensionDate1);
+        
+        LocalDate planValidTillDate = LocalDate.parse(planValidTillDate1);//LocalDate.parse(permitRenewal.getPlanValidTillDate().toString());
+        int validTillYear = planValidTillDate.getYear();
+        System.out.println("validTillYear : " + validTillYear);
+        
+        LocalDate planExtensionDate = LocalDate.parse(planExtensionDate1);//LocalDate.parse(permitRenewal.getPlanExtensionDate().toString());
+        int extensionYear = planExtensionDate.getYear();
+        System.out.println("extensionYear : " + extensionYear);
+        
+        System.out.println("planValidTillDate : " + planValidTillDate);
+        System.out.println("planExtensionDate : " + planExtensionDate);
+         
+        //long noOfDays = Duration.between(planExtensionDate, planValidTillDate).toDays();
+        //int yearExtension = (extensionYear - validTillYear) * 1000;  
+        
+        
+        long daysBetween = ChronoUnit.DAYS.between(planValidTillDate, planExtensionDate);
+        System.out.println("daysBetween : " + daysBetween);
+        
+        long finalDays = daysBetween/365;
+        System.out.println("finalDays : " + finalDays);
+        if(finalDays < 0 && finalDays > 1){
+        	finalDays = 1;
         }
+        
+        if(daysBetween%365 != 0){
+        	System.out.println("Inside modular method");
+        	finalDays = finalDays + 1;
+        }
+        
+        finalDays = finalDays * 1000;
+        
+        System.out.println("finalDays : " + finalDays);
+        totalPermitRenewalFee = totalPermitRenewalFee.add(BigDecimal.valueOf(finalDays));
+        System.out.println("totalPermitRenewalFee : " + totalPermitRenewalFee);
+        
+        demandReasonCode = "PRF";
+        /*Date permitExpiryDate = DateUtils.toDateUsingDefaultPattern(bpaNoticeUtil.calculateCertExpryDate(
+                new DateTime(permitRenewal.getParent().getPlanPermissionDate()),
+                permitRenewal.getParent().getServiceType().getValidity()));
+        Date minAllowedRenewalDate = DateUtils.toDateUsingDefaultPattern(
+                permitRenewalService.getMinAllowedDateForRenewalPriorExpiry(permitRenewal.getParent()));
+        Date maxAllowedRenewalDate = DateUtils.toDateUsingDefaultPattern(
+                permitRenewalService.getMaxAllowedDateForRenewalAfterExpiry(permitRenewal.getParent()));
+        if (permitRenewal.getApplicationDate().compareTo(minAllowedRenewalDate) >= 0
+                && permitRenewal.getApplicationDate().compareTo(permitExpiryDate) <= 0) {
+            BigDecimal permitExtensionFee = appConfigUtil.getPermitExtensionFeeInPercentage();
+            totalPermitRenewalFee = totalPermitFee.multiply(permitExtensionFee)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            demandReasonCode = "PEF";
+        } else if (permitRenewal.getApplicationDate().after(permitExpiryDate)
+                && permitRenewal.getApplicationDate().compareTo(maxAllowedRenewalDate) <= 0) {
+            BigDecimal permitRenewalFeeInPercent = appConfigUtil.getPermitRenewalFeeInPercentage();
+            totalPermitRenewalFee = totalPermitFee.multiply(permitRenewalFeeInPercent)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            demandReasonCode = "PRF";
+        }*/
         demandReasonAndAmt.put(demandReasonCode, totalPermitRenewalFee.setScale(0, BigDecimal.ROUND_HALF_UP));
         return demandReasonAndAmt;
     }

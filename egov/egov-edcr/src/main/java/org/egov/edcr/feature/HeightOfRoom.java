@@ -272,7 +272,8 @@ public class HeightOfRoom extends FeatureProcess {
 		if (DxfFileConstants.NEW_CONSTRUCTION.equals(plan.getServiceType())
 				|| DxfFileConstants.RECONSTRUCTION.equals(plan.getServiceType())) {
 			if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())
-					|| DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode()))
+					|| DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+						|| DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode()))
 				flage = true;
 		}
 

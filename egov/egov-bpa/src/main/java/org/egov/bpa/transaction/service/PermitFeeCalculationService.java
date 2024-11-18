@@ -1395,6 +1395,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				|| BpaConstants.F_BBM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.F_TS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.F_PP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.F_CFI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.F_CD.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.G_GBAC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.G_GBZP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -1423,7 +1424,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			multiplier = THOUSAND;
 		} else if (BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.A_G.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
-				|| BpaConstants.F_CFI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.A_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
 			multiplier = FIFTEEN_HUNDRED;
 		} else {
@@ -1727,18 +1728,89 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			for (Block block : plan.getBlocks()) {
 				for (Floor floor : block.getBuilding().getFloors()) {
 					System.out.println("Floor number : " + floor.getNumber());
-					for (Occupancy occupancy : floor.getOccupancies()) {
-						if (occupancy != null && occupancy.getFloorArea() != null) {
-							BigDecimal floorAreaInSqm=occupancy.getFloorArea();
-							System.out.println("floorAreaInSqm 1 : " + floorAreaInSqm);
-							if (plan.getDrawingPreference().getInFeets()) {
-								floorAreaInSqm = floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2, RoundingMode.HALF_UP);
-								System.out.println("floorAreaInSqm 2 after divide by 144 : " + floorAreaInSqm);
-								floorAreaInSqm = floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2, RoundingMode.HALF_UP);
-								System.out.println("floorAreaInSqm 3 after divide by 10.764 : " + floorAreaInSqm);
+					/* for (Occupancy occupancy : floor.getOccupancies()) { */
+					/*
+					 * if (occupancy != null && occupancy.getFloorArea() !=
+					 * null) { BigDecimal
+					 * floorAreaInSqm=occupancy.getFloorArea();
+					 * System.out.println("floorAreaInSqm 1 : " +
+					 * floorAreaInSqm); if
+					 * (plan.getDrawingPreference().getInFeets()) {
+					 * floorAreaInSqm =
+					 * floorAreaInSqm.divide(SQINCH_SQFT_DIVIDER, 2,
+					 * RoundingMode.HALF_UP);
+					 * System.out.println("floorAreaInSqm 2 after divide by 144 : "
+					 * + floorAreaInSqm); floorAreaInSqm =
+					 * floorAreaInSqm.divide(SQMT_SQFT_MULTIPLIER, 2,
+					 * RoundingMode.HALF_UP); System.out.println(
+					 * "floorAreaInSqm 3 after divide by 10.764 : " +
+					 * floorAreaInSqm); } plotAreaInSqm =
+					 * plotAreaInSqm.add(floorAreaInSqm);
+					 * System.out.println("plotAreaInSqm : " + plotAreaInSqm); }
+					 */
+					if (floor.getNumber() >= 0) {
+						for (Occupancy occupancy : floor.getOccupancies()) {
+							if (occupancy != null
+									&& occupancy.getTypeHelper() != null
+									&& !BpaUtils
+											.isOccupancyExcludedFromFar(occupancy
+													.getTypeHelper())) {
+								BigDecimal floorAreaInSqm = occupancy
+										.getFloorArea();
+								System.out.println("floorAreaInSqm 1 : "
+										+ floorAreaInSqm);
+								if (plan.getDrawingPreference().getInFeets()) {
+									floorAreaInSqm = floorAreaInSqm.divide(
+											SQINCH_SQFT_DIVIDER, 2,
+											RoundingMode.HALF_UP);
+									System.out
+											.println("floorAreaInSqm 2 after divided by 144 : "
+													+ floorAreaInSqm);
+									floorAreaInSqm = floorAreaInSqm.divide(
+											SQMT_SQFT_MULTIPLIER, 2,
+											RoundingMode.HALF_UP);
+									System.out
+											.println("floorAreaInSqm 3 after divided by 10.764 : "
+													+ floorAreaInSqm);
+								}
+								plotAreaInSqm = plotAreaInSqm
+										.add(floorAreaInSqm).setScale(2,
+												BigDecimal.ROUND_HALF_UP);
+								System.out.println("plotAreaInSqm : "
+										+ plotAreaInSqm);
 							}
-							plotAreaInSqm = plotAreaInSqm.add(floorAreaInSqm);
-							System.out.println("plotAreaInSqm : " + plotAreaInSqm);
+						}
+					} else {
+						for (Occupancy occupancy : floor.getOccupancies()) {
+							if (occupancy != null
+									&& occupancy.getTypeHelper() != null
+									&& !BpaUtils
+											.isOccupancyExcludedFromFar(occupancy
+													.getTypeHelper())) {
+								BigDecimal floorAreaInSqm = occupancy
+										.getBuiltUpArea();
+								System.out.println("floorAreaInSqm 1 : "
+										+ floorAreaInSqm);
+								if (plan.getDrawingPreference().getInFeets()) {
+									floorAreaInSqm = floorAreaInSqm.divide(
+											SQINCH_SQFT_DIVIDER, 2,
+											RoundingMode.HALF_UP);
+									System.out
+											.println("floorAreaInSqm 2 after divided by 144 : "
+													+ floorAreaInSqm);
+									floorAreaInSqm = floorAreaInSqm.divide(
+											SQMT_SQFT_MULTIPLIER, 2,
+											RoundingMode.HALF_UP);
+									System.out
+											.println("floorAreaInSqm 3 after divided by 10.764 : "
+													+ floorAreaInSqm);
+								}
+								plotAreaInSqm = plotAreaInSqm
+										.add(floorAreaInSqm).setScale(2,
+												BigDecimal.ROUND_HALF_UP);
+								System.out.println("totalProposedAreaInSqm : "
+										+ plotAreaInSqm);
+							}
 						}
 					}
 				}
@@ -2106,6 +2178,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		} else if (BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
 			multiplier = TEN;
 		} else if (BpaConstants.A_G.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+				|| BpaConstants.A_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.IT_MCL.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.IT_MCM.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
 				|| BpaConstants.IT_MCS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())

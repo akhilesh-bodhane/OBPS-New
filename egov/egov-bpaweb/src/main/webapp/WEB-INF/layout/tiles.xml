@@ -374,6 +374,12 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/application/search-collect-fee.jsp" />
 	</definition>
+	<definition name="search-collect-fee-oc" extends="base_layout">
+		<put-attribute name="page-title"
+			value="title.collect.fee" cascade="true" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/application/search-collect-fee-oc.jsp" />
+	</definition>
 	<definition name="view-fees" extends="base_layout">
 		<put-attribute name="page-title"
 			value="title.update.fee" cascade="true" />
@@ -1511,6 +1517,10 @@
 	<definition name="search-bpa-task-urban" extends="base_layout">
 		<put-attribute name="page-title" value="title.search.appln" cascade="true" />
 		<put-attribute name="body" value="/WEB-INF/views/application/search-bpa-task-urban.jsp" />
+	</definition>
+	<definition name="public-dashboard" extends="base_layout">
+		<put-attribute name="page-title" value="title.dashboard" cascade="true" />
+		<put-attribute name="body" value="/WEB-INF/views/application/public-dashboard.jsp" />
 	</definition>
 	<definition name="search-oc-task-urban" extends="base_layout">
 		<put-attribute name="page-title" value="title.search.oc.appln" cascade="true" />

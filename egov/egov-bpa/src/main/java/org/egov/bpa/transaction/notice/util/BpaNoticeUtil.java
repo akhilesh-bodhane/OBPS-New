@@ -488,14 +488,14 @@ public class BpaNoticeUtil {
 			for (Map.Entry<SubOccupancy, BigDecimal> innerMap : bpaUtils
 					.getBlockWiseOccupancyAndBuiltupArea(bpaApplication.getBuildingDetail()).entrySet()) {
 				totalBuiltUpArea = totalBuiltUpArea.append(innerMap.getKey().getDescription()).append(" : ")
-						.append(innerMap.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)).append(" Sq.Mtrs, ");
+						.append(innerMap.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)).append(" Sq.ft, ");
 			}
 			reportParams.put("totalBuiltUpArea", totalBuiltUpArea.toString());
 		} else {
 			reportParams.put("totalBuiltUpArea",
 					!bpaApplication.getBuildingDetail().isEmpty()
 							? bpaApplication.getBuildingDetail().get(0).getTotalPlintArea()
-									.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + " Sq.Mtrs, "
+									.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + " Sq.ft, "
 							: EMPTY);
 		}
 		if (bpaApplication.getIsOneDayPermitApplication())

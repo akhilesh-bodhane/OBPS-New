@@ -126,6 +126,7 @@ public class DxfFileConstants {
 	// sub occupancies code
 	public static final String A_P = "A-P";// Plotted --220
 	public static final String A_G = "A-G";// Grouped --223
+	public static final String A_H = "A-H";// High Rise Buildings --220
 
 	public static final String F_CIR = "F-CIR";// commercial in rural
 
@@ -404,6 +405,7 @@ public class DxfFileConstants {
 	public static final Integer COLOUR_CODE_LEACHPIT_TO_PLOT_BNDRY = 9;
 	public static final int OCCUPANCY_A1_COLOR_CODE = 25;
 	public static final int OCCUPANCY_A2_COLOR_CODE = 3;
+	public static final int OCCUPANCY_A3_COLOR_CODE = 27;
 	public static final int OCCUPANCY_B1_COLOR_CODE = 4;
 	public static final int OCCUPANCY_B2_COLOR_CODE = 14;
 	public static final int OCCUPANCY_B3_COLOR_CODE = 15;

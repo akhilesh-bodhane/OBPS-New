@@ -161,6 +161,7 @@ public class CompoundWallService extends FeatureProcess {
 		}
 		
 		else if(DxfFileConstants.A_G.equals(mostRestrictiveFarHelper.getSubtype().getCode())
+		|| DxfFileConstants.A_H.equals(mostRestrictiveFarHelper.getSubtype().getCode())
 		|| DxfFileConstants.F_H.equals(mostRestrictiveFarHelper.getSubtype().getCode())
 		|| DxfFileConstants.F_M.equals(mostRestrictiveFarHelper.getSubtype().getCode())
 		|| DxfFileConstants.F_CFI.equals(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -179,7 +180,8 @@ public class CompoundWallService extends FeatureProcess {
 		|| DxfFileConstants.IP.equals(mostRestrictiveFarHelper.getType().getCode())
 				) {
 			exceptedFrontMaxFrontHeight=ONE_POINT_ONETHREE;
-			exceptedFrontMaxRearHeight=ONE_POINT_ONETHREE;
+			//exceptedFrontMaxRearHeight=ONE_POINT_ONETHREE;
+			exceptedFrontMaxRearHeight=ONE_POINT_EIGHT;
 			if(pl.getDrawingPreference().getInFeets()) {
 				exceptedFrontMaxFrontHeight=CDGAdditionalService.meterToFoot(exceptedFrontMaxFrontHeight.toString());
 				exceptedFrontMaxFrontHeight=exceptedFrontMaxFrontHeight.add(CDGADeviationConstant.COMPOUND_WALL_DEVIATION_FEET_1_0_13);

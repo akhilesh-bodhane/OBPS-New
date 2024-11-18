@@ -147,7 +147,7 @@ public class PermitOrderFormatImpl implements PermitApplicationNoticesFormat {
             List<BpaNotice> permitOrder = bpaApplication.getBpaNotice().stream()
                     .filter(bpaNotice1 -> bpaNotice1.getNoticeType().equalsIgnoreCase("PermitOrder"))
                     .collect(Collectors.toList());
-            if (!permitOrder.isEmpty()) {
+            if(!permitOrder.isEmpty()) {
                 final FileStoreMapper fmp = permitOrder.get(0).getNoticeFileStore();
                 Path path = fileStoreService.fetchAsPath(fmp.getFileStoreId(), APPLICATION_MODULE_TYPE);
                 reportOutput.setReportOutputData(Files.readAllBytes(path));

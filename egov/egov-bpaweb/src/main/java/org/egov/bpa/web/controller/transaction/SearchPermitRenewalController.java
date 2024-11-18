@@ -113,7 +113,7 @@ public class SearchPermitRenewalController extends BpaGenericApplicationControll
                 new DateTime(permitRenewal.getParent().getPlanPermissionDate()),
                 permitRenewal.getParent().getServiceType().getValidity()));
         model.addAttribute("permitRenewal", permitRenewal);
-        model.addAttribute("constStages", constructionStagesService.findByRequiredForPermitRenewal());
+        //model.addAttribute("constStages", constructionStagesService.findByRequiredForPermitRenewal());
         model.addAttribute(APPLICATION_HISTORY,
                 workflowHistoryService.getHistory(Collections.emptyList(), permitRenewal.getCurrentState(),
                         permitRenewal.getStateHistory()));

@@ -866,6 +866,7 @@ public class OccupancyCertificateFeeService {
                 || BpaConstants.F_TS.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.F_PP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.F_CD.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.F_CFI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.G_GBAC.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.G_GBZP.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.P_D.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
@@ -893,7 +894,7 @@ public class OccupancyCertificateFeeService {
             multiplier = THOUSAND;
         } else if (BpaConstants.A_P.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.A_G.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
-                || BpaConstants.F_CFI.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
+                || BpaConstants.A_H.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())
                 || BpaConstants.F_SCO.equalsIgnoreCase(mostRestrictiveFarHelper.getSubtype().getCode())) {
             multiplier = FIFTEEN_HUNDRED;
         } else {

@@ -588,10 +588,17 @@ public class BpaAjaxController {
             jsonObj.addProperty("dcrNumber", application.geteDcrNumber());
             jsonObj.addProperty("applicantName", application.getApplicantName());
             jsonObj.addProperty("applicantAddress", application.getOwner().getAddress());
+            jsonObj.addProperty("bpaApplicationNumber", application.getApplicationNumber());
             jsonObj.addProperty("applicationNumber", application.getApplicationNumber());
+            jsonObj.addProperty("mobileNumber", application.getOwner().getUser().getMobileNumber());
             jsonObj.addProperty("planPermissionNumber", application.getPlanPermissionNumber());
             jsonObj.addProperty("planPermissionDate", DateUtils.toDefaultDateFormat(application.getPlanPermissionDate()));
-            jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
+            //jsonObj.addProperty("planPermissionDate", DateUtils.toDefaultDateFormat(application.getBuildingPlanApprovalDate()));
+            if(application.getPlanValidTillDate() == null){
+            	jsonObj.addProperty("permitExpiryDate", bpaNoticeUtil.calculateCertExpryDate(new DateTime(application.getPlanPermissionDate()), application.getServiceType().getValidity()));
+            } else {
+            	jsonObj.addProperty("permitExpiryDate", DateUtils.toDefaultDateFormat(application.getPlanValidTillDate()));
+            }
             jsonObj.addProperty("applicationWF", (application.getIsPreviousPlan()!=null && application.getIsPreviousPlan())? true:application.getState().isEnded());
             jsonObj.addProperty("applicationRevoke",
                     (application.getStatus().getCode().equalsIgnoreCase(BpaConstants.APPLICATION_STATUS_REVOKED)

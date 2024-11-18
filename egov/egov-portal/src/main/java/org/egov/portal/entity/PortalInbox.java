@@ -93,7 +93,7 @@ public class PortalInbox extends AbstractAuditable {
 	@GeneratedValue(generator = SEQ_PORTALINBOX, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
 	@JoinColumn(name = "MODULEID")
 	private Module module;
 
@@ -135,7 +135,7 @@ public class PortalInbox extends AbstractAuditable {
 	@NotNull
 	private Date applicationDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "STATE_ID")
 	private State state;
 

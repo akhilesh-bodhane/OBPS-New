@@ -81,16 +81,26 @@
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.build.plan.permission.date" />
 		</div>
-		<div class="col-sm-3 add-margin view-content">
+		<%-- <div class="col-sm-3 add-margin view-content">
 			<fmt:formatDate value="${permitRenewal.parent.planPermissionDate}"
 				pattern="dd/MM/yyyy" var="planPermissionDate" />
 			<c:out value="${planPermissionDate}" default="N/A"></c:out>
-		</div>
+		</div> --%>
+		<div class="col-sm-3 add-margin view-content">
+			<fmt:formatDate value="${permitRenewal.bpaPlanApprovalDate}"
+				pattern="dd/MM/yyyy" var="bpaPlanApprovalDate" />
+			<c:out value="${bpaPlanApprovalDate}" default="N/A"></c:out>
+		</div>		
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.exist.permit.expiry" />
 		</div>
-		<div class="col-sm-3 add-margin view-content">
+		<%-- <div class="col-sm-3 add-margin view-content">
 			<c:out value="${permitExpiryDate}" default="N/A"></c:out>
+		</div> --%>
+		<div class="col-sm-3 add-margin view-content">
+			<fmt:formatDate value="${permitRenewal.planValidTillDate}"
+				pattern="dd/MM/yyyy" var="planValidTillDate" />
+			<c:out value="${planValidTillDate}" default="N/A"></c:out>
 		</div>
 	</div>
 	<div class="row add-border">
@@ -141,12 +151,20 @@
 	</div>
 
 	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
+		<%-- <div class="col-sm-3 add-margin">
 			<spring:message code="lbl.re.survey.no" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
 			<c:out value="${permitRenewal.parent.siteDetail[0].reSurveyNumber}"
 				default="N/A"></c:out>
+		</div> --%>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.plan.extension.date" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<fmt:formatDate value="${permitRenewal.planExtensionDate}"
+				pattern="dd/MM/yyyy" var="planExtensionDate" />
+			<c:out value="${planExtensionDate}" default="N/A"></c:out>
 		</div>
 	</div>
 

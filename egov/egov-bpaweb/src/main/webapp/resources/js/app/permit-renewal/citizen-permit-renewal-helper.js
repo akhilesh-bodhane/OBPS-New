@@ -43,8 +43,8 @@ jQuery(document).ready(function ($) {
 
 	
 	if($('#applicationStatus').val() === 'Approved' 
-		&& $('#feePending').val() 
-		&& $('#feePending').val() === 'true') {
+		&& $('#isFeePending').val() 
+		&& $('#isFeePending').val() === 'true') {
 		bootbox.alert($('#feePendingMsg').val());
 	}
     //toggle between multiple tab
@@ -122,7 +122,7 @@ jQuery(document).ready(function ($) {
 
     $('#prSave').click(function (e) {
         var button = $('#prSave').val();
-        $('#acceptance').removeAttr('required');
+        //$('#acceptance').removeAttr('required');
         if (validateFormOnSave(button, validator)) {
             bootbox
                 .dialog({
@@ -155,7 +155,7 @@ jQuery(document).ready(function ($) {
 
     $('#prSubmit').click(function (e) {
         var button = $('#prSubmit').val();
-        $('#acceptance').attr('required', 'required');
+        //$('#acceptance').attr('required', 'required');
         if (validateFormOnSubmit(button, validator)) {
             bootbox
                 .dialog({
@@ -218,11 +218,12 @@ jQuery(document).ready(function ($) {
 	                $('#applicationType').val(response.applicationType);
 	                $('.applicantName').val(response.applicantName);
 	                $('#bpaApplicationId').val(response.id);
-	                $('#applicationNumber').val(response.applicationNumber);
+	                $('#bpaApplicationNumber').val(response.bpaApplicationNumber);
 	                $('#planPermissionNumber').val(response.planPermissionNumber);
-	                $('#planPermissionDate').val(response.planPermissionDate);
-	                $('#existingPermitExpiryDate').val(response.permitExpiryDate);
+	                $('#bpaPlanApprovalDate').val(response.planPermissionDate);
+	                $('#planValidTillDate').val(response.permitExpiryDate);
 	                $('#extentInSqmts').val(response.plotArea);
+	                $('#mobileNumber').val(response.mobileNumber);
 	            } else {
 	            	$('.resetValues').val('');
 	               console.log("No application details available");
@@ -237,7 +238,7 @@ jQuery(document).ready(function ($) {
     
     function getOwnershipAppByPermitNo(permitNo) {
 		$.ajax({
-	        url: "/bpa/application/getownershipapplication",
+	        url: "/bpa/application/getrenewalapplication",
 	        type: "GET",
 	        data: {
 	            permitNumber : permitNo

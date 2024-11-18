@@ -167,6 +167,7 @@ public class InteriorOpenSpaceService extends FeatureProcess {
 				areaExpected =new BigDecimal("9.0");
 				widthExpected =new BigDecimal("3.0");
 			} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())

@@ -121,8 +121,9 @@ jQuery(document).ready(function ($) {
             var action = document
                 .getElementById("workFlowAction").value;
             if (action == 'Reject') {
+            	/*alert('Action Reject');*/
                 $('#Reject').attr('formnovalidate', 'true');
-                if (validateOnReject(true) && validateForm(validator)) {
+                if (validateForm(validator)) {
                     bootbox
                         .dialog({
                             message: $('#rejectAppln').val(),
@@ -150,8 +151,9 @@ jQuery(document).ready(function ($) {
                 }
                 return false;
             } else if (action == 'Initiate Rejection') {
+            	/*alert('Inside Initiate Rejection');*/
                 $('#Initiate Rejection').attr('formnovalidate', 'true');
-                if (validateOnReject(true) && validateForm(validator)) {
+                if (validateForm(validator)) {
                     bootbox
                         .dialog({
                             message: $('#intiateRejectionAppln').val(),
@@ -260,7 +262,7 @@ jQuery(document).ready(function ($) {
                 }
                 return false;
             } else if (action == 'Generate Rejection Notice') {
-                if (validateOnReject(false) && validateOnApproveAndForward(validator, action)) {
+            	if (validateOnApproveAndForward(validator, action)) {
                     bootbox
                         .dialog({
                             message: $('#generateRejectNotice').val(),
@@ -306,25 +308,29 @@ function validateOnApproveAndForward(validator, action) {
     }
 }
 
-function validateOnReject(isCommentsRequire) {
+/*function validateOnReject(isCommentsRequire) {
     var approvalComent = $('#approvalComent').val();
     var rejectionReasonsLength = $('.rejectionReasons:checked').length;
     if (rejectionReasonsLength <= 0) {
+    	alert('validateOnReject if');
         $('.rejectionReason').show();
         bootbox.alert($('#rejectionReasonMandatory').val());
         return false;
     } else if (approvalComent == "" && isCommentsRequire) {
+    	alert('validateOnReject else');
         bootbox.alert($('#rejectionCommentsRequired').val());
         $('#approvalComent').focus();
         return false;
     }
     return true;
-}
+}*/
 
 function validateForm(validator) {
     if ($('#permitRenewalUpdateForm').valid()) {
+    	//alert('validateForm if');
         return true;
     } else {
+    	//alert('validateForm else');
         $errorInput = undefined;
 
         $.each(validator.invalidElements(), function (index, elem) {

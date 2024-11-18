@@ -495,6 +495,26 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                                     ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
                                     : null);
         }
+        else if ("Send Back to SDO".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Send Back to SDO Building",
+                    null);
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
+        else if ("Send Back to HDM".equalsIgnoreCase(workFlowAction)) {
+        	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+        			bpaApplication.getApplicationType().getName(), "Fee details verification initiated",
+                    null);
+        	approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getAdminBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getAdminBoundary().getId()
+                                    : null);
+        }
         else if ("Send Back To SDOMC".equalsIgnoreCase(workFlowAction)) {
         	WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
         			bpaApplication.getApplicationType().getName(), "Property documents verification initiated",
@@ -920,6 +940,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                 	|| "Forwarded to check NOC updation".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Permit Fee Collection Pending".equalsIgnoreCase(application.getState().getNextAction())
                 	|| "Forwarded to E- Assistant Estate Officer for Approval".equalsIgnoreCase(application.getState().getNextAction())
+                	|| "Forwarded to SDO Building for verification".equalsIgnoreCase(application.getState().getNextAction())
                     ) && !("Approved".equalsIgnoreCase(application.getStatus().getCode()))) {
             model.addAttribute("createlettertoparty", true);
         }

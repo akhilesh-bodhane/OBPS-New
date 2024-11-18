@@ -280,6 +280,11 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
         return "search-bpa-task-urban";
     }
     
+    @GetMapping("/showDashboard")
+    public String showDashboard(final Model model) {
+        return "public-dashboard";
+    }
+    
     
     @PostMapping(value = "/searchBPAItems/d/u", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody

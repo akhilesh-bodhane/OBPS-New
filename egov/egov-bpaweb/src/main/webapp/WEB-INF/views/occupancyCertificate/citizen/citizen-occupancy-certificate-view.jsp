@@ -232,14 +232,13 @@
 								onclick="window.open('/bpa/application/occupancy-certificate/demandnotice/${occupancyCertificate.applicationNumber}','popup','width=1100,height=700'); return false;">
 									Print Demand Notice </a>&nbsp;</td>
 						</c:if>
-						<td><%-- <c:if
-								test="${citizenOrBusinessUser && bpaApplication.id != null && bpaApplication.state == null && bpaApplication.status.code ne 'Cancelled'
-								    && (validateCitizenAcceptance && (bpaApplication.status.code ne 'Cancelled') && !citizenDisclaimerAccepted)}"> --%>
+						<td><c:if
+								test="${ occupancyCertificate.status.code ne 'Approved' || !isFeeCollected || !isFinalOCGenerated}">
 								<form:button type="button" id="buttonCancel"
 									class="btn btn-danger" value="Cancel Application">
 									<spring:message code='lbl.btn.cancel.application' />
 								</form:button>&nbsp;
-							<%-- </c:if> --%></td>
+							</c:if></td>
 						<c:if
 							test="${occupancyCertificate.status.code eq 'Approved'  && occupancyCertificate.state.value eq 'JE inspection' && !isFinalOCGenerated }">
 							<td><a

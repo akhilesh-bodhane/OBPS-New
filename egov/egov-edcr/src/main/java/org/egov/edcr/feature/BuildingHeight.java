@@ -274,7 +274,7 @@ public class BuildingHeight extends FeatureProcess {
 							exptectedHeight = new BigDecimal("9.83");
 						else if (!DxfFileConstants.MARLA.equals(plotType))
 							exptectedHeight = new BigDecimal("10.67");
-					} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())) {
+					} else if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode()) || DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())) {
 						if (DxfFileConstants.ONE_KANAL.equals(plotType) && (phase == 1 || phase == 2))
 							exptectedHeight = new BigDecimal("14.25");
 						if (DxfFileConstants.ABOVE_TWO_KANAL.equals(plotType) && phase == 3)

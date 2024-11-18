@@ -79,29 +79,77 @@
 				value="${permitRenewal.id}">
 			<input type="hidden" name="id" id="permitRenewalId"
 				value="${permitRenewal.id}">
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="view-renewal-application-details.jsp"></jsp:include>
-			</div>
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="view-permit-application-details.jsp"></jsp:include>
-			</div>
-			<c:if test="${not empty  permitRenewal.receipts}">
-				<div class="panel panel-primary" data-collapsed="0">
-					<c:set var="receipts" scope="request"
-						value="${permitRenewal.receipts}"></c:set>
-					<c:set var="applicationNumber" scope="request"
-						value="${permitRenewal.applicationNumber}"></c:set>
-					<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+			
+			<ul class="nav nav-tabs" id="settingstab">
+				<li class="active"><a data-toggle="tab"
+					href="#appliccation-info" data-tabidx=0><spring:message
+							code='lbl.appln.details' /></a></li>
+				<c:if test="${not empty lettertopartylist}">
+					<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
+								code='lbl.lp.details' /></a></li>
+				</c:if>
+			</ul>
+			<div class="tab-content">
+				<div id="appliccation-info" class="tab-pane fade in active">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="view-renewal-application-details.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="view-permit-application-details.jsp"></jsp:include>
+					</div>
+					<c:if test="${not empty  permitRenewal.receipts}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<c:set var="receipts" scope="request"
+								value="${permitRenewal.receipts}"></c:set>
+							<c:set var="applicationNumber" scope="request"
+								value="${permitRenewal.applicationNumber}"></c:set>
+							<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+						</div>
+					</c:if>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
+					</div>
+					<div class="text-right text-info view-content col-sm-12"
+						style="font-size: 14px; color: #e4841b;">
+						<span id="drawPref"></span>
+					</div>
 				</div>
-			</c:if>
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
+				<c:if test="${not empty lettertopartylist}">
+					<div id="view-lp" class="tab-pane fade">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include
+								page="../lettertoparty/permitrenewal-ltp-details.jsp"></jsp:include>
+						</div>
+					</div>
+				</c:if>
 			</div>
+			<%-- <div class="text-center">
+				<c:if test="${createlettertoparty}">
+					<a
+						href="/bpa/permitrenewal/lettertoparty/create/${permitRenewal.applicationNumber}"
+						target="_self" class="btn btn-primary"> <spring:message
+							code="lbl.btn.letter.to.party" />
+					</a>
+				</c:if>
+			</div> --%>
+			<br>
 			<c:if test="${showRejectionReasons}">
 				<div class="panel panel-primary" data-collapsed="0">
 					<jsp:include page="renewal-rejection-reasons.jsp"></jsp:include>
 				</div>
 			</c:if>
+			<%-- <c:if
+				test="${permitRenewal.status.code eq 'Approved'}">
+				<div align="center">
+					<a
+						href="/bpa/application/demandnotice/${permitRenewal.parent.applicationNumber}"
+						target="popup" class="btn btn-primary"
+						onclick="window.open('/bpa/application/demandnotice/${permitRenewal.parent.applicationNumber}','popup','width=1100,height=700'); return false;">
+						<spring:message code='lbl.btn.print.demand.notice' />
+					</a> <input type="button" name="button2" value="Close"
+						class="btn btn-default" onclick="window.close();" />
+				</div>
+			</c:if> --%>
 			<jsp:include page="../common/commonWorkflowMatrix.jsp" />
 			<div class="buttonbottom" align="center">
 				<jsp:include page="../common/commonWorkflowMatrix-button.jsp" />

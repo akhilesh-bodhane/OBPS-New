@@ -70,6 +70,12 @@ public class PdfQrCodeAppendService {
     private static final String APPROVED_BY = "Approved By :";
 
     private static final String REVIEWED_BY = "Reviewed By :";
+    
+    private static final String OWNER_NAME = "Owner Name :";
+    
+    private static final String HOUSE_NUMBER = "House Number :";
+    
+    private static final String SECTOR = "Sector :";
 
     private static final String DESIGNATION = "designation";
 
@@ -185,6 +191,7 @@ public class PdfQrCodeAppendService {
 
     private void prepareStamp(BpaApplication application, Document document, PdfWriter writer, Float pageWidth)
             throws IOException, DocumentException {
+    	System.out.println("Inside Prepare Stamp Method");
         Image img = Image.getInstance(cityService.getCityLogoURL());
         img.scaleAbsolute(14, 9);
         img.setAbsolutePosition(29f, 42.5f);
@@ -217,24 +224,24 @@ public class PdfQrCodeAppendService {
         Phrase phrase5 = new Phrase(applicationNumber, font);
         ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase5, 17, 27.5f, 0);
         
+        
         //Added owner and house/sector no in stamp        
-        if(application.getOwner().getName() != null){
-        	String ownerName = "OWMNER NAME : " + application.getOwner().getName();
-        	Phrase phrase6 = new Phrase(ownerName, font);
-            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase6, 17, 27.5f, 0);
-        }
         
-        if(application.getPlotNumber() != null){
-        	String houseNo = "HOUSE NUMBER : " + application.getPlotNumber();
-        	Phrase phrase7 = new Phrase(houseNo, font);
-            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase7, 17, 27.5f, 0);
-        }
-        
-        if(application.getSector() != null){
-        	String sector = "SECTOR : " + application.getSector();
-            Phrase phrase8 = new Phrase(sector, font);
-            ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase8, 17, 27.5f, 0);
-        }        
+		System.out.println("Owner Name : " + application.getOwner().getName());
+		String ownerName = OWNER_NAME + application.getOwner().getName();
+		Phrase phrase6 = new Phrase(ownerName, font);
+		ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase6, 17,	27.5f, 0);
+
+		System.out.println("Plot No : " + application.getPlotNumber());
+		String houseNo = HOUSE_NUMBER + application.getPlotNumber();
+		Phrase phrase7 = new Phrase(houseNo, font);
+		ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase7, 17,	27.5f, 0);
+
+		System.out.println("Sector : " + application.getSector());
+		String sector = SECTOR + application.getSector();
+		Phrase phrase8 = new Phrase(sector, font);
+		ColumnText.showTextAligned(canvas, Element.ALIGN_LEFT, phrase8, 17,	27.5f, 0);
+            
 
         Font font2 = new Font(Font.FontFamily.TIMES_ROMAN, 3f, Font.NORMAL, BaseColor.BLACK);
 
@@ -289,6 +296,7 @@ public class PdfQrCodeAppendService {
     }
 
     public void addStamp(FileStoreMapper fileMapper, BpaApplication application) {
+    	System.out.println("Inside add stamp method");
         try {
             Path path = bpautils.getExistingFilePath(fileMapper, APPLICATION_MODULE_TYPE);
 
@@ -362,11 +370,31 @@ public class PdfQrCodeAppendService {
             Phrase phrase5 = new Phrase(applicationNumber, font1);
             x1 = x + (140 - (applicationNumber.length() / 2f));
             ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase5, x1, y - 60, 0);
+            
+            //Added owner and house/sector no in stamp        
+
+			System.out.println("Owner Name : " + application.getOwner().getName());
+			String ownerName = OWNER_NAME + application.getOwner().getName();
+			Phrase phrase6 = new Phrase(ownerName, font1);
+			x1 = x + (140 - (ownerName.length() / 2f));
+			ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase6, x1, y - 75, 0);
+
+			System.out.println("Plot No : " + application.getPlotNumber());
+			String houseNo = HOUSE_NUMBER + application.getPlotNumber();
+			Phrase phrase7 = new Phrase(houseNo, font1);
+			x1 = x + (140 - (houseNo.length() / 2f));
+			ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase7, x1, y - 90, 0);
+
+			System.out.println("Sector : " + application.getSector());
+			String sector = SECTOR + application.getSector();
+			Phrase phrase8 = new Phrase(sector, font1);
+			x1 = x + (140 - (sector.length() / 2f));
+			ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase8, x1, y - 105, 0);
 
             String approvedBy = APPROVED_BY;
-            Phrase phrase6 = new Phrase(approvedBy, font2);
+            Phrase phrase9 = new Phrase(approvedBy, font2);
             x1 = x + (140 - (approvedBy.length() / 2f));
-            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase6, x1, y - 75, 0);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase9, x1, y - 120, 0);
 
 			/*
 			 * String approverName = bpaNoticeUtil.getApproverName(application) + "(" +
@@ -377,13 +405,13 @@ public class PdfQrCodeAppendService {
             
             String approverName = bpaNoticeUtil.getApproverDesignation(application.getApproverPosition());
             
-            Phrase phrase7 = new Phrase(approverName, font1);
+            Phrase phrase10 = new Phrase(approverName, font1);
             x1 = x + (140 - (approverName.length() / 2f));
-            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase7, x1, y - 90, 0);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase10, x1, y - 135, 0);
             String reviewedBy = REVIEWED_BY;
-            Phrase phrase8 = new Phrase(reviewedBy, font2);
+            Phrase phrase11 = new Phrase(reviewedBy, font2);
             x1 = x + (140 - (reviewedBy.length() / 2f));
-            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase8, x1, y - 105, 0);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase11, x1, y - 150, 0);
 
             LinkedHashSet<String> reviewersList = new LinkedHashSet<>();
             List<Map<String, String>> reviewersNameAndDesignationMapList = bpaNoticeUtil
@@ -403,9 +431,9 @@ public class PdfQrCodeAppendService {
             Float yy = y - 120;
 
             for (String reviewer : listOfAuthorities) {
-                Phrase phrase9 = new Phrase(reviewer, font1);
+                Phrase phrase12 = new Phrase(reviewer, font1);
                 x1 = x + (140 - (reviewer.length() / 2f));
-                ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase9, x1, yy, 0);
+                ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase12, x1, yy, 0);
                 yy = yy - 13f;
             }
 
@@ -423,7 +451,7 @@ public class PdfQrCodeAppendService {
                 LOG.debug(LAND_SCAPE);
             }
 
-            String pathOfQrCode = generatePDF417Code(bpaNoticeUtil.buildQRCodeDetails(application), 140, 50)
+            String pathOfQrCode = generatePDF417Code(bpaNoticeUtil.buildQRCodeDetails(application), 185, 50)
                     .getAbsolutePath();
 
             Image image = Image.getInstance(pathOfQrCode);
@@ -439,15 +467,15 @@ public class PdfQrCodeAppendService {
             canvas.addImage(image);
             yy = yy - 15;
             String authentication = THIS_IS_A_COMPUTER_GENERATED_AUTHENTICATION;
-            Phrase phrase9 = new Phrase(authentication, font1);
+            Phrase phrase13 = new Phrase(authentication, font1);
             x1 = x + (140 - (authentication.length() / 2f));
-            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase9, x1, yy, 0);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase13, x1, yy, 0);
             yy = yy - 10;
             authentication = AND_DOES_NOT_REQUIRE_ANY_SEAL_OR_SIGNATURE_IN_ORIGINAL;
-            Phrase phrase10 = new Phrase(authentication, font1);
+            Phrase phrase14 = new Phrase(authentication, font1);
             x1 = x + (140 - (authentication.length() / 2f));
             // yy=yy-15;
-            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase10, x1, yy, 0);
+            ColumnText.showTextAligned(canvas, Element.ALIGN_CENTER, phrase14, x1, yy, 0);
             if (LOG.isDebugEnabled())
                 LOG.debug(String.format("Last y position %s", yy));
 

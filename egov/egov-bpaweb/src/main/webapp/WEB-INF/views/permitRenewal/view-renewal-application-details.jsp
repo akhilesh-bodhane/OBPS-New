@@ -76,7 +76,7 @@
 		</div>
 	</div>
 
-	<div class="row add-border">
+	<%-- <div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.cons.stages" />
 		</div>
@@ -89,7 +89,7 @@
 		<div class="col-sm-3 add-margin view-content">
 			<c:out value="${permitRenewal.constructionStatus}" default="N/A"></c:out>
 		</div>
-	</div>
+	</div> --%>
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.permit.renewal.doc.upload" />

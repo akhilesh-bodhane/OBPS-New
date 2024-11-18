@@ -165,7 +165,7 @@ public class StairCover extends FeatureProcess {
 						expactedHeiht = CDGAdditionalService.meterToFoot(expactedHeiht);
 					}
 					if (DxfFileConstants.MARLA.equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE))
-							&& DxfFileConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode())) {
+							&& (DxfFileConstants.A_P.equals(mostRestrictiveFarHelper.getSubtype().getCode()) || DxfFileConstants.A_H.equals(mostRestrictiveFarHelper.getSubtype().getCode()))) {
 						errors.put("MumtyNotAllowed",
 								getLocaleMessage(OBJECTDEFINED, " Mumty is not allowed in block " + b.getName()));
 					}

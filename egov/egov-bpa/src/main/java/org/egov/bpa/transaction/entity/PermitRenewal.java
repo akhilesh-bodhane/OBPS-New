@@ -66,6 +66,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -117,6 +118,10 @@ public class PermitRenewal extends StateAware<Position> {
     @SafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
+    
+    @SafeHtml
+    @Length(min = 1, max = 64)
+    private String bpaApplicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
@@ -127,9 +132,18 @@ public class PermitRenewal extends StateAware<Position> {
 
     @Temporal(value = TemporalType.DATE)
     private Date renewalApprovalDate;
+    
+    @Temporal(value = TemporalType.DATE)
+    private Date bpaPlanApprovalDate;
+    
+    @Temporal(value = TemporalType.DATE)
+    private Date planValidTillDate;
 
     @Temporal(value = TemporalType.DATE)
     private Date permitRenewalExpiryDate;
+    
+    @Temporal(value = TemporalType.DATE)
+    private Date planExtensionDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "demand")
@@ -139,13 +153,13 @@ public class PermitRenewal extends StateAware<Position> {
     @JoinColumn(name = "status")
     private BpaStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   /* @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "constructionStage")
     private ConstructionStages constructionStage;
 
     @SafeHtml
     @Length(min = 1, max = 256)
-    private String constructionStatus;
+    private String constructionStatus;*/
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "egbpa_permit_renewal_documents", joinColumns = @JoinColumn(name = "permitrenewal"), inverseJoinColumns = @JoinColumn(name = "filestore"))
@@ -156,6 +170,7 @@ public class PermitRenewal extends StateAware<Position> {
 
     @OneToMany(mappedBy = "permitRenewal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PermitRenewalConditions> rejectionReasons = new ArrayList<>(0);
+    
     @OrderBy(ORDER_BY_ID_ASC)
     @OneToMany(mappedBy = "permitRenewal", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PermitRenewalConditions> additionalRenewalConditions = new ArrayList<>(0);
@@ -225,7 +240,15 @@ public class PermitRenewal extends StateAware<Position> {
         this.applicationNumber = applicationNumber;
     }
 
-    public Date getApplicationDate() {
+    public String getBpaApplicationNumber() {
+		return bpaApplicationNumber;
+	}
+
+	public void setBpaApplicationNumber(String bpaApplicationNumber) {
+		this.bpaApplicationNumber = bpaApplicationNumber;
+	}
+
+	public Date getApplicationDate() {
         return applicationDate;
     }
 
@@ -273,7 +296,7 @@ public class PermitRenewal extends StateAware<Position> {
         this.status = status;
     }
 
-    public ConstructionStages getConstructionStage() {
+    /*public ConstructionStages getConstructionStage() {
         return constructionStage;
     }
 
@@ -287,7 +310,7 @@ public class PermitRenewal extends StateAware<Position> {
 
     public void setConstructionStatus(String constructionStatus) {
         this.constructionStatus = constructionStatus;
-    }
+    }*/
 
     public Set<FileStoreMapper> getPermitRenewalDocs() {
         return permitRenewalDocs;
@@ -305,7 +328,31 @@ public class PermitRenewal extends StateAware<Position> {
         return renewalNotices;
     }
 
-    public void setRenewalNotices(List<PermitRenewalNotice> renewalNotices) {
+    public Date getBpaPlanApprovalDate() {
+		return bpaPlanApprovalDate;
+	}
+
+	public void setBpaPlanApprovalDate(Date bpaPlanApprovalDate) {
+		this.bpaPlanApprovalDate = bpaPlanApprovalDate;
+	}
+
+	public Date getPlanValidTillDate() {
+		return planValidTillDate;
+	}
+
+	public void setPlanValidTillDate(Date planValidTillDate) {
+		this.planValidTillDate = planValidTillDate;
+	}
+
+	public Date getPlanExtensionDate() {
+		return planExtensionDate;
+	}
+
+	public void setPlanExtensionDate(Date planExtensionDate) {
+		this.planExtensionDate = planExtensionDate;
+	}
+
+	public void setRenewalNotices(List<PermitRenewalNotice> renewalNotices) {
         this.renewalNotices = renewalNotices;
     }
 

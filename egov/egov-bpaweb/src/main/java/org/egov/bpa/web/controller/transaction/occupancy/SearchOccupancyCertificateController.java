@@ -100,6 +100,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
 
     private static final String APPLICATION_HISTORY = "applicationHistory";
     private static final String SEARCH_OC_PENDING_ITEM_FORM = "searchOCPendingItemsForm";
+    private static final String SEARCH_BPA_APPLICATION_FORM = "searchBpaApplicationForm";
     private static final String SEARCH_OC_PENDING_ITEM_FORM_GRAPH = "searchOCPendingItemsFormG";
     private static final Long RURAL_ID = 4L;
     private static final String URBAN ="URBAN";
@@ -121,6 +122,21 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     private CustomImplProvider specificNoticeService;
     @Autowired
     private OccupancyCertificateNocService ocNocService;
+    
+    @GetMapping("/occollectfee")
+    public String showCollectionPendingRecords(final Model model) {
+        prepareFormData(model);
+        model.addAttribute(SEARCH_BPA_APPLICATION_FORM, new SearchBpaApplicationForm());
+        return "search-collect-fee-oc";
+    }
+
+    @PostMapping(value = "/occollectfee", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String searchCollectionPendingRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+        return new DataTable<>(occupancyCertificateService.hasFeeCollectionPending(searchBpaApplicationForm),
+                searchBpaApplicationForm.draw())
+                        .toJson(SearchBpaApplicationAdaptor.class);
+    }
 
     @GetMapping("/occupancy-certificate/search")
     public String showSearchApprovedforFee(final Model model) {

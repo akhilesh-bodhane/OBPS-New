@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildingfloordetailssubreport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="8472d445-9eb5-44cb-8b45-e8ed2f733b02">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -148,7 +148,7 @@
 					<font fontName="SansSerif" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<text><![CDATA[Builtup Area (m²)]]></text>
+				<text><![CDATA[Builtup Area (sq ft)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="125" y="1" width="120" height="20" isRemoveLineWhenBlank="true" uuid="77d1d689-de26-4dc4-8545-6876675b6532"/>
@@ -178,7 +178,7 @@
 					<font fontName="SansSerif" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<text><![CDATA[Floor Area (m²)]]></text>
+				<text><![CDATA[Floor Area (sq ft)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="442" y="1" width="100" height="20" uuid="537d223b-9b73-4696-81fa-b55e4912d522">
@@ -194,7 +194,7 @@
 					<font fontName="SansSerif" isBold="true"/>
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<text><![CDATA[Carpet Area (m²)]]></text>
+				<text><![CDATA[Carpet Area (sq ft)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="88" y="1" width="37" height="20" uuid="6b3d08c4-3eca-4403-9c83-6c86418037f6">

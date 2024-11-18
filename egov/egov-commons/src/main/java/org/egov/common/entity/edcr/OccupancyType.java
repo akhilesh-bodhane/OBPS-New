@@ -72,6 +72,7 @@ public enum OccupancyType {
 	OCCUPANCY_A1("Residential"), 
 	    OCCUPANCY_A1_P("Plotted"), //Plotted
 	    OCCUPANCY_A1_G("Grouped"), //Grouped
+	    OCCUPANCY_A1_H("High Rise Building"),
 	    OCCUPANCY_A2("Special Residential"), OCCUPANCY_A3("Hostel Educational"), OCCUPANCY_A4("Apartment/Flat"), OCCUPANCY_A5(
 	            "Professional Office"), OCCUPANCY_B1("Educational"), OCCUPANCY_B2("Educational HighSchool"), OCCUPANCY_B3(
 	                    "Higher Educational Institute"), OCCUPANCY_C("Medical/Hospital"), OCCUPANCY_C1("Medical IP"), OCCUPANCY_C2(

@@ -60,36 +60,74 @@
 		<input type="hidden" name="citizenOrBusinessUser"
 			value="${citizenOrBusinessUser}"> <input type="hidden"
 			id="applicationStatus" value="${permitRenewal.status.code}">
-		<div class="panel panel-primary" data-collapsed="0">
-			<jsp:include page="view-renewal-application-details.jsp"></jsp:include>
-		</div>
-		<div class="panel panel-primary" data-collapsed="0">
-			<jsp:include page="view-permit-application-details.jsp"></jsp:include>
-		</div>
-		<c:if test="${not empty  permitRenewal.receipts}">
-			<div class="panel panel-primary" data-collapsed="0">
-				<c:set var="receipts" scope="request"
-					value="${permitRenewal.receipts}"></c:set>
-				<c:set var="applicationNumber" scope="request"
-					value="${permitRenewal.applicationNumber}"></c:set>
-				<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+		<ul class="nav nav-tabs" id="settingstab">
+			<li class="active"><a data-toggle="tab"
+				href="#appliccation-info" data-tabidx=0><spring:message
+						code='lbl.appln.details' /></a></li>
+			<c:if test="${not empty lettertopartylist}">
+				<li><a data-toggle="tab" href="#view-lp" data-tabidx=7><spring:message
+							code='lbl.lp.details' /></a></li>
+			</c:if>
+		</ul>
+		<div class="tab-content">
+			<div id="appliccation-info" class="tab-pane fade in active">
+				<div class="panel panel-primary" data-collapsed="0">
+					<jsp:include page="view-renewal-application-details.jsp"></jsp:include>
+				</div>
+				<div class="panel panel-primary" data-collapsed="0">
+					<jsp:include page="view-permit-application-details.jsp"></jsp:include>
+				</div>
+				<c:if test="${not empty  permitRenewal.receipts}">
+					<div class="panel panel-primary" data-collapsed="0">
+						<c:set var="receipts" scope="request"
+							value="${permitRenewal.receipts}"></c:set>
+						<c:set var="applicationNumber" scope="request"
+							value="${permitRenewal.applicationNumber}"></c:set>
+						<jsp:include page="../common/view-bpa-receipt-details.jsp"></jsp:include>
+					</div>
+				</c:if>
+				<div class="panel panel-primary" data-collapsed="0">
+					<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
+				</div>
+				<c:if test="${showRejectionReasons}">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="renewal-rejection-reasons.jsp"></jsp:include>
+					</div>
+				</c:if>
 			</div>
-		</c:if>
-		<div class="panel panel-primary" data-collapsed="0">
-			<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
+			<c:if test="${not empty lettertopartylist}">
+				<div id="view-lp" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../lettertoparty/permitrenewal-ltp-details.jsp"></jsp:include>
+					</div>
+				</div>
+			</c:if>
 		</div>
 	</div>
 	<div align="center">
 		<input type="hidden" id="onlinePaymentEnable"
 			value="${onlinePaymentEnable}">
+		<%-- <c:if
+			test="${permitRenewal.status.code eq 'Approved' && onlinePaymentEnable && feePending}"> --%>
 		<c:if
-			test="${permitRenewal.status.code eq 'Approved' && onlinePaymentEnable && feePending}">
+			test="${isFeePending}">
 			<td><a
 				href="/bpa/application/permit/renewal/generate-bill/${permitRenewal.applicationNumber}"
 				class="btn btn-primary"> <spring:message
 						code='lbl.btn.pay.fee.online' />
 			</a>&nbsp;</td>
 		</c:if>
+
+		<c:if
+			test="${isFeePending}">
+			<td><a
+				href="/bpa/application/permitrenewal/demandnotice/${permitRenewal.applicationNumber}"
+				target="popup" class="btn btn-primary"
+				onclick="window.open('/bpa/application/permitrenewal/demandnotice/${permitRenewal.applicationNumber}','popup','width=1100,height=700'); return false;">
+					<spring:message code='lbl.btn.print.demand.notice' />
+			</a>&nbsp;</td>
+		</c:if>
+
 		<c:if test="${permitRenewal.status.code eq 'Rejected'}">
 			<td><a
 				href="/bpa/application/permitrenewal/rejectionnotice/${permitRenewal.applicationNumber}"

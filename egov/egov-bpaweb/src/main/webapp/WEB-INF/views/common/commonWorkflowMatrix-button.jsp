@@ -126,6 +126,14 @@
 										<c:out value="${validButtons}" />
 									</form:button>
 								</c:if>
+								<c:if test="${nextAction eq 'Forwarded to generate permit renewal order'}">
+									<td><a
+										href="/bpa/application/renewal/generaterenewalorder/${permitRenewal.applicationNumber}"
+										target="popup" class="btn btn-primary"
+										onclick="window.open('/bpa/application/renewal/generaterenewalorder/${permitRenewal.applicationNumber}','popup','width=1100,height=700'); return false;">
+											<spring:message code='lbl.btn.print.renewal.order' />
+									</a>&nbsp;</td>
+								</c:if>
 							</c:when>
 							<c:otherwise>
 								<form:button type="submit" id="${validButtons}"

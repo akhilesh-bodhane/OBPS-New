@@ -337,15 +337,18 @@ public class GeneralStair extends FeatureProcess {
 	private BigDecimal requiredRaiserHeight(OccupancyTypeHelper occupancyTypeHelper,Boolean isInFeet) {
 		
 		if(isInFeet) {
-			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) 
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
 				return new BigDecimal("0.63");
-			else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+			} else if(DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())){
+				System.out.println("Indside if required raiser height check of A_H");
+				return new BigDecimal("0.6");
+			} else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
-					) 
+					) {
 				return new BigDecimal("0.58");
-			else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+			} else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
@@ -360,20 +363,24 @@ public class GeneralStair extends FeatureProcess {
 					|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.P_CNA.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
-					) 
+					) { 
 				return new BigDecimal("0.5");
-			else
+			} else {
 				return new BigDecimal("0.5");
-		}else {
-			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) 
+			}
+		} else {
+			if(DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())) {
 				return BigDecimal.valueOf(0.19);
-			else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+			} else if(DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())) {
+				System.out.println("Indside else required raiser height check of A_H");
+				return BigDecimal.valueOf(0.18);
+			} else if(DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.ITH_R.equals(occupancyTypeHelper.getSubtype().getCode())
-					) 
+					) {
 				return BigDecimal.valueOf(0.175);
-			else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
+			} else if(DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
@@ -388,10 +395,11 @@ public class GeneralStair extends FeatureProcess {
 					|| DxfFileConstants.P_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.P_CNA.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_BH.equals(occupancyTypeHelper.getSubtype().getCode())
-					) 
+					) {
 				return BigDecimal.valueOf(0.15);
-			else
+			} else {
 				return BigDecimal.valueOf(0.15);
+			}
 		}
 		
 	}
@@ -533,11 +541,13 @@ public class GeneralStair extends FeatureProcess {
 		if (DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_B.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-				|| DxfFileConstants.P_N.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+				|| DxfFileConstants.P_N.equals(mostRestrictiveOccupancyType.getSubtype().getCode())){
 			return BigDecimal.valueOf(1.0);
-		else if (DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+		} else if (DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+				|| DxfFileConstants.A_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
+			System.out.println("Indside if required width check of A_H");
 			return BigDecimal.valueOf(1.25);
-		else if (DxfFileConstants.F_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+		} else if (DxfFileConstants.F_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_BBM.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_TS.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.G_GBZP.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
@@ -548,9 +558,9 @@ public class GeneralStair extends FeatureProcess {
 				|| DxfFileConstants.IT.equals(mostRestrictiveOccupancyType.getType().getCode())
 				|| DxfFileConstants.ITH_R.equals(mostRestrictiveOccupancyType.getType().getCode())
 				|| DxfFileConstants.ITH_GH.equals(mostRestrictiveOccupancyType.getType().getCode())
-				|| DxfFileConstants.IP_R.equals(mostRestrictiveOccupancyType.getType().getCode()))
+				|| DxfFileConstants.IP_R.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			return BigDecimal.valueOf(1.5);
-		else if (DxfFileConstants.F_M.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
+		} else if (DxfFileConstants.F_M.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_M.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_BH.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_TCIM.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
@@ -562,16 +572,18 @@ public class GeneralStair extends FeatureProcess {
 				|| DxfFileConstants.ITH_C.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.ITH_CC.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.IP_I.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-				|| DxfFileConstants.IP_C.equals(mostRestrictiveOccupancyType.getSubtype().getCode()))
+				|| DxfFileConstants.IP_C.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 			return BigDecimal.valueOf(2.0);
-		else if (DxfFileConstants.B.equals(mostRestrictiveOccupancyType.getType().getCode())) {
+		} else if (DxfFileConstants.B.equals(mostRestrictiveOccupancyType.getType().getCode())) {
 			BigDecimal numberOfPerson = CDGAdditionalService.getNumberOfPerson(pl);
-			if (numberOfPerson.compareTo(BigDecimal.valueOf(200)) <= 0)
+			if (numberOfPerson.compareTo(BigDecimal.valueOf(200)) <= 0) {
 				return BigDecimal.valueOf(1.5);
-			else
+			} else {
 				return BigDecimal.valueOf(1.8);
-		}else 
+			}
+		} else {
 			return BigDecimal.ZERO;
+		}
 	}
 
 	private BigDecimal validateTread(Plan plan, HashMap<String, String> errors, Block block,
@@ -646,12 +658,15 @@ public class GeneralStair extends FeatureProcess {
 		if(DxfFileConstants.A_P.equals(mostRestrictiveOccupancyType.getSubtype().getCode())) {
 			return BigDecimal.valueOf(0.25);
 		}
+		else if(DxfFileConstants.A_H.equals(mostRestrictiveOccupancyType.getSubtype().getCode())){
+			System.out.println("Indside if required Tread check of A_H");
+			return BigDecimal.valueOf(0.12);
+		}
 		else if(DxfFileConstants.A_G.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_SCO.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.F_B.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.ITH_R.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
 				|| DxfFileConstants.ITH_GH.equals(mostRestrictiveOccupancyType.getSubtype().getCode())
-				
 				) {
 			return BigDecimal.valueOf(0.28);
 		}
@@ -733,6 +748,7 @@ public class GeneralStair extends FeatureProcess {
 		details.put(PROVIDED, actual);
 		details.put(STATUS, status);
 		scrutinyDetail.getDetail().add(details);
+		System.out.println("scrutiny Details : " + scrutinyDetail);
 		pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
 	}
 

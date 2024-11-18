@@ -55,7 +55,7 @@ public interface ApplicationSubTypeRepository extends JpaRepository<ApplicationS
 	
 	List<ApplicationSubType> findByEnabledTrueOrderByDescriptionAsc();
 	
-    @Query("select a from ApplicationSubType a where name in ('Low Risk','High Risk','Medium Risk')")
+    @Query("select a from ApplicationSubType a where name in ('Low Risk','High Risk','Medium Risk','Occupancy Certificate')")
 	List<ApplicationSubType> findRiskBasedApplicationType();
 	
 	List<ApplicationSubType> findBySlotRequiredTrueOrderByDescriptionAsc();

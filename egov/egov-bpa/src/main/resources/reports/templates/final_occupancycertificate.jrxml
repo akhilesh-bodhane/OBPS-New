@@ -94,7 +94,7 @@
 				<textElement>
 					<font size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Whereas Sh. "+$P{applicantName} + " , "+$P{coApplicantName}+" has given notice of completion of the building described below, I hereby: - " + "\n" + "1. Grant Permission for Occupation Certificate and use of said building upto "+$P{maxFloorNumber}+" floor ."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Whereas Sh. "+$P{applicantName} + " , "+$P{coApplicantName}+" has given notice of completion of the building described below, I hereby: - " + "\n" + "1. Grant Permission for Occupation Certificate and use of said building upto "+$P{maxFloorNumber}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="81">
@@ -103,7 +103,7 @@
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector No- "+$P{sectorNo}+" , Chandigarh"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Plot no - "+$P{plotNo}+", Sector/Locality- "+$P{sectorNo}+" , Chandigarh"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="1" y="51" width="554" height="20" uuid="7291a0f5-d57a-4ece-97e0-1e700208e94a">
@@ -129,7 +129,7 @@
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Estate office
-(exercising the power of
+(exercising the powers of
 Chief Administrator, UT- Chandigarh)]]></text>
 			</staticText>
 		</band>

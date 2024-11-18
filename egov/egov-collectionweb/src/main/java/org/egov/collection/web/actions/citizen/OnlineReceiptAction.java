@@ -70,8 +70,10 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
+import org.egov.bpa.transaction.service.PermitRenewalService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.collection.cdg.finance.service.VocherService;
 import org.egov.collection.config.properties.CollectionApplicationProperties;
@@ -197,9 +199,14 @@ public class OnlineReceiptAction extends BaseFormAction {
     private OccupancyCertificateService occupancyCertificateService;
     
     @Autowired
+    private PermitRenewalService permitRenewalService;
+    
+    @Autowired
     private VocherService vocherService;
+    
     @Autowired
     private EdcrExternalService edcrExternalService;
+    
     @Autowired
 	private CollectionApplicationProperties collectionApplicationProperties;
     private Map<String, String> getPlanInfo(String applicationNumber, String serviceCode){
@@ -209,9 +216,12 @@ public class OnlineReceiptAction extends BaseFormAction {
     		if("OC".equalsIgnoreCase(serviceCode)) {
     			OccupancyCertificate occupancyCertificate = occupancyCertificateService.findByApplicationNumber(applicationNumber);
     			dcrNumber=occupancyCertificate.geteDcrNumber();
-    		}else {
+    		} else if("BPA".equalsIgnoreCase(serviceCode)){
     			BpaApplication bpaApplication=applicationBpaService.findByApplicationNumber(applicationNumber);
     			dcrNumber=bpaApplication.geteDcrNumber();
+    		} else {
+    			PermitRenewal permitRenewal = permitRenewalService.findByApplicationNumber(applicationNumber);
+    			dcrNumber=permitRenewal.getParent().geteDcrNumber();
     		}
     		EdcrApplicationInfo odcrPlanInfo = edcrExternalService.loadEdcrApplicationDetails(dcrNumber);
     		
@@ -230,10 +240,15 @@ public class OnlineReceiptAction extends BaseFormAction {
          * initialise receipt info,persist receipt, create bill desk payment object and redirect to payment screen
          */
     	String rootBoundaryType=null;
+    	String dcr=null;
     	//get rootBonndaryType start
-    	String dcr=receiptHeader.getConsumerCode();    	
+		if (null != receiptHeader.getConsumerCode()) {
+			System.out.println("Inside Consumer Code Check Method : " + receiptHeader.getConsumerCode());
+			dcr = receiptHeader.getConsumerCode();
+		}
     	String serviceCode="";
     	if(null!=receiptHeader.getService()) {
+    		System.out.println("Inside Service Code Method : " + receiptHeader.getService().getCode());
     		serviceCode=receiptHeader.getService().getCode();
     	}   	
     	

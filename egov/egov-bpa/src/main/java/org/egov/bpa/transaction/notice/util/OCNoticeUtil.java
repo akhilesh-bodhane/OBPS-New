@@ -370,26 +370,26 @@ public class OCNoticeUtil {
 	    		    .orElse(null);      	
 	    	
 			    	if(basement != null)
-			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with basement)");
 			    	else
-			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with out basement)");
 	         	}else {
 	         		OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
 	             		    .orElse(null);      	
 	             	
 	             	if(basement != null)
-	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor(with basement)");
 	             	else
-	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with out basement)");
 	         	}
 	    	 }else {
 	    		 OCExistingBuildingFloor basement = oc.getExistingBuildings().get(0).getExistingBuildingFloorDetails().stream().filter(floor->floor.getFloorDescription().equalsIgnoreCase("Cellar Floor")).findAny()
 	             		    .orElse(null);      	
 	             	
 	             	if(basement != null)
-	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with basement)");
 	             	else
-	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+	             		maxFloorCount = ordinal(exisitingBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with out basement)");
 	    	 }
          }else {
         	 
@@ -401,9 +401,9 @@ public class OCNoticeUtil {
              }      	
   	    	
   			    	if(basement != null)
-  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with basement)");
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with basement)");
   			    	else
-  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" (with out basement)");
+  			    		maxFloorCount = ordinal(proposedBldgMaxFloorNumber.get().getFloorNumber()).concat(" floor (with out basement)");
          }
         
         reportParams.put("maxFloorNumber", maxFloorCount);

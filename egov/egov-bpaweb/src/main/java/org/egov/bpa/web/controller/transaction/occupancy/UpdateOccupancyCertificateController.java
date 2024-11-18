@@ -84,6 +84,9 @@ import static org.egov.bpa.utils.BpaConstants.WF_BA_FORWARD_TO_SDO_BUILDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_AEE_APPLICATION_APPROVAL_PENDING;
 import static org.egov.bpa.utils.BpaConstants.WF_BA_FINAL_APPROVAL_PROCESS_INITIATED;
 import static org.egov.bpa.utils.BpaConstants.WF_INSPECTION_APPROVED_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_AEO;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERT_TO_BA;
+import static org.egov.bpa.utils.BpaConstants.WF_REVERTED_TO_AEO;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -532,13 +535,19 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         			|| WF_BA_FORWARD_TO_SDO_BUILDING.equalsIgnoreCase(oc.getState().getValue())
 	        			|| WF_BA_AEE_APPLICATION_APPROVAL_PENDING.equalsIgnoreCase(oc.getState().getValue())
 	                		|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getValue())
+	                			|| WF_REVERT_TO_AEO.equalsIgnoreCase(oc.getState().getValue())
+	                				|| WF_REVERT_TO_BA.equalsIgnoreCase(oc.getState().getValue())
+	                					|| WF_REVERTED_TO_AEO.equalsIgnoreCase(oc.getState().getValue())
         			) {
         				model.addAttribute("createlettertoparty", true);
         				}
         }
         else {
         	if (APPLICATION_STATUS_REGISTERED.equalsIgnoreCase(oc.getState().getValue()) 
-        			|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getValue())) {
+        			|| WF_BA_FINAL_APPROVAL_PROCESS_INITIATED.equalsIgnoreCase(oc.getState().getValue())
+        				|| WF_REVERT_TO_AEO.equalsIgnoreCase(oc.getState().getValue())
+        					|| WF_REVERT_TO_BA.equalsIgnoreCase(oc.getState().getValue())
+        						|| WF_REVERTED_TO_AEO.equalsIgnoreCase(oc.getState().getValue())) {
         		model.addAttribute("createlettertoparty", true);	
         	}
         }
@@ -664,14 +673,26 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
         } else if (WF_REVERT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             pos = occupancyCertificate.getCurrentState().getPreviousOwner();
             approvalPosition = occupancyCertificate.getCurrentState().getPreviousOwner().getId();
-        }else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        } else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
         	WorkFlowMatrix wfMatrix = ocApplicationWorkflowService.getWfMatrix(occupancyCertificate.getStateType(), null, amountRule,
         			occupancyCertificate.getOccupancyCertificateType(), "NEW",
                     null);
         	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
         			bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());
         	approvalPosition = pos.getId();
-        }       
+        } else if ("Revert to Building Assistant".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        	WorkFlowMatrix wfMatrix = ocApplicationWorkflowService.getWfMatrix(occupancyCertificate.getStateType(), null, wfBean.getAmountRule(),
+       			 wfBean.getAdditionalRule(), "Revert to Building Assistant",
+                   null);
+       	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+       			bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());
+           } else if ("Revert to AEO".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+        	WorkFlowMatrix wfMatrix = ocApplicationWorkflowService.getWfMatrix(occupancyCertificate.getStateType(), null, wfBean.getAmountRule(),
+       			 wfBean.getAdditionalRule(), "Revert to AEO",
+                   null);
+       	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+       			bpaUtils.getBoundaryForWorkflow(occupancyCertificate.getParent().getSiteDetail().get(0)).getId());
+           }      
         else if (FWDINGTOLPINITIATORPENDING.equalsIgnoreCase(occupancyCertificate.getState().getNextAction())) {
             List<OCLetterToParty> letterToParties = ocLetterToPartyService.findAllByOC(occupancyCertificate);
             StateHistory<Position> stateHistory = bpaWorkFlowService.getStateHistoryToGetLPInitiator(

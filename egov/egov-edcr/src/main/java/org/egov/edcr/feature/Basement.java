@@ -255,8 +255,11 @@ public class Basement extends FeatureProcess {
 
 	private boolean isOccupancyNotAllowed(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage = false;
-		if (DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
+		/*if (DxfFileConstants.F_B.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.F_TS.equals(occupancyTypeHelper.getSubtype().getCode())
+
+		)*/
+		if (DxfFileConstants.F_TS.equals(occupancyTypeHelper.getSubtype().getCode())
 
 		)
 			flage = true;
@@ -267,6 +270,7 @@ public class Basement extends FeatureProcess {
 	private boolean isOccupancyOptional(OccupancyTypeHelper occupancyTypeHelper) {
 		boolean flage = false;
 		if (DxfFileConstants.A_P.equals(occupancyTypeHelper.getSubtype().getCode())
+				|| DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.F_SCO.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.F_PP.equals(occupancyTypeHelper.getSubtype().getCode())
 				|| DxfFileConstants.G.equals(occupancyTypeHelper.getType().getCode())

@@ -114,7 +114,9 @@ public class BpaApplication extends StateAware<Position> {
 	@SafeHtml
     private String buildingplanapprovalnumber;
     @Temporal(value = TemporalType.DATE)
-    private Date buildingPlanApprovalDate;
+    private Date buildingPlanApprovalDate;    
+	@Temporal(value = TemporalType.DATE)
+    private Date planValidTillDate;
     @Length(min = 1, max = 128)
 	@SafeHtml
     private String applicationNumber;
@@ -431,6 +433,14 @@ public class BpaApplication extends StateAware<Position> {
     public void setBuildingplanapprovalnumber(final String buildingplanapprovalnumber) {
         this.buildingplanapprovalnumber = buildingplanapprovalnumber;
     }
+    
+    public Date getPlanValidTillDate() {
+		return planValidTillDate;
+	}
+
+	public void setPlanValidTillDate(Date planValidTillDate) {
+		this.planValidTillDate = planValidTillDate;
+	}
 
     public String getApplicationNumber() {
         return applicationNumber;

@@ -52,6 +52,7 @@ import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.master.entity.LpReason;
 import org.egov.bpa.master.service.ChecklistServicetypeMappingService;
 import org.egov.bpa.master.service.LpReasonService;
+import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.PermitRenewalLetterToParty;
 import org.egov.bpa.transaction.entity.common.LetterToPartyCommon;
@@ -84,6 +85,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.sun.mail.imap.protocol.Status;
 
     @Controller
     @RequestMapping(value = "/permitrenewal/lettertoparty")
@@ -160,12 +163,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
         public String createLetterToParty(@ModelAttribute("permitRenewalLetterToParty") final PermitRenewalLetterToParty permitRenewalLTP,
         		@PathVariable final String applicationNumber,final BindingResult resultBinder, final Model model, final HttpServletRequest request,
                 final BindingResult errors, final RedirectAttributes redirectAttributes) {
+        	System.out.println("Inside letter to Party create method");
+        	System.out.println("Permit Renewal Application Number : " + applicationNumber);
+        	PermitRenewal permitRenewal = permitRenewalService.findByApplicationNumber(applicationNumber);
+        	permitRenewalLTP.setPermitRenewal(permitRenewal);
+        	
             if (permitRenewalLTP.getPermitRenewal().getStatus().getCode().equals(BpaConstants.CREATEDLETTERTOPARTY)) {
+            	System.out.println("Inside LTP if condition 1");
                 model.addAttribute(MESSAGE,
                         messageSource.getMessage("msg.lp.already.created", null, LocaleContextHolder.getLocale()));
                 return COMMON_ERROR;
             }
             Position ownerPosition = permitRenewalLTP.getPermitRenewal().getCurrentState().getOwnerPosition();
+            System.out.println("Owner Position : " + ownerPosition);
             if (validateLoginUserAndOwnerIsSame(model, securityUtils.getCurrentUser(), ownerPosition))
                 return COMMON_ERROR;
             validateCreateLetterToParty(permitRenewalLTP, errors);
@@ -200,13 +210,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
                     ltp.setPendingAction(existingLpParty.getPendingAction());
                 }
             }
-            Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(permitRenewalLTP.getPermitRenewal(),
-                    "LP Initiated");
-            lettertoPartyService.save(permitRenewalLTP, pos.getId());
-            User user = workflowHistoryService.getUserPositionByPassingPosition(pos.getId());
+            
+            
+            /*Position pos = bpaWorkFlowService.getApproverPositionOfElectionWardByCurrentState(permitRenewal,
+                    "LP Initiated");*/
+            lettertoPartyService.save(permitRenewalLTP, ownerPosition.getId());
+            User user = workflowHistoryService.getUserPositionByPassingPosition(ownerPosition.getId());
             String message = messageSource.getMessage(MSG_LP_FORWARD_CREATE, new String[] {
                     user != null ? user.getUsername().concat("~")
-                            .concat(getApproverDesigName(pos))
+                            .concat(getApproverDesigName(ownerPosition))
                             : "",
                     ltp.getLpNumber(), permitRenewalLTP.getPermitRenewal().getApplicationNumber() },
                     LocaleContextHolder.getLocale());

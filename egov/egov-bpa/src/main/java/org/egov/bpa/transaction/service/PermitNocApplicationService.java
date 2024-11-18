@@ -404,7 +404,8 @@ public class PermitNocApplicationService {
 				if(boundaryType.equalsIgnoreCase(BpaConstants.URBAN)) {
 					if(plotType.equalsIgnoreCase(BpaConstants.ABOVE_TWO_KANAL)) {
 						if(BpaConstants.A_G.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
-							|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
+							|| BpaConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode()) 
+								|| BpaConstants.A_H.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPACDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocStructureDept("YES");
 							edcrPlanInfo.getPlan().getPlanInformation().setNocPlanningDept("YES");

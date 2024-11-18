@@ -369,6 +369,32 @@
 		</div>
 	</div>
 
+	<c:if
+		test="${sanctionPlan}">
+		<div class="form-group">
+			<label class="col-sm-3 control-label text-right"><spring:message
+					code="lbl.build.plan.permission.date" /><span class="mandatory"></span>
+			</label>
+			<div class="col-sm-3 add-margin">
+				<form:input path="buildingPlanApprovalDate"
+					class="form-control datepicker" data-date-end-date="0d"
+					id="buildingPlanApprovalDate" data-inputmask="'mask': 'd/m/y'"
+					required="required" />
+				<form:errors path="buildingPlanApprovalDate"
+					cssClass="add-margin error-msg" />
+			</div>
+			<label class="col-sm-2 control-label text-right"><spring:message
+					code="lbl.exist.permit.expiry" /></label>
+			<div class="col-sm-3 add-margin">
+				<form:input path="planValidTillDate" class="form-control datepicker"
+					data-date-end-date="0d" id="planValidTillDate"
+					data-inputmask="'mask': 'd/m/y'" required="required" />
+				<form:errors path="planValidTillDate"
+					cssClass="add-margin error-msg" />
+			</div>
+		</div>
+	</c:if>
+
 	<%-- <div class="form-group">
 		<div class="col-sm-3 add-margin">
 			<c:choose>

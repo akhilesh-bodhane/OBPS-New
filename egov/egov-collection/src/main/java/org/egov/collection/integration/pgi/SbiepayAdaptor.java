@@ -74,7 +74,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 	@Override
 	public PaymentRequest createPaymentRequest(final ServiceDetails paymentServiceDetails,
 			final ReceiptHeader receiptHeader) {
-		LOGGER.info("inside  SbiepayAdaptor createPaymentRequest");
+		LOGGER.info("inside SbiepayAdaptor createPaymentRequest");
 		final DefaultPaymentRequest paymentRequest = new DefaultPaymentRequest();
 
 		String prefix = null;
@@ -133,6 +133,10 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 		
 		paymentRequest.setParameter("MultiAccountInstructionDtls", AES256Bit.encrypt(multiAccountInstructionDtls,
 				AES256Bit.readKeyBytes(collectionApplicationProperties.sbiMkey(prefix))));
+		LOGGER.info("returnUrl : " + returnUrl);
+		LOGGER.info("hashSequence : " + hashSequence);
+		LOGGER.info("multiAccountInstructionDtls : " + multiAccountInstructionDtls);
+		LOGGER.info("paymentRequest : " + paymentRequest.requestParameters.values().toString());
 		return paymentRequest;
 	}
 	
@@ -277,7 +281,7 @@ public class SbiepayAdaptor implements PaymentGatewayAdaptor {
 
 	public Map<String, String> getOfflinePaymentRequest(String reconcileUrl, String aggregatorId, String MID,
 			String orderNo) {
-		//LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
+		LOGGER.info("getOfflinePaymentRequest call to sbi : for order number :"+orderNo+" reconcileUrl : "+reconcileUrl+" aggregatorId : "+aggregatorId+" MID :"+MID);
 		Map<String, String> map = new HashMap<String, String>();
 		String queryRequest = "|" + MID + "|" + orderNo;
 		try {

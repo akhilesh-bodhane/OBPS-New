@@ -53,6 +53,7 @@ import static org.egov.bpa.utils.BpaConstants.DEMANDNOCFILENAME;
 import static org.egov.bpa.utils.BpaConstants.OCDEMANDFILENAME;
 import static org.egov.bpa.utils.BpaConstants.OCREJECTIONFILENAME;
 import static org.egov.bpa.utils.BpaConstants.PLREJECTIONFILENAME;
+import static org.egov.bpa.utils.BpaConstants.PERMITRENEWALDEMANDNOCFILENAME;
 import static org.egov.infra.utils.StringUtils.append;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
@@ -121,6 +122,17 @@ public class BpaNoticeController {
         ReportOutput reportOutput = bpaNoticeFeature
                 .generateNotice(applicationBpaService.findByApplicationNumber(applicationNumber));
         return getFileAsResponseEntity(applicationNumber, reportOutput, DEMANDNOCFILENAME);
+    }
+    
+    @GetMapping(value = "/application/permitrenewal/demandnotice/{applicationNumber}", produces = APPLICATION_PDF_VALUE)
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> viewPermitRenewalDemandNoticeReport(@PathVariable final String applicationNumber)
+            throws IOException {
+    	PermitRenewalRejectionNoticeService renewalNoticeFeature = (PermitRenewalRejectionNoticeService) specificNoticeService
+                .find(PermitRenewalRejectionNoticeService.class, specificNoticeService.getCityDetails());
+        ReportOutput reportOutput = renewalNoticeFeature
+                .generateDemandNotice(permitRenewalService.findByApplicationNumber(applicationNumber));
+        return getFileAsResponseEntity(applicationNumber, reportOutput, PERMITRENEWALDEMANDNOCFILENAME);
     }
 
     @GetMapping(value = "/application/generatepermitorder/{applicationNumber}", produces = APPLICATION_PDF_VALUE)

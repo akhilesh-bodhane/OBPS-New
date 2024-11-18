@@ -437,10 +437,11 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
 			return COMMON_ERROR;
 
 		}
-        if (bpaApplication.getIsOneDayPermitApplication())
+		//commented to remove one day permit application type during withdraw
+        /*if (bpaApplication.getIsOneDayPermitApplication())
         System.out.println("getIsOneDayPermitApplication: Yes");
             bpaApplication.setApplicationType(
-                    applicationTypeService.findByName(BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT.toUpperCase()));
+                    applicationTypeService.findByName(BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT.toUpperCase()));*/
 
         bpaUtils.saveOrUpdateBoundary(bpaApplication);
         System.out.println("BPA Application Detail 1 : " + bpaApplication);

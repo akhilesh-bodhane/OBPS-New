@@ -278,24 +278,36 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                     .withDateInfo(currentDate.toDate()).withOwner(stateHistory.getOwnerPosition()).withOwner(stateHistory.getOwnerUser())
                     .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
         } else {
+        	System.out.println("Inside else condition OC workflow");
         	 if (null == pos && wfBean.getWorkFlowAction().equalsIgnoreCase(WF_INSPECTION_APPROVED_BUTTON)) {
                  pos = positionMasterService.getPositionById(oc.getCurrentState().getOwnerPosition().getId());
              }
-            Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
-            if (approverAssignment == null)
-                approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
+        	 
+        	
             if (BpaConstants.WF_REVERT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
                 oc.setSentToPreviousOwner(true);
                 pos = oc.getCurrentState().getPreviousOwner();
                 wfMatrix = workFlowMatrixService
                         .getWorkFlowObjectbyId(bpaWorkFlowService.getPreviousWfMatrixId(oc.getStateHistory(),oc.getState()));
-            }else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            } else if ("Revert to BA".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             	 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
             			 wfBean.getAdditionalRule(), "NEW",
                         null);
             	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
             			bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
-            } 
+            } else if ("Revert to Building Assistant".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+           	 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
+        			 wfBean.getAdditionalRule(), "Revert to Building Assistant",
+                    null);
+        	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+        			bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
+            } else if ("Revert to AEO".equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+           	 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
+        			 wfBean.getAdditionalRule(), "Revert to AEO",
+                    null);
+        	pos= bpaUtils.getUserPositionByZone(wfMatrix.getNextDesignation(),
+        			bpaUtils.getBoundaryForWorkflow(oc.getParent().getSiteDetail().get(0)).getId());
+            }
             
             else if (BpaConstants.WF_AUTO_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
@@ -334,11 +346,6 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                     && oc.getStatus().getCode().equals(BpaConstants.APPLICATION_STATUS_REGISTERED)) {
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
                         null, wfBean.getAdditionalRule(), BpaConstants.WF_NEW_STATE, null);
-            } else if (approverAssignment != null
-                    && BpaConstants.DESIGNATION_TOWN_SURVEYOR.equalsIgnoreCase(approverAssignment.getDesignation().getName())) {
-                wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
-                        null, wfBean.getAdditionalRule(), BpaConstants.WF_TS_INSPECTION_INITIATED,
-                        OcConstants.WF_FWD_AE_APPROVAL_PENDING);
             } else if (BpaConstants.WF_RESCHDLE_APPMNT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
                 wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
                         null, wfBean.getAdditionalRule(), oc.getCurrentState().getValue(),
@@ -350,6 +357,19 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                     wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
                             null, wfBean.getAdditionalRule(), oc.getCurrentState().getValue(), null);
             }
+            
+           /* System.out.println("Position : " + pos);
+            Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
+            if(approverAssignment == null){
+                approverAssignment = bpaWorkFlowService.getAssignmentsByPositionAndDate(pos.getId(), new Date()).get(0);
+                
+            } else if (approverAssignment != null
+                    && BpaConstants.DESIGNATION_TOWN_SURVEYOR.equalsIgnoreCase(approverAssignment.getDesignation().getName())) {
+                wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null,
+                        null, wfBean.getAdditionalRule(), BpaConstants.WF_TS_INSPECTION_INITIATED,
+                        OcConstants.WF_FWD_AE_APPROVAL_PENDING);
+            } */
+            
             if (wfMatrix != null) {
                 BpaStateInfo bpaStateInfo = bpaWorkFlowService.getBpaStateInfo(oc.getCurrentState(), oc.getStateHistory(),
                         oc.getTownSurveyorInspectionRequire(), new BpaStateInfo(), wfMatrix, wfBean.getWorkFlowAction());

@@ -118,13 +118,14 @@ public class PermitRenewalService {
     @Transactional
     public PermitRenewal save(final PermitRenewal permitRenewal, final WorkflowBean wfBean) {
         if (permitRenewal.getApplicationNumber() == null) {
+        	System.out.println("Inside Application Number Generation Method");
             permitRenewal.setApplicationNumber(applicationNumberGenerator.generate());
             permitRenewal.setApplicationDate(new Date());
         }
         buildDocuments(permitRenewal);
         permitRenewal.setStatus(bpaStatusService.findByModuleTypeAndCode(RENEWALSTATUS_MODULETYPE, APPLICATION_STATUS_CREATED));
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction()))
-            bpaWorkflowRedirectUtility.redirectToBpaWorkFlow(permitRenewal, wfBean);
+            bpaWorkflowRedirectUtility.redirectToBpaWorkFlow(permitRenewal, wfBean);        
         PermitRenewal renewalResponse = permitRenewalRepository.saveAndFlush(permitRenewal);
         permitRenewalIndexService.createPermitRenewalIndex(renewalResponse);
         return renewalResponse;
@@ -151,7 +152,7 @@ public class PermitRenewalService {
         if (WF_APPROVE_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
             permitRenewal.setRenewalApprovalDate(new Date());
             permitRenewal.setRenewalNumber(permitRenewal.getParent().getPlanPermissionNumber());
-            renewalSmsAndEmailService.sendSmsAndEmailOnRenewalApproval(permitRenewal, null);
+            //renewalSmsAndEmailService.sendSmsAndEmailOnRenewalApproval(permitRenewal, null);
         }
 
         if (WF_GENERATE_RENEWAL_ORDER.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
@@ -163,13 +164,15 @@ public class PermitRenewalService {
                     permitRenewal.getParent().getServiceType().getRenewalValidity());
             permitRenewal.setPermitRenewalExpiryDate(DateUtils.toDateUsingDefaultPattern(permitRenewalExpiryDateStr));
         }
-        if ("Initiated for permit renewal".equalsIgnoreCase(permitRenewal.getCurrentState().getValue())) {
+        /*if ("Initiated for permit renewal".equalsIgnoreCase(permitRenewal.getCurrentState().getValue())) {*/
+        /*if ("Fee details verification initiated".equalsIgnoreCase(permitRenewal.getCurrentState().getValue())) {        	
             permitRenewal.setDemand(
                     bpaDemandService.createDemandUsingDemandReasonCodes(permitRenewal.getDemand(),
                             feeCalculationService.calculateRenewalFee(permitRenewal)));
-        }
+        }*/
         if (WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
                 || APPLICATION_STATUS_REJECTED.equalsIgnoreCase(permitRenewal.getStatus().getCode())) {
+        	System.out.println("WF REJECT BUTTON Condition");
             buildRejectionReasons(permitRenewal);
         }
         PermitRenewal permitRenewalRes = permitRenewalRepository.save(permitRenewal);
@@ -179,6 +182,8 @@ public class PermitRenewalService {
     }
 
     private void buildRejectionReasons(final PermitRenewal permitRenewal) {
+    	System.out.println("Inside Build Rejection Method");
+    	System.out.println("Rejection Reasons : " + permitRenewal.getRejectionReasons());
         renewalConditionsService.delete(permitRenewal.getRejectionReasons());
         renewalConditionsService.delete(permitRenewal.getAdditionalRenewalConditions());
         permitRenewal.getAdditionalRenewalConditions().clear();

@@ -88,12 +88,14 @@ import org.egov.bpa.master.service.ChecklistServicetypeMappingService;
 import org.egov.bpa.master.service.ServiceTypeService;
 import org.egov.bpa.service.es.OccupancyCertificateIndexService;
 import org.egov.bpa.transaction.entity.ApplicationFee;
+import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.common.DcrDocument;
 import org.egov.bpa.transaction.entity.common.GeneralDocument;
 import org.egov.bpa.transaction.entity.common.NocDocument;
 import org.egov.bpa.transaction.entity.common.StoreDcrFiles;
+import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.oc.OCBuilding;
 import org.egov.bpa.transaction.entity.oc.OCDcrDocuments;
 import org.egov.bpa.transaction.entity.oc.OCDocuments;
@@ -109,8 +111,10 @@ import org.egov.bpa.transaction.notice.impl.OccupancyCertificateDemandFormatImpl
 import org.egov.bpa.transaction.repository.OCDcrDocumentRepository;
 import org.egov.bpa.transaction.repository.oc.OccupancyCertificateRepository;
 import org.egov.bpa.transaction.repository.oc.OccupancyFeeRepository;
+import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.ApplicationFeeService;
+import org.egov.bpa.transaction.service.WorkflowHistoryService;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
 import org.egov.bpa.transaction.service.collection.OccupancyCertificateBillService;
 import org.egov.bpa.transaction.service.impl.OccupancyCertificateFeeService;
@@ -121,6 +125,7 @@ import org.egov.bpa.utils.OccupancyCertificateUtils;
 import org.egov.commons.entity.Source;
 import org.egov.demand.model.EgDemand;
 import org.egov.infra.admin.master.entity.Boundary;
+import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.custom.CustomImplProvider;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.filestore.entity.FileStoreMapper;
@@ -136,6 +141,10 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -149,6 +158,8 @@ public class OccupancyCertificateService {
     private static final String APPLICATION_FEES_FOR_WELL_CONSTURCTION = "Application Fees for Well consturction";
     private static final String APPLICATION_DOCUMENTS_VERIFICATION_IN_PROGRESS = "Application documents verification in progress";
 
+    @Autowired
+    private WorkflowHistoryService workflowHistoryService;
     @Autowired
     private BpaUtils bpaUtils;
     @Autowired
@@ -620,6 +631,35 @@ public class OccupancyCertificateService {
             ocFeeCalculationService.calculateOCFees(oc, ocFee);
         }
         return ocFee;
+    }
+    
+    @ReadOnly
+    public Page<SearchBpaApplicationForm> hasFeeCollectionPending(
+            final SearchBpaApplicationForm searchRequest) {
+        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+                searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        Page<OccupancyCertificate> ocApplications = occupancyCertificateRepository
+        		.findAll(SearchOcSpec.hasCollectionPendingSpecification(searchRequest), pageable);
+        List<SearchBpaApplicationForm> searchResults = new ArrayList<>();
+        for (OccupancyCertificate application : ocApplications) {
+            String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
+            Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
+            searchResults.add(
+                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+        }
+        return new PageImpl<>(searchResults, pageable, ocApplications.getTotalElements());
+    }
+    
+    private String getProcessOwner(OccupancyCertificate ocApplication) {
+        String processOwner;
+        if (ocApplication.getState() != null && ocApplication.getState().getOwnerPosition() != null)
+            processOwner = workflowHistoryService
+                    .getUserPositionByPositionAndDate(ocApplication.getState().getOwnerPosition().getId(),
+                    		ocApplication.getState().getLastModifiedDate())
+                    .getName();
+        else
+            processOwner = ocApplication.getLastModifiedBy().getName();
+        return processOwner;
     }
 
 	public List<Long> findFinalOCGenerationApplications(Date todayDate) {

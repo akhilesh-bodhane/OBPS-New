@@ -1,11 +1,17 @@
 <!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <html>
 	<head>
 		<link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/bpa-features.css" />
 		 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	    <!--Import materialize.css-->
 	    <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/materialize.min.css" media="screen,projection" />
-	    <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/landingpage.css" />    
+	    <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/landingpage.css" />   
 	    <style>
 	        .icon-header {display: block !important;}
 	    </style>
@@ -22,7 +28,7 @@
 	                    var downarrow = e.querySelectorAll('.landingpage-card-down-arrow');
 	                    downarrow[0].classList.add("row-hide");
 	                    var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
-	                    uparrow[0].classList.remove("row-hide");	
+	                    uparrow[0].classList.remove("row-hide");
 	                },
 	                onCloseEnd: function (e) {
 	                    var row = e.querySelectorAll('.lp-row-1');
@@ -30,14 +36,16 @@
 	                    var downarrow = e.querySelectorAll('.landingpage-card-down-arrow');
 	                    downarrow[0].classList.remove("row-hide");
 	                    var uparrow = e.querySelectorAll('.landingpage-card-up-arrow');
-	                    uparrow[0].classList.add("row-hide");	
+	                    uparrow[0].classList.add("row-hide");
 	                }
 	            });
 	        });
+	        
 	    </script>   
 	</head>
 <body>
 	<div class="landingpage-font-style">
+
 		<div class="card landingpage-card">
 			<ul class="collapsible card-collapse">
 				<li style="padding-left: 40px; padding-right: 40px;" class="">
@@ -138,6 +146,110 @@
 				</li>
 			</ul>
 		</div>
+
+		<%-- <div class="card landingpage-card">
+			<ul class="collapsible card-collapse">
+				<li style="padding-left: 40px; padding-right: 40px;">
+					<div class="panel-heading">
+					<div class="panel-title">
+						<spring:message code="title.dashboard" />
+					</div>
+				</div>
+					<div
+						class="card-content collapsible-header landingpage-card-content"
+						tabindex="0">
+						<span class="card-title card-header">Dashboard</span>
+					</div>
+
+
+					<div class="panel-body custom">
+						<!-- <div class="row collapsible-header collapsible-body card-body"
+							tabindex="0" style=""> -->
+							<div
+								class="row lp-row-2 collapsible-header landingpage-card-content"
+								tabindex="0">
+								<table class="table table-bordered  multiheadertbl"
+									id="citizenDashboardCount">
+									<thead>
+										<tr>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.srl.no" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.service.name" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.application.count" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.application.granted" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.avg.time.taken" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.avg.time.taken.a2k" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.avg.time.taken.b2k" /></th>
+											<th class="view-content text-center" style="font-size: 97%;"><spring:message
+													code="lbl.total.collection" /></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="view-content text-left" style="font-size: 97%;">1.</td>
+											<td class="view-content text-left" style="font-size: 97%;">BPA
+												Application</td>
+											<td class="view-content text-left" style="font-size: 97%;">711</td>
+											<td class="view-content text-left" style="font-size: 97%;">243</td>
+											<td class="view-content text-left" style="font-size: 97%;">3</td>
+											<td class="view-content text-left" style="font-size: 97%;">2</td>
+											<td class="view-content text-left" style="font-size: 97%;">2</td>										
+											<td class="view-content text-left" style="font-size: 97%;">1,97,373,073</td>
+										</tr>
+										<tr>
+											<td class="view-content text-left" style="font-size: 97%;">2.</td>
+											<td class="view-content text-left" style="font-size: 97%;">Occupancy
+												Certificate Application</td>
+											<td class="view-content text-left" style="font-size: 97%;">126</td>
+											<td class="view-content text-left" style="font-size: 97%;">78</td>
+											<td class="view-content text-left" style="font-size: 97%;">2</td>
+											<td class="view-content text-left" style="font-size: 97%;">1</td>
+											<td class="view-content text-left" style="font-size: 97%;">2</td>
+											<td class="view-content text-left" style="font-size: 97%;">622,581</td>
+										</tr>
+										<tr>
+											<td class="view-content text-left" style="font-size: 97%;">3.</td>
+											<td class="view-content text-left" style="font-size: 97%;">DPC/Plinth
+												Level Certificate Application</td>
+											<td class="view-content text-left" style="font-size: 97%;">35</td>
+											<td class="view-content text-left" style="font-size: 97%;">17</td>
+											<td class="view-content text-left" style="font-size: 97%;">2</td>
+											<td class="view-content text-left" style="font-size: 97%;">NA</td>
+											<td class="view-content text-left" style="font-size: 97%;">NA</td>
+											<td class="view-content text-left" style="font-size: 97%;">NA</td>
+										</tr>
+										<tr>
+											<td class="view-content text-left" style="font-size: 97%;">4.</td>
+											<td class="view-content text-left" style="font-size: 97%;">Revalidation
+												Application</td>
+											<td class="view-content text-left" style="font-size: 97%;">56</td>
+											<td class="view-content text-left" style="font-size: 97%;">7</td>
+											<td class="view-content text-left" style="font-size: 97%;">3</td>
+											<td class="view-content text-left" style="font-size: 97%;">NA</td>
+											<td class="view-content text-left" style="font-size: 97%;">NA</td>
+											<td class="view-content text-left" style="font-size: 97%;">61,000</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						<!-- </div> -->
+					</div>
+					<!-- <div
+						class="row collapsible-header card-action card-collapse-header"
+						tabindex="0">
+						<i class="material-icons landingpage-card-down-arrow-2">keyboard_arrow_down</i>
+						<i class="material-icons landingpage-card-up-arrow-2 row-hide">keyboard_arrow_up</i>
+					</div> -->
+				</li>
+			</ul>
+		</div> --%>
+
 	</div>
 		
 	<footer class = "f-regular bpa-login-footer page-common-padding col-md-12 color-black">

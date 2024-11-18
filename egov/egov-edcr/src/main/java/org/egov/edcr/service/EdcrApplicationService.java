@@ -111,6 +111,8 @@ public class EdcrApplicationService {
         edcrIndexService.updateIndexes(edcrApplication, NEW_SCRTNY);
         portalInetgrationService.createPortalUserinbox(edcrApplication,
                 Arrays.asList(securityUtils.getCurrentUser()));
+        
+        System.out.println("EDCR Application : " + edcrApplication);
 
         Plan planDetail = callDcrProcess(edcrApplication, NEW_SCRTNY);
         portalInetgrationService.updatePortalUserinbox(edcrApplication, securityUtils.getCurrentUser());
@@ -139,6 +141,7 @@ public class EdcrApplicationService {
     private Plan callDcrProcess(EdcrApplication edcrApplication, String applicationType) {
         Plan planDetail = new Plan();
         try {
+        	System.out.println("Application Type : " + applicationType);
             planDetail = planService.process(edcrApplication, applicationType);
             updateFile(planDetail, edcrApplication);
             edcrApplicationDetailService.saveAll(edcrApplication.getEdcrApplicationDetails());

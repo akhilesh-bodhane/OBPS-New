@@ -74,6 +74,7 @@ public class PlanService {
 	public Plan process(EdcrApplication dcrApplication, String applicationType) {
 		Map<String, String> cityDetails = specificRuleService.getCityDetails();
 
+		System.out.println("DCR Application : " + dcrApplication.toString());
 		Date asOnDate = null;
 		if (dcrApplication.getPermitApplicationDate() != null) {
 			asOnDate = dcrApplication.getPermitApplicationDate();
@@ -94,6 +95,7 @@ public class PlanService {
 			plan.setServiceType(dcrApplication.getServiceType());
 			setProperties(plan);
 			plan = applyRules(plan, amd, cityDetails);
+			System.out.println("Plan Info : " + plan);
 			additionalValidation(plan);
 			setEDCRmandatoryNOC(plan);
 		}catch (Exception e) {
@@ -364,14 +366,13 @@ public class PlanService {
 	
 	private void additionalValidation(Plan pl) {
 		//PRESENT_COLLECTOR for sco/scf
-		
-		OccupancyTypeHelper typeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();
-		
+		System.out.println("Inside Additional Vaildation Method");
+		OccupancyTypeHelper typeHelper=pl.getVirtualBuilding().getMostRestrictiveFarHelper();		
 		if(DxfFileConstants.F_SCO.equals(typeHelper.getSubtype().getCode()) && pl.getPlanInformation().getPresentCollectorRate().compareTo(BigDecimal.ZERO)==0) {
 			pl.addError("PRESENT_COLLECTOR_RATE_1", "PRESENT_COLLECTOR_RATE should  not be empty or zero for SCO/SCF.");
 		}
-		
 	}
+	
 	private void setEDCRmandatoryNOC(Plan plan) {		
 		plan.getPlanInformation().setNocPACDept("NO");
 		plan.getPlanInformation().setNocStructureDept("NO");
@@ -395,7 +396,8 @@ public class PlanService {
 			}
 			if(boundaryType.equalsIgnoreCase(DxfFileConstants.URBAN)) {
 				if(DxfFileConstants.A_G.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())
-					|| DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
+					|| DxfFileConstants.A_P.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode()) 
+						|| DxfFileConstants.A_H.equalsIgnoreCase(occupancyTypeHelper.getSubtype().getCode())){
 					plan.getPlanInformation().setNocPACDept("YES");
 					plan.getPlanInformation().setNocStructureDept("YES");
 				}else {

@@ -179,6 +179,7 @@ public class CitizenPreviousSanctionPlanApplicationController extends BpaGeneric
         bpaApplication.setApplicationDate(new Date());
         prepareCommonModelAttribute(model, bpaApplication.isCitizenAccepted());
         model.addAttribute("mode", "new");
+        model.addAttribute("sanctionPlan", true);
         model.addAttribute("permitApplnFeeRequired", false);
         bpaApplication.setSource(Source.CITIZENPORTAL);
         bpaApplication.setApplicantMode(ApplicantMode.NEW);

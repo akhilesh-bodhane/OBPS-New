@@ -280,6 +280,7 @@ public class Balcony extends FeatureProcess {
 				return true;
 		} else {
 			if (DxfFileConstants.A_G.equals(occupancyTypeHelper.getSubtype().getCode())
+					|| DxfFileConstants.A_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_H.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_M.equals(occupancyTypeHelper.getSubtype().getCode())
 					|| DxfFileConstants.F_CFI.equals(occupancyTypeHelper.getSubtype().getCode())

@@ -82,7 +82,6 @@ import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.workflow.entity.State;
 import org.egov.infra.workflow.entity.StateHistory;
 import org.egov.pims.commons.Position;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class SearchBpaApplnFormSpec {

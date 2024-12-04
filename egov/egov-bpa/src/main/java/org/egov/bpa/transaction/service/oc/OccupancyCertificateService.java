@@ -316,7 +316,9 @@ public class OccupancyCertificateService {
 
     @Transactional
     public OccupancyCertificate update(final OccupancyCertificate oc, final WorkflowBean wfBean) {
+    	System.out.println("occupancy certificate update method");
         if (WF_APPROVE_BUTTON.equals(wfBean.getWorkFlowAction())) {
+        	System.out.println("occupancy certificate update method if condition");
             oc.setApprovalDate(new Date());
             oc.setApproverPosition(oc.getState().getOwnerPosition());
             oc.setApproverUser(oc.getState().getOwnerUser());
@@ -331,7 +333,7 @@ public class OccupancyCertificateService {
             ReportOutput reportOutput = ocNoticeFeature
                     .generateNotice(findByApplicationNumber(oc.getApplicationNumber()));
             ocSmsAndEmailService.sendSmsAndEmailOnApproval(oc, reportOutput);
-            appendQrCodeWithDcrDocumentsForOc(oc);
+            //appendQrCodeWithDcrDocumentsForOc(oc);
         }
         oc.setSentToPreviousOwner(false);
         processAndStoreGeneralDocuments(oc);
@@ -595,7 +597,8 @@ public class OccupancyCertificateService {
         return occupancyCertificateRepository.findByStatusListOrderByCreatedDateAsc(listOfBpaStatus);
     }
 
-    private void appendQrCodeWithDcrDocumentsForOc(OccupancyCertificate oc) {
+    public void appendQrCodeWithDcrDocumentsForOc(OccupancyCertificate oc) {
+    	System.out.print("appendQrCodeWithDcrDocumentsForOc method");
         List<OCDcrDocuments> dcrDocuments = ocDcrDocumentRepository.findByOc(oc);
         for (OCDcrDocuments dcrDocument : dcrDocuments) {
             DcrDocument ocDcrDocument = dcrDocument.getDcrDocument();

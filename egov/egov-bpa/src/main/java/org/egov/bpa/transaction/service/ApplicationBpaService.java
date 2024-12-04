@@ -70,6 +70,8 @@ import static org.egov.bpa.utils.BpaConstants.WF_LBE_SUBMIT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_NEW_STATE;
 import static org.egov.bpa.utils.BpaConstants.WF_REJECT_BUTTON;
 import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_ORDER_ISSUED;
+import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.ByteArrayInputStream;
@@ -585,8 +587,8 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         buildSchemeLandUsage(application);
         // For one day permit
         LOG.info("#### BpaApplication in updateApplication method ####", application);
-        appendQrCodeWithDcrDocuments(application);
-        appendQrCodeWithLPDocuments(application);
+        //appendQrCodeWithDcrDocuments(application);
+        //appendQrCodeWithLPDocuments(application);
         if (workFlowAction.equals(BpaConstants.GENERATEREVOCATIONNOTICE)) {
             PermitRevocation permitRevocation = new PermitRevocation();
             permitRevocation.setRevocationNumber(revocationNumberGenerator.generatePermitRevocationNumber());
@@ -690,6 +692,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
                 || defaultPermitCondition.isEmpty() && !GENERATEREVOCATIONNOTICE.equalsIgnoreCase(workFlowAction))
             buildDefaultPermitConditionsList(application);
         final BpaApplication updatedApplication = applicationBpaRepository.save(application);
+        
         if (!WF_SAVE_BUTTON.equalsIgnoreCase(workFlowAction) && updatedApplication.getCurrentState() != null
                 && !updatedApplication.getCurrentState().getValue().equals(WF_NEW_STATE)) {
             bpaUtils.redirectToBpaWorkFlow(approvalPosition, application, application.getCurrentState().getValue(),
@@ -699,18 +702,25 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         return updatedApplication;
     }
 
-    private void appendQrCodeWithDcrDocuments(BpaApplication application) {
+    public void appendQrCodeWithDcrDocuments(BpaApplication application) {  
     	
 System.out.println("#### BpaApplication ####"+application);
     	
 System.out.println("#### BpaApplication idd ####"+application.getId());
+
+System.out.println("#### BpaApplication idd ####"+application.getId());
+
+System.out.println("#### application status ####"+application.getStatus().getCode());
+
+System.out.println("#### application status ####"+application.getState().getValue());
     	
     	LOG.info("#### BpaApplication ####", application);
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
-                && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
-                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
+                 && application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED) || (application.getStatus().getCode().equals(APPLICATION_STATUS_ORDER_ISSUED)
+                 || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
+        	System.out.println("#### application status changed iff ####"+application.getStatus().getCode());
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
             for (PermitDcrDocument dcrDocument : dcrDocuments) {
                 if (LOG.isInfoEnabled())
@@ -724,7 +734,7 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
         }
     }
     
-    private void appendQrCodeWithLPDocuments(BpaApplication application) {
+    public void appendQrCodeWithLPDocuments(BpaApplication application) {
     	
     	System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments ####"+application);
     	
@@ -743,8 +753,9 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
     		List<LetterToPartyDocumentCommon> lpdocuments=null;
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
-                && (application.getStatus().getCode().equals(APPLICATION_STATUS_APPROVED)
-                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
+                && (application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED)
+                        || application.getStatus().getCode().equals(APPLICATION_STATUS_NOCUPDATED) || application.getStatus().getCode().equals(APPLICATION_STATUS_ORDER_ISSUED)
+                        || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
             //List<LetterToPartyDocumentCommon> dcrDocuments = dcrDocumentRepository.findByApplication(application.);
         	for (Iterator iterator = permitLetterToParties.iterator(); iterator.hasNext();) {

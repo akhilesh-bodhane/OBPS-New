@@ -766,7 +766,11 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                     + occupancyCertificate.getApplicationNumber();
         }
         else if (isNotBlank(wfBean.getWorkFlowAction())
-                && WF_INSPECTION_APPROVED_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+                && WF_INSPECTION_APPROVED_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())) {     	
+        	System.out.print("WF_INSPECTION_APPROVED_BUTTON  else if condition");
+   		 System.out.print("OC Application status**************"+occupancyCertificate.getStatus().getCode());      		 
+   		 occupancyCertificateService.appendQrCodeWithDcrDocumentsForOc(occupancyCertificate);
+        	
             OccupancyCertificateNoticesFormat ocNoticeFeature = (OccupancyCertificateNoticesFormat) specificNoticeService
                     .find(OccupancyCertificateFinalFormatImpl.class, specificNoticeService.getCityDetails());
             ReportOutput reportOutput = ocNoticeFeature

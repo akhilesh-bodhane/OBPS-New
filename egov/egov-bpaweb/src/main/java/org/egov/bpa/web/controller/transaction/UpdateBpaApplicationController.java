@@ -645,6 +645,12 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         }
         if (isNotBlank(workFlowAction) 
         		&& GENERATEPERMITORDER.equalsIgnoreCase(workFlowAction)) {
+        	
+        	System.out.println("GENERATEPERMITORDER  if inside***********");
+            System.out.println("workFlowAction GENERATEPERMITORDER name***********"+workFlowAction);
+            System.out.println("#### GENERATEPERMITORDER else if inside application status ####"+bpaApplication.getStatus().getCode());
+            applicationBpaService.appendQrCodeWithDcrDocuments(bpaApplication);
+            applicationBpaService.appendQrCodeWithLPDocuments(bpaApplication);
 
             PermitApplicationNoticesFormat bpaNoticeFeature = (PermitApplicationNoticesFormat) specificNoticeService
                     .find(PermitOrderFormatImpl.class, specificNoticeService.getCityDetails());
@@ -654,8 +660,12 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
 
             return "redirect:/application/generatepermitorder/" + bpaAppln.getApplicationNumber();
         } else if (isNotBlank(workFlowAction) 
-        				&& ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction)) {
-
+        				&& ACCEPTASSCRUTINIZED.equalsIgnoreCase(workFlowAction)) {      
+          System.out.println("ACCEPTASSCRUTINIZED else if inside***********");
+          System.out.println("workFlowAction name***********"+workFlowAction);
+          System.out.println("#### ACCEPTASSCRUTINIZED else if inside application status ####"+bpaApplication.getStatus().getCode());
+          applicationBpaService.appendQrCodeWithDcrDocuments(bpaApplication);
+          applicationBpaService.appendQrCodeWithLPDocuments(bpaApplication);
             PermitApplicationNoticesFormat bpaNoticeFeature = (PermitApplicationNoticesFormat) specificNoticeService
                     .find(PermitOrderFormatImpl.class, specificNoticeService.getCityDetails());
             bpaNoticeFeature.generateNotice(applicationBpaService.findByApplicationNumber(applicationNumber));

@@ -733,12 +733,13 @@ if(permitLetterToParties.size()>0) {
 		
 	}
 }
+
     	
     	LOG.info("#### BpaApplication ####", application);
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
-                 && application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED) || (application.getStatus().getCode().equals(APPLICATION_STATUS_ORDER_ISSUED)
-                 || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED) && !"Building Plan Scrutiny".equals(lpreason))
+                 && (application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED) || ((application.getStatus().getCode().equals(APPLICATION_STATUS_ORDER_ISSUED)
+                 || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED)) && !"Building Plan Scrutiny".equals(lpreason)))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
         	System.out.println("#### application status changed iff ####"+application.getStatus().getCode());
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
@@ -815,9 +816,9 @@ if(permitLetterToParties.size()>0) {
         		 System.out.println("#### code ####"+code);
         		 System.out.println("####@@@@@@@ lpreason ####@@@@@@@@@"+lpreason);
         		 //LOG.info("#### code ####", code);
-        		if("LTP-01".equals(code) || "LTP-02".equals(code) || "LTP-03".equals(code) || "LTP-04".equals(code)
+        		if(("LTP-01".equals(code) || "LTP-02".equals(code) || "LTP-03".equals(code) || "LTP-04".equals(code)
         			|| "LTP-05".equals(code) || "LTP-06".equals(code) || "LTP-07".equals(code) || "LTP-08".equals(code) || "LTP-10".equals(code) 
-        			|| "LTP-32".equals(code) || "LTP-33".equals(code) || "LTP-34".equals(code) || "LTP-35".equals(code) && "Building Plan Scrutiny".equals(lpreason)){       		
+        			|| "LTP-32".equals(code) || "LTP-33".equals(code) || "LTP-34".equals(code) || "LTP-35".equals(code)) && "Building Plan Scrutiny".equals(lpreason)){       		
         		if (LOG.isInfoEnabled())
         			System.out.println("#### lp Document ####"+lp.getId());
                     //LOG.info("#### lp Document ####", lp.getId());    		

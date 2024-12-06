@@ -103,6 +103,7 @@ import org.egov.bpa.autonumber.RevocationNumberGenerator;
 import org.egov.bpa.autonumber.impl.PlanPermissionNumberGeneratorImpl;
 import org.egov.bpa.master.entity.BpaFeeMapping;
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
+import org.egov.bpa.master.entity.LpReason;
 import org.egov.bpa.master.entity.PermitRevocation;
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.master.entity.enums.FeeSubType;
@@ -713,12 +714,31 @@ System.out.println("#### BpaApplication idd ####"+application.getId());
 System.out.println("#### application status ####"+application.getStatus().getCode());
 
 System.out.println("#### application status ####"+application.getState().getValue());
+
+String lpreason="";
+
+List<PermitLetterToParty> permitLetterToParties = application.getPermitLetterToParties();
+
+if(permitLetterToParties.size()>0) {
+	for (Iterator iterator = permitLetterToParties.iterator(); iterator.hasNext();) {
+		PermitLetterToParty permitLetterToParty = (PermitLetterToParty) iterator.next();		
+		List<LpReason> lpReason = permitLetterToParty.getLetterToParty().getLpReason();
+		 System.out.println("####@@@@@@@ appendQrCodeWithDcrDocuments method lp reasonlist ####@@@@@@@@@"+lpReason);
+		for (LpReason lpReason2 : lpReason) {			
+			String description = lpReason2.getDescription();
+			 System.out.println("####@@@@@@@ description ####@@@@@@@@@"+description);
+				lpreason=description;
+				System.out.println("####@@@@@@@ if condition lpreason####@@@@@@@@@"+lpreason);
+		}
+		
+	}
+}
     	
     	LOG.info("#### BpaApplication ####", application);
         if (Boolean.valueOf(appConfigValuesService.getConfigValuesByModuleAndKey(MODULE_NAME,
                 PDF_QR_ENBLD).get(0).getValue())
                  && application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED_AS_SCRUTINIZED) || (application.getStatus().getCode().equals(APPLICATION_STATUS_ORDER_ISSUED)
-                 || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED))
+                 || application.getStatus().getCode().equals(APPLICATION_STATUS_ACCEPTED) && !"Building Plan Scrutiny".equals(lpreason))
                 && !bpaDemandService.checkAnyTaxIsPendingToCollect(application)) {
         	System.out.println("#### application status changed iff ####"+application.getStatus().getCode());
             List<PermitDcrDocument> dcrDocuments = dcrDocumentRepository.findByApplication(application);
@@ -739,6 +759,8 @@ System.out.println("#### application status ####"+application.getState().getValu
     	System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments ####"+application);
     	
     	System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments id ####"+application.getId());
+    	
+    	String lpreason="";
     	
     	//LOG.info("#### BpaApplication in appendQrCodeWithLPDocuments ####", application.getId());
     	
@@ -765,6 +787,18 @@ System.out.println("#### application status ####"+application.getState().getValu
 	    		System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if id ####"+letterToParty.getId());	
 	    		System.out.println("#### BpaApplication in appendQrCodeWithLPDocuments if LPNO ####"+letterToParty.getLpNumber());
 	    		lpdocuments = lpRepository.findByIsRequestedTrueAndIsSubmittedTrueAndLetterToPartyOrderByIdDesc(letterToParty);
+	    		
+	    		 List<LpReason> lpReason = permitLetterToParty.getLetterToParty().getLpReason();
+	    		 System.out.println("####@@@@@@@ appendQrCodeWithLPDocuments lp reasonlist ####@@@@@@@@@"+lpReason);
+	    		for (LpReason lpReason2 : lpReason) {
+	    			
+	    			String description = lpReason2.getDescription();
+	    			 System.out.println("####@@@@@@@ description ####@@@@@@@@@"+description);
+	    				lpreason=description;
+	    				System.out.println("####@@@@@@@ if condition lpreasion ####@@@@@@@@@"+lpreason);					
+				}
+	    		
+	    		
 			}     	 
         	 //LOG.info("#### LP documents ####", lpdocuments);       	 
         	 System.out.println("#### LP documents ####" + lpdocuments);      	 
@@ -779,10 +813,11 @@ System.out.println("#### application status ####"+application.getState().getValu
         		 //LOG.info("#### checklist ####", checklist);
         		 String code = checklist.getCode();
         		 System.out.println("#### code ####"+code);
+        		 System.out.println("####@@@@@@@ lpreason ####@@@@@@@@@"+lpreason);
         		 //LOG.info("#### code ####", code);
         		if("LTP-01".equals(code) || "LTP-02".equals(code) || "LTP-03".equals(code) || "LTP-04".equals(code)
         			|| "LTP-05".equals(code) || "LTP-06".equals(code) || "LTP-07".equals(code) || "LTP-08".equals(code) || "LTP-10".equals(code) 
-        			|| "LTP-32".equals(code) || "LTP-33".equals(code) || "LTP-34".equals(code) || "LTP-35".equals(code)){       		
+        			|| "LTP-32".equals(code) || "LTP-33".equals(code) || "LTP-34".equals(code) || "LTP-35".equals(code) && "Building Plan Scrutiny".equals(lpreason)){       		
         		if (LOG.isInfoEnabled())
         			System.out.println("#### lp Document ####"+lp.getId());
                     //LOG.info("#### lp Document ####", lp.getId());    		

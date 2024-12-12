@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.EdcrPdfDetail;
@@ -27,6 +30,7 @@ import org.egov.edcr.entity.Amendment;
 import org.egov.edcr.entity.AmendmentDetails;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
+import org.egov.edcr.entity.EgbpaApplicationDTO;
 import org.egov.edcr.feature.Coverage;
 import org.egov.edcr.feature.FeatureProcess;
 import org.egov.edcr.service.cdg.CDGAdditionalService;
@@ -39,9 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Service
 public class PlanService {
@@ -60,6 +61,8 @@ public class PlanService {
 	private ExtractService extractService;
 	@Autowired
 	private EdcrApplicationService edcrApplicationService;
+	
+	
 	
 	private boolean isMeterEnabled=false;
 	private boolean isFeetEnabled=false;
@@ -166,6 +169,9 @@ public class PlanService {
 	}
 	
 	private void setProperties(Plan pl) {
+		
+		
+		
 		pl.getPlanInformation().setFlushingUnitVolume(pl.getPlanInfoProperties().get(DxfFileConstants.FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.FLUSHING_UNITS_VOLUME_ABOVE_SEVEN_LITRES):"NA");
 		pl.getPlanInformation().setPlotType(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_TYPE):"NA");
 		pl.getPlanInformation().setTotalNumberOfBuildingUsers(pl.getPlanInfoProperties().get(DxfFileConstants.TOTAL_USERS)!=null?pl.getPlanInfoProperties().get(DxfFileConstants.TOTAL_USERS):"NA");
@@ -362,6 +368,31 @@ public class PlanService {
 				pl.addError("EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA", "EXCESS_COVERAGE_6_INCH_BEYOND_BUILD_UP_AREA is invalid in planifo layer");
 			}
 		}
+		
+		System.out.println("plan permission number********************"+pl.getPlanPermissionNumber());
+		EgbpaApplicationDTO egbpaApplication = edcrApplicationService.getEgbpaApplication(pl.getPlanPermissionNumber());
+		
+		System.out.println("egbpaApplication plot number********************"+egbpaApplication.getPlotnumber());
+		
+		System.out.println("egbpaApplication sector number********************"+egbpaApplication.getSector());
+		
+		System.out.println("plan info plot no********************"+pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO));
+		
+		System.out.println("plan info sector no********************"+pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER));
+		
+		if(!egbpaApplication.getPlotnumber().equals(pl.getPlanInfoProperties().get(DxfFileConstants.PLOT_NO))) {
+			
+			System.out.println("plan info plot no if condition********************");
+			
+			pl.addError("PLOT_NO_MISMATCH", "PLOT_NO_IS_MISMATCH with BPA in planinfo layer");			
+		}
+        if(!egbpaApplication.getSector().equals(pl.getPlanInfoProperties().get(DxfFileConstants.SECTOR_NUMBER))) {
+        	
+        	System.out.println("plan info sector no if condition********************");
+			
+			pl.addError("SECTOR_NO_MISMATCH", "SECTOR_NO_IS_MISMATCH with BPA in planinfo layer");			
+		}
+		
 	}
 	
 	private void additionalValidation(Plan pl) {

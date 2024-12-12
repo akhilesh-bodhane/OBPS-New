@@ -22,6 +22,7 @@ import org.egov.common.entity.edcr.Plan;
 import org.egov.edcr.entity.ApplicationType;
 import org.egov.edcr.entity.EdcrApplication;
 import org.egov.edcr.entity.EdcrApplicationDetail;
+import org.egov.edcr.entity.EgbpaApplicationDTO;
 import org.egov.edcr.entity.SearchBuildingPlanScrutinyForm;
 import org.egov.edcr.repository.EdcrApplicationDetailRepository;
 import org.egov.edcr.repository.EdcrApplicationRepository;
@@ -32,8 +33,13 @@ import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.filestore.service.FileStoreService;
 import org.egov.infra.security.utils.SecurityUtils;
 import org.egov.infra.utils.ApplicationNumberGenerator;
+import org.egov.infstr.services.PersistenceService;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.StringType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -84,6 +90,15 @@ public class EdcrApplicationService {
 
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
+    
+
+	//private EgbpaApplicationDAO egbpaApplicationDAO;
+	
+	@Autowired
+	@Qualifier("persistenceService")
+	private PersistenceService persistenceService;
+
+    
 
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
@@ -314,5 +329,22 @@ public class EdcrApplicationService {
         callDcrProcess(edcrApplication, NEW_SCRTNY);
         edcrIndexService.updateEdcrRestIndexes(edcrApplication, NEW_SCRTNY);
         return edcrApplication;
+    }
+    
+    
+    public EgbpaApplicationDTO getEgbpaApplication(String planPermitNumber) {
+    	
+    	String query="SELECT ea.plotnumber, ea.sector FROM egbpa_application ea WHERE ea.planpermissionnumber = '"+planPermitNumber+"'";
+    	
+    	SQLQuery createSQLQuery = persistenceService.getSession().createSQLQuery(query);
+    	createSQLQuery.addScalar("plotnumber",StringType.INSTANCE);
+		createSQLQuery.addScalar("sector",StringType.INSTANCE);
+		createSQLQuery.setResultTransformer(Transformers.aliasToBean(EgbpaApplicationDTO.class));
+		EgbpaApplicationDTO result = (EgbpaApplicationDTO) createSQLQuery.uniqueResult();
+		
+		System.out.println("result********************"+result);
+		
+		return result;
+        
     }
 }

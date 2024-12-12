@@ -369,6 +369,8 @@ public class PlanService {
 			}
 		}
 		
+		if(pl.getPlanPermissionNumber() !=null) {
+		System.out.println("plan permission number not null********************");
 		System.out.println("plan permission number********************"+pl.getPlanPermissionNumber());
 		EgbpaApplicationDTO egbpaApplication = edcrApplicationService.getEgbpaApplication(pl.getPlanPermissionNumber());
 		
@@ -392,6 +394,7 @@ public class PlanService {
 			
 			pl.addError("SECTOR_NO_MISMATCH", "SECTOR_NO_IS_MISMATCH with BPA in planinfo layer");			
 		}
+	}
 		
 	}
 	

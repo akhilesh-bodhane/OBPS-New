@@ -67,4 +67,10 @@ public interface StateRepository extends JpaRepository<State, Long> {
 
     @Query("select max(s.createdDate) from State s  where s.ownerPosition.id = :posId and s.status <> 2")
     Date findMaxCreatedDateByOwnerPosId(@Param("posId") Long posId);
+    
+    @Query(value = "select ea.addowner ,ea.applicantname  from edcr_application ea\r\n"
+    		+ "inner join edcr_application_detail ead on ea.id =ead.application \r\n"
+    		+ "inner join egbpa_occupancy_certificate eoc on ead.dcrnumber =eoc.edcrnumber \r\n"
+    		+ "where eoc.id=:id",nativeQuery = true)
+    String[] findedcrocownername(@Param("id") Long id);
 }

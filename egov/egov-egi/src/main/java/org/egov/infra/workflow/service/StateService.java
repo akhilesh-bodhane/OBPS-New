@@ -85,5 +85,9 @@ public class StateService {
     public Date getMaxCreatedDateByPositionId(final Long posId) {
         return stateRepository.findMaxCreatedDateByOwnerPosId(posId);
     }
+    
+    public String[] findedcrocownername(final Long id) {
+        return stateRepository.findedcrocownername(id);
+    }
 
 }

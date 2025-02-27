@@ -71,6 +71,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -167,10 +168,38 @@ public class InboxRenderServiceDelegate<T extends StateAware> {
     private List<Inbox> buildInbox(List<T> items) {
         List<Inbox> inboxItems = new ArrayList<>();
         for (StateAware stateAware : items) {
+        	
+        	State state = stateAware.getState();
+        	
+        	String type = state.getType();
+        	Boolean addOwner=false;
+        	String ownerName="";
+        	if("OccupancyCertificate".equals(type)) {          		
+        	String formattedString = stateAware.getStateDetails();        	
+        	// Split the string to extract `appId`
+        	String[] parts = formattedString.split("Applicant Name:"); // Break at known delimiter
+        	String appIdPart = parts[0].trim(); // Extract the left part
+        	String appId = appIdPart.split(":")[1].trim(); // Get the value after `app Id:`
+        	long appIdLong = Long.parseLong(appId); // Convert the string to a long
+        	System.out.println("Extracted AppId: " + appId);
+            System.out.println("Converted AppId to long: " + appIdLong);
+        	       	
+            String[] findedcrocownername = stateService.findedcrocownername(appIdLong);
+        	System.out.println("findedcrocownername: " + findedcrocownername);
+        	if (findedcrocownername != null || findedcrocownername.length != 0) {
+        	for (String name : findedcrocownername) {
+        	    // Splitting the string using a delimiter (e.g., comma, space, etc.)
+        	    String[] splitNames = name.split(","); // Replace "," with your actual delimiter
+        	    System.out.println("Split names: " + Arrays.toString(splitNames));
+        	    addOwner = Boolean.parseBoolean(splitNames[0]);
+        	    ownerName=splitNames[1];
+        	}
+        	}
+        	}
             inboxItems.add(Inbox
                     .build(stateAware,
                             getWorkflowType(stateAware.getStateType()),
-                            getNextAction(stateAware.getState())));
+                            getNextAction(stateAware.getState()),addOwner,ownerName));
         }
         inboxItems.addAll(microserviceUtils.getInboxItems());
         return inboxItems

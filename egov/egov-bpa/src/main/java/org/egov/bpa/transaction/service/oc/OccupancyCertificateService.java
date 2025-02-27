@@ -114,6 +114,7 @@ import org.egov.bpa.transaction.repository.oc.OccupancyFeeRepository;
 import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.transaction.service.ApplicationFeeService;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.WorkflowHistoryService;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
 import org.egov.bpa.transaction.service.collection.OccupancyCertificateBillService;
@@ -122,6 +123,7 @@ import org.egov.bpa.transaction.service.messaging.oc.OcSmsAndEmailService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.utils.BpaUtils;
 import org.egov.bpa.utils.OccupancyCertificateUtils;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.commons.entity.Source;
 import org.egov.demand.model.EgDemand;
 import org.egov.infra.admin.master.entity.Boundary;
@@ -147,6 +149,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -208,6 +212,9 @@ public class OccupancyCertificateService {
     private ServiceTypeService serviceTypeService;
     @Autowired
     protected OccupancyFeeService ocFeeService;
+    
+    @Autowired
+    private DcrRestService drcRestService;
 
     public List<OccupancyCertificate> findByEdcrNumber(String edcrNumber) {
         return occupancyCertificateRepository.findByEDcrNumber(edcrNumber);
@@ -647,8 +654,18 @@ public class OccupancyCertificateService {
         for (OccupancyCertificate application : ocApplications) {
             String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
             Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application);
+            
+          String geteDcrNumber = application.geteDcrNumber();       	
+   		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+   		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+   		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+   		 String ownerName = odcrPlanInfo.getOwnerName();
+   		 Boolean addowner=   odcrPlanInfo.getAddowner();
+   		 System.out.println("hasFeeCollectionPending addowner"+addowner);
+   		 System.out.println("hasFeeCollectionPending owner name"+ownerName);
+            
             searchResults.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending,ownerName,addowner));
         }
         return new PageImpl<>(searchResults, pageable, ocApplications.getTotalElements());
     }

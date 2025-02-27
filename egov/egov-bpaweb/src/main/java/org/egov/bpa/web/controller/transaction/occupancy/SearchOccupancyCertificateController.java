@@ -61,6 +61,7 @@ import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OCNocDocuments;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.oc.OccupancyNocApplication;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.oc.OCLetterToPartyService;
 import org.egov.bpa.transaction.service.oc.OcInspectionService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateNocService;
@@ -71,6 +72,7 @@ import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaPendingTaskAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchOCPendingTaskAdaptor;
 import org.egov.bpa.web.controller.transaction.BpaGenericApplicationController;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.eis.entity.Employee;
 import org.egov.eis.entity.Jurisdiction;
 import org.egov.eis.service.EmployeeService;
@@ -91,6 +93,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.gson.Gson;
 
@@ -122,6 +126,9 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     private CustomImplProvider specificNoticeService;
     @Autowired
     private OccupancyCertificateNocService ocNocService;
+    
+    @Autowired
+    private DcrRestService drcRestService;
     
     @GetMapping("/occollectfee")
     public String showCollectionPendingRecords(final Model model) {
@@ -312,6 +319,22 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     public String editOccupancyCertificateApplication(@PathVariable final String applicationNumber, final Model model,
             final HttpServletRequest request) {
         OccupancyCertificate oc = occupancyCertificateService.findByApplicationNumber(applicationNumber);
+        String geteDcrNumber = oc.geteDcrNumber(); 
+		  EdcrApplicationInfo odcrPlanInfo=drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+		  RequestContextHolder.getRequestAttributes()).getRequest());
+		  
+		  System.out.println("editOccupancyCertificateApplication method"+odcrPlanInfo);
+		  String ownerName = odcrPlanInfo.getOwnerName();
+		  System.out.println("editOccupancyCertificateApplication owner name"+ownerName);
+		  System.out.println("editOccupancyCertificateApplication get name"+oc.getParent().getOwner().getName());
+		  System.out.println("editOccupancyCertificateApplication add owner"+odcrPlanInfo.getAddowner());
+		  System.out.println("editOccupancyCertificateApplication Application type"+odcrPlanInfo.getApplicationType());
+		  if(odcrPlanInfo.getAddowner() == true && "Occupancy certificate".equals(odcrPlanInfo.getApplicationType())) {
+			  System.out.println("editOccupancyCertificateApplication if condition get add owner"+odcrPlanInfo.getAddowner()); 		  
+			  System.out.println("editOccupancyCertificateApplication if condition get Application type"+odcrPlanInfo.getApplicationType()); 		  	  
+			  model.addAttribute("addowner", odcrPlanInfo);		  	  
+			  }
+		  
         List<OccupancyNocApplication> nocApplication = ocNocService.findByOCApplicationNumber(applicationNumber);
         model.addAttribute("nocApplication",nocApplication);
         for (OCNocDocuments nocDocument : oc.getNocDocuments()) {

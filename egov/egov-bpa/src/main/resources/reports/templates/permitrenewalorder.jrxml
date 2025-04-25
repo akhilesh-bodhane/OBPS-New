@@ -79,13 +79,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ulbName}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="453" y="10" width="70" height="70" uuid="ac206e46-6930-479b-88cd-c4a07891707f">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="88" y="75" width="370" height="20" uuid="59b6cc21-112d-42da-b7d2-4a8343e79723">
 					<printWhenExpression><![CDATA[!$P{subHeaderTitle}.isEmpty()]]></printWhenExpression>

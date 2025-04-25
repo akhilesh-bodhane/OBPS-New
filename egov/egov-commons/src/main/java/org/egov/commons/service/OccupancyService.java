@@ -58,10 +58,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class OccupancyService {
 
     @Autowired
-    private OccupancyRepository occupancyRepository;
+    private OccupancyRepository occupancyRepository;    
     @Autowired
     private SubOccupancyRepository subOccupancyRepository;
-
     @Autowired
     private UsagesRepository usagesRepository;
 

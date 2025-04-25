@@ -83,20 +83,22 @@
 				<td class="view-content text-left" style="font-size: 97%;">1.</td>
 				<td class="view-content text-left" style="font-size: 97%;">BPA
 					Application</td>
-				<td class="view-content text-left" style="font-size: 97%;">9</td>
-				<td class="view-content text-left" style="font-size: 97%;">7</td>
+				<!--<td class="view-content text-left" style="font-size: 97%;">${bpaAppCount}</td> -->
+				<td class="view-content text-left" style="font-size: 97%;">6</td> 
+				<td class="view-content text-left" style="font-size: 97%;">1</td>
+				<td class="view-content text-left" style="font-size: 97%;">1</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
-				<td class="view-content text-left" style="font-size: 97%;">0</td>
-				<td class="view-content text-left" style="font-size: 97%;">0</td>
-				<td class="view-content text-left" style="font-size: 97%;">0</td>
-				<td class="view-content text-left" style="font-size: 97%;">0</td>
-				<td class="view-content text-left" style="font-size: 97%;">0</td>
+				<td class="view-content text-left" style="font-size: 97%;">1</td>
+				<td class="view-content text-left" style="font-size: 97%;">1</td>
+				<td class="view-content text-left" style="font-size: 97%;">1</td>
+				<td class="view-content text-left" style="font-size: 97%;">5626</td>
 			</tr>
 			<tr>
 				<td class="view-content text-left" style="font-size: 97%;">2.</td>
 				<td class="view-content text-left" style="font-size: 97%;">Occupancy
 					Certificate Application</td>
+				<!-- <td class="view-content text-left" style="font-size: 97%;">${ocAppCount}</td> -->
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
@@ -111,6 +113,7 @@
 				<td class="view-content text-left" style="font-size: 97%;">3.</td>
 				<td class="view-content text-left" style="font-size: 97%;">DPC/Plinth
 					Level Certificate Application</td>
+				<!-- <td class="view-content text-left" style="font-size: 97%;">${plintAppCount}</td> -->
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
@@ -125,6 +128,7 @@
 				<td class="view-content text-left" style="font-size: 97%;">4.</td>
 				<td class="view-content text-left" style="font-size: 97%;">Revalidation
 					Application</td>
+				<!-- <td class="view-content text-left" style="font-size: 97%;">${permitRenewalAppCount}</td> -->
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>
 				<td class="view-content text-left" style="font-size: 97%;">0</td>

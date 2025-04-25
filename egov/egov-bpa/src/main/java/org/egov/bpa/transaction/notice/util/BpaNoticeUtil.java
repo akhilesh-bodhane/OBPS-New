@@ -516,6 +516,7 @@ public class BpaNoticeUtil {
 		Plan plan = applicationBpaService.getPlanInfo(bpaApplication.geteDcrNumber());
 		reportParams.put("cityName", "Chandigarh Administration");
 		String imageURL = ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH);
+		//String imageURL = BpaConstants.STATE_LOGO_PATH_BASE64;
 		if (plan.isRural()) {
 			reportParams.put("cityName", BpaConstants.RURAL_ULB_NAME);
 		}

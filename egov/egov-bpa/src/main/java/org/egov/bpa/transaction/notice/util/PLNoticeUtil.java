@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.config.reports.properties.BpaApplicationReportProperties;
 import org.egov.bpa.master.entity.ServiceType;
@@ -80,6 +82,7 @@ public class PLNoticeUtil {
     private PLNoticeConditionsService plNoticeConditionsService;
     @Autowired
     private BpaUtils bpaUtils;
+    
     @Autowired
     @Qualifier("parentMessageSource")
     private MessageSource plMessageSource;

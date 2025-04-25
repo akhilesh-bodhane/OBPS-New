@@ -79,6 +79,9 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
 
     @Query("select app from BpaApplication app where app.status in :status and app.isOneDayPermitApplication = false order by createddate asc")
 	List<BpaApplication> findByStatusListOrderByCreatedDateAsc(@Param("status") List<BpaStatus> listOfBpaStatus);
+    
+    @Query("select count(app.applicationNumber) from BpaApplication app where app.status in :status")
+	int findApprovedAppCount(@Param("status") List<BpaStatus> listOfBpaStatus);
 
     List<BpaApplication> findApplicationByPlotNumberAndSectorOrderByIdDesc(String plotNumber,String sector);
     

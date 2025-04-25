@@ -213,7 +213,8 @@
                             <dependency>
                                 <groupId>org.postgresql</groupId>
                                 <artifactId>postgresql</artifactId>
-                                <version>${postgres-version}</version>
+                                <version>42.2.5</version>
+                                <!-- <version>${postgres-version}</version> -->
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -252,7 +253,8 @@
                             <dependency>
                                 <groupId>org.postgresql</groupId>
                                 <artifactId>postgresql</artifactId>
-                                <version>${postgres-version}</version>
+                                <version>42.2.5</version>
+                                <!-- <version>${postgres-version}</version> -->
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -295,7 +297,8 @@
                             <dependency>
                                 <groupId>org.postgresql</groupId>
                                 <artifactId>postgresql</artifactId>
-                                <version>${postgres-version}</version>
+                                <version>42.2.5</version>
+                                <!-- <version>${postgres-version}</version> -->
                             </dependency>
                         </dependencies>
                         <configuration>

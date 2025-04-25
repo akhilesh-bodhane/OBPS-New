@@ -668,4 +668,8 @@ public class OccupancyCertificateService {
 	public List<Long> findFinalOCGenerationApplications(Date todayDate) {
 		return occupancyCertificateRepository.findAllFinalOCGenerationApplications(todayDate);
 	}
+	
+	public Long getOcAppCount(){
+		return occupancyCertificateRepository.count();
+	}
 }

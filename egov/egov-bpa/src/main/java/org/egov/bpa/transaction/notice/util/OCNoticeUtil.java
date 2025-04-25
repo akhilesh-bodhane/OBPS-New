@@ -215,7 +215,7 @@ public class OCNoticeUtil {
         reportParams.put("ocdemandtitle", WordUtils.capitalize(BPADEMANDNOTICETITLE));
         reportParams.put("cityName", ApplicationThreadLocals.getCityName());
         reportParams.put("logoPath", cityService.getCityLogoAsStream());
-        reportParams.put("stateLogo", ReportUtil.getImageURL(BpaConstants.STATE_LOGO_PATH));
+        reportParams.put("stateLogo", ReportUtil.getImageURL(BpaConstants.JASPER_STATE_LOGO_PATH));
         reportParams.put("ulbName", ApplicationThreadLocals.getMunicipalityName());
         reportParams.put("formRule", "FORM F (RULE 18)");
         reportParams.put("permitNumber",

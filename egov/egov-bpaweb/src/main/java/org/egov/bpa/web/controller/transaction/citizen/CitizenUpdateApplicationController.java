@@ -617,7 +617,9 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         	System.out.println("Application Number Passed :  " + applicationNumber);
         	System.out.println("NOC Application Number Passed :  " + nocApplication);
         	permitNocService.updateNocApplicationNumberStatus(nocApplication);
-        	applicationBpaService.updateApplicationState(applicationNumber);
+        	
+        	//commented on 17/03/2025 function make state id null
+        	//applicationBpaService.updateApplicationState(applicationNumber);
             redirectAttributes.addFlashAttribute(MESSAGE,
                     messageSource.getMessage("msg.cancel.applnby.applicantitself.success",
                             new String[] { bpaApplication.getApplicationNumber() }, null));

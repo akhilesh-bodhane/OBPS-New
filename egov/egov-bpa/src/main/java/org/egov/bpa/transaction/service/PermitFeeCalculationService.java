@@ -1707,7 +1707,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 		
 		try{	
 			String applicationDate = formatter.format(plan.getApplicationDate());
-			String comparisonDate = "01-04-2024";
+			//commented to set new charges date
+			//String comparisonDate = "01-04-2024";
+			String comparisonDate = "01-04-2025";
 			appDate = formatter.parse(applicationDate);
 			compDate = formatter.parse(comparisonDate);
 			System.out.println("Plan Applicate Date : " + applicationDate + " Comparison Date : " + comparisonDate);
@@ -1822,12 +1824,21 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			//old rate for demolision
 			//totalAmount = plotAreaInSqm.multiply(new BigDecimal("21")).setScale(2, BigDecimal.ROUND_HALF_UP);
 			
-			if(appDate.after(compDate)){
+			//commented to apply new charges from 21-04-2025
+			/*if(appDate.after(compDate)){
 				totalAmount = plotAreaInSqm.multiply(new BigDecimal("22.05")).setScale(2, BigDecimal.ROUND_HALF_UP);
 				System.out.println("totaAmount nultiplied with 22.05 : " + totalAmount);
 			} else {
 				totalAmount = plotAreaInSqm.multiply(new BigDecimal("21")).setScale(2, BigDecimal.ROUND_HALF_UP);
 				System.out.println("totaAmount nultiplied with 21 : " + totalAmount);
+			}*/
+			
+			if(appDate.after(compDate)){
+				totalAmount = plotAreaInSqm.multiply(new BigDecimal("23.15")).setScale(2, BigDecimal.ROUND_HALF_UP);
+				System.out.println("totaAmount nultiplied with 23.15 : " + totalAmount);
+			} else {
+				totalAmount = plotAreaInSqm.multiply(new BigDecimal("22.05")).setScale(2, BigDecimal.ROUND_HALF_UP);
+				System.out.println("totaAmount nultiplied with 22.05 : " + totalAmount);
 			}
 			
 			System.out.println("Total amount new construction ConstructionAndDemolisionFee : " + totalAmount);
@@ -1898,12 +1909,21 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			//old rate demolitiona area
 			//totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("178.5")).setScale(2, BigDecimal.ROUND_HALF_UP);
 			
-			if(appDate.after(compDate)){
+			//commented to apply new charges from 21-04-2025
+			/*if(appDate.after(compDate)){
 				totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("187.4")).setScale(2, BigDecimal.ROUND_HALF_UP);
 				System.out.println("totalAmount on multiply demolitionAreaInSqm with 187.4 : " + totalAmount);
 			} else {
 				totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("178.5")).setScale(2, BigDecimal.ROUND_HALF_UP);
 				System.out.println("totalAmount on multiply demolitionAreaInSqm with 178.5 : " + totalAmount);
+			}*/
+			
+			if(appDate.after(compDate)){
+				totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("196.77")).setScale(2, BigDecimal.ROUND_HALF_UP);
+				System.out.println("totalAmount on multiply demolitionAreaInSqm with 196.77 : " + totalAmount);
+			} else {
+				totalAmount = demolitionAreaInSqm.multiply(new BigDecimal("187.4")).setScale(2, BigDecimal.ROUND_HALF_UP);
+				System.out.println("totalAmount on multiply demolitionAreaInSqm with 187.40 : " + totalAmount);
 			}
 			
 			/*BigDecimal leftProposedAreaInSqm = totalProposedAreaInSqm.subtract(demolitionAreaInSqm).setScale(2,
@@ -1926,7 +1946,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			//old rate of c&d
 			/*totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
 					BigDecimal.ROUND_HALF_UP);*/
-			if(appDate.after(compDate)){
+			
+			//commented for new charges 23/04/2025
+			/*if(appDate.after(compDate)){
 				totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("22.05"))).setScale(2,
 						BigDecimal.ROUND_HALF_UP);
 				System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 22.05 : " + totalAmount);
@@ -1934,6 +1956,16 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 				totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("21"))).setScale(2,
 						BigDecimal.ROUND_HALF_UP);
 				System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 21 : " + totalAmount);
+			}*/
+			
+			if(appDate.after(compDate)){
+				totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("23.15"))).setScale(2,
+						BigDecimal.ROUND_HALF_UP);
+				System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 23.15 : " + totalAmount);
+			} else {
+				totalAmount = totalAmount.add(totalProposedAreaInSqm.multiply(new BigDecimal("22.05"))).setScale(2,
+						BigDecimal.ROUND_HALF_UP);
+				System.out.println("totalAmount on adding leftProposedAreaInSqm multiplied with 22.05 : " + totalAmount);
 			}
 			
 		}

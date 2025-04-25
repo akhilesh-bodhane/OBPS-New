@@ -269,5 +269,9 @@ public class PermitRenewalService {
         DateTimeFormatter fmt = DateUtils.defaultDateFormatter();
         return fmt.print(permitExpiryDate.minusDays(noOfDaysPriorAllowed));
     }
+    
+    public Long getPermitRenewalAppCount(){
+    	return permitRenewalRepository.count();
+    }
 
 }

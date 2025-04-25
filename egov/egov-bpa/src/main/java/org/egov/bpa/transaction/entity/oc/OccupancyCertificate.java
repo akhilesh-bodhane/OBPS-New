@@ -573,8 +573,9 @@ public class OccupancyCertificate extends StateAware<Position> {
 
     @Override
     public String getStateDetails() {
-        return String.format("Applicant Name: %s Application Number %s Dated %s For the service type - %s.",
-                parent.getOwner() == null ? "Not Specified" : parent.getOwner().getName(),
+        return String.format("app Id: %s Applicant Name: %s Application Number %s Dated %s For the service type - %s.",
+        		id == null ? id : id,
+        		parent.getOwner() == null ? "Not Specified" : parent.getOwner().getName(),
                 applicationNumber == null ? occupancyCertificateNumber : applicationNumber,
                 applicationDate == null ? DateUtils.toDefaultDateFormat(new Date())
                         : DateUtils.toDefaultDateFormat(applicationDate),

@@ -43,19 +43,19 @@ public class Metrics {
 	private int todaysClosedApplicationsOC;
 	
 	@JsonProperty("todaysCompletedApplicationsWithinSLAOC")
-	private String todaysCompletedApplicationsWithinSLAOC = "NA";
+	private int todaysCompletedApplicationsWithinSLAOC;
 	
 	@JsonProperty("todaysClosedApplicationsPermit")
 	private int todaysClosedApplicationsPermit;
 	
 	@JsonProperty("todaysCompletedApplicationsWithinSLAPermit")
-	private String todaysCompletedApplicationsWithinSLAPermit = "NA";
+	private int todaysCompletedApplicationsWithinSLAPermit;
 	
 	@JsonProperty("slaComplianceOC")
-	private String slaComplianceOC = "NA";
+	private int slaComplianceOC;
 	
 	@JsonProperty("slaCompliancePermit")
-	private String slaCompliancePermit = "NA";
+	private int slaCompliancePermit;
 	
 	@JsonProperty("applicationsWithDeviation")
 	private int applicationsWithDeviation;
@@ -146,35 +146,37 @@ public class Metrics {
 		this.ocWithDeviation = ocWithDeviation;
 	}
 
-	public String getTodaysCompletedApplicationsWithinSLAOC() {
+	
+
+	public int getTodaysCompletedApplicationsWithinSLAOC() {
 		return todaysCompletedApplicationsWithinSLAOC;
 	}
 
-	public void setTodaysCompletedApplicationsWithinSLAOC(String todaysCompletedApplicationsWithinSLAOC) {
+	public void setTodaysCompletedApplicationsWithinSLAOC(int todaysCompletedApplicationsWithinSLAOC) {
 		this.todaysCompletedApplicationsWithinSLAOC = todaysCompletedApplicationsWithinSLAOC;
 	}
 
-	public String getTodaysCompletedApplicationsWithinSLAPermit() {
+	public int getTodaysCompletedApplicationsWithinSLAPermit() {
 		return todaysCompletedApplicationsWithinSLAPermit;
 	}
 
-	public void setTodaysCompletedApplicationsWithinSLAPermit(String todaysCompletedApplicationsWithinSLAPermit) {
+	public void setTodaysCompletedApplicationsWithinSLAPermit(int todaysCompletedApplicationsWithinSLAPermit) {
 		this.todaysCompletedApplicationsWithinSLAPermit = todaysCompletedApplicationsWithinSLAPermit;
 	}
 
-	public String getSlaComplianceOC() {
+	public int getSlaComplianceOC() {
 		return slaComplianceOC;
 	}
 
-	public void setSlaComplianceOC(String slaComplianceOC) {
+	public void setSlaComplianceOC(int slaComplianceOC) {
 		this.slaComplianceOC = slaComplianceOC;
 	}
 
-	public String getSlaCompliancePermit() {
+	public int getSlaCompliancePermit() {
 		return slaCompliancePermit;
 	}
 
-	public void setSlaCompliancePermit(String slaCompliancePermit) {
+	public void setSlaCompliancePermit(int slaCompliancePermit) {
 		this.slaCompliancePermit = slaCompliancePermit;
 	}
 

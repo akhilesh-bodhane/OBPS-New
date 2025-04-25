@@ -53,9 +53,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Date;  
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.egov.bpa.entitiy.national.dashboard.GroupBy;
+import org.egov.bpa.entitiy.national.dashboard.Metrics;
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
 import org.egov.bpa.entitiy.national.dashboard.SearchCriteria;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -63,6 +73,7 @@ import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.report.NationalDashboardService;
 import org.egov.infra.microservice.contract.RequestInfoWrapper;
 import org.joda.time.LocalDate;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -133,11 +144,86 @@ public class BpaCollectionRestController {
 			try {
 				response=nationalDashboardService.getDashboardData(response,bpaApplicationForm);
 				System.out.println("NIUA Dashboard Response : " + response.toString());
+				transformPaymentModes(response);
+				transformDashboardResponse(response);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
-	    }   
+	    }
+	 
+		private void transformPaymentModes(NationalDashboardResponse response) {
+			if (response.getMetrics() != null && response.getMetrics().getTodaysCollection() != null) {
+				for (GroupBy collection : response.getMetrics().getTodaysCollection()) {
+					if ("paymentMode".equals(collection.getGroupBy())) {
+						// Extract existing map-based buckets
+						List<Map<String, Object>> originalBuckets = (List<Map<String, Object>>) (List<?>) collection
+								.getBuckets();
+						if (originalBuckets != null && !originalBuckets.isEmpty()) {
+							Map<String, Integer> groupedPayments = new LinkedHashMap<>(); // Maintain order
+							groupedPayments.put("Digital", 0); // First entry: Digital
+							groupedPayments.put("Non Digital", 0); // Second entry: Non Digital
+							for (Map<String, Object> bucket : originalBuckets) {
+								String name = bucket.get("name") != null ? bucket.get("name").toString().toLowerCase()
+										: "";
+								int value = bucket.get("value") != null ? ((Number) bucket.get("value")).intValue() : 0;
+
+								if (Arrays.asList("cash", "cheque/dd", "bankchallan").contains(name)) {
+									groupedPayments.put("Non Digital", groupedPayments.get("Non Digital") + value);
+								} else if (Arrays.asList("card", "online").contains(name)) {
+									groupedPayments.put("Digital", groupedPayments.get("Digital") + value);
+								}
+							}
+
+							// Create new list of maps
+							List<Map<String, Object>> newBuckets = new ArrayList<>();
+							for (Map.Entry<String, Integer> entry : groupedPayments.entrySet()) {
+								Map<String, Object> newBucket = new HashMap<>();
+								newBucket.put("name", entry.getKey());
+								newBucket.put("value", entry.getValue());
+								newBuckets.add(newBucket);
+							}
+
+							// Update collection with transformed data
+							collection.setBuckets((List<JSONObject>) (List<?>) newBuckets);
+						}
+					}
+				}
+			}
+		}
+	 
+		private void transformDashboardResponse(NationalDashboardResponse response) {
+			if (response.getMetrics() != null) {
+				Metrics metrics = response.getMetrics();
+				// Convert "groupBy" values to camel case
+				if (metrics.getTodaysCollection() != null) {
+					metrics.setTodaysCollection(metrics.getTodaysCollection().stream().map(group -> {
+						group.setGroupBy(toCamelCase(group.getGroupBy()));
+						return group;
+					}).collect(Collectors.toList()));
+				}
+
+				if (metrics.getPermitsIssued() != null) {
+					metrics.setPermitsIssued(metrics.getPermitsIssued().stream().map(group -> {
+						group.setGroupBy(toCamelCase(group.getGroupBy()));
+						return group;
+					}).collect(Collectors.toList()));
+				}
+			}
+		}
+
+
+		private String toCamelCase(String input) {
+			if (input == null || input.isEmpty()) {
+				return input;
+			}
+			String[] parts = input.split("(?=[A-Z])"); // Split by uppercase letters
+			String result = parts[0].toLowerCase();
+			for (int i = 1; i < parts.length; i++) {
+				result += parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+			}
+			return result;
+		}
 	 
 
 }

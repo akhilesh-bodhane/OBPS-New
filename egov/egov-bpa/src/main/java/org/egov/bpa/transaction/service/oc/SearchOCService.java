@@ -53,8 +53,10 @@ import org.egov.bpa.transaction.entity.oc.OCSlot;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.OcSlotRepository;
 import org.egov.bpa.transaction.repository.oc.OccupancyCertificateRepository;
+import org.egov.bpa.transaction.service.DcrRestService;
 import org.egov.bpa.transaction.service.WorkflowHistoryService;
 import org.egov.bpa.utils.BpaUtils;
+import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 @Transactional(readOnly = true)
@@ -84,6 +88,9 @@ public class SearchOCService {
 
     @Autowired
     private OccupancyCertificateRepository occupancyCertificateRepository;
+    
+    @Autowired
+    private DcrRestService drcRestService;
 
     @ReadOnly
     public Page<SearchBpaApplicationForm> searchForDocumentScrutinyPending(final SearchBpaApplicationForm searchRequest) {
@@ -100,7 +107,17 @@ public class SearchOCService {
                 pendingAction = ocSlot.getOc().getState().getNextAction();
             }
             Boolean hasCollectionPending = bpaUtils.checkAnyTaxIsPendingToCollect(ocSlot.getOc().getDemand());
-            searchResults.add(new SearchBpaApplicationForm(ocSlot.getOc(), processOwner, pendingAction, hasCollectionPending));
+            
+            String geteDcrNumber = ocSlot.getOc().geteDcrNumber();       	
+      		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+      		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+      		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+      		 String ownerName = odcrPlanInfo.getOwnerName();
+      		 Boolean addowner=   odcrPlanInfo.getAddowner();
+      		 System.out.println("searchForDocumentScrutinyPending addowner"+addowner);
+      		 System.out.println("searchForDocumentScrutinyPending owner name"+ownerName);
+            
+            searchResults.add(new SearchBpaApplicationForm(ocSlot.getOc(), processOwner, pendingAction, hasCollectionPending,ownerName,addowner));
         }
         return new PageImpl<>(searchResults, pageable, ocSlots.getTotalElements());
     }
@@ -127,8 +144,18 @@ public class SearchOCService {
         for (OccupancyCertificate application : bpaApplications) {
             String pendingAction = application.getState() == null ? "N/A" : application.getState().getNextAction();
             Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application.getDemand());
+            
+            String geteDcrNumber = application.geteDcrNumber();       	
+     		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+     		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+     		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+     		 String ownerName = odcrPlanInfo.getOwnerName();
+     		 Boolean addowner=   odcrPlanInfo.getAddowner();
+     		 System.out.println("pagedSearch addowner"+addowner);
+     		 System.out.println("pagedSearch owner name"+ownerName);
+            
             searchResults.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending,ownerName,addowner));
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
     }
@@ -140,6 +167,16 @@ public class SearchOCService {
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+        	 String geteDcrNumber = application.geteDcrNumber();       	
+      		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+      		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+      		 System.out.println("pagedSearchForPendingTask odcrPlanInfo"+odcrPlanInfo);   		 
+      		 String ownerName = odcrPlanInfo.getOwnerName();
+      		 Boolean addowner=   odcrPlanInfo.getAddowner();
+      		 System.out.println("pagedSearchForPendingTask addowner"+addowner);
+      		 System.out.println("pagedSearchForPendingTask owner name"+ownerName);
+        	
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -149,10 +186,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -169,6 +206,16 @@ public class SearchOCService {
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+        	 String geteDcrNumber = application.geteDcrNumber();       	
+      		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+      		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+      		 System.out.println("pagedSearchForPendingTaskRural odcrPlanInfo"+odcrPlanInfo);   		 
+      		 String ownerName = odcrPlanInfo.getOwnerName();
+      		 Boolean addowner=  odcrPlanInfo.getAddowner();
+      		 System.out.println("pagedSearchForPendingTaskRural addowner"+addowner);
+      		 System.out.println("pagedSearchForPendingTaskRural owner name"+ownerName);
+        	
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -178,10 +225,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -198,6 +245,16 @@ public class SearchOCService {
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForUrban(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+        	 String geteDcrNumber = application.geteDcrNumber();       	
+      		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+      		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+      		 System.out.println("pagedSearchForOCTask odcrPlanInfo"+odcrPlanInfo);   		 
+      		 String ownerName = odcrPlanInfo.getOwnerName();
+      		 Boolean addowner=   odcrPlanInfo.getAddowner();
+      		 System.out.println("pagedSearchForOCTask addowner"+addowner);
+      		 System.out.println("pagedSearchForOCTask owner name"+ownerName);
+      		 
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -207,10 +264,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -226,6 +283,16 @@ public class SearchOCService {
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForRural(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+        	String geteDcrNumber = application.geteDcrNumber();       	
+     		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+     		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+     		 System.out.println("pagedSearchForOCTaskRural odcrPlanInfo"+odcrPlanInfo);   		 
+     		 String ownerName = odcrPlanInfo.getOwnerName();
+     		 Boolean addowner=  odcrPlanInfo.getAddowner();
+     		 System.out.println("pagedSearchForOCTaskRural addowner"+addowner);
+     		 System.out.println("pagedSearchForOCTaskRural owner name"+ownerName);
+        	
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -235,10 +302,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -268,6 +335,16 @@ public class SearchOCService {
         List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest));
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+        	String geteDcrNumber = application.geteDcrNumber();       	
+    		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+    		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+    		 System.out.println("pagedSearchForPendingTaskGraph odcrPlanInfo"+odcrPlanInfo);   		 
+    		 String ownerName = odcrPlanInfo.getOwnerName();
+    		 Boolean addowner=  odcrPlanInfo.getAddowner();
+    		 System.out.println("pagedSearchForPendingTaskGraph addowner"+addowner);
+    		 System.out.println("pagedSearchForPendingTaskGraph owner name"+ownerName);
+        	
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -277,10 +354,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -299,6 +376,16 @@ public class SearchOCService {
         List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForRural(searchRequest));
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
+        	
+         String geteDcrNumber = application.geteDcrNumber();       	
+   		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+   		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+   		 System.out.println("pagedSearchForOCTaskGraph odcrPlanInfo"+odcrPlanInfo);   		 
+   		 String ownerName = odcrPlanInfo.getOwnerName();
+   		 Boolean addowner=  odcrPlanInfo.getAddowner();
+   		 System.out.println("pagedSearchForOCTaskGraph addowner"+addowner);
+   		 System.out.println("pagedSearchForOCTaskGraph owner name"+ownerName);
+        	
         	if(null!=application.getState()) {
         		Date dateInfo = application.getState().getDateInfo();
         		if(null!=application.getState()) {
@@ -308,10 +395,10 @@ public class SearchOCService {
 	            		Map<String,String> map = getCurrentOwner(application);
 	            		if(!StringUtils.isEmpty(searchRequest.getCurrentOwnerDesg())) {
 	            			if(null!=map.get("designation") && searchRequest.getCurrentOwnerDesg().equalsIgnoreCase(map.get("designation"))) {
-	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            				searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            			}
 	            		}else {
-	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days));
+	            			searchResults.add(new SearchPendingItemsForm(application, map.get("name"), map.get("designation"), pendingAction, days,ownerName,addowner));
 	            		}
         			}
         		}       		
@@ -326,8 +413,18 @@ public class SearchOCService {
         for (OccupancyCertificate application : occupancyCertificate) {
         	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
         	Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application.getDemand());
+        	
+        	String geteDcrNumber = application.geteDcrNumber();       	
+    		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+    		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+    		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+    		 String ownerName = odcrPlanInfo.getOwnerName();
+    		 Boolean addowner=   odcrPlanInfo.getAddowner();
+    		 System.out.println("pagedSearch addowner"+addowner);
+    		 System.out.println("pagedSearch owner name"+ownerName);
+        	
             searchBpaApplicationFormList.add(
-                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending,ownerName,addowner));
         }
         return searchBpaApplicationFormList;
 	}
@@ -338,8 +435,18 @@ public class SearchOCService {
 	        for (OccupancyCertificate application : occupancyCertificate) {
 	        	String pendingAction = application.getState()== null ? "N/A" : application.getState().getNextAction();
 	        	Boolean hasCollectionPending = bpaDemandService.checkAnyTaxIsPendingToCollect(application.getDemand());
+	        	
+	        	String geteDcrNumber = application.geteDcrNumber();       	
+	    		 EdcrApplicationInfo odcrPlanInfo =drcRestService.getDcrPlanInfo(geteDcrNumber, ((ServletRequestAttributes)
+	    		 RequestContextHolder.getRequestAttributes()).getRequest());   		 
+	    		 System.out.println("odcrPlanInfo"+odcrPlanInfo);   		 
+	    		 String ownerName = odcrPlanInfo.getOwnerName();
+	    		 Boolean addowner=   odcrPlanInfo.getAddowner();
+	    		 System.out.println("pagedSearch addowner"+addowner);
+	    		 System.out.println("pagedSearch owner name"+ownerName);
+	        	
 	            searchBpaApplicationFormList.add(
-	                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending));
+	                    new SearchBpaApplicationForm(application, getProcessOwner(application), pendingAction, hasCollectionPending,ownerName,addowner));
 	        }
 	        return searchBpaApplicationFormList;
 	}

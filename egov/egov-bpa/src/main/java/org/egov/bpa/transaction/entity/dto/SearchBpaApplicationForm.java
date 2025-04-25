@@ -201,10 +201,14 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     }
 
     public SearchBpaApplicationForm(OccupancyCertificate occupancyCertificate, String currentOwner, String pendingAction,
-            Boolean isFeeCollected) {
+            Boolean isFeeCollected,String ownerName,Boolean addowner) {
         setId(occupancyCertificate.getId());
         setApplicationNumber(occupancyCertificate.getApplicationNumber());
-        setApplicantName(occupancyCertificate.getParent().getOwner().getName());
+        if(addowner==true) {
+        setApplicantName(ownerName);
+        }else {
+        setApplicantName(occupancyCertificate.getParent().getOwner().getName());	
+        }
         setApplicationDate(occupancyCertificate.getApplicationDate());
         if (!occupancyCertificate.getOcSlots().isEmpty()) {
             SlotDetail slotDetail = occupancyCertificate.getOcSlots().get(0).getSlotDetail();

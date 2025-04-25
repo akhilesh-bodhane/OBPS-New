@@ -66,10 +66,14 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setIsPreviousPlan(application.getIsPreviousPlan()==null?false:application.getIsPreviousPlan());
     }
 	
-	 public SearchPendingItemsForm(OccupancyCertificate occupancyCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays) {
+	 public SearchPendingItemsForm(OccupancyCertificate occupancyCertificate, String currentOwnerName, String currentOwnerDesg, String pendingAction, int ellapseDays,String ownerName,Boolean addowner) {
         setId(occupancyCertificate.getId());
-        setApplicationNumber(occupancyCertificate.getApplicationNumber());
-        setApplicantName(occupancyCertificate.getParent().getOwner().getName());
+        setApplicationNumber(occupancyCertificate.getApplicationNumber());       
+        if(addowner==true) {	  	  
+		setApplicantName(ownerName);  	  
+		}else {
+		setApplicantName(occupancyCertificate.getParent().getOwner().getName());  
+		} 
         setApplicationDate(occupancyCertificate.getApplicationDate());
         setApplicationType(occupancyCertificate.getApplicationType());
         setOccupancy(occupancyCertificate.getParent().getOccupanciesName());

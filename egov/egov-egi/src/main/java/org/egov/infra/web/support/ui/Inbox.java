@@ -81,14 +81,28 @@ public class Inbox implements Serializable {
         // Default constructor for external inbox integration
     }
 
-    private Inbox(StateAware stateAware, WorkflowTypes workflowTypes, String nextAction) {
+    private Inbox(StateAware stateAware, WorkflowTypes workflowTypes, String nextAction,Boolean addowner,String ownername) {
         State state = stateAware.getCurrentState();
         setId(workflowTypes.isGrouped() ? EMPTY : state.getId() + "#" + workflowTypes.getId());
         setDate(toDefaultDateTimeFormat(state.getCreatedDate()));
         setSender(state.getSenderName());
         setTask(isBlank(state.getNatureOfTask()) ? workflowTypes.getDisplayName() : state.getNatureOfTask());
         setStatus(state.getValue() + (isBlank(nextAction) ? EMPTY : " - " + nextAction));
-        setDetails(isBlank(stateAware.getStateDetails()) ? EMPTY : stateAware.getStateDetails());
+        if(addowner== true) {
+        	String originalDetails  = stateAware.getStateDetails();
+        	String[] parts = originalDetails.split("Applicant Name:");
+        	String applicantName = parts[1].split("Application Number")[0].trim();
+        	System.out.println("Applicant Name: " + applicantName);       	
+        	String formattedString = originalDetails.replaceAll("app Id:\\s*\\d+\\s*", "");       	
+        	formattedString = formattedString.replace(applicantName, ownername);
+        	System.out.println(formattedString);       	      	
+        	setDetails(isBlank(formattedString) ? EMPTY : formattedString);       	
+        }else {
+        	String originalDetails  = stateAware.getStateDetails();
+        	String formattedString = originalDetails.replaceAll("app Id:\\s*\\d+\\s*", "");
+        	setDetails(isBlank(formattedString) ? EMPTY : formattedString);
+        }
+        //setDetails(isBlank(stateAware.getStateDetails()) ? EMPTY : stateAware.getStateDetails());
         setLink(workflowTypes.getLink().replace(":ID", stateAware.myLinkId()));
         setModuleName(workflowTypes.getModule().getDisplayName());
         setCreatedDate(state.getCreatedDate());
@@ -109,8 +123,8 @@ public class Inbox implements Serializable {
         setLink(EMPTY);
     }
 
-    public static Inbox build(StateAware stateAware, WorkflowTypes workflowType, String nextAction) {
-        return new Inbox(stateAware, workflowType, nextAction);
+    public static Inbox build(StateAware stateAware, WorkflowTypes workflowType, String nextAction,Boolean addowner,String ownername) {
+        return new Inbox(stateAware, workflowType, nextAction,addowner,ownername);
     }
 
     public static Inbox buildHistory(StateHistory stateHistory, WorkflowTypes workflowType) {

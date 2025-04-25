@@ -585,16 +585,17 @@ public class OccupancyCertificateFeeService {
 		BigDecimal oc = ocPlan.getOcdataComparison().getOcdataComparison()
 				.get(OCDataComparison.Partitions_on_ground_floor_on_multi_bays_shops).getDeviation();
 
-		if (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("17B")
+		/*if (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("17B")
 				|| (ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34") || ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34C") || ocPlan.getPlanInformation().getSectorNumber().equalsIgnoreCase("34D"))) {
 			multiplier = BigDecimal.valueOf(100);
 			totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 		} else {
 			multiplier = BigDecimal.valueOf(80);
 			totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
-		}
+		}*/
 		
-		multiplier = BigDecimal.valueOf(80);
+		multiplier = BigDecimal.valueOf(100);
+		//multiplier = BigDecimal.valueOf(80);
 		totalAmount = totalAmount.add(oc.multiply(multiplier).setScale(2, BigDecimal.ROUND_HALF_UP));
 
 		return totalAmount;
@@ -665,6 +666,7 @@ public class OccupancyCertificateFeeService {
 		BigDecimal Multiplier = BigDecimal.ZERO;
 		//BigDecimal noOfGlazingVerandah = BigDecimal.ZERO;
 		
+		System.out.println("Inside getTotalGlazingVerandahFee method");
 		OccupancyTypeHelper typeHelper = ocPlan.getVirtualBuilding().getMostRestrictiveFarHelper();
 
 		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode())) {
@@ -672,11 +674,10 @@ public class OccupancyCertificateFeeService {
 		}
 		
 		//commented for rural application prod issue
-		if (BpaConstants.A_P.equals(typeHelper.getSubtype().getCode()) && (ocPlan.getPlanInformation().getSectorNumber().equals("22A") || ocPlan.getPlanInformation().getSectorNumber().equals("22B") || ocPlan.getPlanInformation().getSectorNumber().equals("22C") || ocPlan.getPlanInformation().getSectorNumber().equals("22D") || ocPlan.getPlanInformation().getSectorNumber().equals("22"))) {
+		if ((BpaConstants.A_P.equals(typeHelper.getSubtype().getCode()) || BpaConstants.F_SCO.equals(typeHelper.getSubtype().getCode())) && (ocPlan.getPlanInformation().getSectorNumber().equals("22A") || ocPlan.getPlanInformation().getSectorNumber().equals("22B") || ocPlan.getPlanInformation().getSectorNumber().equals("22C") || ocPlan.getPlanInformation().getSectorNumber().equals("22D") || ocPlan.getPlanInformation().getSectorNumber().equals("22"))) {
 			Multiplier = BigDecimal.valueOf(200);
 		}
 
-		
 		BigDecimal noOfGlazingVerandah = ocPlan.getPlanInformation().getNumberOfGlazingOfVerandah();
 		totalAmount = noOfGlazingVerandah.multiply(Multiplier).setScale(2, BigDecimal.ROUND_HALF_UP);
 		return totalAmount;

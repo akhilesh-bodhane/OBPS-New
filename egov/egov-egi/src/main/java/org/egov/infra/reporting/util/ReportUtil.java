@@ -72,6 +72,8 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
+
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.reporting.engine.ReportFormat;
 import org.egov.infra.reporting.engine.ReportOutput;
@@ -79,6 +81,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.utils.NumberUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -88,6 +91,7 @@ public final class ReportUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportUtil.class);
     private static final EnumMap<ReportFormat, String> CONTENT_TYPES;
+    
 
     static {
         CONTENT_TYPES = new EnumMap<>(ReportFormat.class);

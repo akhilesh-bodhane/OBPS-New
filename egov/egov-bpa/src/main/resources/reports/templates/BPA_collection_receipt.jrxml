@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="collection_receipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="custom" uuid="97372054-cc7e-41ed-9c4d-7a7a1652d8c6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -51,7 +51,6 @@
 		<fieldDescription><![CDATA[Total Amount]]></fieldDescription>
 	</field>
 	<field name="instrumentDetails" class="java.util.Collection"/>
-	<field name="receiptMisc" class="org.egov.collection.entity.ReceiptMisc"/>
 	<field name="collectionType" class="java.lang.String"/>
 	<field name="createdBy" class="org.egov.infra.admin.master.entity.User"/>
 	<variable name="amountReceived" class="java.math.BigDecimal">
@@ -75,7 +74,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Receipt No:]]></text>
 			</staticText>
@@ -89,9 +88,8 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{receiptNum}+($F{receiptMisc}.getReceiptHeader().getManualreceiptnumber()==null? "":"("+$F{receiptMisc}.getReceiptHeader().getManualreceiptnumber()+")")]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement stretchType="RelativeToTallestObject" x="310" y="94" width="113" height="20" uuid="989f2cb5-d44b-4fff-8128-9190397a3772"/>
@@ -103,7 +101,7 @@
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Receipt Date:]]></text>
 			</staticText>
@@ -117,18 +115,14 @@
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receiptDate}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="10" y="10" width="60" height="60" uuid="0df2ed0a-84b0-402b-9f41-e7b12b27680f"/>
-				<imageExpression><![CDATA[$P{CITY_LOGO_PATH}]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="132" y="19" width="291" height="43" uuid="2e4dabdc-58c3-4512-b1e9-10f0de235034"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="16" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[ReportUtil.getCityName()]]></textFieldExpression>
 			</textField>
@@ -137,7 +131,7 @@
 					<printWhenExpression><![CDATA[!$F{description}.startsWith( "Service Charges" )]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BUILDING PERMISSION FEE RECEIPT]]></text>
 			</staticText>
@@ -154,7 +148,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bank Transaction ID:]]></text>
 			</staticText>
@@ -167,9 +161,8 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="false" pdfFontName="Times-Roman"/>
+					<font size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{receiptMisc}.getReceiptHeader().getManualreceiptnumber()]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="20">
@@ -183,7 +176,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receiptStatus}.getDescription()]]></textFieldExpression>
 			</textField>
@@ -194,7 +187,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Receipt status:]]></text>
 			</staticText>
@@ -210,7 +203,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payeeName}]]></textFieldExpression>
 			</textField>
@@ -224,7 +217,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name:]]></text>
 			</staticText>
@@ -240,7 +233,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payeeAddress}]]></textFieldExpression>
 			</textField>
@@ -254,7 +247,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Address:]]></text>
 			</staticText>
@@ -270,7 +263,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
@@ -278,7 +271,7 @@
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="125" y="0" width="103" height="20" uuid="3c02e237-dbb6-427e-8713-d1a9b58b4e86"/>
 				<box leftPadding="5" rightPadding="5"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Description:]]></text>
 			</staticText>
@@ -292,7 +285,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Payment]]></text>
 			</staticText>
@@ -308,7 +301,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paidBy}==null?$F{payeeName}:$F{paidBy}]]></textFieldExpression>
 			</textField>
@@ -322,7 +315,7 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Paid By:]]></text>
 			</staticText>
@@ -336,7 +329,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Top">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Details:]]></text>
 			</staticText>
@@ -361,7 +354,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[This is computer generated receipt. Signature is not required.]]></text>
 			</staticText>
@@ -377,7 +370,7 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
@@ -393,7 +386,7 @@
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Secretary"]]></textFieldExpression>
 			</textField>

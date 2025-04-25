@@ -52,6 +52,8 @@ import static org.egov.bpa.utils.BpaConstants.OCDEMANDFILENAME;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.egov.bpa.transaction.entity.oc.OCNotice;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.notice.OccupancyCertificateNoticesFormat;

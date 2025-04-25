@@ -77,6 +77,7 @@ import org.egov.commons.service.OccupancyService;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -179,7 +180,7 @@ public class BpaNocApplicationController {
 	@Autowired
 	private NocEvaluationRepository nocEvaluationRepository;
 	
-	@Transactional
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	@RequestMapping(value = "/updateNoc/{applicationNumber}", method = RequestMethod.POST)
 	public String updateNoc(@ModelAttribute final PermitNocApplication permitNocApplication,
 			@PathVariable final String applicationNumber, final HttpServletRequest request, final Model model,

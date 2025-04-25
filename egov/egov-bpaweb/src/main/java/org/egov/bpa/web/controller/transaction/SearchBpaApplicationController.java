@@ -74,6 +74,7 @@ import org.egov.bpa.transaction.entity.PermitNocDocument;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
+import org.egov.bpa.transaction.repository.BpaStatusRepository;
 import org.egov.bpa.transaction.service.ApplicationBpaFeeCalculation;
 import org.egov.bpa.transaction.service.BpaDcrService;
 import org.egov.bpa.transaction.service.InConstructionInspectionService;
@@ -82,8 +83,10 @@ import org.egov.bpa.transaction.service.InspectionService;
 import org.egov.bpa.transaction.service.LettertoPartyService;
 import org.egov.bpa.transaction.service.PermitFeeCalculationService;
 import org.egov.bpa.transaction.service.PermitNocApplicationService;
+import org.egov.bpa.transaction.service.PermitRenewalService;
 import org.egov.bpa.transaction.service.SearchBpaApplicationService;
 import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
+import org.egov.bpa.transaction.service.pl.PlinthLevelCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.bpa.web.controller.adaptor.SearchBpaApplicationAdaptor;
 import org.egov.bpa.web.controller.adaptor.SearchBpaPendingTaskAdaptor;
@@ -150,7 +153,12 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     private OccupancyCertificateService occupancyCertificateService;
     @Autowired
     private CustomImplProvider specificNoticeService;
-
+    @Autowired
+    private PermitRenewalService permitRenewalService;
+    @Autowired
+    private PlinthLevelCertificateService plinthLevelCertificateService;
+    
+    
     @GetMapping("/search")
     public String showSearchApprovedforFee(final Model model) {
         prepareFormData(model);
@@ -282,6 +290,11 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     
     @GetMapping("/showDashboard")
     public String showDashboard(final Model model) {
+    	model.addAttribute("bpaAppCount", searchBpaApplicationService.getBpaAppplicationCount());
+    	//model.addAttribute("bpaApprovedAppCount", searchBpaApplicationService.findApprovedAppCount());
+    	model.addAttribute("ocAppCount", occupancyCertificateService.getOcAppCount());
+    	model.addAttribute("permitRenewalAppCount", permitRenewalService.getPermitRenewalAppCount());
+    	model.addAttribute("plintAppCount", plinthLevelCertificateService.getPlinthAppCount());
         return "public-dashboard";
     }
     

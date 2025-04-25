@@ -50,17 +50,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{bpademandtitle}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="485" y="4" width="60" height="60" uuid="c2276e9e-fa92-4532-8ff3-dae9932a4693"/>
-				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
-			</image>
-			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="true" onErrorType="Blank">
-				<reportElement mode="Transparent" x="10" y="4" width="90" height="61" uuid="9b7666c4-1523-4021-bf60-b8a9abdea0ab">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<imageExpression><![CDATA[$P{stateLogo}]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

@@ -399,6 +399,8 @@ public class BpaConstants {
 	public static final String BPA_APP_FEE = "Application Fees";
 	public static final String BPA_COMPOUND_FEE = "Charges for Compound Wall";
 	public static final String STATE_LOGO_PATH = "/egi/resources/global/images/logo@2x.png";
+	public static final String STATE_LOGO_PATH_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAEIAAAApCAYAAACBZ/9xAAAAkklEQVRoQ+3aQQqAIBBAUcf7n9kJS4IgYtb5XLVo9XEeFkZmZrNazBCzRe89duwxxsiIuELEfNp4nQ2EaE2INQVCCPEE0Y6wI+yI10OC0TAaRsNofH1BMIIRjGAEIwr/WWAJS1jCEpawLBSAJSxhCcsCFU6WsIQlLGEJy0IBWMISlrAsUHGfLN2qW7fqCtF+/8oBBRdFlaPTGPQAAAAASUVORK5CYII=";
+	public static final String JASPER_STATE_LOGO_PATH = "/nfs/filestore-0/egi/images/logo@2x.png";
 	public static final String IMAGES_BASE_PATH = "/egi/resources/global/images/";
 	public static final String IMAGE_CONTEXT_PATH = "/egi";
 	public static final String BPADEMANDNOTICETITLE = "Demand Notice";

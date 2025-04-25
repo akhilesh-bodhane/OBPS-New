@@ -66,7 +66,7 @@ public interface PortalInboxRepository extends JpaRepository<PortalInbox, Long> 
     Long getPortalInboxCount();
     
     @Modifying
-    @Query("update PortalInbox pi set pi.status = 'Cancelled', pi.resolved = true where pi.applicationNumber =:nocAppNo")
+    @Query("update PortalInbox pi set pi.status = 'Cancelled', pi.resolved = true, pi.pendingAction = null  where pi.applicationNumber =:nocAppNo")
 	void updateNocAppInboxStatus(@Param("nocAppNo") String nocAppNo);
 
 }

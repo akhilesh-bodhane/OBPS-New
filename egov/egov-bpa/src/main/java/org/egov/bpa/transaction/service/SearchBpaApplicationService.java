@@ -70,6 +70,7 @@ import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.service.ApplicationSubTypeService;
 import org.egov.bpa.transaction.entity.BpaApplication;
+import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.bpa.transaction.entity.BuildingDetail;
 import org.egov.bpa.transaction.entity.SlotApplication;
 import org.egov.bpa.transaction.entity.dto.CollectionSummaryReportHelper;
@@ -78,6 +79,7 @@ import org.egov.bpa.transaction.entity.dto.SearchPendingItemsForm;
 import org.egov.bpa.transaction.entity.enums.ScheduleAppointmentType;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.ApplicationBpaRepository;
+import org.egov.bpa.transaction.repository.BpaStatusRepository;
 import org.egov.bpa.transaction.repository.SlotApplicationRepository;
 import org.egov.bpa.transaction.repository.specs.SearchBpaApplnFormSpec;
 import org.egov.bpa.transaction.service.collection.BpaDemandService;
@@ -131,6 +133,8 @@ public class SearchBpaApplicationService {
     private EntityManager entityManager;
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
+    @Autowired
+    private BpaStatusRepository bpaStatusRepository;
 
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
@@ -734,5 +738,21 @@ public class SearchBpaApplicationService {
                         new SearchBpaApplicationForm(application, occupancyCertificate.get(0)));
         }
         return new PageImpl<>(searchResults, pageable, bpaApplications.getTotalElements());
+    }
+    
+    @ReadOnly
+    public Long getBpaAppplicationCount(){
+    	return applicationBpaRepository.count();
+    }
+    
+    public int findApprovedAppCount(){
+    	BpaStatus bpaStatusApproved = bpaStatusRepository.findByCode(BpaConstants.APPLICATION_STATUS_APPROVED);
+        BpaStatus bpaStatusOrderIssued = bpaStatusRepository.findByCode(BpaConstants.APPLICATION_STATUS_ORDER_ISSUED);
+        BpaStatus bpaStatusAcceptAsScrutinized = bpaStatusRepository.findByCode(BpaConstants.APPLICATION_STATUS_ACCEPTED);
+        List<BpaStatus> listOfBpaStatus = new ArrayList<>();
+        listOfBpaStatus.add(bpaStatusApproved);
+        listOfBpaStatus.add(bpaStatusOrderIssued);
+        listOfBpaStatus.add(bpaStatusAcceptAsScrutinized);
+    	return applicationBpaRepository.findApprovedAppCount(listOfBpaStatus);
     }
 }

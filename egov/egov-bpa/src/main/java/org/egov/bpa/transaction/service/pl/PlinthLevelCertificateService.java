@@ -62,6 +62,10 @@ public class PlinthLevelCertificateService {
 	public PlinthLevelCertificate findById(Long id) {
         return plinthLevelCertificateRepository.findOne(id);
     }
+	
+	public Long getPlinthAppCount() {
+        return plinthLevelCertificateRepository.count();
+    }
 
     public List<PlinthLevelCertificate> findByStatusListOrderByCreatedDate(List<BpaStatus> listOfBpaStatus) {
         return plinthLevelCertificateRepository.findByStatusListOrderByCreatedDateAsc(listOfBpaStatus);

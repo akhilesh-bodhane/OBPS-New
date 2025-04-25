@@ -25,10 +25,6 @@
 	</queryString>
 	<title>
 		<band height="113" splitType="Stretch">
-			<image hAlign="Center">
-				<reportElement isPrintRepeatedValues="false" x="22" y="15" width="83" height="79" uuid="d163ddf0-22ef-4e54-bdcb-5cab48e70f7b"/>
-				<imageExpression><![CDATA[$P{logoPath}]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement x="120" y="19" width="338" height="22" uuid="5167f56d-0808-4c64-8e7d-3211128bcd11"/>
 				<textElement textAlignment="Center">

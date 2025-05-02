@@ -242,7 +242,6 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 			final BindingResult resultBinder, final Model model,
 			final HttpServletRequest request, final BindingResult errors,
 			final RedirectAttributes redirectAttributes) {
-		System.out.println("createLetterToParty method start*****************");
 		if (permitLTP.getApplication().getStatus().getCode()
 				.equals(BpaConstants.CREATEDLETTERTOPARTY)) {
 			model.addAttribute(MESSAGE, messageSource.getMessage(
@@ -430,7 +429,6 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 
 	protected void processAndStoreLetterToPartyDocuments(
 			final PermitLetterToParty lettertoParty) {
-		System.out.println("*******************processAndStoreLetterToPartyDocuments method started************");
 		if (!lettertoParty.getLetterToParty().getLetterToPartyDocuments()
 				.isEmpty())
 			for (final LetterToPartyDocumentCommon lettertoPartyDocument : lettertoParty
@@ -447,8 +445,6 @@ public class LetterToPartyController extends BpaGenericApplicationController {
 							.addToFileStore(lettertoPartyDocument.getFiles()));
 					lettertoPartyDocument.setIsSubmitted(true);
 				}
-				
-				//System.out.println("*******************processAndStoreLetterToPartyDocuments************"+lettertoPartyDocument.getIsRequested());
 			}
 	}
 

@@ -249,10 +249,37 @@
 										</c:forEach>
 									</div>
 										<div class="col-sm-2 add-margin">
-                          <form:checkbox
-                            id="letterToPartyDocuments${status.index}isRequested"
-                            path="letterToParty.letterToPartyDocuments[${status.index}].isRequested"
+                                       <c:forEach items="${permitLetterToParty.letterToParty.lpReason}" var="lpReason" varStatus="status1">
+                                      <c:choose>
+                                    <c:when test="${lpdoc.serviceChecklist.checklist.code eq 'LTP-01' 
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-02'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-05'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-06'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-07'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-08'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-10'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-32'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-33'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-34'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-35'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-03'
+                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-04'
+                                    and lpReason.description eq 'Building Plan Scrutiny'}">
+                        <!-- <span class="mandatory"></span> -->
+                                  <form:checkbox 
+                            id="letterToPartyDocuments${status1.index}isRequested"
+                            path="letterToParty.letterToPartyDocuments[${status1.index}].isRequested" value="true"
+                            checked="true" 
                             disabled="true" />
+                         </c:when>
+                         <c:otherwise>
+                          <form:checkbox 
+                            id="letterToPartyDocuments${status1.index}isRequested"
+                            path="letterToParty.letterToPartyDocuments[${status1.index}].isRequested" 
+                            disabled="true" />
+                    </c:otherwise>
+               </c:choose>
+             </c:forEach>
           </div>
                          
 										

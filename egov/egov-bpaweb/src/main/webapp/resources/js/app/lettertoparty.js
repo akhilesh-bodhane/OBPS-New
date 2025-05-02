@@ -139,51 +139,6 @@ jQuery(document).ready(function($) {
 
 	}).mousemove(function(e){e.preventDefault()});
 	
-	
-	
-
-    $('#lpReason').change(function () {
-        // Get the selected values
-       var selectedValues = $(this).val();
-       
-        console.log("lpReason on change");
-
-        // Define the set of checklist codes for conditions
-        
-        console.log("selectedValues::"+selectedValues);
-        
-        var validChecklistCodes = [
-            'LTP-01', 'LTP-02', 'LTP-05', 'LTP-06',
-            'LTP-07', 'LTP-08', 'LTP-10', 'LTP-32',
-            'LTP-33', 'LTP-34', 'LTP-35', 'LTP-03', 'LTP-04'
-        ];
-
-        // Check if there are selected values
-        if (Array.isArray(selectedValues) && selectedValues.length > 0) {
-        $('.requested').each(function () {
-            var checklistCode = $(this).data('checklist-code'); // Assume each checkbox has a data attribute with the code
-              //console.log("checklistCode"+checklistCode);
-            // Check if the checklist code matches the conditions
-            if (selectedValues.includes('7') && validChecklistCodes.includes(checklistCode)) {
-	         //console.log("checklistCode: matches condition");
-                $(this).prop('checked', true); // Check the checkbox
-            } else {
-	           //console.log("checklistCode: does not match condition");
-                $(this).prop('checked', false); // Uncheck the checkbox
-            }
-        });
-        }else {
-        console.log("No selected values. Disabling all checkboxes.");
-
-        // unDisable all checkboxes if no values are selected
-        $('.requested').each(function () {
-            $(this).prop('checked', false);   // Uncheck the checkbox
-        });
-    }
-    });
-
-
-	
 });
 
 	function getUrlToPring() {
@@ -221,4 +176,3 @@ jQuery(document).ready(function($) {
 			}
 		}
 	}
-

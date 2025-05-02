@@ -146,7 +146,7 @@
 										<form:checkbox
 												id="letterToParty.letterToPartyDocuments${status.index}isrequested"
 												path="letterToParty.letterToPartyDocuments[${status.index}].isRequested"
-												class="requested" data-checklist-code="${docs.checklist.code}" />
+												class="requested"/>
 									</div>
 
 									<div class="col-sm-3 add-margin">

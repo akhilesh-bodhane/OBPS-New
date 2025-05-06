@@ -226,63 +226,13 @@
 												id="letterToPartyDocuments${status.index}serviceChecklist"
 												path="letterToParty.letterToPartyDocuments[${status.index}].serviceChecklist.mandatory"
 												value="${lpdoc.serviceChecklist.mandatory}" />
-										<c:forEach
-											items="${permitLetterToParty.letterToParty.lpReason}"
-											var="lpReason" varStatus="status1">
-											<c:choose>
-												<c:when
-													test="${lpReason.description eq 'Building Plan Scrutiny'}">
-													<c:choose>
-														<c:when
-															test="${lpdoc.serviceChecklist.checklist.code eq 'LTP-01' or lpdoc.serviceChecklist.checklist.code eq 'LTP-02' 
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-05' or lpdoc.serviceChecklist.checklist.code eq 'LTP-06'
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-07' or lpdoc.serviceChecklist.checklist.code eq 'LTP-08'
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-10' or lpdoc.serviceChecklist.checklist.code eq 'LTP-32'
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-33' or lpdoc.serviceChecklist.checklist.code eq 'LTP-34'
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-35' or lpdoc.serviceChecklist.checklist.code eq 'LTP-03'
-															     or lpdoc.serviceChecklist.checklist.code eq 'LTP-04'}">
-															<span class="mandatory"></span>
-														</c:when>
-													</c:choose>
-												</c:when>
-											</c:choose>
-										</c:forEach>
-									</div>
+										</div>
 										<div class="col-sm-2 add-margin">
-                                       <c:forEach items="${permitLetterToParty.letterToParty.lpReason}" var="lpReason" varStatus="status1">
-                                      <c:choose>
-                                    <c:when test="${lpdoc.serviceChecklist.checklist.code eq 'LTP-01' 
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-02'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-05'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-06'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-07'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-08'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-10'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-32'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-33'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-34'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-35'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-03'
-                                    or lpdoc.serviceChecklist.checklist.code eq 'LTP-04'
-                                    and lpReason.description eq 'Building Plan Scrutiny'}">
-                        <!-- <span class="mandatory"></span> -->
-                                  <form:checkbox 
-                            id="letterToPartyDocuments${status1.index}isRequested"
-                            path="letterToParty.letterToPartyDocuments[${status1.index}].isRequested" value="true"
-                            checked="true" 
-                            disabled="true" />
-                         </c:when>
-                         <c:otherwise>
-                          <form:checkbox 
-                            id="letterToPartyDocuments${status1.index}isRequested"
-                            path="letterToParty.letterToPartyDocuments[${status1.index}].isRequested" 
-                            disabled="true" />
-                    </c:otherwise>
-               </c:choose>
-             </c:forEach>
-          </div>
-                         
-										
+											<form:checkbox
+												id="letterToPartyDocuments${status.index}isRequested"
+												path="letterToParty.letterToPartyDocuments[${status.index}].isRequested"
+												disabled="true" />
+										</div>
 										<%--<div class="col-sm-2 add-margin text-center">
 											<form:checkbox
 												id="letterToPartyDocuments${status.index}issubmitted"
@@ -300,7 +250,7 @@
 												cssClass="add-margin error-msg" />
 										</div>
 
-										<%-- <div class="col-sm-3 add-margin">
+										<div class="col-sm-3 add-margin">
 												<div class="files-upload-container"
 													 data-file-max-size="5"
 													 <c:if test="${lpdoc.isRequested eq true && fn:length(lpdoc.getSupportDocs()) eq 0}">required</c:if>
@@ -351,141 +301,7 @@
 
 													</div>
 												</div>
-										</div> --%>
-										
-										<div class="col-sm-3 add-margin">
-    <c:forEach items="${permitLetterToParty.letterToParty.lpReason}" var="lpReason" varStatus="status1">
-        <c:choose>
-        <c:when test="${(lpdoc.serviceChecklist.checklist.code eq 'LTP-01' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-02' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-05' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-06' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-07' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-08' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-10' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-32' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-33' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-34' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-35' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-03' 
-                                   or lpdoc.serviceChecklist.checklist.code eq 'LTP-04') 
-                                   and lpReason.description eq 'Building Plan Scrutiny'}">           
-                        <div class="files-upload-container"
-                             data-file-max-size="5"
-                             data-allowed-extension="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff"
-                             data-mandatory="true">
-                            <div class="files-viewer">
-                                <c:forEach items="${lpdoc.getSupportDocs()}" var="file" varStatus="status2">
-                                    <div class="file-viewer" data-toggle="tooltip"
-                                         data-placement="top" title="${file.fileName}">
-                                        <a class="download" target="_blank"
-                                           href="/bpa/application/downloadfile/${file.fileStoreId}"></a>
-                                        <c:choose>
-                                            <c:when test="${file.contentType eq 'application/pdf'}">
-                                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:when test="${file.contentType eq 'application/txt'}">
-                                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:when test="${file.contentType eq 'application/rtf' 
-                                                          or file.contentType eq 'application/doc' 
-                                                          or file.contentType eq 'application/docx' 
-                                                          or file.contentType eq 'application/msword' 
-                                                          or file.contentType eq 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}">
-                                                <i class="fa fa-file-word-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:when test="${file.contentType eq 'application/zip'}">
-                                                <i class="fa fa-file-archive-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:when test="${file.contentType eq 'image/jpg' 
-                                                          or file.contentType eq 'image/jpeg' 
-                                                          or file.contentType eq 'image/png' 
-                                                          or file.contentType eq 'image/gif' 
-                                                          or file.contentType eq 'image/tiff'}">
-                                                <i class="fa fa-picture-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:when test="${file.contentType eq 'application/xls' 
-                                                          or file.contentType eq 'application/xlsx' 
-                                                          or file.contentType eq 'application/vnd.ms-excel'}">
-                                                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <i class="fa fa-file-o" aria-hidden="true"></i>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <span class="doc-numbering">${status2.index + 1}</span>
-                                    </div>
-                                </c:forEach>
-                                <!-- Add file upload button -->
-                                <a href="javascript:void(0);" class="file-add"
-                                   data-unlimited-files="true"
-                                   data-file-input-name="letterToParty.letterToPartyDocuments[${status.index}].files">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                            </div>
-                        </div>
-                  
-            </c:when>
-            <c:otherwise>
-                <!-- Non-mandatory files section -->
-                <div class="files-upload-container"
-                     data-file-max-size="5"
-                     data-allowed-extension="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
-                    <div class="files-viewer">
-                        <c:forEach items="${lpdoc.getSupportDocs()}" var="file" varStatus="status2">
-                            <div class="file-viewer" data-toggle="tooltip"
-                                 data-placement="top" title="${file.fileName}">
-                                <a class="download" target="_blank"
-                                   href="/bpa/application/downloadfile/${file.fileStoreId}"></a>
-                                <c:choose>
-                                    <c:when test="${file.contentType eq 'application/pdf'}">
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:when test="${file.contentType eq 'application/txt'}">
-                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:when test="${file.contentType eq 'application/rtf' 
-                                                  or file.contentType eq 'application/doc' 
-                                                  or file.contentType eq 'application/docx' 
-                                                  or file.contentType eq 'application/msword' 
-                                                  or file.contentType eq 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}">
-                                        <i class="fa fa-file-word-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:when test="${file.contentType eq 'application/zip'}">
-                                        <i class="fa fa-file-archive-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:when test="${file.contentType eq 'image/jpg' 
-                                                  or file.contentType eq 'image/jpeg' 
-                                                  or file.contentType eq 'image/png' 
-                                                  or file.contentType eq 'image/gif' 
-                                                  or file.contentType eq 'image/tiff'}">
-                                        <i class="fa fa-picture-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:when test="${file.contentType eq 'application/xls' 
-                                                  or file.contentType eq 'application/xlsx' 
-                                                  or file.contentType eq 'application/vnd.ms-excel'}">
-                                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <i class="fa fa-file-o" aria-hidden="true"></i>
-                                    </c:otherwise>
-                                </c:choose>
-                                <span class="doc-numbering">${status2.index + 1}</span>
-                            </div>
-                        </c:forEach>
-                        <a href="javascript:void(0);" class="file-add"
-                           data-unlimited-files="true"
-                           data-file-input-name="letterToParty.letterToPartyDocuments[${status.index}].files">
-                            <i class="fa fa-plus"></i>
-                        </a>
-                    </div>
-                </div>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-</div>
-										
-										
+										</div>
 
 										</div>
 						</c:forEach>

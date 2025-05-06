@@ -38,6 +38,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
+//commented on 25/04/2025 document validation issue fix
 var atkGenDocs1 = [
 	"DOCUMENTATION-01","DOCUMENTATION-02","DOCUMENTATION-03","DOCUMENTATION-10","DOCUMENTATION-11","DOCUMENTATION-12","DOCUMENTATION-13",
 	"DOCUMENTATION-14","DOCUMENTATION-15","DOCUMENTATION-16","DOCUMENTATION-18","DOCUMENTATION-19","DOCUMENTATION-06","DOCUMENTATION-07",

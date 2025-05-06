@@ -60,34 +60,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#btnLPReply").click(function(e){
-	
-	/*var divContent = $('#lpreasonid').text();*/
-	//var divContent = $.trim($('#lpreasonid').text());
-	//alert("divContent::"+divContent);
-    //console.log(divContent);
-    
-     var allMandatoryFilled = true;
-     var showAlertOnce = false;
-
-        // Iterate through all mandatory file upload containers
-        $('.files-upload-container[data-mandatory="true"]').each(function () {
-            var fileCount = $(this).find('.files-viewer .file-viewer').length; // Count the uploaded files
-            console.log("fileCount:::"+fileCount);
-            if (fileCount === 0) {
-                allMandatoryFilled = false;
-               if (!showAlertOnce) {
-            bootbox.alert('Please upload mandatory files.'); // Show alert only once
-            showAlertOnce = true; // Set the flag to true
-        }
-            } else {
-                //$(this).removeClass('error-highlight'); // Remove error highlight if files are uploaded
-            }
-        });
-
-        if (!allMandatoryFilled) {
-            e.preventDefault(); // Stop form submission if mandatory files are missing
-        }
-	
+    	
         if ($('#lettertoPartyReplyform').valid() && validateUploadFilesMandatory()) {
             return true;
         } else {

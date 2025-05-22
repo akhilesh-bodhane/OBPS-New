@@ -263,7 +263,7 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
-									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {										
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
 									}
@@ -382,6 +382,9 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
+									System.out.println("Total Amount C&D before GST : " + totalAmount);
+									totalAmount = totalAmount.add(totalAmount.multiply(new BigDecimal("0.18")).setScale(2, BigDecimal.ROUND_HALF_UP));
+									System.out.println("Total Amount C&D after GST : " + totalAmount);
 									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
 										permitFee.getApplicationFee().addApplicationFeeDetail(buildApplicationFeeDetail(
 												bpaFee, permitFee.getApplicationFee(), totalAmount));
@@ -530,7 +533,10 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								} else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
-									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+									System.out.println("Total Amount C&D before GST : " + totalAmount);
+									totalAmount = totalAmount.add(totalAmount.multiply(new BigDecimal("0.18")).setScale(2, BigDecimal.ROUND_HALF_UP));
+									System.out.println("Total Amount C&D after GST : " + totalAmount);
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {										
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
@@ -642,7 +648,10 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 								}  else if (BpaConstants.CONSTRUCTION_AND_DEMOLISION
 										.equalsIgnoreCase(bpaFee.getBpaFeeCommon().getDescription())) {
 									BigDecimal totalAmount = getTotalConstructionAndDemolisionFee(plan, lpAreas);
-									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {
+									System.out.println("Total Amount C&D before GST : " + totalAmount);
+									totalAmount = totalAmount.add(totalAmount.multiply(new BigDecimal("0.18")).setScale(2, BigDecimal.ROUND_HALF_UP));
+									System.out.println("Total Amount C&D after GST : " + totalAmount);
+									if (totalAmount.compareTo(BigDecimal.ZERO) > 0) {										
 										fees.put(bpaFee.getBpaFeeCommon().getDescription(),
 												String.valueOf(totalAmount.setScale(0, BigDecimal.ROUND_HALF_UP)));
 									}
@@ -1969,6 +1978,11 @@ public class PermitFeeCalculationService implements ApplicationBpaFeeCalculation
 			}
 			
 		}
+		// GST applied to C&D total amount
+		System.out.println("Final C&D amount before GST : " + totalAmount);
+		totalAmount = totalAmount.add(totalAmount.multiply(new BigDecimal("0.18")).setScale(2, BigDecimal.ROUND_HALF_UP));
+		System.out.println("Final C&D amount after GST : " + totalAmount);
+		
 		return totalAmount;
 	}
 

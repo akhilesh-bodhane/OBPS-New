@@ -442,6 +442,7 @@ public class BpaNoticeUtil {
 		reportParams.put("serviceTypeForDmd", bpaApplication.getServiceType().getDescription());
 		reportParams.put("amenities", StringUtils.isBlank(amenities) ? "N/A" : amenities);
 		reportParams.put("occupancy", bpaApplication.getOccupanciesName());
+		reportParams.put("fileNumber", bpaApplication.getFileNumber());
 
 		if (!bpaApplication.getSiteDetail().isEmpty()) {
 			reportParams.put("plotNo", bpaApplication.getSiteDetail().get(0).getMspPlotNumber() == null ? EMPTY

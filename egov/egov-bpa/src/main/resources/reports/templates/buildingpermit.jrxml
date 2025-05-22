@@ -62,6 +62,7 @@
 	<parameter name="dcrReport" class="java.io.ByteArrayInputStream"/>
 	<parameter name="cityNameLocal" class="java.lang.String"/>
 	<parameter name="nocDetails" class="java.util.Collection"/>
+	<parameter name="fileNumber" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -161,7 +162,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Municipal Corporation Chandigarh."]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{cityName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="85" width="100" height="20" uuid="d95d47a0-9f49-47f8-84e3-6e590f7a377f"/>
@@ -196,7 +197,7 @@
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Memo No "+ $P{applicationNumber} + "/ SDO(B)/RP5410."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Memo No "+ $P{applicationNumber} + "/ SDO(B)/"+ $P{fileNumber}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="364" splitType="Stretch">

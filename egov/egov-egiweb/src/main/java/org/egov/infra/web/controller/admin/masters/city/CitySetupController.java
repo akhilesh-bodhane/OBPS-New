@@ -48,11 +48,13 @@
 
 package org.egov.infra.web.controller.admin.masters.city;
 
+import org.apache.commons.fileupload.FileUpload;
 import org.egov.infra.admin.master.entity.City;
 import org.egov.infra.admin.master.entity.CityPreferences;
 import org.egov.infra.admin.master.service.CityService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
 import org.egov.infra.filestore.service.FileStoreService;
+import org.egov.infra.utils.FileUploadValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -78,6 +80,9 @@ public class CitySetupController {
     @Qualifier("fileStoreService")
     protected FileStoreService fileStoreService;
 
+    @Autowired
+    private FileUploadValidator fileUploadValidator;
+
     @ModelAttribute
     public City city() {
         final City city = cityService.getCityByCode(ApplicationThreadLocals.getCityCode());
@@ -91,21 +96,51 @@ public class CitySetupController {
         return "city-setup";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateCitySetup(@Valid @ModelAttribute final City city, final BindingResult bindResult,
-            @RequestParam(required = false) final MultipartFile logo, @RequestParam(required = false) final MultipartFile ruralLogo, final RedirectAttributes redirectAttrs) throws IOException {
-        if (bindResult.hasErrors())
-            return "city-setup";
-        if (!logo.isEmpty())
-            city.getPreferences().setMunicipalityLogo(fileStoreService.store(logo.getInputStream(), logo.getOriginalFilename(),
-                    logo.getContentType(), ApplicationThreadLocals.getCityCode()));
-        if (!ruralLogo.isEmpty())
-            city.getPreferences().setMunicipalityRularLogo(fileStoreService.store(ruralLogo.getInputStream(), ruralLogo.getOriginalFilename(),
-            		ruralLogo.getContentType(), ApplicationThreadLocals.getCityCode()));
-        
-        cityService.updateCity(city);
-        redirectAttrs.addFlashAttribute("message", "msg.city.update.success");
-        return "redirect:/city/setup/view";
+
+@RequestMapping(value = "/update", method = RequestMethod.POST)
+public String updateCitySetup(
+        @Valid @ModelAttribute final City city,
+        final BindingResult bindResult,
+        @RequestParam(required = false) final MultipartFile logo,
+        @RequestParam(required = false) final MultipartFile ruralLogo,
+        final RedirectAttributes redirectAttrs) throws IOException {
+
+  
+    if (bindResult.hasErrors())
+        return "city-setup";
+    try {
+        if (logo != null && !logo.isEmpty())
+            FileUploadValidator.validateImageFile(logo);
+
+        if (ruralLogo != null && !ruralLogo.isEmpty())
+            FileUploadValidator.validateImageFile(ruralLogo);
+
+    if (logo != null && !logo.isEmpty())
+        city.getPreferences().setMunicipalityLogo(
+            fileStoreService.store(
+                logo.getInputStream(),
+                FileUploadValidator.sanitizeFileName(logo.getOriginalFilename()), 
+                FileUploadValidator.getSafeContentType(logo.getOriginalFilename()), 
+                ApplicationThreadLocals.getCityCode()
+            )
+        );
+
+    if (ruralLogo != null && !ruralLogo.isEmpty())
+        city.getPreferences().setMunicipalityRularLogo(
+            fileStoreService.store(
+                ruralLogo.getInputStream(),
+                FileUploadValidator.sanitizeFileName(ruralLogo.getOriginalFilename()), 
+                FileUploadValidator.getSafeContentType(ruralLogo.getOriginalFilename()), 
+                ApplicationThreadLocals.getCityCode()
+            )
+        );
+        } catch (IllegalArgumentException | IOException e) {
+        redirectAttrs.addFlashAttribute("fileUploadError", e.getMessage());
+        return "city-setup";
     }
+    cityService.updateCity(city);
+    redirectAttrs.addFlashAttribute("message", "msg.city.update.success");
+    return "redirect:/city/setup/view";
+}
 
 }

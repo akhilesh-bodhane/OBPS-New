@@ -63,20 +63,35 @@ import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_NAM
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_PATH;
 
 @Configuration
-@EnableRedisHttpSession
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class RedisHttpSessionConfiguration {
     
     @Value("${common.domain.name}")
     private String commonDomainName;
 
     @Bean
-    public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName(SESSION_COOKIE_NAME);
-        serializer.setCookiePath(SESSION_COOKIE_PATH);
-        serializer.setDomainName(commonDomainName);
-        return serializer;
-    }
+public CookieSerializer cookieSerializer() {
+    DefaultCookieSerializer serializer = new DefaultCookieSerializer() {
+        @Override
+        public void writeCookieValue(CookieValue cookieValue) {
+            super.writeCookieValue(cookieValue);
+
+            String cookie = cookieValue.getResponse().getHeader("Set-Cookie");
+            if (cookie != null && !cookie.contains("SameSite")) {
+                cookie = cookie + "; SameSite=Lax";
+                cookieValue.getResponse().setHeader("Set-Cookie", cookie);
+            }
+        }
+    };
+
+    serializer.setCookieName(SESSION_COOKIE_NAME);
+    serializer.setCookiePath(SESSION_COOKIE_PATH);
+    serializer.setDomainName(commonDomainName);
+    serializer.setUseSecureCookie(true);
+    serializer.setUseHttpOnlyCookie(true);
+
+    return serializer;
+}
 
     @Bean
     public CookieHttpSessionStrategy cookieHttpSessionStrategy(CookieSerializer cookieSerializer) {

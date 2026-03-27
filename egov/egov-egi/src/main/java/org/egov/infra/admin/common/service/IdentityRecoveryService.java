@@ -56,11 +56,15 @@ import org.egov.infra.config.core.EnvironmentSettings;
 import org.egov.infra.notification.service.NotificationService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -86,6 +90,9 @@ public class IdentityRecoveryService {
 
     @Autowired
     private EnvironmentSettings environmentSettings;
+
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
     public Optional<IdentityRecovery> getByToken(String token) {
         return Optional.ofNullable(identityRecoveryRepository.findByToken(token));
@@ -130,12 +137,35 @@ public class IdentityRecoveryService {
                 user.updateNextPwdExpiryDate(environmentSettings.userPasswordExpiryInDays());
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userService.updateUser(user);
+                // Invalidate all existing sessions of the user after password reset
+            
+                invalidateUserSessions(user.getUsername());
                 recoverd = true;
             }
             identityRecoveryRepository.delete(idRecovery);
         }
         return recoverd;
     }
+
+    private void invalidateUserSessions(String username) {
+    for (Object principal : sessionRegistry.getAllPrincipals()) {
+        String principalName = (principal instanceof UserDetails)
+            ? ((UserDetails) principal).getUsername()
+            : principal.toString();
+ 
+        if (!username.equals(principalName)) {
+            continue;
+        }
+ 
+        
+        List<SessionInformation> sessions =
+            sessionRegistry.getAllSessions(principal, false);
+ 
+        for (SessionInformation session : sessions) {
+            session.expireNow();
+        }
+    }
+}
 
     public boolean tokenValid(String token) {
         Optional<IdentityRecovery> identityRecovery = getByToken(token);

@@ -76,7 +76,7 @@
 				<security:filter-chain pattern="/city/details" filters="none" />
 				<security:filter-chain pattern="/public/**" filters="anonymousAuthenticationFilter"/>
                 <security:filter-chain pattern="/**"
-                                       filters="securityContextPersistenceFilter, concurrentSessionFilter,
+                                       filters="securityContextPersistenceFilter, sessionHijackProtectionFilter, concurrentSessionFilter,
                                        logoutFilter,authenticationProcessingFilter,headerWriterFilter,
                                        securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
                                        anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>

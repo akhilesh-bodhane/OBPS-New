@@ -51,6 +51,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -61,7 +62,7 @@
         <meta name="author" content="eGovernments Foundation"/>
         <title><tiles:insertAttribute name="title"/></title>
 
-        <spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
+        <spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
         <spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 
         <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
@@ -84,10 +85,16 @@
         <script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js' context='/egi'/>"></script>
         <script src="<cdn:url value='/resources/global/js/ie8/respond.min.js' context='/egi'/>"></script>
         <![endif]-->
+        <c:set var="safeGoogleApiKey" value="${empty sessionScope.googleApiKey ? '' : fn:escapeXml(sessionScope.googleApiKey)}"/>
+        <c:set var="safeCityLat" value="${empty sessionScope.citylat ? '0' : fn:escapeXml(sessionScope.citylat)}"/>
+        <c:set var="safeCityLng" value="${empty sessionScope.citylng ? '0' : fn:escapeXml(sessionScope.citylng)}"/>
+        <meta name="google-api-key" content="${safeGoogleApiKey}">
+        <meta name="city-lat" content="${safeCityLat}">
+        <meta name="city-lng" content="${safeCityLng}">
         <script>
-            var googleapikey = '${sessionScope.googleApiKey}';
-            const citylat = ${empty sessionScope.citylat ? 0 : sessionScope.citylat};
-            const citylng = ${empty sessionScope.citylng ? 0 : sessionScope.citylng};
+            var googleapikey = document.querySelector('meta[name="google-api-key"]').getAttribute('content') || '';
+            const citylat = Number(document.querySelector('meta[name="city-lat"]').getAttribute('content') || 0);
+            const citylng = Number(document.querySelector('meta[name="city-lng"]').getAttribute('content') || 0);
         </script>
     </head>
     <body>
@@ -141,7 +148,7 @@
                                 <div id="pwd-incorrt-match"
                                      class="password-error error-msg alert alert-danger display-hide">Password is not matching
                                 </div>
-                                <div class="password-error-msg display-hide">${pwdmsg}</div>
+                                <div class="password-error-msg display-hide"><c:out value="${pwdmsg}"/></div>
                             </div>
                         </div>
                         <div class="form-group text-right">

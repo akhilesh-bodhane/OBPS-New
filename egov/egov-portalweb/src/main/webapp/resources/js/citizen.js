@@ -166,7 +166,7 @@ $(document).ready(function(){
       $('[data-services="'+module+'"]').show();
     }
     $(".services-item .services:visible").each(function(){
-      var testStr = $(this).find('.content').html().toLowerCase();
+      var testStr = $(this).find('.content').text().toLowerCase();
       console.log(testStr, rule, matchRuleShort(testStr, rule))
       if(matchRuleShort(testStr, rule))
         $(this).show();
@@ -235,14 +235,14 @@ $(document).ready(function(){
                     $("#old-pass").val("");
                     $('.change-password').modal('show');
                 } else if (data == "NEWPWD_INVALID") {
-                    msg = $('.password-error-msg').html();
+                    msg = $('.password-error-msg').text();
                     $("#new-pass").val("");
                     $("#retype-pass").val("");
                     $('.change-password').modal('show');
                 }
                 $('#pwd-incorrt-match').removeClass('alert-success');
                 $('#pwd-incorrt-match').addClass('alert-danger');
-                $('.password-error').html(msg).show();
+                $('.password-error').text(msg).show();
 
             },
             error: function () {
@@ -258,13 +258,13 @@ $(document).ready(function(){
                 $('#pwd-incorrt-match').removeClass('alert-danger');
                 $('#pwd-incorrt-match').addClass('alert-success');
                 $('.password-error').show();
-                $('.password-error').html('Password is matching');
+                $('.password-error').text('Password is matching');
                 $('#retype-pass').addClass('error');
             } else if ($('#new-pass').val() !== $('#retype-pass').val()) {
                 $('#pwd-incorrt-match').removeClass('alert-success');
                 $('#pwd-incorrt-match').addClass('alert-danger');
                 $('.password-error').show();
-                $('.password-error').html('Password is not matching');
+                $('.password-error').text('Password is not matching');
                 $('#retype-pass').addClass('error');
             }
         }
@@ -400,12 +400,12 @@ function resetServicesCount(){
         async: false,
         dataType: "json",
         success: function (response) {
-        	$('#totalServicesAppliedSize').html('');
-        	$('#totalServicesPendingSize').html('');
-        	$('#totalServicesCompletedSize').html('');
-        	$('#totalServicesAppliedSize').html(response.totalServices);
-        	$('#totalServicesPendingSize').html(response.underScrutiny);
-        	$('#totalServicesCompletedSize').html(response.completedServices);
+        	$('#totalServicesAppliedSize').text('');
+        	$('#totalServicesPendingSize').text('');
+        	$('#totalServicesCompletedSize').text('');
+        	$('#totalServicesAppliedSize').text(response.totalServices);
+        	$('#totalServicesPendingSize').text(response.underScrutiny);
+        	$('#totalServicesCompletedSize').text(response.completedServices);
         },
         error: function (response) {
             console.log("Error occurred while retrieving services!!!!!!!");

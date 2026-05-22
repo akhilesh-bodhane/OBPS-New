@@ -50,6 +50,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +59,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="Chandigarh Building Plan Approvals" />
 	<meta name="author" content="Chandigarh Administration"/>
-    <spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
+    <spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
     <spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg"/>
     <title>Chandigarh Building Plan Approvals</title>
     <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
@@ -82,7 +83,7 @@
                         <%-- <img src="<c:url value='/downloadfile/logo' context='/egi'/>" height="60"> --%>
                     <img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" height="60">
                         <div>
-                            <span class="title2">${sessionScope.citymunicipalityname}</span>
+                            <span class="title2"><c:out value="${sessionScope.citymunicipalityname}"/></span>
                         </div>
                     </a>
                 </div>
@@ -130,7 +131,7 @@
                             <div class="input-group-addon style-label">
                                 <i class="fa fa-key fa-fw theme-color style-color"></i>
                             </div>
-                            <form:password path="password" cssClass="form-control style-form check-password" id="password" placeholder="Password" maxlength="32" autocomplete="off" required="required" data-container="#wrap" data-toggle="popover" data-content='${pwdmsg}'/>
+                            <form:password path="password" cssClass="form-control style-form check-password" id="password" placeholder="Password" maxlength="32" autocomplete="off" required="required" data-container="#wrap" data-toggle="popover" data-content='${fn:escapeXml(pwdmsg)}'/>
                             <span class="mandatory set-mandatory"></span>
                             <div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
                                 <i class="fa fa-eye show password-view" data-view="show" aria-hidden="true"></i>
@@ -138,7 +139,7 @@
                         </div>
                         <label id="password-error" class="error align-top pull-right display-hide" for="password">Required</label>
                         <label class="text-right align-top add-margin error-msg display-hide password-invalid" style="margin:0;">
-                                ${pwdmsg}
+                                <c:out value="${pwdmsg}"/>
                         </label>
                         <div class="text-right" style="margin:0;"><form:errors path="password" cssClass="error-check add-margin error-msg font-12"/></div>
                     </div>
@@ -225,7 +226,7 @@
             <div class="modal-body font-12">
                 <p>This website is designed, developed and maintained by
                     eGovernments Foundation under the supervision of
-                    ${sessionScope.citymunicipalityname}, India.</p>
+                    <c:out value="${sessionScope.citymunicipalityname}"/>, India.</p>
 
                 <p>Though all efforts have been made to ensure the accuracy and
                     currency of the content on this website, the same should not be
@@ -246,18 +247,18 @@
 
                 <p>The information posted on this website could include
                     hypertext links or pointers to information created and maintained
-                    by non-Government/private organisations. ${sessionScope.citymunicipalityname}
+                    by non-Government/private organisations. <c:out value="${sessionScope.citymunicipalityname}"/>
                     is providing these links and pointers solely for your information
                     and convenience. When you select a link to an outside website, you
-                    are leaving the ${sessionScope.citymunicipalityname} website and are subject
+                    are leaving the <c:out value="${sessionScope.citymunicipalityname}"/> website and are subject
                     to the privacy and security policies of the owners/sponsors of the
-                    outside website. ${sessionScope.citymunicipalityname}, does not guarantee the
+                    outside website. <c:out value="${sessionScope.citymunicipalityname}"/>, does not guarantee the
                     availability of such linked pages at all times.</p>
 
-                <p>${sessionScope.citymunicipalityname},cannot authorise the use of
+                <p><c:out value="${sessionScope.citymunicipalityname}"/>,cannot authorise the use of
                     copyrighted materials contained in linked websites. Users are
                     advised to request such authorisation from the owner of the linked
-                    website. ${sessionScope.citymunicipalityname}, does not guarantee that linked
+                    website. <c:out value="${sessionScope.citymunicipalityname}"/>, does not guarantee that linked
                     websites comply with Indian Government Web Guidelines.</p>
             </div>
             <div class="modal-footer">
@@ -276,7 +277,7 @@
             <div class="modal-body font-12">
                 <h5>Privacy Policy</h5>
                 <p>
-                    ${sessionScope.citymunicipalityname} Portal does not automatically capture any specific personal information from you
+                    <c:out value="${sessionScope.citymunicipalityname}"/> Portal does not automatically capture any specific personal information from you
                     (like name, phone number or e-mail address), that allows us to identify you individually.
                     If you choose to provide us with your personal information, like names or addresses, when
                     you visit our website, we use it only to fulfill your request for information. To use this website
@@ -311,7 +312,7 @@
                         browser session. Again, once you close your browser, the cookie disappears.
                     </li>
                 </ul>
-                You may note additionally that when you visit sections of ${sessionScope.citymunicipalityname} Portal
+                You may note additionally that when you visit sections of <c:out value="${sessionScope.citymunicipalityname}"/> Portal
                 where you are prompted to log in, or which are customizable, you may
                 be required to accept cookies. If you choose to have your browser refuse cookies, it is
                 possible that some sections of our web site may not function properly.
@@ -320,25 +321,25 @@
                 <h5>Security Policy</h5>
                 <p>
                 <ul>
-                    <li>${sessionScope.citymunicipalityname} Portal, has been placed in protected zones with implementation of firewalls
+                    <li><c:out value="${sessionScope.citymunicipalityname}"/> Portal, has been placed in protected zones with implementation of firewalls
                         and IDS (Intrusion Detection System) and high availability solutions.
                     </li>
-                    <li>${sessionScope.citymunicipalityname} Portal, simulated penetration tests have been conducted.
-                        Penetration testing has also been conducted 1 time after the launch of the ${sessionScope.citymunicipalityname} Portal.
+                    <li><c:out value="${sessionScope.citymunicipalityname}"/> Portal, simulated penetration tests have been conducted.
+                        Penetration testing has also been conducted 1 time after the launch of the <c:out value="${sessionScope.citymunicipalityname}"/> Portal.
                     </li>
-                    <li>${sessionScope.citymunicipalityname} Portal has been audited for known application level vulnerabilities before
+                    <li><c:out value="${sessionScope.citymunicipalityname}"/> Portal has been audited for known application level vulnerabilities before
                         the launch and all the known vulnerability has been addressed.
                     </li>
                     <li>Hardening of servers has been done as per the guideline of Cyber Security division
-                        before the launch of the${sessionScope.citymunicipalityname} Portal.
+                        before the launch of the <c:out value="${sessionScope.citymunicipalityname}"/> Portal.
                     </li>
-                    <li>Access to web servers hosting the ${sessionScope.citymunicipalityname} is restricted both physically and through the
+                    <li>Access to web servers hosting the <c:out value="${sessionScope.citymunicipalityname}"/> is restricted both physically and through the
                         network as far as possible.
                     </li>
                     <li>Logs at 2 different locations are maintained for authorized physical
-                        access of ${sessionScope.citymunicipalityname} servers.
+                        access of <c:out value="${sessionScope.citymunicipalityname}"/> servers.
                     </li>
-                    <li>Web-servers hosting the ${sessionScope.citymunicipalityname} are configured behind IDS, IPS (Intrusion Prevention
+                    <li>Web-servers hosting the <c:out value="${sessionScope.citymunicipalityname}"/> are configured behind IDS, IPS (Intrusion Prevention
                         System) and with system firewalls on them.
                     </li>
                     <li>All the development work is done on separate development environment and is
@@ -360,7 +361,7 @@
                         and access to applications are maintained and archived. All rejected accesses and
                         services are logged and listed in exception reports for further scrutiny.
                     </li>
-                    <li>Help Desk staff at the ${sessionScope.citymunicipalityname} monitor the ${sessionScope.citymunicipalityname} Portal at intervals of
+                    <li>Help Desk staff at the <c:out value="${sessionScope.citymunicipalityname}"/> monitor the <c:out value="${sessionScope.citymunicipalityname}"/> Portal at intervals of
                         week to check the web pages to confirm that the web pages are up and
                         running, that no unauthorized changes have been made, and that no unauthorized
                         links have been established.
@@ -374,12 +375,12 @@
                     <li>Server passwords are changed at the interval of 1 months and are shared
                         by responsible persons.
                     </li>
-                    <li>Responsible persons have been designated as Administrator for the ${sessionScope.citymunicipalityname} Portal and
+                    <li>Responsible persons have been designated as Administrator for the <c:out value="${sessionScope.citymunicipalityname}"/> Portal and
                         shall be responsible for implementing this policy for each of the web servers. The
                         administrator shall also coordinate with the Audit Team for required auditing of
                         the server(s).
                     </li>
-                    <li>${sessionScope.citymunicipalityname} Portal has been re-audited for the application level vulnerability after major
+                    <li><c:out value="${sessionScope.citymunicipalityname}"/> Portal has been re-audited for the application level vulnerability after major
                         modification in application development [Not applicable at first launch].
                     </li>
                 </ul>

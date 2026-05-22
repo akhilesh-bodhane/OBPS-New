@@ -50,6 +50,8 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,10 +84,16 @@
     <script src="<cdn:url  value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
     <script src="<cdn:url  value='/resources/global/js/ie8/respond.min.js'/>"></script>
     <![endif]-->
+    <c:set var="safeGoogleApiKey" value="${empty sessionScope.googleApiKey ? '' : fn:escapeXml(sessionScope.googleApiKey)}"/>
+    <c:set var="safeCityLat" value="${empty sessionScope.citylat ? '0' : fn:escapeXml(sessionScope.citylat)}"/>
+    <c:set var="safeCityLng" value="${empty sessionScope.citylng ? '0' : fn:escapeXml(sessionScope.citylng)}"/>
+    <meta name="google-api-key" content="${safeGoogleApiKey}">
+    <meta name="city-lat" content="${safeCityLat}">
+    <meta name="city-lng" content="${safeCityLng}">
     <script>
-        var googleapikey = '${sessionScope.googleApiKey}';
-        const citylat = ${empty sessionScope.citylat ? 0 : sessionScope.citylat};
-        const citylng = ${empty sessionScope.citylng ? 0 : sessionScope.citylng};
+        var googleapikey = document.querySelector('meta[name="google-api-key"]').getAttribute('content') || '';
+        const citylat = Number(document.querySelector('meta[name="city-lat"]').getAttribute('content') || 0);
+        const citylng = Number(document.querySelector('meta[name="city-lng"]').getAttribute('content') || 0);
     </script>
 
 </head>

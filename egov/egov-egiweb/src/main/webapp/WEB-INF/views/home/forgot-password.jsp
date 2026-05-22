@@ -49,7 +49,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
+<spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
 		<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 <div class="row">
 	<div class="col-md-12">

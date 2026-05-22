@@ -58,7 +58,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	    <meta name="description" content="Chandigarh Building Plan Approvals" />
 		<meta name="author" content="Chandigarh Administration"/>
-		<spring:eval expression="@environment.getProperty('user.pwd.strength')" var="pwdstrengthmsg"/>
+		<spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
 		<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 		<title>Chandigarh Building Plan Approvals</title>		
 		<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">

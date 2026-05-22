@@ -58,7 +58,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.infra.validation.regex.Constants.LOW_PASSWORD;
 import static org.egov.infra.validation.regex.Constants.MEDIUM_PASSWORD;
-import static org.egov.infra.validation.regex.Constants.NONE_PASSWORD;
 import static org.egov.infra.validation.regex.Constants.STRONG_PASSWORD;
 
 @Service("validatorUtils")
@@ -67,14 +66,16 @@ public class ValidatorUtils {
     private Pattern passwordPattern;
 
     public ValidatorUtils(@Value("${user.pwd.strength}") String passwordStrength) {
-        if ("high".equals(passwordStrength))
+        if (passwordStrength == null || passwordStrength.trim().isEmpty()
+                || "high".equalsIgnoreCase(passwordStrength))
             this.passwordPattern = Pattern.compile(STRONG_PASSWORD);
-        else if ("medium".equals(passwordStrength))
+        else if ("medium".equalsIgnoreCase(passwordStrength))
             this.passwordPattern = Pattern.compile(MEDIUM_PASSWORD);
-        else if ("low".equals(passwordStrength))
+        else if ("low".equalsIgnoreCase(passwordStrength))
             this.passwordPattern = Pattern.compile(LOW_PASSWORD);
         else
-            this.passwordPattern = Pattern.compile(NONE_PASSWORD);
+            // If an unknown value is provided (or "none"), default to strong validation
+            this.passwordPattern = Pattern.compile(STRONG_PASSWORD);
     }
 
     public static void assertNotNull(Object value, String message) {
@@ -88,6 +89,6 @@ public class ValidatorUtils {
     }
 
     public boolean isValidPassword(String pwd) {
-        return isNotBlank(pwd) && passwordPattern.matcher(pwd).find();
+        return isNotBlank(pwd) && passwordPattern.matcher(pwd).matches();
     }
 }

@@ -73,12 +73,12 @@
         </constructor-arg>
     </bean>
 
-    <bean id="concurrentSessionControlStrategy"
-          class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
-        <constructor-arg index="0" ref="springSessionBackedSessionRegistry"/>
-        <property name="exceptionIfMaximumExceeded" value="true"/>
-        <property name="maximumSessions" value="${max.user.session}"/>
-    </bean>
+        <bean id="concurrentSessionControlStrategy"
+                    class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+                <constructor-arg index="0" ref="springSessionBackedSessionRegistry"/>
+                <property name="exceptionIfMaximumExceeded" value="true"/>
+                <property name="maximumSessions" value="${max.user.session}"/>
+        </bean>
 
     <bean id="registerSessionAuthenticationStrategy"
           class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
@@ -87,6 +87,15 @@
 
     <bean id="securityContextPersistenceFilter"
           class="org.springframework.security.web.context.SecurityContextPersistenceFilter"/>
+
+    <bean id="requestIdentityResolver"
+          class="org.egov.infra.security.util.RequestIdentityResolver"/>
+
+    <bean id="sessionHijackProtectionFilter"
+          class="org.egov.infra.config.security.filter.SessionHijackProtectionFilter">
+        <constructor-arg index="0" ref="requestIdentityResolver"/>
+        <constructor-arg index="1" ref="applicationLogoutHandler"/>
+    </bean>
 
     <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
         <constructor-arg value="/index.jsp"/>
@@ -128,6 +137,7 @@
           class="org.egov.infra.config.security.authentication.handler.ApplicationAuthenticationSuccessHandler">
         <property name="alwaysUseDefaultTargetUrl" value="false"/>
         <property name="defaultTargetUrl" value="/home"/>
+        <property name="requestIdentityResolver" ref="requestIdentityResolver"/>
         <property name="excludedUrlRegex">
             <value>^https?://[^/]+/egi/(home/(.*)|inbox($|/.*))</value>
         </property>

@@ -48,6 +48,7 @@
 
 package org.egov.infra.config.security.authentication.handler;
 
+import org.egov.infra.security.util.RequestIdentityResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -60,14 +61,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import static org.egov.infra.security.utils.SecurityConstants.IPADDR_FIELD;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_IP;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_TIME;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_USER_AGENT;
-import static org.egov.infra.security.utils.SecurityConstants.USERAGENT_FIELD;
+import static org.egov.infra.security.utils.SecurityConstants.SESSION_USER_AGENT;
 import static org.springframework.util.StringUtils.hasText;
 
 public class ApplicationAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -75,6 +74,7 @@ public class ApplicationAuthenticationSuccessHandler extends SimpleUrlAuthentica
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     private Pattern excludedUrls;
+    private RequestIdentityResolver requestIdentityResolver;
 
     public void setRequestCache(RequestCache requestCache) {
         this.requestCache = requestCache;
@@ -82,6 +82,10 @@ public class ApplicationAuthenticationSuccessHandler extends SimpleUrlAuthentica
 
     public void setExcludedUrlRegex(String excludedUrlRegex) {
         this.excludedUrls = Pattern.compile(excludedUrlRegex);
+    }
+
+    public void setRequestIdentityResolver(RequestIdentityResolver requestIdentityResolver) {
+        this.requestIdentityResolver = requestIdentityResolver;
     }
 
     @Override
@@ -114,10 +118,12 @@ public class ApplicationAuthenticationSuccessHandler extends SimpleUrlAuthentica
     }
 
     private void auditLoginDetails(HttpServletRequest request, Authentication authentication) {
-        HashMap<String, String> credentials = (HashMap<String, String>) authentication.getCredentials();
         HttpSession session = request.getSession(false);
+        String clientIp = requestIdentityResolver.resolveClientIp(request);
+        String userAgent = requestIdentityResolver.resolveUserAgent(request);
         session.setAttribute(LOGIN_TIME, new Date());
-        session.setAttribute(LOGIN_IP, credentials.get(IPADDR_FIELD));
-        session.setAttribute(LOGIN_USER_AGENT, credentials.get(USERAGENT_FIELD));
+        session.setAttribute(LOGIN_IP, clientIp);
+        session.setAttribute(LOGIN_USER_AGENT, userAgent);
+        session.setAttribute(SESSION_USER_AGENT, userAgent);
     }
 }

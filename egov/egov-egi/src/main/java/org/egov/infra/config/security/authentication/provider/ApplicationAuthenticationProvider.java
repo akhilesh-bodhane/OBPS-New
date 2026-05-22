@@ -93,6 +93,7 @@ public class ApplicationAuthenticationProvider extends DaoAuthenticationProvider
 
     @Override
     public Authentication authenticate(Authentication authentication) {
+        validateCaptcha();
         try {
             return super.authenticate(authentication);
         } catch (BadCredentialsException ex) {
@@ -103,16 +104,20 @@ public class ApplicationAuthenticationProvider extends DaoAuthenticationProvider
         }
     }
 
+    private void validateCaptcha() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        if (!recaptchaUtils.captchaIsValid(request)) {
+            throw new BadCredentialsException(format(INVALID_CAPTCHA_MSG_FORMAT, BAD_CRED_DEFAULT_MSG));
+        }
+    }
+
     private Authentication unlockAccount(Authentication authentication, LockedException le) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         if (isNotBlank(request.getParameter(RECAPTCHA_FIELD)) || isNotBlank(request.getParameter(CAPTCHA_FIELD))) {
-            if (recaptchaUtils.captchaIsValid(request)) {
-                loginAttemptService.resetFailedAttempt(authentication.getName());
-                return super.authenticate(authentication);
-            } else {
-                throw new LockedException(format(INVALID_CAPTCHA_MSG_FORMAT, le.getMessage()));
-            }
+            loginAttemptService.resetFailedAttempt(authentication.getName());
+            return super.authenticate(authentication);
         }
         throw le;
     }

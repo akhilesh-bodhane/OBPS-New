@@ -80,9 +80,6 @@ public class CitySetupController {
     @Qualifier("fileStoreService")
     protected FileStoreService fileStoreService;
 
-    @Autowired
-    private FileUploadValidator fileUploadValidator;
-
     @ModelAttribute
     public City city() {
         final City city = cityService.getCityByCode(ApplicationThreadLocals.getCityCode());

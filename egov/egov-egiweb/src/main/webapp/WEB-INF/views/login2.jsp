@@ -95,7 +95,7 @@
 						</a> --%>
 						<div>
 							<span class="title2"
-								style="color: black; font-family: OpenSans; font-size: 30px"><b>${sessionScope.citymunicipalityname}</b></span>
+								style="color: black; font-family: OpenSans; font-size: 30px"><b><c:out value="${sessionScope.citymunicipalityname}"/></b></span>
 						</div>
 					</div>
 					<div class="navbar-right">
@@ -224,6 +224,18 @@
 										class="error pull-right" for="locationId"></label>
 								</div>
 							</div>
+							<div class="form-group">
+								<spring:eval
+									expression="@environment.getProperty('captcha.strength')"
+									var="strength" />
+								<c:import url="/WEB-INF/views/common/captcha-${strength}.jsp"
+									context="/egi" />
+							</div>
+							<c:if test="${param.sessionSecurity}">
+								<div class="text-center error-msg add-margin">
+									<spring:message code="msg.session.security" />
+								</div>
+							</c:if>
 							<c:if test="${param.error}">
 								<div class="text-center error-msg add-margin">
 									<c:set var="security_message"
@@ -244,15 +256,10 @@
 										<c:when
 											test="${fn:contains(security_message, 'User account is locked')}">
 											<spring:message code="msg.acc.locked" />
-											<spring:eval
-												expression="@environment.getProperty('captcha.strength')"
-												var="strength" />
-											<c:import url="/WEB-INF/views/common/captcha-${strength}.jsp"
-												context="/egi" />
-											<c:if
-												test="${fn:contains(security_message, 'Recaptcha Invalid')}">
-												<spring:message code="err.recaptcha.invalid" />
-											</c:if>
+										</c:when>
+										<c:when
+											test="${fn:contains(security_message, 'Recaptcha Invalid')}">
+											<spring:message code="err.recaptcha.invalid" />
 										</c:when>
 										<c:when
 											test="${fn:contains(security_message, 'Too many attempts')}">

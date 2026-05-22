@@ -59,39 +59,47 @@ import org.springframework.session.web.http.CookieHttpSessionStrategy;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_NAME;
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_PATH;
 
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class RedisHttpSessionConfiguration {
-    
+
+    private static final String SAME_SITE_POLICY = "Lax";
+    private static final String SET_COOKIE_HEADER = "Set-Cookie";
+
     @Value("${common.domain.name}")
     private String commonDomainName;
 
     @Bean
-public CookieSerializer cookieSerializer() {
-    DefaultCookieSerializer serializer = new DefaultCookieSerializer() {
-        @Override
-        public void writeCookieValue(CookieValue cookieValue) {
-            super.writeCookieValue(cookieValue);
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer() {
+            @Override
+            public void writeCookieValue(CookieValue cookieValue) {
+                HttpServletResponse sameSiteResponse = new SameSiteResponseWrapper(cookieValue.getResponse());
+                CookieValue sameSiteCookieValue = new CookieValue(
+                        cookieValue.getRequest(),
+                        sameSiteResponse,
+                        cookieValue.getCookieValue()
+                );
 
-            String cookie = cookieValue.getResponse().getHeader("Set-Cookie");
-            if (cookie != null && !cookie.contains("SameSite")) {
-                cookie = cookie + "; SameSite=Lax";
-                cookieValue.getResponse().setHeader("Set-Cookie", cookie);
+                super.writeCookieValue(sameSiteCookieValue);
             }
-        }
-    };
+        };
 
-    serializer.setCookieName(SESSION_COOKIE_NAME);
-    serializer.setCookiePath(SESSION_COOKIE_PATH);
-    serializer.setDomainName(commonDomainName);
-    serializer.setUseSecureCookie(true);
-    serializer.setUseHttpOnlyCookie(true);
+        serializer.setCookieName(SESSION_COOKIE_NAME);
+        serializer.setCookiePath(SESSION_COOKIE_PATH);
+        serializer.setDomainName(commonDomainName);
+        serializer.setUseSecureCookie(true);
+        serializer.setUseHttpOnlyCookie(true);
 
-    return serializer;
-}
+        return serializer;
+    }
 
     @Bean
     public CookieHttpSessionStrategy cookieHttpSessionStrategy(CookieSerializer cookieSerializer) {
@@ -109,5 +117,41 @@ public CookieSerializer cookieSerializer() {
     @Bean
     public UserSessionDestroyListener httpSessionEventPublisher() {
         return new UserSessionDestroyListener();
+    }
+
+    private static final class SameSiteResponseWrapper extends HttpServletResponseWrapper {
+
+        private SameSiteResponseWrapper(HttpServletResponse response) {
+            super(response);
+        }
+
+        @Override
+        public void addCookie(Cookie cookie) {
+            addHeader(SET_COOKIE_HEADER, buildSetCookieHeader(cookie));
+        }
+
+        private String buildSetCookieHeader(Cookie cookie) {
+            StringBuilder header = new StringBuilder();
+            header.append(cookie.getName()).append('=').append(cookie.getValue());
+
+            if (cookie.getMaxAge() >= 0) {
+                header.append("; Max-Age=").append(cookie.getMaxAge());
+            }
+            if (cookie.getDomain() != null) {
+                header.append("; Domain=").append(cookie.getDomain());
+            }
+            if (cookie.getPath() != null) {
+                header.append("; Path=").append(cookie.getPath());
+            }
+            if (cookie.getSecure()) {
+                header.append("; Secure");
+            }
+            if (cookie.isHttpOnly()) {
+                header.append("; HttpOnly");
+            }
+
+            header.append("; SameSite=").append(SAME_SITE_POLICY);
+            return header.toString();
+        }
     }
 }

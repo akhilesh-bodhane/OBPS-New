@@ -48,7 +48,7 @@
 jQuery(document).ready(function($)
 {
 	var unreadMessageCount = "${unreadMessageCount}";
-	document.getElementById("unreadMessageCount").innerHTML=unreadMessageCount;
+	document.getElementById("unreadMessageCount").textContent = unreadMessageCount;
 	//unreadMessageCount.initialize();
 });
 
@@ -61,7 +61,7 @@ function refreshInbox(obj){
 			citizenInboxId : obj
 		},
 		success : function(response) {
-            document.getElementById("unreadMessageCount").innerHTML=response;
+            document.getElementById("unreadMessageCount").textContent = response;
         }
     });
 }

@@ -142,6 +142,7 @@ public class User extends AbstractAuditable {
     @NotNull
     @SafeHtml
     @Length(min = 2, max = 100)
+    @Pattern(regexp = "^[A-Za-z][A-Za-z .'-]*$", message = "Name must contain only letters, spaces, dot, apostrophe, or hyphen")
     @Audited
     private String name;
 
@@ -165,10 +166,12 @@ public class User extends AbstractAuditable {
 
     @SafeHtml
     @Length(max = 10)
+    @Pattern(regexp = Constants.PANNUMBER)
     private String pan;
 
     @SafeHtml
     @Length(max = 20)
+    @Pattern(regexp = "^\\d{12}$")
     private String aadhaarNumber;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

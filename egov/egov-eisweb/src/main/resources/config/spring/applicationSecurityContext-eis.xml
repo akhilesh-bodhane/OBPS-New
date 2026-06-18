@@ -62,6 +62,7 @@
                 <security:filter-chain pattern="/complaints/citizen/anonymous/**" filters="none"/>
                 <security:filter-chain pattern="/eisdashboard/*" filters="none"/>
                 <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
+                                       sessionHijackProtectionFilter,
                                        logoutFilter,authenticationProcessingFilter,headerWriterFilter,
                                        securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
                                        anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>

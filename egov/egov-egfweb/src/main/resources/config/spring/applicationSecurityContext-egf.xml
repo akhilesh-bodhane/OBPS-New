@@ -94,6 +94,7 @@
                 <security:filter-chain pattern="/payment/directBankPayment-beforeView.action" filters="none"/>
                 <security:filter-chain pattern="/findashboard/*" filters="none"/>
                 <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
+                                       sessionHijackProtectionFilter,
                                        logoutFilter,authenticationProcessingFilter,headerWriterFilter,
                                        securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
                                        anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>

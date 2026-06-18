@@ -86,7 +86,7 @@ $(document).ready(function () {
         e.preventDefault();
         $.ajax({
             url: 'home/password/update',
-            type: 'GET',
+            type: 'POST',
             data: {
                 'currentPwd': $("#old-pass").val(),
                 'newPwd': $("#new-pass").val(),

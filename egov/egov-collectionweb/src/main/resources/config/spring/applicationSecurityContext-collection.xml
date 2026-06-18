@@ -76,6 +76,7 @@
 				<security:filter-chain pattern="/reports/collectionSummary-report.action" filters="none" />
 				<security:filter-chain pattern="/receipts/ajaxReceiptCreate-ajaxLoadServiceByClassification.action" filters="none" />
                 <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
+                                       sessionHijackProtectionFilter,
                                        logoutFilter,authenticationProcessingFilter,headerWriterFilter,
                                        securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
                                        anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>

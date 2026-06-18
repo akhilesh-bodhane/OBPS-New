@@ -171,7 +171,7 @@ public class HomeController {
     }
 
     @ResponseBody
-    @GetMapping("password/update")
+    @PostMapping("password/update")
     public String changePassword(@RequestParam String currentPwd, @RequestParam String newPwd, @RequestParam String retypeNewPwd) {
         User user = userService.getCurrentUser();
         if (passwordEncoder.matches(currentPwd, user.getPassword())) {

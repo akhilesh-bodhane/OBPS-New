@@ -48,11 +48,13 @@
 package org.egov.infra.microservice.contract;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.infra.persistence.entity.enums.UserType;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,6 +91,8 @@ public class UserRequest {
     private Long lastModifiedBy;
     private String tenantId;
     private List<RoleRequest> roles;
+    @JsonProperty("additionalDetails")
+    private Map<String, Object> additionalDetails;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "IST")
     private Date createdDate;
@@ -257,6 +261,10 @@ public class UserRequest {
 
     public List<RoleRequest> getRoles() {
         return roles;
+    }
+
+    public Map<String, Object> getAdditionalDetails() {
+        return additionalDetails;
     }
 
     public Date getCreatedDate() {

@@ -96,7 +96,7 @@ $(document).ready(function()
 	       e.preventDefault();
 	       $.ajax({
                url: '/egi/home/password/update',
-               type: 'GET',
+               type: 'POST',
                data: {'currentPwd': $("#old-pass").val(), 'newPwd':$("#new-pass").val(),'retypeNewPwd':$("#retype-pass").val()},
                success: function(data) {
                	var msg = "";

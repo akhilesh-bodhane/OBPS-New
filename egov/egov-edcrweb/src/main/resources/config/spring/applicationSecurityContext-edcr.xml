@@ -65,6 +65,7 @@
 				<security:filter-chain pattern="/rest/dcr/downloadfile/**" filters="none"/>
 				<security:filter-chain pattern="/rest/dcr/scrutinydetails/**" filters="none"/>
 				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
+												      sessionHijackProtectionFilter,
 												      logoutFilter,authenticationProcessingFilter,headerWriterFilter,
 												      springSecurityFilterChain,
 												      securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,

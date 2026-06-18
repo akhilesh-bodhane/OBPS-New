@@ -75,6 +75,7 @@
 				<security:filter-chain pattern="/national-dashboard/_obpas" filters="none"/>
 				<security:filter-chain pattern="/application/citizen/check-status/**" filters="anonymousAuthenticationFilter"/>
 				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
+													 sessionHijackProtectionFilter,
 													 logoutFilter,authenticationProcessingFilter,headerWriterFilter,
 													 securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
 													 anonymousAuthenticationFilter,exceptionTranslationFilter,

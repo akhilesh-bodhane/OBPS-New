@@ -65,6 +65,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static org.egov.infra.security.utils.SecurityConstants.SESSION_CLIENT_IP;
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_USER_AGENT;
 
 public class SessionHijackProtectionFilter extends GenericFilterBean {
@@ -89,7 +90,7 @@ public class SessionHijackProtectionFilter extends GenericFilterBean {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (!shouldValidateSession(authentication, session)
-                || isMatchingUserAgent(session, httpRequest)) {
+                || (isMatchingUserAgent(session, httpRequest) && isMatchingClientIp(session, httpRequest))) {
             chain.doFilter(request, response);
             return;
         }
@@ -105,12 +106,19 @@ public class SessionHijackProtectionFilter extends GenericFilterBean {
                 && authentication.isAuthenticated()
                 && !(authentication instanceof AnonymousAuthenticationToken)
                 && session != null
-                && session.getAttribute(SESSION_USER_AGENT) != null;
+                && session.getAttribute(SESSION_USER_AGENT) != null
+                && session.getAttribute(SESSION_CLIENT_IP) != null;
     }
 
     private boolean isMatchingUserAgent(HttpSession session, HttpServletRequest request) {
         String sessionUserAgent = (String) session.getAttribute(SESSION_USER_AGENT);
         String currentUserAgent = requestIdentityResolver.resolveUserAgent(request);
         return StringUtils.equals(sessionUserAgent, currentUserAgent);
+    }
+
+    private boolean isMatchingClientIp(HttpSession session, HttpServletRequest request) {
+        String sessionClientIp = (String) session.getAttribute(SESSION_CLIENT_IP);
+        String currentClientIp = requestIdentityResolver.resolveClientIp(request);
+        return StringUtils.equals(sessionClientIp, currentClientIp);
     }
 }

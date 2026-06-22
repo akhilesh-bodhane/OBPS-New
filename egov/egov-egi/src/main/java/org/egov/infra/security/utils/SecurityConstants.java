@@ -63,6 +63,7 @@ public final class SecurityConstants {
     public static final String LOGIN_IP = "login_ip";
     public static final String LOGIN_USER_AGENT = "login_user_agent";
     public static final String SESSION_USER_AGENT = "session_user_agent";
+    public static final String SESSION_CLIENT_IP = "session_client_ip";
     public static final int MAX_LOGIN_ATTEMPT_ALLOWED = 5;
 
     private SecurityConstants() {

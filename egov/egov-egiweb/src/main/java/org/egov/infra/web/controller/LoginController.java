@@ -86,15 +86,16 @@ public class LoginController {
                                           @RequestParam String originURL,
                                           @RequestParam boolean byOTP,
                                           final RedirectAttributes redirectAttrib) {
-        redirectAttrib.addAttribute("recovered", identityRecoveryService.generateAndSendUserPasswordRecovery(identity,
+        redirectAttrib.addFlashAttribute("recovered", identityRecoveryService.generateAndSendUserPasswordRecovery(identity,
                 originURL + "/egi/login/password/reset?token=", byOTP));
-        redirectAttrib.addAttribute("byOTP", byOTP);
+        redirectAttrib.addFlashAttribute("byOTP", byOTP);
         return "redirect:/login/secure";
     }
 
     @GetMapping(value = "password/reset", params = "token")
     public String viewPasswordReset(@RequestParam final String token, Model model) {
         model.addAttribute("valid", identityRecoveryService.tokenValid(token));
+        model.addAttribute("token", token);
         return "password/reset";
     }
 
@@ -111,10 +112,11 @@ public class LoginController {
             return "redirect:/login/password/reset?token=" + token;
         }
 
-        return "redirect:/login/secure?reset=" + identityRecoveryService.validateAndResetPassword(token, newPassword);
+        redirectAttrib.addFlashAttribute("reset", identityRecoveryService.validateAndResetPassword(token, newPassword));
+        return "redirect:/login/secure";
     }
 
-    @GetMapping("requiredlocations")
+    @PostMapping("requiredlocations")
     @ResponseBody
     public List<Location> requiredLocations(@RequestParam final String username) {
         return locationService.getLocationRequiredByUserName(username);

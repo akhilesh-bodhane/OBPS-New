@@ -92,6 +92,7 @@ $(document).ready(function(){
 			if($(this).val()) {
 				$.ajax({
 					url: "signup/validate-pwd",
+					type: "POST",
 					dataType: "json",
 					data : {"pswd" : $(this).val()},
 					success: function(data) {

@@ -200,10 +200,10 @@
 														</c:choose>
 													</div>
 												</c:if>
-												<c:if test="${not empty param.reset}">
+												<c:if test="${not empty reset}">
 													<div class="form-group">
 														<c:choose>
-															<c:when test="${param.reset}">
+															<c:when test="${reset}">
 																<div class="text-center success-msg font-12">
 																	<spring:message code="msg.success.pwd.reset" />
 																</div>
@@ -317,7 +317,7 @@
 			</div>
 		</div>
 	</div>
-	<c:if test="${not empty param.recovered}">
+	<c:if test="${not empty recovered}">
 		<div class="f-regular login-modal-new modal fade" data-backdrop="static" id="resetpwd">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -328,8 +328,8 @@
 					</div>
 					<form class = "f-regular" method="post" role="form">
 						<c:choose>
-							<c:when test="${param.recovered}">
-								<c:if test="${param.byOTP}">
+							<c:when test="${recovered}">
+								<c:if test="${byOTP}">
 									<div class="modal-body f-regular">
 										<div class="form-group">
 											<div class="col-md-12 input-group" style="margin: 0;">
@@ -357,11 +357,11 @@
 										</button>
 									</div>
 								</c:if>
-								<c:if test="${not param.byOTP}">
+								<c:if test="${not byOTP}">
 									<div class="modal-body f-regular">
 										<div class="text-center font-12">
 											<spring:message
-												code="msg.success.pwd.recov.otp.${param.byOTP}" />
+												code="msg.success.pwd.recov.otp.${byOTP}" />
 										</div>
 									</div>
 									<div style = "background-color: transparent; border: none;" class="modal-footer">

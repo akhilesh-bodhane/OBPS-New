@@ -89,7 +89,9 @@ $(document).ready(function()
 			//console.log('Trimmed - value is not there');
 		}else{
 			$.ajax({
-			      url: "requiredlocations?username="+this.value,
+			      url: "requiredlocations",
+			      type: "POST",
+			      data: { username: this.value },
 			      dataType: "json",
 			      success: function(data) { 
 			    	  checklocation = true;

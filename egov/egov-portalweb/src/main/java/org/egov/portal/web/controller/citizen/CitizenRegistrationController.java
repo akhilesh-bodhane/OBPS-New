@@ -116,7 +116,7 @@ public class CitizenRegistrationController {
         return citizenService.sendOTPMessage(mobileNumber, emailId);
     }
 
-    @RequestMapping(value = "/validate-pwd", method = GET)
+    @RequestMapping(value = "/validate-pwd", method = POST)
     @ResponseBody
     public boolean validatePassword(@RequestParam String pswd) {
         return validatorUtils.isValidPassword(pswd);

@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static org.egov.infra.security.utils.SecurityConstants.SESSION_CLIENT_IP;
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_USER_AGENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -30,12 +29,10 @@ public class SessionHijackProtectionFilterTest {
     }
 
     @Test
-    public void shouldAllowAuthenticatedRequestWhenUserAgentAndIpMatch() throws Exception {
+    public void shouldAllowAuthenticatedRequestWhenUserAgentMatches() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession().setAttribute(SESSION_USER_AGENT, "Mozilla/5.0");
-        request.getSession().setAttribute(SESSION_CLIENT_IP, "10.0.0.1");
         request.addHeader("User-Agent", "Mozilla/5.0");
-        request.setRemoteAddr("10.0.0.1");
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser());
 
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -51,27 +48,7 @@ public class SessionHijackProtectionFilterTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setContextPath("/egi");
         request.getSession().setAttribute(SESSION_USER_AGENT, "Browser-A");
-        request.getSession().setAttribute(SESSION_CLIENT_IP, "10.0.0.1");
         request.addHeader("User-Agent", "Browser-B");
-        request.setRemoteAddr("10.0.0.1");
-        SecurityContextHolder.getContext().setAuthentication(authenticatedUser());
-
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        filter.doFilter(request, response, new MockFilterChain());
-
-        assertEquals("/egi/login/secure?sessionSecurity=true", response.getRedirectedUrl());
-        assertNull(request.getSession(false));
-    }
-
-    @Test
-    public void shouldInvalidateSessionAndRedirectWhenClientIpDoesNotMatch() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setContextPath("/egi");
-        request.getSession().setAttribute(SESSION_USER_AGENT, "Mozilla/5.0");
-        request.getSession().setAttribute(SESSION_CLIENT_IP, "10.0.0.1");
-        request.addHeader("User-Agent", "Mozilla/5.0");
-        request.setRemoteAddr("10.0.0.2");
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser());
 
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -86,9 +63,7 @@ public class SessionHijackProtectionFilterTest {
     public void shouldAllowAnonymousRequestWithoutSessionValidation() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.getSession().setAttribute(SESSION_USER_AGENT, "Browser-A");
-        request.getSession().setAttribute(SESSION_CLIENT_IP, "10.0.0.1");
         request.addHeader("User-Agent", "Browser-B");
-        request.setRemoteAddr("10.0.0.2");
         SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken(
                 "anonymous",
                 "anonymousUser",

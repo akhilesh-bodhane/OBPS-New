@@ -66,7 +66,6 @@ import java.util.regex.Pattern;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_IP;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_TIME;
 import static org.egov.infra.security.utils.SecurityConstants.LOGIN_USER_AGENT;
-import static org.egov.infra.security.utils.SecurityConstants.SESSION_CLIENT_IP;
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_USER_AGENT;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -126,6 +125,5 @@ public class ApplicationAuthenticationSuccessHandler extends SimpleUrlAuthentica
         session.setAttribute(LOGIN_IP, clientIp);
         session.setAttribute(LOGIN_USER_AGENT, userAgent);
         session.setAttribute(SESSION_USER_AGENT, userAgent);
-        session.setAttribute(SESSION_CLIENT_IP, clientIp);
     }
 }

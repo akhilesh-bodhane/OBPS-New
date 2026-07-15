@@ -63,11 +63,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/login")
 public class LoginController {
+
+    private static final String RESET_TOKEN_SESSION_ATTR = "pwd_reset_token";
 
     @Autowired
     private IdentityRecoveryService identityRecoveryService;
@@ -93,25 +96,37 @@ public class LoginController {
     }
 
     @GetMapping(value = "password/reset", params = "token")
-    public String viewPasswordReset(@RequestParam final String token, Model model) {
-        model.addAttribute("valid", identityRecoveryService.tokenValid(token));
-        model.addAttribute("token", token);
+    public String captureResetToken(@RequestParam final String token, HttpSession session) {
+        session.setAttribute(RESET_TOKEN_SESSION_ATTR, token);
+        return "redirect:/login/password/reset";
+    }
+
+    @GetMapping("password/reset")
+    public String viewPasswordReset(HttpSession session, Model model) {
+        String token = (String) session.getAttribute(RESET_TOKEN_SESSION_ATTR);
+        model.addAttribute("valid", token != null && identityRecoveryService.tokenValid(token));
         return "password/reset";
     }
 
     @PostMapping(value = "password/reset")
-    public String validateAndSendNewPassword(@RequestParam final String token, @RequestParam final String newPassword,
+    public String validateAndSendNewPassword(HttpSession session, @RequestParam final String newPassword,
                                              @RequestParam final String confirmPwd, final RedirectAttributes redirectAttrib) {
+        String token = (String) session.getAttribute(RESET_TOKEN_SESSION_ATTR);
+        if (token == null) {
+            return "redirect:/login/password/reset";
+        }
+
         if (!newPassword.equals(confirmPwd)) {
-            redirectAttrib.addAttribute("error", "err.login.pwd.mismatch");
-            return "redirect:/login/password/reset?token=" + token;
+            redirectAttrib.addFlashAttribute("error", "err.login.pwd.mismatch");
+            return "redirect:/login/password/reset";
         }
 
         if (!validatorUtils.isValidPassword(newPassword)) {
-            redirectAttrib.addAttribute("error", "usr.pwd.strength.msg." + passwordStrength);
-            return "redirect:/login/password/reset?token=" + token;
+            redirectAttrib.addFlashAttribute("error", "usr.pwd.strength.msg." + passwordStrength);
+            return "redirect:/login/password/reset";
         }
 
+        session.removeAttribute(RESET_TOKEN_SESSION_ATTR);
         redirectAttrib.addFlashAttribute("reset", identityRecoveryService.validateAndResetPassword(token, newPassword));
         return "redirect:/login/secure";
     }

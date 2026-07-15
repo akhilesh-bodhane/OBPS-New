@@ -60,10 +60,10 @@
 			<div class="panel-body custom-form">
 				<c:choose>
 					<c:when test="${valid}">
-						<form:form id="password-form" method="post" action="<c:url value='/login/password/reset'/>" cssClass="form-horizontal form-groups-bordered">
-							<input type="hidden" name="token" value="${token}"/>
-							<c:if test="${not empty param.error}">
-								<div id="error-msg" class="error-msg text-center add-margin"><spring:message code="${param.error}"/></div>
+						<c:url value="/login/password/reset" var="resetActionUrl"/>
+						<form:form id="password-form" method="post" action="${resetActionUrl}" cssClass="form-horizontal form-groups-bordered">
+							<c:if test="${not empty error}">
+								<div id="error-msg" class="error-msg text-center add-margin"><spring:message code="${error}"/></div>
 							</c:if>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">

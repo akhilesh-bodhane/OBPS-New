@@ -139,7 +139,9 @@ $(document).ready(function(){
             $(this).hide();
         }
 		$.ajax({
-			url: "signup/otp/"+$('#mobileNumber').val(),
+			url: "signup/otp",
+			type: "POST",
+			data: { mobileNumber: $('#mobileNumber').val() },
 			dataType: "json",
 			success: function(data) {
 				if(data){

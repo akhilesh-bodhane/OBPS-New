@@ -336,12 +336,12 @@
 												<!-- <div class="input-group-addon style-label">
 													<i class="fa fa-key theme-color style-color"></i>
 												</div> -->
-												<label class = "login-input-label" for="token">New Password</label>
-												<input style="display: none" type="password"> <input
-													type="password" class="login-input form-control style-form"
+												<label class = "login-input-label" for="token">Enter OTP</label>
+												<input
+													type="text" class="login-input form-control style-form"
 													name="token" id="token" placeholder="Enter your OTP"
 													autocomplete="off" required="required"
-													style="font-family: Roboto_Regular;"  /> 
+													style="font-family: Roboto_Regular;"  />
 													<span class="mandatory set-mandatory"></span>
 											</div>
 											<div class="text-right font-12">OTP sent to your

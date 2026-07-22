@@ -59,7 +59,7 @@
                 &nbsp;
             </div>
             <div class="panel-body custom-form">
-                <form:form id="password-form" cssClass="form-horizontal form-groups-bordered">
+                <form:form id="password-form" method="post" cssClass="form-horizontal form-groups-bordered">
                     <input style="display:none" type="text">
                     <input style="display:none" type="password"/>
                     <div class="form-group">

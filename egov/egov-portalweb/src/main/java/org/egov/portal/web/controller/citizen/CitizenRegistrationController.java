@@ -54,9 +54,7 @@ import org.egov.portal.service.CitizenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -104,16 +102,11 @@ public class CitizenRegistrationController {
         return "redirect:signup";
     }
 
-    @RequestMapping(value = "/otp/{mobileNumber}", method = GET)
+    @RequestMapping(value = "/otp", method = POST)
     @ResponseBody
-    public boolean sendOTPMessage(@PathVariable String mobileNumber) {
-        return citizenService.sendOTPMessage(mobileNumber);
-    }
-
-    @GetMapping("/otp/{mobileNumber}/{emailId:.+}")
-    @ResponseBody
-    public boolean sendOTPMessage(@PathVariable ("mobileNumber") String mobileNumber, @PathVariable ("emailId") String emailId) {
-        return citizenService.sendOTPMessage(mobileNumber, emailId);
+    public boolean sendOTPMessage(@RequestParam String mobileNumber, @RequestParam(required = false) String emailId) {
+        return StringUtils.isBlank(emailId) ? citizenService.sendOTPMessage(mobileNumber)
+                                            : citizenService.sendOTPMessage(mobileNumber, emailId);
     }
 
     @RequestMapping(value = "/validate-pwd", method = POST)

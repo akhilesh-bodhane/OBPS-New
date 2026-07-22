@@ -66,7 +66,14 @@ $(document).ready(function()
 
     $("#otprecoverybtn").click( function () {
             if ($("#token").val() != "") {
-                window.location = '/egi/login/password/reset?token='+$("#token").val();
+                $.ajax({
+                    url: '/egi/login/password/reset/otp',
+                    type: 'POST',
+                    data: { token: $("#token").val() },
+                    success: function() {
+                        window.location = '/egi/login/password/reset';
+                    }
+                });
             }
         }
     );

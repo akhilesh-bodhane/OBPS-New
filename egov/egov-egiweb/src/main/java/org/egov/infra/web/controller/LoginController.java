@@ -101,6 +101,12 @@ public class LoginController {
         return "redirect:/login/password/reset";
     }
 
+    @PostMapping("password/reset/otp")
+    @ResponseBody
+    public void captureResetTokenFromOtp(@RequestParam final String token, HttpSession session) {
+        session.setAttribute(RESET_TOKEN_SESSION_ATTR, token);
+    }
+
     @GetMapping("password/reset")
     public String viewPasswordReset(HttpSession session, Model model) {
         String token = (String) session.getAttribute(RESET_TOKEN_SESSION_ATTR);

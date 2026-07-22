@@ -125,8 +125,9 @@ $(document).ready(function () {
     $('#otpbtn').click(function (e) {
         if (validateForm(validator)) {
             $.ajax({
-                url: "/portal/citizen/signup/otp/"+$('#mobileNumber1').val()+"/"+$('#emailId1').val(),
-                type: "get",
+                url: "/portal/citizen/signup/otp",
+                type: "POST",
+                data: { mobileNumber: $('#mobileNumber1').val(), emailId: $('#emailId1').val() },
                 dataType: "json",
                 success: function (data) {
                     if (data) {

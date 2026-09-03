@@ -80,11 +80,11 @@ jQuery(document)
 					}
 					//To show notification to business user/citizen on application open
 					if($('#appointmentDateRes').val() && $('#appointmentTimeRes').val() && $('#appointmentTitle').val()) {
-						$('#appointmentDateModal').html($('#appointmentDateRes').val());
-						$('#appointmentTimeModal').html($('#appointmentTimeRes').val());
-						$('#appointmentTitleModal').html($('#appointmentTitle').val());
+						$('#appointmentDateModal').text($('#appointmentDateRes').val());
+						$('#appointmentTimeModal').text($('#appointmentTimeRes').val());
+						$('#appointmentTitleModal').text($('#appointmentTitle').val());
 						if($('#appmntInspnRemarks').val())
-                        	$('#appmntInspnRemarksModal').html($('#appmntInspnRemarks').val());
+                        	$('#appmntInspnRemarksModal').text($('#appmntInspnRemarks').val());
 						$('#myModal').modal('show');
 					}
 					

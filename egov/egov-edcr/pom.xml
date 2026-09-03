@@ -75,11 +75,17 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.egov</groupId>
 			<artifactId>egov-dcr</artifactId>  
 			<version>5.0.3</version>
-			<!-- <version>1.0.0-SNAPSHOT</version> -->
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency> -->
+
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>egov-edcr-extract</artifactId>
+			<version>BPA-3.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>

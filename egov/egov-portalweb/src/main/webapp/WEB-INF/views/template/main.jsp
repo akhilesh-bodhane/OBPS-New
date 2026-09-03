@@ -118,7 +118,7 @@
                             please reset your password.
                         </div>
                     </c:if>
-                    <form id="passwordForm" class="form-horizontal form-groups-bordered">
+                    <form id="passwordForm" method="post" class="form-horizontal form-groups-bordered">
                         <div class="form-group">
                             <div class="col-md-4">
                                 <label class="control-label">Old Password</label>

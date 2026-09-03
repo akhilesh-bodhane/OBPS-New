@@ -143,12 +143,20 @@ $(document).ready(function () {
         }
     });
 
+    function escapeHtml(str) {
+        return String(str == null ? '' : str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     function format(d) {
         // `d` is the original data object for the row
         var tablerows = '';
         $.each(d.values, function (index, value) {
-            console.log(value["Effective Date"] + '<--->' + value["Value"]);
-            var tr = '<tr><td>' + value["Effective Date"] + '</td><td>' + value["Value"] + '</td></tr>';
+            var tr = '<tr><td>' + escapeHtml(value["Effective Date"]) + '</td><td>' + escapeHtml(value["Value"]) + '</td></tr>';
             tablerows += tr;
         });
         return '<table class="table table-bordered" style="width: 90%;margin: 0 auto;"><thead><th>Effective Date</th><th>Values</th></thead><tbody>' + tablerows + '</tbody></table>';

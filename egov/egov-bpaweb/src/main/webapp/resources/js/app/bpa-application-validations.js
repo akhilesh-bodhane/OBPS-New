@@ -79,7 +79,7 @@ $(document).ready(function() {
     if($('#violationMessage').val()) {
         bootbox.alert($('#violationMessage').val()+$('#violationMessage1').val());
         $('.showViolationMessage').focus();
-        $('.showViolationMessage').html($('#violationMessage').val());
+        $('.showViolationMessage').text($('#violationMessage').val());
         $('.showViolationMessage').closest('div.panel-body').show();
     }
 
@@ -117,7 +117,7 @@ $(document).ready(function() {
     
     var myStr = $(".original").text();
     var trimStr = $.trim(myStr);
-    $(".trimmed").html(trimStr);
+    $(".trimmed").text(trimStr);
     
 
     $(document).on('blur', '.decimalfixed', function(evt) {

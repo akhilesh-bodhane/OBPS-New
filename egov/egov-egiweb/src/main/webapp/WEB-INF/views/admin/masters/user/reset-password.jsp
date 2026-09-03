@@ -49,10 +49,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
+<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 <div class="row">
     <div class="col-md-12">
         <c:if test="${not empty message}">
             <div class="alert alert-success" role="alert"><spring:message code="${message}" arguments="${name}"/></div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div id="error-msg" class="error-msg text-center add-margin"><spring:message code="${error}"/></div>
         </c:if>
         <div class="panel panel-primary" data-collapsed="0">
             <div class="panel-heading">
@@ -76,7 +81,8 @@
                             <spring:message code="lbl.new.pwd"/><span class="mandatory"></span>
                         </label>
                         <div class="col-sm-6 add-margin">
-                            <input type="password" name="password" class="form-control" id="password" value="demo" autocomplete="off" required="required" maxlength="32"/>
+                            <input type="password" name="password" class="form-control check-password" id="password" autocomplete="off" required="required" maxlength="32" data-container="#wrap" data-toggle="popover" data-content="${pwdmsg}"/>
+                            <div class="password-error-msg display-hide">${pwdmsg}</div>
                         </div>
                     </div>
                     <div class="form-group text-center">

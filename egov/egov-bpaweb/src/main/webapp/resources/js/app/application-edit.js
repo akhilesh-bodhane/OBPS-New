@@ -97,7 +97,7 @@ jQuery(document)
                 $('#approveComments').val() &&
                 $('#wfstateDesc').val() !== 'LP Created' &&
                 $('#wfstateDesc').val() !== 'LP Reply Received') {
-                $('#showCommentsModal').html($('#approveComments').val());
+                $('#showCommentsModal').text($('#approveComments').val());
                 $('#commentsModal').modal('show');
             }
             var tbody = $('#bpaAdditionalPermitConditions').children('tbody');

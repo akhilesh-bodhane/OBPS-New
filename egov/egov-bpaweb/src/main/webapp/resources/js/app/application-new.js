@@ -113,6 +113,6 @@ $(document).ready(
 			$('.applicantname').hide();
 			$('#name').change(function() {
 				$('.applicantname').show();
-				$("span#applicantName").html($(this).val());
+				$("span#applicantName").text($(this).val());
 			});
 		});

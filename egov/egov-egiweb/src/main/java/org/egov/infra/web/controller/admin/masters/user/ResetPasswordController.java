@@ -51,7 +51,9 @@ package org.egov.infra.web.controller.admin.masters.user;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.core.EnvironmentSettings;
+import org.egov.infra.validation.ValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,6 +75,12 @@ public class ResetPasswordController {
     @Autowired
     private EnvironmentSettings environmentSettings;
 
+    @Autowired
+    private ValidatorUtils validatorUtils;
+
+    @Value("${user.pwd.strength}")
+    private String passwordStrength;
+
     @GetMapping("reset-password")
     public String showResetPassword() {
         return "reset-password";
@@ -80,6 +88,10 @@ public class ResetPasswordController {
 
     @PostMapping("reset-password")
     public String resetPassword(@RequestParam Long userId, @RequestParam String password, RedirectAttributes redirAttrib) {
+        if (!validatorUtils.isValidPassword(password)) {
+            redirAttrib.addFlashAttribute("error", "usr.pwd.strength.msg." + passwordStrength);
+            return "redirect:/user/reset-password";
+        }
         User user = userService.getUserById(userId);
         user.setPassword(passwordEncoder.encode(password));
         user.updateNextPwdExpiryDate(environmentSettings.userPasswordExpiryInDays());

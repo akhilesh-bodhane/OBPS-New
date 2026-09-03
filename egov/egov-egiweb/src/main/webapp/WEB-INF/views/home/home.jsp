@@ -380,7 +380,7 @@
 							<i class="fa fa-exclamation-triangle"></i> Security alert...! You are using default password, please reset your password.
 							</div>
 						</c:if>
-						<form id="password-form" class="form-horizontal form-groups-bordered">
+						<form id="password-form" method="post" class="form-horizontal form-groups-bordered">
 							<div class="form-group">
 								<div class="col-md-4">
 									<label class="control-label">Old Password</label>

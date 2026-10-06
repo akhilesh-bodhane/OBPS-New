@@ -61,9 +61,9 @@
 %>
 <!DOCTYPE html>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <html lang="en">
 <head>
@@ -75,10 +75,11 @@
 	<title>Chandigarh Building Plan Approvals</title>
 	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
 	<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>" type="text/javascript"></script>
 	
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -86,8 +87,7 @@
 		<script src="<cdn:url value='/resources/global/js/ie8/respond.min.js'/>"></script>
 	<![endif]-->
 </head>
-<body class="page-body index"
-	style="height: 580px; background: #F8F9F9;">
+<body class="page-body index login-page">
 	<div class="page-container">
 		<div class="padding0 login-main-content">
 			<div class = "padding0 login-cont">
@@ -100,10 +100,10 @@
 							</div>
 						</div>
 						<c:set var="tenantId" value="<%=tenantId%>" />
-						<div class="page-common-padding col-md-12">
+						<div class="page-common-padding col-md-12 login-hero-main">
 						<div class = "new-login-content padding0 col-md-12">
-							<div class = "login-left-cont padding0 col-md-6" style="color: #ffffff;">
-								<h1 class="animated fadeInUpBig" style="font-size: 46px;margin-bottom: 0;line-height: 27px;letter-spacing: 2px;font-family: 'allerregular';font-weight: normal;margin: 20px 0 60px 0;">
+							<div class = "login-left-cont padding0 col-md-6">
+								<h1 class="animated fadeInUpBig login-hero-title">
 									Building Plan Approvals
 								</h1>
 								<div class="animated fadeInDownBig" style="max-width: 700px;">
@@ -118,17 +118,19 @@
 										</div>
 										<form action="${pageContext.request.contextPath}/j_security_check" method="post" role="form" id="signform">
 											<div class = "md-form clearfix">
-												<div class = "col-md-12 padding0" style = "margin: 36px 0 16px 0">
+												<div class = "col-md-12 padding0 login-field" style = "margin: 36px 0 16px 0">
 													<label class = "login-input-label" for="j_username">Login ID</label>
-													<input name="j_username" id="j_username" 
+													<i class="fa fa-user login-field-icon" aria-hidden="true"></i>
+														<input name="j_username" id="j_username" 
 														style="font-family: Roboto_Regular;" 
 														placeholder="Enter Login ID" 
 														required="" type="text" autofocus="autofocus"
 														autocomplete="off" class="login-input form-control" />
 												</div>
-												<div class = "col-md-12 padding0">
+												<div class = "col-md-12 padding0 login-field">
 													<label class = "login-input-label" for="j_password">Password</label>
-													<input name="j_password" id="j_password" required="required"
+													<i class="fa fa-lock login-field-icon" aria-hidden="true"></i>
+														<input name="j_password" id="j_password" required="required"
 														style="font-family: Roboto_Regular;" placeholder="Enter Password" 
 														type="password" class="login-input form-control"
 														autocomplete="off" />
@@ -396,7 +398,8 @@
 	</c:if>
 
 	<script
-		src="<cdn:url value='/resources/global/js/bts/bts.js'/>"
+		src="<cdn:url value='/resources/global/js/bts/bts5.js'/>"
+<script 		src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>"
 		type="text/javascript"></script>
 	<script
 		src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"

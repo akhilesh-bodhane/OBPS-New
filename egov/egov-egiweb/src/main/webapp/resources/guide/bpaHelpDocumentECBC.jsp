@@ -8,7 +8,7 @@
 	rel="stylesheet">
 
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+	href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 <link rel="stylesheet"
 	href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 <link rel="stylesheet"

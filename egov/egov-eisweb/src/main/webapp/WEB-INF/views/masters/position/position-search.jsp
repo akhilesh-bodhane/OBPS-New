@@ -47,7 +47,7 @@
   --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
@@ -60,11 +60,13 @@
     <meta name="description" content="Chandigarh Building Plan Approvals" />
 	<meta name="author" content="Chandigarh Administration"/>
 	<title>Chandigarh Building Plan Approvals</title>
-    <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
+    <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
 	<script src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
-    <script src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>"></script>
+    <script src="<cdn:url value='/resources/global/js/bts/bts5.js' context='/egi'/>"></script>
+    <script src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
     <script src="<cdn:url value='/resources/global/js/jq/plugins/jq.inputmask.bundle.min.js' context='/egi'/>"></script>
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">

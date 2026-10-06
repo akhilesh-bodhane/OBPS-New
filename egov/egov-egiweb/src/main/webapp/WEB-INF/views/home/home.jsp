@@ -46,7 +46,7 @@
   ~
   --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
@@ -62,7 +62,7 @@
 		<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 		<title>Chandigarh Building Plan Approvals</title>		
 		<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
-		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/multi-level-menu/jq.multilevelpushmenu.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
@@ -71,8 +71,10 @@
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css'/>">
 		
 		<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js'/>"></script>
-		<script src="<cdn:url value='/resources/global/js/bts/bts.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/bts/bts5.js'/>"></script>
+		<script src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/multi-level-menu/jq.multilevelpushmenu.js'/>"></script>
 		
 		
@@ -512,7 +514,7 @@
 		<script src="<cdn:url value='/resources/js/app/custom-menu.js?rnd=${app_release_no}'/>"></script>
 		<script src="<cdn:url value='/resources/js/app/homepageofficial.js?rnd=${app_release_no}'/>"></script>
 		<script type="text/javascript">
-			$(window).load(function(){
+			$(window).on('load', function(){
 		        document.getElementById("loading").style.display = "none";
 				document.getElementById("loadingMask").style.display = "none";
 		    });

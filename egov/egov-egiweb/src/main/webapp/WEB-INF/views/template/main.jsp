@@ -50,8 +50,8 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,14 +63,16 @@
     
     <title><tiles:insertAttribute name="title"/></title>
     <link rel="icon" href="<cdn:url  value='/resources/global/images/favicon.png'/>" sizes="32x32">
-    <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/bts.css'/>">
+    <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/bts5.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/typeahead.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/bts-datepicker.css'/>"/>
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
 
     <script src="<cdn:url  value='/resources/global/js/jq/jq.js'/>"></script>
-    <script src="<cdn:url  value='/resources/global/js/bts/bts.js'/>"></script>
+    <script src="<cdn:url  value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>"></script>
+    <script src="<cdn:url  value='/resources/global/js/bts/bts5.js'/>"></script>
+    <script src="<cdn:url  value='/resources/global/js/bts/bts-compat.js'/>"></script>
     <script src="<cdn:url  value='/resources/global/js/bts/bootbox.min.js'/>"></script>
     <script src="<cdn:url  value='/resources/global/js/bts/typeahead.bundle.js'/>"></script>
     <script src="<cdn:url  value='/resources/global/js/jq/plugins/jq.inputmask.bundle.min.js'/>"></script>

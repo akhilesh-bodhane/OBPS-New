@@ -50,8 +50,8 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -65,7 +65,7 @@
         <spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
         <spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
 
-        <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
+        <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
         <link rel="stylesheet"
               href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css?rnd=${app_release_no}' context='/egi'/>">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -74,7 +74,9 @@
         <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 
         <script src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
-        <script src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/bts/bts5.js' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
         <script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
         <script src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js' context='/egi'/>"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>

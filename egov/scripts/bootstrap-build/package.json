@@ -1,0 +1,13 @@
+{
+  "name": "obps-bootstrap-build",
+  "private": true,
+  "description": "Builds the Bootstrap 5.3 stylesheet (BS3-compatible breakpoints/sizing + legacy-class shim) used by all OBPS web modules",
+  "scripts": {
+    "build": "sass --no-source-map --style=expanded --load-path=node_modules src/bts5.scss ../../egov-egiweb/src/main/webapp/resources/global/css/bts/bts5.css"
+  },
+  "devDependencies": {
+    "bootstrap": "5.3.8",
+    "postcss": "^8.4.31",
+    "sass": "1.62.1"
+  }
+}

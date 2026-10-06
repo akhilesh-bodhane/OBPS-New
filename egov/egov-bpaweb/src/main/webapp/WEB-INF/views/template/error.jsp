@@ -46,7 +46,7 @@
   ~
   --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +58,7 @@
 		<meta name="author" content="Chandigarh Administration"/>		
 		<title>Chandigarh Building Plan Approvals</title>		
 		<link rel="icon" href="<c:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
-	    <link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
+	    <link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 		

@@ -72,14 +72,16 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/calenderNew.js?rnd=${app_release_no}"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/helper.js?rnd=${app_release_no}"></script>
 	<script type="text/javascript" src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"> </script>
+	<script type="text/javascript" src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>"> </script>
 	<script type="text/javascript" src="<cdn:url value='/resources/global/js/jq-ui/jq-ui.js' context='/egi'/>"> </script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/ajax-script.js?rnd=${app_release_no}"></script>
 	<link rel="stylesheet" type="text/css" href="<cdn:url value='/resources/global/js/jq-ui/jq-ui.css' context='/egi'/>" />
 	
-	<link href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>" rel="stylesheet" type="text/css" />
+	<link href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>" rel="stylesheet" type="text/css" />
     <link href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>"
           rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
+	<script type="text/javascript" src="<cdn:url value='/resources/global/js/bts/bts5.js' context='/egi'/>"></script>
+	<script type="text/javascript" src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
 	<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>"/>
 	<script src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>" ></script>

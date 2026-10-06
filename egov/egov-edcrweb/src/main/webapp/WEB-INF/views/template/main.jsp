@@ -48,8 +48,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 
@@ -63,14 +63,16 @@
 	<meta name="author" content="eGovernments Foundation" />
 	<title><tiles:insertAttribute name="title"/></title>
 	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css' context='/egi'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/typeahead.css' context='/egi'/>">
 	<link rel="stylesheet"	href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
 
 	<script src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
-	<script src="<cdn:url value='/resources/global/js/bts/bts.js' context='/egi'/>"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>"></script>
+	<script src="<cdn:url value='/resources/global/js/bts/bts5.js' context='/egi'/>"></script>
+	<script src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
 	<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
 	<script src="<cdn:url value='/resources/global/js/bts/typeahead.bundle.js' context='/egi'/>"></script>
 	<script	src="<cdn:url value='/resources/global/js/bts/bts-datepicker.js' context='/egi'/>"></script>

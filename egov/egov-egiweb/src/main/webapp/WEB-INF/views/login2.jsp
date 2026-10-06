@@ -59,9 +59,9 @@
 %>
 <!DOCTYPE html>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <html lang="en">
 <head>
@@ -72,10 +72,11 @@
 	<meta name="author" content="Chandigarh Administration"/>
 	<title>Chandigarh Building Plan Approvals</title>
 	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
 	<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>" type="text/javascript"></script>
 	
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -490,7 +491,8 @@
 	</c:if>
 
 	<script
-		src="<cdn:url value='/resources/global/js/bts/bts.js'/>"
+		src="<cdn:url value='/resources/global/js/bts/bts5.js'/>"
+<script 		src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>"
 		type="text/javascript"></script>
 	<script
 		src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"

@@ -1,0 +1,61 @@
+@use "sass:math";
+// BS3 -> BS5 shims that cannot be taken verbatim from Bootstrap 3.
+
+// Legacy grid: col-xs-*, offsets, push/pull and float behaviour outside .row
+@each $bp in (xs, sm, md, lg) {
+  @for $i from 1 through 12 {
+    .col-#{$bp}-#{$i} { position: relative; float: left; min-height: 1px; padding-right: 15px; padding-left: 15px; }
+    .col-#{$bp}-push-#{$i} { position: relative; left: percentage(math.div($i, 12)); }
+    .col-#{$bp}-pull-#{$i} { position: relative; right: percentage(math.div($i, 12)); }
+  }
+}
+@for $i from 1 through 12 {
+  .col-xs-#{$i} { @extend .col-#{$i}; }
+}
+.col-xs-offset-0 { margin-left: 0; }
+@for $i from 1 through 11 {
+  .col-xs-offset-#{$i} { @extend .offset-#{$i}; }
+}
+@each $bp in (sm, md, lg) {
+  .col-#{$bp}-offset-0 { margin-left: 0; }
+  @for $i from 1 through 11 {
+    .col-#{$bp}-offset-#{$i} { @extend .offset-#{$bp}-#{$i}; }
+  }
+}
+
+.hide { display: none !important; }
+.sr-only { @extend .visually-hidden; }
+.btn-default { color: #333; background-color: #fff; border-color: #ccc; }
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active { color: #333; background-color: #e6e6e6; border-color: #adadad; }
+
+// Input groups: BS3 .input-group-addon / .input-group-btn
+.input-group-addon {
+  @extend .input-group-text;
+  padding: 6px 12px; font-size: 14px; font-weight: 400; line-height: 1; color: #555; text-align: center;
+  background-color: #eee; border: 1px solid #ccc; border-radius: 4px;
+}
+.input-group-btn { position: relative; display: flex; font-size: 0; white-space: nowrap; }
+.input-group-btn > .btn { position: relative; font-size: 14px; }
+
+// Typography / spacing differences in the BS5 reboot
+p { margin: 0 0 10px; }
+ul, ol { margin-top: 0; margin-bottom: 10px; }
+h1, h2, h3 { margin-top: 20px; margin-bottom: 10px; }
+h4, h5, h6 { margin-top: 10px; margin-bottom: 10px; }
+hr { margin-top: 20px; margin-bottom: 20px; border-top: 1px solid #eee; opacity: 1; }
+label { display: inline-block; max-width: 100%; margin-bottom: 5px; font-weight: 700; }
+.table { margin-bottom: 20px; }
+.btn:focus-visible { outline: 5px auto -webkit-focus-ring-color; }
+.dropdown-menu { font-size: 14px; }
+.dropdown-menu > li > a { text-decoration: none; }
+
+// bs3 .in state is mirrored to BS5 .show by bts-compat.js; keep BS3 look if the script is late
+.fade.in { opacity: 1; }
+.collapse.in { display: block; }
+tr.collapse.in { display: table-row; }
+tbody.collapse.in { display: table-row-group; }
+.modal-header .close { margin-left: auto; }
+
+// BS3 tab content (BS5 nav.scss is not included)
+.tab-content > .tab-pane { display: none; }
+.tab-content > .active { display: block; }

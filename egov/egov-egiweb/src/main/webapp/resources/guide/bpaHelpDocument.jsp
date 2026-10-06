@@ -6,7 +6,7 @@
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts.css'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">

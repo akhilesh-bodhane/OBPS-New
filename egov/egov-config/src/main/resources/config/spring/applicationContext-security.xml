@@ -54,13 +54,13 @@
 	   http://www.springframework.org/schema/security
 	   http://www.springframework.org/schema/security/spring-security.xsd" default-lazy-init="true">
 
-    <security:global-method-security secured-annotations="enabled"
-                                     access-decision-manager-ref="accessDecisionManager"/>
+    <security:method-security secured-enabled="true"/>
 
     <bean id="concurrentSessionFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
         <constructor-arg name="sessionRegistry" ref="springSessionBackedSessionRegistry"/>
+        <constructor-arg name="expiredUrl" value="/index.jsp"/>
     </bean>
-    
+
     <bean id="headerWriterFilter" class="org.springframework.security.web.header.HeaderWriterFilter">
         <constructor-arg name="headerWriters">
             <list>
@@ -68,7 +68,6 @@
                 <bean class="org.springframework.security.web.header.writers.HstsHeaderWriter"/>
                 <bean class="org.springframework.security.web.header.writers.XContentTypeOptionsHeaderWriter"/>
                 <bean class="org.springframework.security.web.header.writers.XXssProtectionHeaderWriter"/>
-                <bean class="org.springframework.security.web.header.writers.HpkpHeaderWriter"/>
             </list>
         </constructor-arg>
     </bean>
@@ -76,7 +75,7 @@
         <bean id="concurrentSessionControlStrategy"
                     class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
                 <constructor-arg index="0" ref="springSessionBackedSessionRegistry"/>
-                <property name="exceptionIfMaximumExceeded" value="true"/>
+                <property name="exceptionIfMaximumExceeded" value="false"/>
                 <property name="maximumSessions" value="${max.user.session}"/>
         </bean>
 

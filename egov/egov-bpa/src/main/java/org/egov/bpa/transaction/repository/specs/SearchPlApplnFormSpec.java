@@ -49,10 +49,12 @@
 package org.egov.bpa.transaction.repository.specs;
 
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.SiteDetail;
@@ -75,201 +77,169 @@ public final class SearchPlApplnFormSpec {
         // static methods only
     }
 
-    private static void commonSpecForPendingItems(SearchPendingItemsForm requestForm, Root<PlinthLevelCertificate> root, CriteriaBuilder builder, Predicate predicate) {
+    private static void commonSpecForPendingItems(SearchPendingItemsForm requestForm, Root<PlinthLevelCertificate> root, CriteriaBuilder builder, List<Predicate> predicates) {
         Join<PlinthLevelCertificate, BpaApplication> bpaApplication = root.join("parent");
       if (requestForm.getApplicationNumber() != null)
-          predicate.getExpressions()
-                           .add(builder.like(root.get("applicationNumber"), requestForm.getApplicationNumber()+"%"));
+          predicates.add(SpecMatchUtil.contains(builder, root.get("applicationNumber"), requestForm.getApplicationNumber()));
       if (requestForm.getApplicantName() != null)
-          predicate.getExpressions()
-                  .add(builder.like(bpaApplication.get("owner").get("name"),
-                          requestForm.getApplicantName()+"%"));
+          predicates.add(SpecMatchUtil.contains(builder, bpaApplication.get("owner").get("name"),
+                          requestForm.getApplicantName()));
       
       if (requestForm.getServiceTypeId() != null)
-          predicate.getExpressions()
-                  .add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
+          predicates.add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
       if (requestForm.getServiceType() != null)
-          predicate.getExpressions()
-                  .add(builder.equal(bpaApplication.get("serviceType").get("description"),
-                          requestForm.getServiceTypeId()));
+          predicates.add(builder.equal(bpaApplication.get("serviceType").get("description"),
+                          requestForm.getServiceType()));
       
       if (requestForm.getFromDate() != null)
-          predicate.getExpressions()
-                  .add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
+          predicates.add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
       if (requestForm.getToDate() != null)
-          predicate.getExpressions()
-                  .add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
+          predicates.add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
       
       if (requestForm.getPlotNumber() != null)
-          predicate.getExpressions()
-                  .add(builder.equal(bpaApplication.get("plotNumber"), requestForm.getPlotNumber()));
-      
+          predicates.add(SpecMatchUtil.contains(builder, bpaApplication.get("plotNumber"), requestForm.getPlotNumber()));
+
       if (requestForm.getSector() != null)
-          predicate.getExpressions()
-                  .add(builder.equal(bpaApplication.get("sector"), requestForm.getSector())); 
+          predicates.add(SpecMatchUtil.contains(builder, bpaApplication.get("sector"), requestForm.getSector()));
       
     }
 
 	public static Specification<PlinthLevelCertificate> searchSpecificationForPlItems(final SearchPendingItemsForm requestForm) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
-            commonSpecForPendingItems(requestForm, root, builder, predicate);
+            final List<Predicate> predicates = new ArrayList<>();
+            commonSpecForPendingItems(requestForm, root, builder, predicates);
             Join<PlinthLevelCertificate, BpaApplication> bpaApplication = root.join("parent");
             
             //to differential Urban and Rural applications
             if (requestForm.getApplicationTypeId() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+                predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
             else
-            	predicate.getExpressions()
-                .add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+            	predicates.add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
     
             if (requestForm.getStatusId() != null)
-                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+                predicates.add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
             
             query.distinct(true);
-            return predicate;
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 	
 	public static Specification<PlinthLevelCertificate> search(final SearchBpaApplicationForm requestForm) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             Join<OccupancyCertificate, BpaApplication> bpaApplication = root.join("parent");
             Join<BpaApplication, SiteDetail> siteDetailJoin = bpaApplication.join("siteDetail");
             Join<SiteDetail, Boundary> adminBoundaryJoin = siteDetailJoin.join("adminBoundary");
             if (requestForm.getApplicationNumber() != null)
-                predicate.getExpressions()
-                                 .add(builder.equal(root.get("applicationNumber"), requestForm.getApplicationNumber()));
+                predicates.add(SpecMatchUtil.contains(builder, root.get("applicationNumber"), requestForm.getApplicationNumber()));
             if (requestForm.getApplicantName() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("owner").get("name"),
+                predicates.add(SpecMatchUtil.contains(builder, bpaApplication.get("owner").get("name"),
                                 requestForm.getApplicantName()));
             if(requestForm.getStatusId() !=null)
-            	predicate.getExpressions()
-                .add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+            	predicates.add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
             
             if(requestForm.getStatus() !=null)
-            	predicate.getExpressions()
-                .add(builder.equal(root.get("status").get("description"), requestForm.getStatus()));
+            	predicates.add(builder.equal(root.get("status").get("description"), requestForm.getStatus()));
             
             if (requestForm.getServiceTypeId() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
+                predicates.add(builder.equal(bpaApplication.get("serviceType").get("id"), requestForm.getServiceTypeId()));
             if (requestForm.getServiceType() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("serviceType").get("description"),
+                predicates.add(builder.equal(bpaApplication.get("serviceType").get("description"),
                                 requestForm.getServiceType()));
 
             if (requestForm.getOccupancyId() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("occupancy").get("id"), requestForm.getOccupancyId()));
+                predicates.add(builder.equal(bpaApplication.get("occupancy").get("id"), requestForm.getOccupancyId()));
             if(requestForm.getRevenueBoundary()!=null)
-                predicate.getExpressions()
-                .add(builder.equal(siteDetailJoin.get("adminBoundary").get("id"), requestForm.getRevenueBoundary()));
+                predicates.add(builder.equal(siteDetailJoin.get("adminBoundary").get("id"), requestForm.getRevenueBoundary()));
             if(requestForm.getAdminBoundary()!=null)
-                predicate.getExpressions()
-                .add(builder.equal(siteDetailJoin.get("electionBoundary").get("id"), requestForm.getAdminBoundary()));
+                predicates.add(builder.equal(siteDetailJoin.get("electionBoundary").get("id"), requestForm.getAdminBoundary()));
             if(requestForm.getLocationBoundary()!=null)
-                predicate.getExpressions()
-                .add(builder.equal(siteDetailJoin.get("locationBoundary").get("id"), requestForm.getLocationBoundary()));
+                predicates.add(builder.equal(siteDetailJoin.get("locationBoundary").get("id"), requestForm.getLocationBoundary()));
             
             if (requestForm.getFromDate() != null)
-                predicate.getExpressions()
-                        .add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
+                predicates.add(builder.greaterThanOrEqualTo(root.get("applicationDate"), requestForm.getFromDate()));
             if (requestForm.getToDate() != null)
-                predicate.getExpressions()
-                        .add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
+                predicates.add(builder.lessThanOrEqualTo(root.get("applicationDate"), requestForm.getToDate()));
             if (requestForm.getFromBuiltUpArea() != null)
-                predicate.getExpressions()
-                        .add(builder.greaterThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));
+                predicates.add(builder.greaterThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getFromBuiltUpArea()));
             if (requestForm.getToBuiltUpArea() != null)
-                predicate.getExpressions()
-                        .add(builder.lessThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getToBuiltUpArea()));
+                predicates.add(builder.lessThanOrEqualTo(bpaApplication.get("totalBuiltUpArea"), requestForm.getToBuiltUpArea()));
             if (requestForm.getApplicationTypeId() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+                predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
             else
-            	predicate.getExpressions()
-                .add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+            	predicates.add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
             
             query.distinct(true);
-            return predicate;
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 	
 	public static Specification<PlinthLevelCertificate> searchSpecificationForPlPendingItems(
 			SearchPendingItemsForm requestForm) {
 		 return (root, query, builder) -> {
-	            final Predicate predicate = builder.conjunction();
-	            commonSpecForPendingItems(requestForm, root, builder, predicate);
+	            final List<Predicate> predicates = new ArrayList<>();
+	            commonSpecForPendingItems(requestForm, root, builder, predicates);
 	            Join<PlinthLevelCertificate, BpaApplication> bpaApplication = root.join("parent");
 	            
 	            //to differential Urban and Rural applications
 	            if (requestForm.getApplicationTypeId() != null)
-	                predicate.getExpressions()
-	                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+	                predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
 	            else
-	            	predicate.getExpressions()
-	                .add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+	            	predicates.add(builder.notEqual(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
 	    
 	            if (requestForm.getStatusId() != null)
-	                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+	                predicates.add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
 	            
 	            else 
-	            	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
+	            	predicates.add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
 	            
 	            query.distinct(true);
-	            return predicate;
+	            return builder.and(predicates.toArray(new Predicate[0]));
 	        };
 	}
 	
 	public static Specification<PlinthLevelCertificate> searchSpecificationForPlItemsRural(final SearchPendingItemsForm requestForm) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
-            commonSpecForPendingItems(requestForm, root, builder, predicate);
+            final List<Predicate> predicates = new ArrayList<>();
+            commonSpecForPendingItems(requestForm, root, builder, predicates);
             Join<PlinthLevelCertificate, BpaApplication> bpaApplication = root.join("parent");
             
             //to differential Urban and Rural applications
             if (requestForm.getApplicationTypeId() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+                predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
             else
-            	predicate.getExpressions()
-                .add(builder.equal(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+            	predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
     
             if (requestForm.getStatusId() != null)
-                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+                predicates.add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
             
             query.distinct(true);
-            return predicate;
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
 	public static Specification<PlinthLevelCertificate> searchSpecificationForPlPendingItemsRural(
 			SearchPendingItemsForm requestForm) {
 		 return (root, query, builder) -> {
-	            final Predicate predicate = builder.conjunction();
-	            commonSpecForPendingItems(requestForm, root, builder, predicate);
+	            final List<Predicate> predicates = new ArrayList<>();
+	            commonSpecForPendingItems(requestForm, root, builder, predicates);
 	            Join<PlinthLevelCertificate, BpaApplication> bpaApplication = root.join("parent");
 	            
 	            //to differential Urban and Rural applications
 	            if (requestForm.getApplicationTypeId() != null)
-	                predicate.getExpressions()
-	                        .add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
+	                predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), requestForm.getApplicationTypeId()));
 	            else
-	            	predicate.getExpressions()
-	                .add(builder.equal(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
+	            	predicates.add(builder.equal(bpaApplication.get("applicationType").get("id"), RURAL_APPLICATION_ID));
 	    
 	            if (requestForm.getStatusId() != null)
-	                predicate.getExpressions().add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
+	                predicates.add(builder.equal(root.get("status").get("id"), requestForm.getStatusId()));
 	            
 	            else 
-	               	predicate.getExpressions().add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
+	               	predicates.add(builder.not(root.get("status").get("code").in(PL_END_STATUS,CANCELLED,REJECTED)));
 	               	 
 	            
 	            query.distinct(true);
-	            return predicate;
+	            return builder.and(predicates.toArray(new Predicate[0]));
 	        };
 	}
 

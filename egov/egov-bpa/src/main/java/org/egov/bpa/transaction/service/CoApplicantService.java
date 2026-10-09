@@ -59,7 +59,7 @@ public class CoApplicantService {
     private CoApplicantDetailRepository coApplicantDetailRepository;
 
     public CoApplicant findById(Long id) {
-        return coApplicantDetailRepository.findOne(id);
+        return coApplicantDetailRepository.findById(id).orElse(null);
     }
 
     @Transactional

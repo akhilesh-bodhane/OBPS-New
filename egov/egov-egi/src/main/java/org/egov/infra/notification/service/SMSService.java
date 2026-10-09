@@ -60,7 +60,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import javax.net.ssl.SSLContext;
 
 import org.apache.commons.io.IOUtils;

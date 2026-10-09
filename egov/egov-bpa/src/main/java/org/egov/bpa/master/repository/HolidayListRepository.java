@@ -53,7 +53,6 @@ public interface HolidayListRepository extends JpaRepository<Holiday, Long> {
 	Holiday findByHolidayDate(Date holidayDate);
 	Holiday findByHolidayType(String holidayType);
 	List<Holiday> findByYearOrderByHolidayDateAsc(String year);
-	Holiday findById(Long id);
 	@Query("select holi from Holiday holi where holi.holidayDate>=:fromDate and holi.holidayDate<=:toDate")
 	List<Holiday>findByFromAndToDate(@Param("fromDate") Date fromDate,@Param("toDate") Date toDate);
 }

@@ -50,7 +50,7 @@ package org.egov.commons.service;
 import org.egov.commons.CFinancialYear;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,8 +82,8 @@ public class FinancialYearService extends PersistenceService<CFinancialYear, Lon
         Query query = getSession()
                 .createQuery(
                         " from CFinancialYear cfinancialyear where cfinancialyear.startingDate <=:sDate and cfinancialyear.endingDate >=:eDate");
-        query.setDate("sDate", date);
-        query.setDate("eDate", date);
+        query.setParameter("sDate", date, jakarta.persistence.TemporalType.DATE);
+        query.setParameter("eDate", date, jakarta.persistence.TemporalType.DATE);
         ArrayList list = (ArrayList) query.list();
         if (list.size() > 0)
             cFinancialYear = (CFinancialYear) list.get(0);

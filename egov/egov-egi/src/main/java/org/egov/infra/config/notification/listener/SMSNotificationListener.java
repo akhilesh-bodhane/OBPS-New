@@ -53,9 +53,9 @@ import static org.egov.infra.notification.NotificationConstants.MOBILE;
 import static org.egov.infra.notification.NotificationConstants.PRIORITY;
 import static org.egov.infra.notification.NotificationConstants.TEMPLATEID;
 
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
+import jakarta.jms.JMSException;
+import jakarta.jms.MapMessage;
+import jakarta.jms.Message;
 
 import org.egov.infra.notification.entity.NotificationPriority;
 import org.egov.infra.notification.service.SMSService;

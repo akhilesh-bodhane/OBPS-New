@@ -69,7 +69,7 @@ import org.egov.model.budget.BudgetDetail;
 import org.egov.model.budget.BudgetGroup;
 import org.egov.pims.commons.Position;
 import org.egov.pims.model.PersonalInformation;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -393,9 +393,9 @@ public class BudgetService extends PersistenceService<Budget, Long> {
         EgwStatus createdStatus = egwStatusDAO.getStatusByModuleAndCode("BUDGET", "Created");
         persistenceService
                 .getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "update egf_budget set status = :approvedStatus where status =:createdStatus and  materializedPath like'"
-                                + materializedPath + "%'").setLong("approvedStatus", approvedStatus.getId())
-                .setLong("createdStatus", createdStatus.getId()).executeUpdate();
+                                + materializedPath + "%'").setParameter("approvedStatus", approvedStatus.getId())
+                .setParameter("createdStatus", createdStatus.getId()).executeUpdate();
     }
 }

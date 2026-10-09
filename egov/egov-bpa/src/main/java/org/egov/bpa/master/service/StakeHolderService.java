@@ -50,8 +50,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -97,12 +97,12 @@ import org.egov.infra.utils.ApplicationConstant;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.infra.workflow.service.SimpleWorkflowService;
 import org.egov.pims.commons.Position;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -540,7 +540,7 @@ public class StakeHolderService {
     }
 
     public StakeHolder findById(final Long id) {
-        return stakeHolderRepository.findOne(id);
+        return stakeHolderRepository.findById(id).orElse(null);
     }
 
     public StakeHolder findByDemand(final EgDemand demand) {
@@ -649,7 +649,7 @@ public class StakeHolderService {
 
     @SuppressWarnings("unchecked")
     public List<StakeHolder> getStakeHolderListByType(final StakeHolderType stkHldrType, final String name) {
-        final Criteria criteria = getCurrentSession().createCriteria(StakeHolder.class, STK_HLDR);
+        final Criteria criteria = Criteria.create(getCurrentSession(), StakeHolder.class, STK_HLDR);
         criteria.add(Restrictions.eq(STK_HLDR_TYPE, stkHldrType));
         criteria.add(Restrictions.ilike("stakeHolder.name", name, MatchMode.ANYWHERE));
         criteria.add(Restrictions.eq("stakeHolder.isActive", true));
@@ -657,7 +657,7 @@ public class StakeHolderService {
     }
 
     public Criteria buildSearchCriteria(final StakeHolder stkHldr) {
-        final Criteria criteria = getCurrentSession().createCriteria(StakeHolder.class, STK_HLDR);
+        final Criteria criteria = Criteria.create(getCurrentSession(), StakeHolder.class, STK_HLDR);
 
         if (stkHldr.getName() != null)
             criteria.add(Restrictions.ilike("stakeHolder.name", stkHldr.getName(), MatchMode.ANYWHERE));
@@ -720,7 +720,7 @@ public class StakeHolderService {
 
     @SuppressWarnings("unchecked")
     private List<StakeHolder> buildSearchCriteriaForApproval(SearchStakeHolderForm srchStkHldrFrm) {
-        final Criteria criteria = getCurrentSession().createCriteria(StakeHolder.class, STK_HLDR);
+        final Criteria criteria = Criteria.create(getCurrentSession(), StakeHolder.class, STK_HLDR);
         if (srchStkHldrFrm.getFromDate() != null) {
             criteria.add(Restrictions.ge(STAKE_HOLDER_DOT_CREATED_DATE,
                     searchBpaApplicationService.resetFromDateTimeStamp(srchStkHldrFrm.getFromDate())));

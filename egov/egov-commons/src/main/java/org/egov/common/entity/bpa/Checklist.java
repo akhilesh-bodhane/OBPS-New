@@ -32,23 +32,23 @@ package org.egov.common.entity.bpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-@Entity
+@Entity(name = "CommonChecklist")
 @Table(name = "eg_checklist")
 @SequenceGenerator(name = Checklist.SEQ_CHECKLIST, sequenceName = Checklist.SEQ_CHECKLIST, allocationSize = 1)
 public class Checklist extends AbstractAuditable {
@@ -59,12 +59,12 @@ public class Checklist extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_CHECKLIST, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-	@SafeHtml
+	@CustomSafeHtml
 	@Length(min = 1, max = 128)
 	@Column(name = "code", unique = true)
 	private String code;
 
-	@SafeHtml
+	@CustomSafeHtml
 	@Length(min = 1, max = 256)
 	private String description;
 

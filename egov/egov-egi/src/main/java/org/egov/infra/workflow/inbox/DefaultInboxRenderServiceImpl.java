@@ -48,10 +48,12 @@
 
 package org.egov.infra.workflow.inbox;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -98,9 +100,9 @@ public class DefaultInboxRenderServiceImpl<T extends StateAware> implements Inbo
 
     @Override
     public List<T> getAssignedWorkflowItems(List<Long> owners) {
-        return this.stateAwarePersistenceService.getSession().createCriteria(this.stateAwareType)
+        return Criteria.create(this.stateAwarePersistenceService.getSession(), this.stateAwareType)
                 .setFetchMode("state", JOIN).createAlias("state", "state")
-                .setFlushMode(MANUAL).setReadOnly(true).setCacheable(true)
+                .setHibernateFlushMode(MANUAL).setReadOnly(true).setCacheable(true)
                 .add(Restrictions.eq("state.type", this.stateAwareType.getSimpleName()))
                 .add(Restrictions.in("state.ownerPosition.id", owners))
                 .add(Restrictions.in("state.status", Arrays.asList(INPROGRESS, STARTED)))
@@ -110,9 +112,9 @@ public class DefaultInboxRenderServiceImpl<T extends StateAware> implements Inbo
 
     @Override
     public List<T> getDraftWorkflowItems(List<Long> owners) {
-        return this.stateAwarePersistenceService.getSession().createCriteria(this.stateAwareType)
+        return Criteria.create(this.stateAwarePersistenceService.getSession(), this.stateAwareType)
                 .setFetchMode("state", JOIN).createAlias("state", "state")
-                .setFlushMode(MANUAL).setReadOnly(true).setCacheable(true)
+                .setHibernateFlushMode(MANUAL).setReadOnly(true).setCacheable(true)
                 .add(Restrictions.eq("state.type", this.stateAwareType.getSimpleName()))
                 .add(Restrictions.in("state.ownerPosition.id", owners))
                 .add(Restrictions.eq("state.status", STARTED))

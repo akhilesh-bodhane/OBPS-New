@@ -78,17 +78,17 @@ import org.egov.pims.model.PersonalInformation;
 import org.egov.pims.model.SearchEmpDTO;
 import org.egov.pims.model.ServiceHistory;
 import org.egov.pims.utils.EisManagersUtill;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.IntegerType;
+import org.egov.infra.persistence.criteria.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -196,13 +196,13 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             qry = getCurrentSession().createQuery(mainStr);
             LOGGER.info("qryqryqryqry" + qry.toString());
             if (code != null && !code.equals("")) {
-                qry.setString("employeeCode", code.trim().toUpperCase());
+                qry.setParameter("employeeCode", code.trim().toUpperCase());
             }
             if (departmentId.intValue() != 0) {
-                qry.setLong("deptId", departmentId.longValue());
+                qry.setParameter("deptId", departmentId.longValue());
             }
             if (designationId.intValue() != 0) {
-                qry.setInteger("designationId", designationId);
+                qry.setParameter("designationId", designationId);
             }
             employeeList = (List) qry.list();
 
@@ -272,16 +272,16 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             qry = getCurrentSession().createQuery(mainStr);
             LOGGER.info("qryqryqryqry" + qry.toString());
             if (code != null && !code.equals("")) {
-                qry.setString("employeeCode", code.trim().toUpperCase());
+                qry.setParameter("employeeCode", code.trim().toUpperCase());
             }
             if (departmentId.intValue() != 0) {
-                qry.setInteger("deptId", departmentId);
+                qry.setParameter("deptId", departmentId);
             }
             if (designationId.intValue() != 0) {
-                qry.setInteger("designationId", designationId);
+                qry.setParameter("designationId", designationId);
             }
             if (status.intValue() != 0) {
-                qry.setInteger("employeeStatus", status);
+                qry.setParameter("employeeStatus", status);
             }
             employeeList = (List) qry.list();
 
@@ -357,19 +357,19 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             qry = getCurrentSession().createQuery(mainStr);
             LOGGER.info("qryqryqryqry" + qry.toString());
             if (code != null && !code.equals("")) {
-                qry.setString("employeeCode", code.trim().toUpperCase());
+                qry.setParameter("employeeCode", code.trim().toUpperCase());
             }
             if (departmentId.intValue() != 0) {
-                qry.setInteger("deptId", departmentId);
+                qry.setParameter("deptId", departmentId);
             }
             if (designationId.intValue() != 0) {
-                qry.setInteger("designationId", designationId);
+                qry.setParameter("designationId", designationId);
             }
             if (functionaryId.intValue() != 0) {
-                qry.setInteger("functionaryId", functionaryId);
+                qry.setParameter("functionaryId", functionaryId);
             }
             if (status.intValue() != 0) {
-                qry.setInteger("employeeStatus", status);
+                qry.setParameter("employeeStatus", status);
             }
             employeeList = (List) qry.list();
 
@@ -481,25 +481,25 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
                 qry = getCurrentSession().createQuery(mainStr);
                 if (departmentId.intValue() != 0) {
-                    qry.setInteger("deptId", departmentId);
+                    qry.setParameter("deptId", departmentId);
                 }
                 if (designationId.intValue() != 0) {
-                    qry.setInteger("designationId", designationId);
+                    qry.setParameter("designationId", designationId);
                 }
                 if (functionaryId.intValue() != 0) {
-                    qry.setInteger("functionaryId", functionaryId);
+                    qry.setParameter("functionaryId", functionaryId);
                 }
                 if (status.intValue() != 0) {
-                    qry.setInteger("employeeStatus", status);
+                    qry.setParameter("employeeStatus", status);
                 }
                 if (empType.intValue() != 0) {
-                    qry.setInteger("employeeType", empType);
+                    qry.setParameter("employeeType", empType);
                 }
                 if (isActive.intValue() != 0) {
-                    qry.setInteger("isActive", isActive);
+                    qry.setParameter("isActive", isActive);
                 }
                 if (userId.intValue() != 0) {
-                    qry.setInteger("userId", userId);
+                    qry.setParameter("userId", userId);
                 }
                 employeeList = (List) qry.list();
             }
@@ -545,16 +545,16 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      * + " ) "; Query qry = null; qry =
      * getCurrentSession().createQuery(mainStr);
      * LOGGER.info("qryqryqryqry"+qry.toString());
-     * if(code!=null&&!code.equals("")) { qry.setString("employeeCode",
+     * if(code!=null&&!code.equals("")) { qry.setParameter("employeeCode",
      * code.trim().toUpperCase()); } if(name!= null && !name.equals("")) {
-     * qry.setString("empName","%"+name.trim().toUpperCase()+"%"); }
-     * if(departmentId.intValue() != 0) { qry.setInteger("deptId",
+     * qry.setParameter("empName","%"+name.trim().toUpperCase()+"%"); }
+     * if(departmentId.intValue() != 0) { qry.setParameter("deptId",
      * departmentId); } if(designationId.intValue() != 0) {
-     * qry.setInteger("designationId", designationId); }
-     * if(functionaryId.intValue() != 0) { qry.setInteger("functionaryId",
+     * qry.setParameter("designationId", designationId); }
+     * if(functionaryId.intValue() != 0) { qry.setParameter("functionaryId",
      * functionaryId); } if(status.intValue() != 0) {
-     * qry.setInteger("employeeStatus", status); } if(empType.intValue() != 0) {
-     * qry.setInteger("employeeType",empType); } employeeList =
+     * qry.setParameter("employeeStatus", status); } if(empType.intValue() != 0) {
+     * qry.setParameter("employeeType",empType); } employeeList =
      * (List)qry.list(); } catch (HibernateException he) { LOGGER.error(he);
      * ApplicationRuntimeException("Exception:" + he.getMessage(),he); } catch
      * throw new ApplicationRuntimeException("Exception:" + he.getMessage(),he); }
@@ -616,25 +616,25 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             qry = getCurrentSession().createQuery(mainStr);
             LOGGER.info("qryqryqryqry" + qry.toString());
             if (code != null && !code.equals("")) {
-                qry.setString("employeeCode", code.trim().toUpperCase());
+                qry.setParameter("employeeCode", code.trim().toUpperCase());
             }
             if (departmentId.intValue() != 0) {
-                qry.setInteger("deptId", departmentId);
+                qry.setParameter("deptId", departmentId);
             }
             if (name != null && !name.equals("")) {
-                qry.setString("empName", "%" + name.trim().toUpperCase() + "%");
+                qry.setParameter("empName", "%" + name.trim().toUpperCase() + "%");
             }
             if (designationId.intValue() != 0) {
-                qry.setInteger("designationId", designationId);
+                qry.setParameter("designationId", designationId);
             }
             if (functionaryId.intValue() != 0) {
-                qry.setInteger("functionaryId", functionaryId);
+                qry.setParameter("functionaryId", functionaryId);
             }
             if (status.intValue() != 0) {
-                qry.setInteger("employeeStatus", status);
+                qry.setParameter("employeeStatus", status);
             }
             if (empType.intValue() != 0) {
-                qry.setInteger("employeeType", empType);
+                qry.setParameter("employeeType", empType);
             }
             employeeList = (List) qry.list();
 
@@ -710,7 +710,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             Query qry = getCurrentSession().createQuery(mainStr);
 
             if (empId.intValue() != 0) {
-                qry.setInteger("empId", empId);
+                qry.setParameter("empId", empId);
 
             }
             employeeList = qry.list();
@@ -787,10 +787,10 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             if (empId != null) {
                 String mainStr = " select 	ev.assignment  from EmployeeView ev  where ev.assignment.isPrimary = 'Y' and ev.id = :empId and ((ev.toDate is null and ev.fromDate <= :date1 ) OR (ev.fromDate <= :date2 AND ev.toDate >= :date3 ))";
                 Query qry = getCurrentSession().createQuery(mainStr);
-                qry.setInteger("empId", empId);
-                qry.setDate("date1", new java.sql.Date(date.getTime()));
-                qry.setDate("date2", new java.sql.Date(date.getTime()));
-                qry.setDate("date3", new java.sql.Date(date.getTime()));
+                qry.setParameter("empId", empId);
+                qry.setParameter("date1", new java.sql.Date(date.getTime()), jakarta.persistence.TemporalType.DATE);
+                qry.setParameter("date2", new java.sql.Date(date.getTime()), jakarta.persistence.TemporalType.DATE);
+                qry.setParameter("date3", new java.sql.Date(date.getTime()), jakarta.persistence.TemporalType.DATE);
 
                 if (qry.list() != null && !qry.list().isEmpty()) {
                     assignment = (Assignment) qry.list().get(0);
@@ -817,8 +817,8 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             Query qry = getCurrentSession().createQuery(mainStr);
 
             if (empId != null) {
-                qry.setInteger("empId", empId);
-                qry.setDate("sysDate", new java.sql.Date(currDate.getTime()));
+                qry.setParameter("empId", empId);
+                qry.setParameter("sysDate", new java.sql.Date(currDate.getTime()), jakarta.persistence.TemporalType.DATE);
             }
             if (qry.list() != null && !qry.list().isEmpty()) {
                 for (Iterator iter = qry.list().iterator(); iter.hasNext();) {
@@ -845,11 +845,11 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      * if(applicationNumber!=null&&!applicationNumber.equals("")) mainStr
      * +=" and upper(trim(dp.applicationNumber)) = :applicationNumber "; Query
      * qry = getCurrentSession().createQuery(mainStr); if(empId != null) {
-     * qry.setInteger("empId", empId); }
+     * qry.setParameter("empId", empId); }
      * if(chargeMemoNo!=null&&!chargeMemoNo.equals("")) {
-     * qry.setString("chargeMemoNo", chargeMemoNo); }
+     * qry.setParameter("chargeMemoNo", chargeMemoNo); }
      * if(applicationNumber!=null&&!applicationNumber.equals("")) {
-     * qry.setString("applicationNumber", applicationNumber); }
+     * qry.setParameter("applicationNumber", applicationNumber); }
      * if(qry.list()!=null&&!qry.list().isEmpty()) { Integer desigId = null;
      * for(Iterator iter = qry.list().iterator();iter.hasNext();) { desigId =
      * (Integer)iter.next(); list.add(getDisciplinaryPunishmentById(desigId)); }
@@ -882,9 +882,9 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      * String mainStr =
      * "select ev.desigId.designationId, ev.fromDate,ev.toDate  from EmployeeView ev  where ev.id = :empId and  ( ev.toDate is null or ev.toDate >= :startingFy ) and  ev.fromDate <  :givenDate "
      * ; Query qry = getCurrentSession().createQuery(mainStr); if(empId != null)
-     * { qry.setInteger("empId", empId); qry.setDate("startingFy", new
-     * java.sql.Date(stFyDate.getTime())); qry.setDate("givenDate",
-     * myGivenDate); } List listOfHistory = qry.list();
+     * { qry.setParameter("empId", empId); qry.setParameter("startingFy", new
+     * java.sql.Date(stFyDate.getTime()), jakarta.persistence.TemporalType.DATE); qry.setParameter("givenDate",
+     * myGivenDate, jakarta.persistence.TemporalType.DATE); } List listOfHistory = qry.list();
      * if(qry.list()!=null&&!qry.list().isEmpty()) { for(Iterator iter =
      * listOfHistory.iterator();iter.hasNext();) { Object [] objArray = (Object
      * [])iter.next();
@@ -905,8 +905,8 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      * String mainStr =
      * "select ev.desigId.designationId, ev.fromDate,ev.toDate  from EmployeeView ev  where ev.id = :empId and  ( ev.toDate is null or ev.toDate >= :startingFy ) and  ev.fromDate <  :givenDate "
      * ; Query qry = getCurrentSession().createQuery(mainStr); if(empId != null)
-     * { qry.setInteger("empId", empId); qry.setDate("startingFy", new
-     * java.sql.Date(stFyDate.getTime())); qry.setDate("givenDate", givenDate);
+     * { qry.setParameter("empId", empId); qry.setParameter("startingFy", new
+     * java.sql.Date(stFyDate.getTime()), jakarta.persistence.TemporalType.DATE); qry.setParameter("givenDate", givenDate, jakarta.persistence.TemporalType.DATE);
      * } List listOfHistory = qry.list();
      * if(qry.list()!=null&&!qry.list().isEmpty()) { for(Iterator iter =
      * listOfHistory.iterator();iter.hasNext();) { Object [] objArray = (Object
@@ -944,11 +944,11 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
             String mainStr = "";
             mainStr = " select 	id  from EG_EIS_EMPLOYEEINFO ev  where ev.POS_ID = :pos and ((ev.to_Date is null and ev.from_Date <= SYSDATE ) OR (ev.from_Date <= SYSDATE AND ev.to_Date > SYSDATE))";
-            Query qry = getCurrentSession().createSQLQuery(mainStr).addScalar("id", IntegerType.INSTANCE);
+            Query qry = getCurrentSession().createNativeQuery(mainStr).addScalar("id", StandardBasicTypes.INTEGER);
             ;
 
             if (pos != null) {
-                qry.setEntity("pos", pos);
+                qry.setParameter("pos", pos);
             }
             if (qry.list() != null && !qry.list().isEmpty()) {
                 for (Iterator iter = qry.list().iterator(); iter.hasNext();) {
@@ -974,10 +974,10 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
             String mainStr = "";
             mainStr = " select 	POS_ID  from EG_EIS_EMPLOYEEINFO ev  where ev.ID = :empId and ((ev.to_Date is null and ev.from_Date <= SYSDATE ) OR (ev.from_Date <= SYSDATE AND ev.to_Date >= SYSDATE))";
-            Query qry = getCurrentSession().createSQLQuery(mainStr).addScalar("POS_ID", IntegerType.INSTANCE);
+            Query qry = getCurrentSession().createNativeQuery(mainStr).addScalar("POS_ID", StandardBasicTypes.INTEGER);
 
             if (empId != null) {
-                qry.setInteger("empId", empId);
+                qry.setParameter("empId", empId);
             }
             list = qry.list();
             if (list != null && !list.isEmpty()) {
@@ -1002,7 +1002,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      * public boolean checkSanctionNoForDisciplinary(String sanctionNo) {
      * qry = getCurrentSession().createQuery(
      * "select dp.id from  DisciplinaryPunishmentApproval dp where upper(dp.sanctionNo) = :sanctionNo "
-     * ); if(sanctionNo != null ) { qry.setString("sanctionNo", sanctionNo); }
+     * ); if(sanctionNo != null ) { qry.setParameter("sanctionNo", sanctionNo); }
      * if(qry.list()!=null&&!qry.list().isEmpty()) { Object obj = null;
      * for(Iterator iter = qry.list().iterator();iter.hasNext();) { obj =
      * (Object)iter.next(); b = true; } } return b; }
@@ -1014,8 +1014,8 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
         try {
             Query qry = getCurrentSession()
                     .createQuery("from " + className + " CA where trim(upper(CA.name)) = :name ");
-            qry.setString("name", name);
-            Iterator iter = qry.iterate();
+            qry.setParameter("name", name);
+            Iterator iter = qry.list().iterator();
 
             if (iter.hasNext()) {
 
@@ -1269,8 +1269,8 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
         Integer id = Integer.valueOf(0);
         try {
-            Query qry = getCurrentSession().createSQLQuery("SELECT SEQ_DIS_APP.nextval as id from dual").addScalar(
-                    "id", IntegerType.INSTANCE);
+            Query qry = getCurrentSession().createNativeQuery("SELECT SEQ_DIS_APP.nextval as id from dual").addScalar(
+                    "id", StandardBasicTypes.INTEGER);
 
             if (qry.list() != null && !qry.list().isEmpty()) {
                 Integer obj = null;
@@ -1298,9 +1298,9 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
         Integer id = Integer.valueOf(0);
         try {
             Query qry = getCurrentSession()
-                    .createSQLQuery(
+                    .createNativeQuery(
                             "SELECT CODE AS id FROM EG_EMPLOYEE emp  WHERE emp.CODE =(SELECT MAX(code) FROM EG_EMPLOYEE )  FOR UPDATE ")
-                    .addScalar("id", IntegerType.INSTANCE);
+                    .addScalar("id", StandardBasicTypes.INTEGER);
             if (qry.list() != null && !qry.list().isEmpty()) {
                 Integer obj = null;
                 for (Iterator iter = qry.list().iterator(); iter.hasNext();) {
@@ -1354,22 +1354,22 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
             }
             if (posId != null) {
-                qry.setInteger("posId", posId);
+                qry.setParameter("posId", posId);
 
             }
             if (empId != null) {
-                qry.setInteger("empId", empId);
+                qry.setParameter("empId", empId);
 
             }
             if (isPrimary != null) {
-                qry.setCharacter("isPrimary", Character.valueOf(isPrimary.charAt(0)));
+                qry.setParameter("isPrimary", Character.valueOf(isPrimary.charAt(0)));
             }
             if (fromDate != null && toDate != null) {
-                qry.setDate("fromDate", new java.sql.Date(fromDate.getTime()));
-                qry.setDate("toDate", new java.sql.Date(toDate.getTime()));
+                qry.setParameter("fromDate", new java.sql.Date(fromDate.getTime()), jakarta.persistence.TemporalType.DATE);
+                qry.setParameter("toDate", new java.sql.Date(toDate.getTime()), jakarta.persistence.TemporalType.DATE);
 
             } else if (fromDate != null && toDate == null) {
-                qry.setDate("fromDate", new java.sql.Date(fromDate.getTime()));
+                qry.setParameter("fromDate", new java.sql.Date(fromDate.getTime()), jakarta.persistence.TemporalType.DATE);
             }
 
             if (qry.list() != null && !qry.list().isEmpty()) {
@@ -1497,7 +1497,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             mainStr = "select ev.assignment from EmployeeView ev  where ev.id = :empId and nvl(ev.toDate,sysdate) in(select max(nvl(ev1.toDate,sysdate)) from EmployeeView ev1 where ev1.id = :empId)";
             Query qry = getCurrentSession().createQuery(mainStr);
             if (empId != null) {
-                qry.setInteger("empId", empId);
+                qry.setParameter("empId", empId);
             }
             if (qry.list() != null && !qry.list().isEmpty()) {
                 for (Iterator iter = qry.list().iterator(); iter.hasNext();) {
@@ -1517,7 +1517,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
 
     public ServiceHistory getServiceId(Integer id) {
         Query qry = getCurrentSession().createQuery("from ServiceHistory S where S.idService =:id ");
-        qry.setInteger("id", id);
+        qry.setParameter("id", id);
         return (ServiceHistory) qry.uniqueResult();
 
     }
@@ -1552,11 +1552,11 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
                                 "select ev.id from EmployeeView ev  where ev.position = :posId and ((ev.toDate is null ) or (ev.fromDate <=  TO_DATE(SYSDATE,'dd-MM-yyy') AND ev.toDate >=  TO_DATE(SYSDATE,'dd-MM-yyy')))");
             }
             if (posId != null) {
-                qry.setInteger("posId", posId);
+                qry.setParameter("posId", posId);
 
             }
             if (dateEntered != null) {
-                qry.setDate("fromDate", new java.sql.Date(dateEntered.getTime()));
+                qry.setParameter("fromDate", new java.sql.Date(dateEntered.getTime()), jakarta.persistence.TemporalType.DATE);
             }
 
             if (qry.list() != null && !qry.list().isEmpty()) {
@@ -1602,11 +1602,11 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
                                 "select distinct ev.id from EmployeeView ev  where ev.position = :posId and ((ev.toDate is null ) or (ev.fromDate <=  TO_DATE(SYSDATE,'dd-MM-yyy') AND ev.toDate >=  TO_DATE(SYSDATE,'dd-MM-yyy')))");
             }
             if (posId != null) {
-                qry.setInteger("posId", posId);
+                qry.setParameter("posId", posId);
 
             }
             if (dateEntered != null) {
-                qry.setDate("fromDate", new java.sql.Date(dateEntered.getTime()));
+                qry.setParameter("fromDate", new java.sql.Date(dateEntered.getTime()), jakarta.persistence.TemporalType.DATE);
             }
 
             if (qry.list() != null && !qry.list().isEmpty()) {
@@ -1757,13 +1757,13 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             }
             Query qry = getCurrentSession().createQuery(mainStr);
             if (code != null && !code.equals("")) {
-                qry.setString("code", code);
+                qry.setParameter("code", code);
             }
             if (givenDate != null) {
-                qry.setDate("givenDate", givenDate);
+                qry.setParameter("givenDate", givenDate, jakarta.persistence.TemporalType.DATE);
             }
             if (posId != null && posId != 0) {
-                qry.setInteger("posId", posId);
+                qry.setParameter("posId", posId);
             }
 
             assignment = qry.list();
@@ -1808,14 +1808,14 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             } else {
                 stringbuffer.append(" and  ev.from_Date <= :givenDate AND ev.to_Date >= :givenDate");
             }
-            query = getCurrentSession().createSQLQuery(stringbuffer.toString())
-                    .addScalar("ASS_ID", IntegerType.INSTANCE);
+            query = getCurrentSession().createNativeQuery(stringbuffer.toString())
+                    .addScalar("ASS_ID", StandardBasicTypes.INTEGER);
 
             if (query.getQueryString().contains(":givenDate")) {
-                query.setDate("givenDate", givenDate);
+                query.setParameter("givenDate", givenDate, jakarta.persistence.TemporalType.DATE);
             }
 
-            query.setInteger("empId", empId);
+            query.setParameter("empId", empId);
 
         } catch (HibernateException hibException) {
             LOGGER.error(hibException.getMessage());
@@ -1854,10 +1854,10 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             }
             Query qry = getCurrentSession().createQuery(mainStr);
             if (user != null) {
-                qry.setLong("userId", user.getId());
+                qry.setParameter("userId", user.getId());
             }
             if (date != null) {
-                qry.setDate("date", date);
+                qry.setParameter("date", date, jakarta.persistence.TemporalType.DATE);
             }
 
             if (qry.list() != null && !qry.list().isEmpty()) {
@@ -1910,13 +1910,13 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             }
             Query qry = getCurrentSession().createQuery(mainStr);
             if (code != null && !code.equals("")) {
-                qry.setString("code", code);
+                qry.setParameter("code", code);
             }
             if (givenDate != null) {
-                qry.setDate("givenDate", givenDate);
+                qry.setParameter("givenDate", givenDate, jakarta.persistence.TemporalType.DATE);
             }
             if (posId != null && posId != 0) {
-                qry.setInteger("posId", posId);
+                qry.setParameter("posId", posId);
             }
 
             assignment = qry.list();
@@ -2028,14 +2028,14 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             logger.info("Query----" + qry.toString());
 
             if (status.intValue() != 0) {
-                qry.setInteger("employeeStatus", status);
+                qry.setParameter("employeeStatus", status);
             }
             if (fromDate != null) {
-                qry.setDate("fromDate", new java.sql.Date(fromDate.getTime()));
+                qry.setParameter("fromDate", new java.sql.Date(fromDate.getTime()), jakarta.persistence.TemporalType.DATE);
             }
 
             if (toDate != null) {
-                qry.setDate("toDate", new java.sql.Date(toDate.getTime()));
+                qry.setParameter("toDate", new java.sql.Date(toDate.getTime()), jakarta.persistence.TemporalType.DATE);
             }
 
             employeeList = (List) qry.list();
@@ -2067,7 +2067,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
             }
 
             if (userName != null) {
-                qry.setString("userName", userName);
+                qry.setParameter("userName", userName);
             }
 
             if (qry != null && qry.list() != null && !qry.list().isEmpty()) {
@@ -2112,7 +2112,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
      */
     public List<EmployeeView> getEmployeeInfoBasedOnDeptAndDesg(Integer deptId, Integer desgId) {
         List<EmployeeView> employeeList = new ArrayList<EmployeeView>();
-        Criteria criteria = getCurrentSession().createCriteria(EmployeeView.class)
+        Criteria criteria = Criteria.create(getCurrentSession(), EmployeeView.class)
                 .createAlias("deptId", "department").createAlias("desigId", "designation")
                 .add(Restrictions.eq("department.id", deptId))
                 .add(Restrictions.eq("designation.designationId", desgId))
@@ -2136,7 +2136,7 @@ public class EmployeeServiceImpl implements EmployeeServiceOld {
         if (date == null)
             date = new Date();
         List<EmployeeView> employeeList = new ArrayList<EmployeeView>();
-        Criteria criteria = getCurrentSession().createCriteria(EmployeeView.class)
+        Criteria criteria = Criteria.create(getCurrentSession(), EmployeeView.class)
                 .createAlias("deptId", "department").add(Restrictions.eq("department.id", deptId))
                 .add(Restrictions.eq("isActive", 1))
                 .add(Restrictions.and(Restrictions.le("fromDate", date), Restrictions.ge("toDate", date)));

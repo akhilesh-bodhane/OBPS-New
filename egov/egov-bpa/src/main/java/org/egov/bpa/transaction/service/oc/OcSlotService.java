@@ -58,6 +58,6 @@ public class OcSlotService {
     }
 
     public OCSlot findById(Long id) {
-        return ocSlotRepository.findOne(id);
+        return ocSlotRepository.findById(id).orElse(null);
     }
 }

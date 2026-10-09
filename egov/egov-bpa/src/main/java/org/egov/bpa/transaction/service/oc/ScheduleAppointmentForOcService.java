@@ -196,7 +196,7 @@ public class ScheduleAppointmentForOcService {
     private void processSchedulingForOcApplications(Slot slot, Map<Long, OCSlot> processedApplication,
                                                     OccupancyCertificate occupancyCertificate) {
         for (SlotDetail slotDetail : slot.getSlotDetail()) {
-            slotDetail = slotDetailRepository.findOne(slotDetail.getId());
+            slotDetail = slotDetailRepository.findById(slotDetail.getId()).orElse(null);
             if (occupancyCertificate.getStatus().getCode()
                     .equals(BpaConstants.APPLICATION_STATUS_PENDING_FOR_RESCHEDULING)) {
                 List<OCSlot> ocSlots = ocSlotRepository

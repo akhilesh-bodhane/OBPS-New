@@ -60,17 +60,17 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.pims.model.PersonalInformation;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.DetachedCriteria;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -349,7 +349,7 @@ public class PersonalInformationService extends PersistenceService<PersonalInfor
 		
 		List<EmployeeView> employeeList = new ArrayList<EmployeeView>();
 		try {
-			Criteria criteria=getCurrentSession().createCriteria(EmployeeView.class);
+			Criteria criteria=Criteria.create(getCurrentSession(), EmployeeView.class);
 			Date asOnDate;
 			for (Map.Entry<String, Object> entry : criteriaParams.entrySet())
 			{
@@ -405,7 +405,7 @@ public List<EmployeeView> getListOfEmployeeViewBasedOnListOfDesignationAndOtherC
 		
 		List<EmployeeView> employeeList = new ArrayList<EmployeeView>();
 		try {
-			Criteria criteria=getCurrentSession().createCriteria(EmployeeView.class);
+			Criteria criteria=Criteria.create(getCurrentSession(), EmployeeView.class);
 			Date asOnDate;
 			for (Map.Entry<String, Object> entry : criteriaParams.entrySet())
 			{
@@ -422,7 +422,7 @@ public List<EmployeeView> getListOfEmployeeViewBasedOnListOfDesignationAndOtherC
 				}
 				if("employeeName".equals(entry.getKey()) && entry.getValue()!=null && !"".equals(entry.getValue()))
 				{
-					criteria.add(Restrictions.ilike("employeeName",entry.getValue().toString() ,org.hibernate.criterion.MatchMode.ANYWHERE));
+					criteria.add(Restrictions.ilike("employeeName",entry.getValue().toString() ,org.egov.infra.persistence.criteria.MatchMode.ANYWHERE));
 				}
 				if("isActive".equals(entry.getKey()) && entry.getValue()!=null && !"".equals(entry.getValue()))
 				{

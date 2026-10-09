@@ -77,19 +77,19 @@ import static org.egov.infra.utils.ApplicationConstant.CITY_URL_KEY;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.Valid;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.Valid;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.Unique;
@@ -98,8 +98,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.SafeHtml;
+import jakarta.validation.constraints.NotBlank;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Unique(fields = "domainURL", enableDfltMsg = true)
@@ -116,36 +116,36 @@ public class City extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_CITY, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String name;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String localName;
 
     private boolean active;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String domainURL;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String code;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String districtCode;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     private String districtName;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String regionName;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String grade;
 
     private Float longitude;

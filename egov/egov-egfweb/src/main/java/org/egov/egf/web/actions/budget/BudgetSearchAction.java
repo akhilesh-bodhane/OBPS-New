@@ -47,8 +47,10 @@
  */
 package org.egov.egf.web.actions.budget;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.ValueStack;
+
+import org.egov.infra.persistence.criteria.Criteria;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.util.ValueStack;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -378,7 +380,7 @@ public class BudgetSearchAction extends BaseFormAction {
             final Budget Budget = budgetService.findById(Long.valueOf(parameters.get("budget.id")[0]), false);
             setTopBudget(Budget);
         }
-        final BudgetDetail criteria = (BudgetDetail) persistenceService.getSession().createCriteria(
+        final BudgetDetail criteria = (BudgetDetail) (Object) Criteria.create(persistenceService.getSession(), 
                 Constants.SEARCH_CRITERIA_KEY);
         criteria.setBudget(budgetDetail.getBudget());
         if (LOGGER.isDebugEnabled())
@@ -422,7 +424,7 @@ public class BudgetSearchAction extends BaseFormAction {
 
         final BudgetDetail criteria = new BudgetDetail();
         /*
-         * final BudgetDetail criteria = (BudgetDetail) persistenceService.getSession().createCriteria(
+         * final BudgetDetail criteria = (BudgetDetail) (Object) Criteria.create(persistenceService.getSession(), 
          * Constants.SEARCH_CRITERIA_KEY);
          */
         Budget budget = budgetDetail.getBudget();

@@ -56,16 +56,16 @@ import org.egov.egf.web.actions.masters.JQueryGridActionSupport.MultipleSearchFi
 import org.egov.infra.persistence.utils.Page;
 import org.egov.infra.web.struts.actions.BaseFormAction;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Junction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.egov.infra.persistence.criteria.Criterion;
+import org.egov.infra.persistence.criteria.Junction;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -109,11 +109,11 @@ public abstract class JQueryGridActionSupport extends BaseFormAction {
      * Internally this method will apply all filtering and ordering according to the value arrived from jqgrid.
      **/
     protected Page getPagedResult(final Class<?> clazz, final String keyFieldName, final Object keyFieldValue) {
-        final Criteria criteria = persistenceService.getSession().createCriteria(clazz);
+        final Criteria criteria = Criteria.create(persistenceService.getSession(), clazz);
         criteria.add(Restrictions.eq(keyFieldName, keyFieldValue));
         applySearchCriteriaIfAny(criteria);
 
-        final Criteria countCriteria = persistenceService.getSession().createCriteria(clazz);
+        final Criteria countCriteria = Criteria.create(persistenceService.getSession(), clazz);
         countCriteria.add(Restrictions.eq(keyFieldName, keyFieldValue));
         countCriteria.setProjection(Projections.rowCount());
         totalRecords = ((Number) countCriteria.uniqueResult()).intValue();

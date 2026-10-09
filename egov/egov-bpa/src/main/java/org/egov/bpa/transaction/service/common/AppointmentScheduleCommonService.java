@@ -55,7 +55,7 @@ public class AppointmentScheduleCommonService {
     private AppointmentScheduleCommonRepository appointmentScheduleCommonRepository;
 
     public AppointmentScheduleCommon findById(Long id) {
-        return appointmentScheduleCommonRepository.findOne(id);
+        return appointmentScheduleCommonRepository.findById(id).orElse(null);
     }
 
     public List<AppointmentScheduleCommon> findByIdAsList(Long id) {

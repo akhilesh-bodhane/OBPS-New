@@ -105,7 +105,7 @@ function search() {
 				"bDestroy" : true,
 				"autoWidth" : false,
 				"sDom" : "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-3'i><'col-xs-3 col-right'l><'col-xs-3 col-right'><'col-xs-3 text-right'p>>",
-				"aLengthMenu" : [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
+				"aLengthMenu" : [ [ 10, 25, 50, 100, -1 ], [ 10, 25, 50, 100, "All" ] ],
 				"fnRowCallback" : function(row, data, index) {
 					$('td:eq(0)', row).html(
 							'<input type="checkbox" name="selectCheckbox" id="checkBoxList"value="'

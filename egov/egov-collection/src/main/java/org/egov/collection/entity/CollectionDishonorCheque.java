@@ -55,25 +55,25 @@ import org.egov.model.instrument.InstrumentHeader;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.egov.collection.entity.CollectionDishonorCheque.SEQ_EGCL_DISHONORCHEQUE;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGCL_DISHONORCHEQUE")
@@ -107,14 +107,14 @@ public class CollectionDishonorCheque extends StateAware<Position> {
 
     private Date transactionDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 20)
     private String bankReferenceNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String instrumentDishonorReason;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String bankreason;
 
     @ManyToOne

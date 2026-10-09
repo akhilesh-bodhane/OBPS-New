@@ -58,46 +58,42 @@
     <bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
         <constructor-arg>
             <list>
-                <security:filter-chain pattern="/commons/**" filters="none"/>
-                <security:filter-chain pattern="/images/**" filters="none"/>
-                <security:filter-chain pattern="/resources/**" filters="none"/>
-                <security:filter-chain pattern="/index.jsp" filters="none"/>
-                <security:filter-chain pattern="/error/**" filters="none"/>
-                <security:filter-chain pattern="/struts/**" filters="none"/>
-                <security:filter-chain pattern="/commonyui/build/**" filters="none"/>
-                <security:filter-chain pattern="/commonyui/yui2.7/**" filters="none"/>
-                <security:filter-chain pattern="/script/**" filters="none"/>
-                <security:filter-chain pattern="/javascript/**" filters="none"/>
-                <security:filter-chain pattern="/report/dayBookReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/trialBalance*.action" filters="none"/>
-                <security:filter-chain pattern="/report/bankBookReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/subLedgerScheduleReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/subLedgerReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/generalLedgerReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/openingBalanceReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/incomeExpenditureReport*.action" filters="none"/>
-                <security:filter-chain pattern="/report/balanceSheetReport*.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/preApprovedVoucher-loadvoucherview.action" filters="none"/>
-                <security:filter-chain pattern="/report/billPaymentVoucherPrint*.action" filters="none"/>
-                <security:filter-chain pattern="/deduction/remitRecovery-beforeView.action" filters="none"/>
-                <security:filter-chain pattern="/bill/contingentBill-beforeView.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadAccountNumbers.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadSLreportCodes.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadSubLedgerTypesByGlCode.action" filters="none"/>
-                <security:filter-chain pattern="/bill/expenseBillPrint*.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadSLreportCodes.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadSubLedgerTypesByGlCode.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadEntitesBy20.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadGLreportCodes.action" filters="none"/>
-                <security:filter-chain pattern="/contra/contraBTB-beforeView.action" filters="none"/>
-                <security:filter-chain pattern="/voucher/common-ajaxLoadAllBanks.action" filters="none"/>
-                <security:filter-chain pattern="/payment/directBankPayment-beforeView.action" filters="none"/>
-                <security:filter-chain pattern="/findashboard/*" filters="none"/>
-                <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
-                                       sessionHijackProtectionFilter,
-                                       logoutFilter,authenticationProcessingFilter,headerWriterFilter,
-                                       securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
-                                       anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commons/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/images/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/resources/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/index.jsp"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/error/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/struts/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commonyui/build/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commonyui/yui2.7/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/script/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/javascript/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/dayBookReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/trialBalance*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/bankBookReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/subLedgerScheduleReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/subLedgerReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/generalLedgerReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/openingBalanceReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/incomeExpenditureReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/balanceSheetReport*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/preApprovedVoucher-loadvoucherview.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/report/billPaymentVoucherPrint*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/deduction/remitRecovery-beforeView.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/bill/contingentBill-beforeView.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadAccountNumbers.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadSLreportCodes.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadSubLedgerTypesByGlCode.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/bill/expenseBillPrint*.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadSLreportCodes.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadSubLedgerTypesByGlCode.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadEntitesBy20.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadGLreportCodes.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/contra/contraBTB-beforeView.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/voucher/common-ajaxLoadAllBanks.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/payment/directBankPayment-beforeView.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/findashboard/*"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/**"/></bean></constructor-arg><constructor-arg><list><ref bean="concurrentSessionFilter"/><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/><ref bean="logoutFilter"/><ref bean="authenticationProcessingFilter"/><ref bean="headerWriterFilter"/><ref bean="securityContextHolderAwareRequestFilter"/><ref bean="rememberMeAuthenticationFilter"/><ref bean="anonymousAuthenticationFilter"/><ref bean="exceptionTranslationFilter"/><ref bean="filterSecurityInterceptor"/></list></constructor-arg></bean>
             </list>
         </constructor-arg>
     </bean>

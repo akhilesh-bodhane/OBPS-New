@@ -51,7 +51,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
-	@Query("select a from Applicant a, User u where a.user=u.id and a.name=:name and u.mobileNumber=:mobileNumber and a.gender=:gender and u.type=:type")
+	@Query("select a from Applicant a, User u where a.user.id=u.id and a.name=:name and u.mobileNumber=:mobileNumber and a.gender=:gender and u.type=:type")
 	Applicant findByNameAndMobileNumberAndGenderAndType(@Param("name") String name, @Param("mobileNumber") String mobileNumber, @Param("gender") Gender gender, @Param("type") UserType type);
 
 }

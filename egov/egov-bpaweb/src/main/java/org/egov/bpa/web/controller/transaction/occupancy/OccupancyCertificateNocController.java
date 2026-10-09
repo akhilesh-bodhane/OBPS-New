@@ -51,7 +51,7 @@ package org.egov.bpa.web.controller.transaction.occupancy;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.egov.bpa.transaction.entity.BpaNocApplication;

@@ -45,27 +45,76 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
+
 package org.egov.edcr.security.oauth2.utils;
 
+import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 /**
- *
- * @author subhash
- *
+ * Redis backed store for the opaque access and refresh tokens issued by the REST API token endpoint.
  */
 @Service
 public class TokenServiceUtils {
 
     private static final String SOURCE = "source";
+    private static final String ACCESS_PREFIX = "edcr:oauth:access:";
+    private static final String REFRESH_PREFIX = "edcr:oauth:refresh:";
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    private AuthorizationServerTokenServices tokenServices;
+    public TokenServiceUtils(final RedisConnectionFactory redisConnectionFactory) {
+        redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.afterPropertiesSet();
+    }
 
-    public Object getSource(final OAuth2Authentication authentication) {
-        return tokenServices.getAccessToken(authentication).getAdditionalInformation().get(SOURCE);
+    public String newToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    public void storeAccessToken(final String token, final TokenRecord record, final int validitySeconds) {
+        redisTemplate.opsForValue().set(ACCESS_PREFIX + token, record, Duration.ofSeconds(validitySeconds));
+    }
+
+    public void storeRefreshToken(final String token, final TokenRecord record, final int validitySeconds) {
+        redisTemplate.opsForValue().set(REFRESH_PREFIX + token, record, Duration.ofSeconds(validitySeconds));
+    }
+
+    public TokenRecord readAccessToken(final String token) {
+        return (TokenRecord) redisTemplate.opsForValue().get(ACCESS_PREFIX + token);
+    }
+
+    public TokenRecord readRefreshToken(final String token) {
+        return (TokenRecord) redisTemplate.opsForValue().get(REFRESH_PREFIX + token);
+    }
+
+    public void removeAccessToken(final String token) {
+        redisTemplate.delete(ACCESS_PREFIX + token);
+    }
+
+    public void removeRefreshToken(final String token) {
+        redisTemplate.delete(REFRESH_PREFIX + token);
+    }
+
+    public Object getSource(final String accessToken) {
+        final TokenRecord record = readAccessToken(accessToken);
+        return record == null ? null : record.getAdditionalInformation().get(SOURCE);
+    }
+
+    public static List<String> authorityNames(final Collection<? extends GrantedAuthority> authorities) {
+        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 }

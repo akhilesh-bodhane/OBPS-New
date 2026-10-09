@@ -61,6 +61,7 @@
 			unsaved-value="null">
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">seq_egf_InstrumentAccountCodes</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<property name="modifiedDate" column="LASTMODIFIEDDATE" type="timestamp"/>

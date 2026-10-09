@@ -85,8 +85,8 @@ $(document).ready(function () {
                     return {"args": JSON.stringify(args), "moduleName": $("#moduleName").val()};
                 }
             },
-            "aLengthMenu": [[10, 25, 50, -1],
-                [10, 25, 50, "All"]],
+            "aLengthMenu": [[10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "All"]],
             "sDom": "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-md-6 col-xs-12'i><'col-md-3 col-xs-6'l><'col-md-3 col-xs-6 text-right'p>>",
             columns: [
                 {
@@ -169,7 +169,7 @@ $(document).ready(function () {
             $trLast = $tableBody.find("tr:last"),
             $trNew = $trLast.clone();
 
-        if (!$.trim($trLast.find('input.effectiveFrom').val()) || !$.trim($trLast.find('input.confValues').val())) {
+        if (!String($trLast.find('input.effectiveFrom').val() ?? "").trim() || !String($trLast.find('input.confValues').val() ?? "").trim()) {
             bootbox.alert('Date effective from and values are mandatory!');
         } else {
             count++;

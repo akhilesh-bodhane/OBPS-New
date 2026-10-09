@@ -79,10 +79,10 @@ import org.egov.pims.commons.Position;
 import org.egov.services.payment.PaymentService;
 import org.egov.services.recoveries.RecoveryService;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.IntegerType;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -517,16 +517,16 @@ public class ScheduledRemittanceService {
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             qry.append(" and  f.code in (:fundCodes) ");
 
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(qry.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(qry.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         if (lastRunDate != null)
-            query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime()));
+            query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE);
 
         if (startDate != null)
-            query.setDate("startdate", new java.sql.Date(startDate.getTime()));
+            query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE);
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             query.setParameterList("fundCodes", receiptFundCodes);
         query.setResultTransformer(Transformers.aliasToBean(AutoRemittanceBean.class));
@@ -582,9 +582,9 @@ public class ScheduledRemittanceService {
         if (size <= 999)
         {
 
-            final SQLQuery glQuery = persistenceService.getSession().createSQLQuery(
+            final NativeQuery glQuery = persistenceService.getSession().createNativeQuery(
                     "update generalledger set remittancedate=:date where id in (:glIds)");
-            glQuery.setDate("date", new java.sql.Date(new Date().getTime()));
+            glQuery.setParameter("date", new java.sql.Date(new Date().getTime()), jakarta.persistence.TemporalType.DATE);
             glQuery.setParameterList("glIds", glIds);
             suceessCount += glQuery.executeUpdate();
 
@@ -596,9 +596,9 @@ public class ScheduledRemittanceService {
             while (size % 1000 >= 1000)
             {
 
-                final SQLQuery glQuery = persistenceService.getSession().createSQLQuery(
+                final NativeQuery glQuery = persistenceService.getSession().createNativeQuery(
                         "update generalledger set remittancedate=:date where id in (:glIds)");
-                glQuery.setDate("date", new java.sql.Date(new Date().getTime()));
+                glQuery.setParameter("date", new java.sql.Date(new Date().getTime()), jakarta.persistence.TemporalType.DATE);
                 glQuery.setParameterList("glIds", glIds.subList(fromIndex, toIndex));
                 suceessCount += glQuery.executeUpdate();
                 fromIndex += 1000;
@@ -606,9 +606,9 @@ public class ScheduledRemittanceService {
                 size -= 1000;
             }
 
-            final SQLQuery glQuery = persistenceService.getSession().createSQLQuery(
+            final NativeQuery glQuery = persistenceService.getSession().createNativeQuery(
                     "update generalledger set remittancedate=:date where id in (:glIds)");
-            glQuery.setDate("date", new java.sql.Date(new Date().getTime()));
+            glQuery.setParameter("date", new java.sql.Date(new Date().getTime()), jakarta.persistence.TemporalType.DATE);
             glQuery.setParameterList("glIds", glIds.subList(toIndex + 1, size));
 
         }
@@ -743,7 +743,7 @@ public class ScheduledRemittanceService {
 
         @SuppressWarnings("unchecked")
         final List<Object[]> list = persistenceService.getSession()
-        .createSQLQuery("select department_id,drawingofficer_id from eg_dept_do_mapping  order by  department_id").list();
+        .createNativeQuery("select department_id,drawingofficer_id from eg_dept_do_mapping  order by  department_id").list();
         final Map<Integer, Integer> deptMap = new LinkedHashMap<Integer, Integer>();
         for (final Object[] dept : list)
         {
@@ -762,7 +762,7 @@ public class ScheduledRemittanceService {
     private Map<Integer, String> getDepartments() {
         @SuppressWarnings("unchecked")
         final List<Object[]> list = persistenceService.getSession()
-        .createSQLQuery("select id_dept,dept_Code from eg_department  order by dept_Code").list();
+        .createNativeQuery("select id_dept,dept_Code from eg_department  order by dept_Code").list();
         final Map<Integer, String> deptMap = new LinkedHashMap<Integer, String>();
         for (final Object[] dept : list)
         {
@@ -946,7 +946,7 @@ public class ScheduledRemittanceService {
     private Map<Integer, String> getFunds() {
         @SuppressWarnings("unchecked")
         final List<Object[]> list = persistenceService.getSession()
-        .createSQLQuery("select id,code from Fund where isactive=true order by code").list();
+        .createNativeQuery("select id,code from Fund where isactive=true order by code").list();
         final Map<Integer, String> fundMap = new HashMap<Integer, String>();
         for (final Object[] fund : list)
         {
@@ -1046,16 +1046,16 @@ public class ScheduledRemittanceService {
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             qry.append(" and  f.code in (:fundCodes) ");
 
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(qry.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(qry.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         if (lastRunDate != null)
-            query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime()));
+            query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE);
 
         if (startDate != null)
-            query.setDate("startdate", new java.sql.Date(startDate.getTime()));
+            query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE);
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             query.setParameterList("fundCodes", receiptFundCodes);
         query.setResultTransformer(Transformers.aliasToBean(AutoRemittanceBean.class));
@@ -1088,16 +1088,16 @@ public class ScheduledRemittanceService {
         if (startDate != null)
             qry.append(" and (ih.instrumentdate >=:startdate or ih.transactiondate>=:startdate )");
 
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(qry.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(qry.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         if (lastRunDate != null)
-            query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime()));
+            query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE);
 
         if (startDate != null)
-            query.setDate("startdate", new java.sql.Date(startDate.getTime()));
+            query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE);
 
         query.setResultTransformer(Transformers.aliasToBean(AutoRemittanceBean.class));
         if (LOGGER.isDebugEnabled())
@@ -1187,18 +1187,18 @@ public class ScheduledRemittanceService {
 
         if (startDate != null)
             queryStr.append(" and vh.voucherdate>= '" + sdf.format(startDate) + "' ");
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(queryStr.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("detailtypeId", IntegerType.INSTANCE)
-        .addScalar("detailkeyId", IntegerType.INSTANCE)
-        .addScalar("remittanceGldtlId", IntegerType.INSTANCE)
-        .addScalar("pendingAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(queryStr.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("detailtypeId", StandardBasicTypes.INTEGER)
+        .addScalar("detailkeyId", StandardBasicTypes.INTEGER)
+        .addScalar("remittanceGldtlId", StandardBasicTypes.INTEGER)
+        .addScalar("pendingAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         /*
-         * if(lastRunDate!=null) { query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime())); } if(lastRunDate!=null)
-         * { query.setDate("startdate", new java.sql.Date(startDate.getTime())); }
+         * if(lastRunDate!=null) { query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE); } if(lastRunDate!=null)
+         * { query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE); }
          */
         query.setResultTransformer(Transformers.aliasToBean(AutoRemittanceBean.class));
         if (LOGGER.isDebugEnabled())
@@ -1266,18 +1266,18 @@ public class ScheduledRemittanceService {
         if (startDate != null)
             queryStr.append(" and (ih.instrumentdate>='" + sdf.format(startDate) + "' or ih.transactiondate>='"
                     + sdf.format(startDate) + "' ) ");
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(queryStr.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("detailtypeId", IntegerType.INSTANCE)
-        .addScalar("detailkeyId", IntegerType.INSTANCE)
-        .addScalar("remittanceGldtlId", IntegerType.INSTANCE)
-        .addScalar("pendingAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(queryStr.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("detailtypeId", StandardBasicTypes.INTEGER)
+        .addScalar("detailkeyId", StandardBasicTypes.INTEGER)
+        .addScalar("remittanceGldtlId", StandardBasicTypes.INTEGER)
+        .addScalar("pendingAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         /*
-         * if(lastRunDate!=null) { query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime())); } if(lastRunDate!=null)
-         * { query.setDate("startdate", new java.sql.Date(startDate.getTime())); }
+         * if(lastRunDate!=null) { query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE); } if(lastRunDate!=null)
+         * { query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE); }
          */
         query.setResultTransformer(Transformers.aliasToBean(AutoRemittanceBean.class));
         if (LOGGER.isDebugEnabled())
@@ -1355,18 +1355,18 @@ public class ScheduledRemittanceService {
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             queryStr.append(" and f.code in (:fundCodes) ");
 
-        final SQLQuery query = persistenceService.getSession().createSQLQuery(queryStr.toString());
-        query.addScalar("generalledgerId", IntegerType.INSTANCE)
-        .addScalar("fundId", IntegerType.INSTANCE)
-        .addScalar("gldtlAmount", DoubleType.INSTANCE)
-        .addScalar("detailtypeId", IntegerType.INSTANCE)
-        .addScalar("detailkeyId", IntegerType.INSTANCE)
-        .addScalar("remittanceGldtlId", IntegerType.INSTANCE)
-        .addScalar("pendingAmount", DoubleType.INSTANCE)
-        .addScalar("bankAccountId", IntegerType.INSTANCE);
+        final NativeQuery query = persistenceService.getSession().createNativeQuery(queryStr.toString());
+        query.addScalar("generalledgerId", StandardBasicTypes.INTEGER)
+        .addScalar("fundId", StandardBasicTypes.INTEGER)
+        .addScalar("gldtlAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("detailtypeId", StandardBasicTypes.INTEGER)
+        .addScalar("detailkeyId", StandardBasicTypes.INTEGER)
+        .addScalar("remittanceGldtlId", StandardBasicTypes.INTEGER)
+        .addScalar("pendingAmount", StandardBasicTypes.DOUBLE)
+        .addScalar("bankAccountId", StandardBasicTypes.INTEGER);
         /*
-         * if(lastRunDate!=null) { query.setDate("lastrundate", new java.sql.Date(lastRunDate.getTime())); } if(startDate!=null) {
-         * query.setDate("startdate", new java.sql.Date(startDate.getTime())); }
+         * if(lastRunDate!=null) { query.setParameter("lastrundate", new java.sql.Date(lastRunDate.getTime()), jakarta.persistence.TemporalType.DATE); } if(startDate!=null) {
+         * query.setParameter("startdate", new java.sql.Date(startDate.getTime()), jakarta.persistence.TemporalType.DATE); }
          */
         if (receiptFundCodes != null && !receiptFundCodes.isEmpty())
             query.setParameterList("fundCodes", receiptFundCodes);

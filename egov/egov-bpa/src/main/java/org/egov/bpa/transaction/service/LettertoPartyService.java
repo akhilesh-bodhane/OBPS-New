@@ -117,7 +117,7 @@ public class LettertoPartyService {
     }
 
     public PermitLetterToParty findById(final Long id) {
-        return lettertoPartyRepository.findOne(id);
+        return lettertoPartyRepository.findById(id).orElse(null);
     }
 
     public Long getDocScutinyUser(BpaApplication bpaApplication) {

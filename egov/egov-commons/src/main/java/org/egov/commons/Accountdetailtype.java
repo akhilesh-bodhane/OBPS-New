@@ -52,16 +52,16 @@ import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -81,25 +81,25 @@ public class Accountdetailtype extends AbstractPersistable<Integer> {
     @GeneratedValue(generator = SEQ_ACCOUNTDETAILTYPE, strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Column(nullable = false, unique = true)
     @Length(max = 50)
     private String name;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(max = 50)
     private String description;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 25)
     private String tablename;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 25)
     private String columnname;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Column(nullable = false, unique = true)
     @Length(max = 50)
     private String attributename;
@@ -109,7 +109,7 @@ public class Accountdetailtype extends AbstractPersistable<Integer> {
 
     private Boolean isactive;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Column(name = "FULL_QUALIFIED_NAME")
     @Length(max = 250)
     private String fullQualifiedName;

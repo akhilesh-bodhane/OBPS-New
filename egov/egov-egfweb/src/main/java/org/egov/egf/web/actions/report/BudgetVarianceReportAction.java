@@ -179,7 +179,7 @@ public class BudgetVarianceReportAction extends BaseFormAction {
         addRelatedEntity("budgetGroup", BudgetGroup.class);
         super.prepare();
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
 
         mandatoryFields = budgetDetailConfig.getMandatoryFields();
         if (!parameters.containsKey("skipPrepare")) {

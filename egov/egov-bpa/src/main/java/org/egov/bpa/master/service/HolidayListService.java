@@ -44,18 +44,18 @@ import org.egov.bpa.master.repository.HolidayListRepository;
 import org.egov.bpa.transaction.entity.dto.SearchHolidayList;
 import org.egov.bpa.transaction.entity.enums.HolidayType;
 import org.egov.infra.utils.DateUtils;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,7 +89,7 @@ public class HolidayListService {
 
     @Transactional
     public List<Holiday> save(final List<Holiday> holidayList) {
-        return holidayListRepository.save(holidayList);
+        return holidayListRepository.saveAll(holidayList);
     }
 
     @Transactional
@@ -99,11 +99,11 @@ public class HolidayListService {
 
     @Transactional
     public void delete(Long id) {
-        holidayListRepository.delete(id);
+        holidayListRepository.deleteById(id);
     }
 
     public Holiday findById(final Long id) {
-        return holidayListRepository.findOne(id);
+        return holidayListRepository.findById(id).orElse(null);
     }
 
     public List<SearchHolidayList> search(final SearchHolidayList holidayList) {
@@ -115,7 +115,7 @@ public class HolidayListService {
     // search holiday by holiday type and date
     @SuppressWarnings("unchecked")
     public List<Holiday> getHolidayTypeListByType(final HolidayType holidayType, final Date holidayDate) {
-        final Criteria criteria = getCurrentSession().createCriteria(Holiday.class, HOLIDAY);
+        final Criteria criteria = Criteria.create(getCurrentSession(), Holiday.class, HOLIDAY);
         if (holidayType != null) {
             criteria.add(Restrictions.eq("holiday.holidayType", holidayType));
         }
@@ -127,14 +127,14 @@ public class HolidayListService {
 
     // search all pre-loaded saturday and sunday
     public boolean getPreLoadedGeneralHolidays(final String year) {
-        final Criteria criteria = getCurrentSession().createCriteria(Holiday.class, HOLIDAY);
+        final Criteria criteria = Criteria.create(getCurrentSession(), Holiday.class, HOLIDAY);
         criteria.add(Restrictions.eq("holiday.year", year));
         criteria.add(Restrictions.eq("holiday.holidayType", HolidayType.GENERAL));
         return !criteria.list().isEmpty() ? true : false;
     }
 
     public Criteria buildSearchCriteria(final SearchHolidayList holidayList) {
-        final Criteria criteria = getCurrentSession().createCriteria(Holiday.class, HOLIDAY);
+        final Criteria criteria = Criteria.create(getCurrentSession(), Holiday.class, HOLIDAY);
 
         if (holidayList.getId() != null) {
             criteria.add(Restrictions.eq("holiday.id", holidayList.getId().toString()));

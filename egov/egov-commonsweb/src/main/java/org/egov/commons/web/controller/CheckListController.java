@@ -4,7 +4,7 @@ import static org.egov.infra.utils.JsonUtils.toJSON;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.common.entity.bpa.Checklist;
 import org.egov.common.entity.bpa.ChecklistType;

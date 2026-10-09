@@ -64,7 +64,7 @@ import org.egov.infra.validation.exception.ValidationError;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.VoucherHelper;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -289,7 +289,7 @@ public class EGovernCommon extends AbstractTask {
 		BigInteger fiscalPeriod = null;
 		final String sql = "select id from fiscalperiod  where '" + vDate + "' between startingdate and endingdate";
 		try {
-			final Query pst = persistenceService.getSession().createSQLQuery(sql);
+			final Query pst = persistenceService.getSession().createNativeQuery(sql);
 			final List<BigInteger> rset = pst.list();
 			fiscalPeriod = rset != null ? rset.get(0) : BigInteger.ZERO;
 		} catch (final Exception e) {
@@ -317,7 +317,7 @@ public class EGovernCommon extends AbstractTask {
         try {
             final String query1 = "SELECT to_char(startingDate, 'DD-Mon-YYYY') AS \"startingDate\", to_char(endingDate, 'DD-Mon-YYYY') AS \"endingDate\" FROM financialYear WHERE startingDate <= '"
                     + vcDate + "' AND endingDate >= '" + vcDate + "'";
-            pst = persistenceService.getSession().createSQLQuery(query1);
+            pst = persistenceService.getSession().createNativeQuery(query1);
             rs = pst.list();
             for (final Object[] element : rs) {
                 element[0].toString();
@@ -326,7 +326,7 @@ public class EGovernCommon extends AbstractTask {
             final String query2 = "SELECT id FROM voucherHeader WHERE voucherNumber = '" + vcNum + "' AND voucherDate>='"
                     + vcDate
                     + "' AND voucherDate<='" + fyEndDate + "' and status!=4";
-            pst = persistenceService.getSession().createSQLQuery(query2);
+            pst = persistenceService.getSession().createNativeQuery(query2);
             rs = pst.list();
             for (final Object[] element : rs)
                 datacol.addMessage(EXILRPERROR, "duplicate voucher number");
@@ -355,7 +355,7 @@ public class EGovernCommon extends AbstractTask {
        try {
            final String query1 = "SELECT to_char(startingDate, 'DD-Mon-YYYY') AS \"startingDate\", to_char(endingDate, 'DD-Mon-YYYY') AS \"endingDate\" FROM financialYear WHERE startingDate <= '"
                    + vcDate + "' AND endingDate >= '" + vcDate + "'";
-           pst = persistenceService.getSession().createSQLQuery(query1);
+           pst = persistenceService.getSession().createNativeQuery(query1);
            rs = pst.list();
            if (rs != null && rs.size() > 0)
                for (final Object[] element : rs) {
@@ -365,7 +365,7 @@ public class EGovernCommon extends AbstractTask {
            final String query2 = "SELECT id FROM voucherHeader WHERE voucherNumber = '" + vcNum + "' AND voucherDate>='"
                    + fyStartDate
                    + "' AND voucherDate<='" + fyEndDate + "' and status!=4";
-           pst = persistenceService.getSession().createSQLQuery(query2);
+           pst = persistenceService.getSession().createNativeQuery(query2);
            rs = pst.list();
            if (rs != null && rs.size() > 0) {
                if (LOGGER.isDebugEnabled())
@@ -403,10 +403,10 @@ public class EGovernCommon extends AbstractTask {
                    "AND endingDate >= ?)  AND glCodeId =(select glcodeid from bankaccount where id=?)";
            if (LOGGER.isDebugEnabled())
                LOGGER.debug("getAccountBalance(EGovernCommon.java): " + str);
-           pst = persistenceService.getSession().createSQLQuery(str);
-           pst.setString(0, vcDate);
-           pst.setString(1, vcDate);
-           pst.setString(2, bankAccountId);
+           pst = persistenceService.getSession().createNativeQuery(str);
+           pst.setParameter(1, vcDate);
+           pst.setParameter(2, vcDate);
+           pst.setParameter(3, bankAccountId);
            resultset = pst.list();
            for (final Object[] element : resultset)
                opeAvailable = new BigDecimal(element[0].toString());
@@ -427,11 +427,11 @@ public class EGovernCommon extends AbstractTask {
 
            if (LOGGER.isDebugEnabled())
                LOGGER.debug("Curr Yr Bal: " + str1);
-           pst = persistenceService.getSession().createSQLQuery(str1);
-           pst.setString(0, bankAccountId);
-           pst.setString(1, vcDate);
-           pst.setString(2, vcDate);
-           pst.setString(3, vcDate);
+           pst = persistenceService.getSession().createNativeQuery(str1);
+           pst.setParameter(1, bankAccountId);
+           pst.setParameter(2, vcDate);
+           pst.setParameter(3, vcDate);
+           pst.setParameter(4, vcDate);
            resultset1 = pst.list();
            for (final Object[] element : resultset1) {
                totalAvailable = new BigDecimal(element[0].toString());
@@ -478,13 +478,13 @@ public class EGovernCommon extends AbstractTask {
                     " AND endingDate >=? )  AND glCodeId =(select glcodeid from bankaccount where id=? )";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("getAccountBalance(EGovernCommon.java): " + str);
-            pst = persistenceService.getSession().createSQLQuery(str);
+            pst = persistenceService.getSession().createNativeQuery(str);
             SimpleDateFormat dtSlashFormat = new SimpleDateFormat("dd/MMM/yyyy");
             Date reconDate=dtSlashFormat.parse(recDate);
             java.sql.Date sDate=new java.sql.Date(reconDate.getTime());
-            pst.setDate(0, sDate);
-            pst.setDate(1, sDate);
-            pst.setInteger(2, Integer.valueOf(bankAccountId));
+            pst.setParameter(1, sDate, jakarta.persistence.TemporalType.DATE);
+            pst.setParameter(2, sDate, jakarta.persistence.TemporalType.DATE);
+            pst.setParameter(3, Integer.valueOf(bankAccountId));
             List list = pst.list();  
             if (list == null || list.size() == 0)
                 if (LOGGER.isDebugEnabled()) LOGGER.debug("Else resultset in getAccountBalance...");
@@ -512,11 +512,11 @@ public class EGovernCommon extends AbstractTask {
 
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("Curr Yr Bal: " + str1);  
-            pst = persistenceService.getSession().createSQLQuery(str1);
-            pst.setInteger(0, Integer.valueOf(bankAccountId));
-            pst.setDate(1, reconDate);
-            pst.setDate(2, reconDate);
-            pst.setDate(3, reconDate);
+            pst = persistenceService.getSession().createNativeQuery(str1);
+            pst.setParameter(1, Integer.valueOf(bankAccountId));
+            pst.setParameter(2, reconDate, jakarta.persistence.TemporalType.DATE);
+            pst.setParameter(3, reconDate, jakarta.persistence.TemporalType.DATE);
+            pst.setParameter(4, reconDate, jakarta.persistence.TemporalType.DATE);
            List list2 = pst.list();
             if(list2!=null)
                totalAvailable = new BigDecimal(list2.get(0).toString());
@@ -587,9 +587,9 @@ public class EGovernCommon extends AbstractTask {
 			final String sql = " select distinct id from egw_status where upper(moduletype)= ? and upper(description)= ? ";
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("statement" + sql);
-			pstmt = persistenceService.getSession().createSQLQuery(sql);
-			pstmt.setString(0, moduleType.toUpperCase());
-			pstmt.setString(1, description.toUpperCase());
+			pstmt = persistenceService.getSession().createNativeQuery(sql);
+			pstmt.setParameter(1, moduleType.toUpperCase());
+			pstmt.setParameter(2, description.toUpperCase());
 			rs = pstmt.list();
 			for (final Object[] element : rs)
 				statusId = element[0].toString();

@@ -55,20 +55,20 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,19 +91,19 @@ public class CChartOfAccounts extends AbstractAuditable {
     private Long id;
 
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String glcode;
 
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 150)
     private String name;
 
     private Long purposeId;
 
     @Column(name = "DESCRIPTION")
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 250)
     private String desc;
 
@@ -125,7 +125,7 @@ public class CChartOfAccounts extends AbstractAuditable {
 
     private Boolean budgetCheckReq;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 250)
     private String majorCode;
 

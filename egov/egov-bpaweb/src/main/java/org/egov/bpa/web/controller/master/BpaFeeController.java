@@ -42,8 +42,8 @@ package org.egov.bpa.web.controller.master;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.entity.BpaFeeCommon;
 import org.egov.bpa.master.entity.BpaFeeMapping;

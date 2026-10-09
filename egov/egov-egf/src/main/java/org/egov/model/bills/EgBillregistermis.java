@@ -59,18 +59,18 @@ import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.admin.master.entity.Department;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -107,23 +107,23 @@ public class EgBillregistermis extends AbstractPersistable<Integer> implements j
     @JoinColumn(name = "functionaryid")
     private Functionary functionaryid;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 30)
     private String sanctionedby;
 
     private Date sanctiondate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 200)
     private String sanctiondetail;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 1024)
     private String narration;
 
     private Date lastupdatedtime;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 30)
     private String disbursementtype;
 
@@ -157,11 +157,11 @@ public class EgBillregistermis extends AbstractPersistable<Integer> implements j
     @JoinColumn(name = "billsubtype")
     private EgBillSubType egBillSubType;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 350)
     private String payto;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 200)
     private String mbRefNo;
 
@@ -181,21 +181,21 @@ public class EgBillregistermis extends AbstractPersistable<Integer> implements j
     @JoinColumn(name = "voucherheaderid")
     private CVoucherHeader voucherHeader;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 150)
     private String sourcePath;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String partyBillNumber;
 
     private Date partyBillDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String inwardSerialNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 30)
     @Column(name = "budgetary_appnumber")
     private String budgetaryAppnumber;

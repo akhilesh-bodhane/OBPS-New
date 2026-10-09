@@ -127,8 +127,7 @@ public class AutoRemittanceAction extends BaseFormAction {
             deptDOList = persistenceService.findAllBy("from DepartmentDOMapping where department is not null  ");
 
             final List<Object[]> list = persistenceService.getSession()
-                    .
-                    createSQLQuery(
+                    .createNativeQuery(
                             "select glcode, to_char(max(lastrundate),'dd/mm/yyyy') from egf_remittance_scheduler where glcode is not null and sch_type='A' "
                                     +
                             " GROUP by glcode order by glcode").list();

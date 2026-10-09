@@ -91,7 +91,7 @@ import org.egov.model.instrument.InstrumentType;
 import org.egov.pims.commons.Designation;
 import org.egov.pims.commons.Position;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -215,17 +215,17 @@ public class ReceiptHeaderService extends PersistenceService<ReceiptHeader, Long
         // if (!allPositions)
         listQuery.setParameterList("positionIds", positionIds);
         if (!allCounters)
-            listQuery.setInteger("counterId", counterId);
+            listQuery.setParameter("counterId", counterId);
         if (!allServices && receiptType.equals(CollectionConstants.SERVICE_TYPE_BILLING))
-            listQuery.setString("serviceCode", serviceCode);
+            listQuery.setParameter("serviceCode", serviceCode);
         if (!allWfAction)
-            listQuery.setString("wfAction", wfAction);
+            listQuery.setParameter("wfAction", wfAction);
         if (!allUserName)
-            listQuery.setString("userName", userName);
+            listQuery.setParameter("userName", userName);
         if (!allDate)
-            listQuery.setDate("rcptDate", rcptDate);
+            listQuery.setParameter("rcptDate", rcptDate, jakarta.persistence.TemporalType.DATE);
         if (receiptType.equals(CollectionConstants.SERVICE_TYPE_BILLING))
-            listQuery.setCharacter("receiptType", receiptType.charAt(0));
+            listQuery.setParameter("receiptType", receiptType.charAt(0));
         return listQuery.list();
     }
 

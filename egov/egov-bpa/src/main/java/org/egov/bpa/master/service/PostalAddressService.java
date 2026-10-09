@@ -42,15 +42,15 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.PostalAddress;
 import org.egov.bpa.master.repository.PostalAddressRepository;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,13 +70,13 @@ public class PostalAddressService {
 
     @SuppressWarnings("unchecked")
     public List<PostalAddress> getPostalAddressList(final String pincode) {
-        final Criteria criteria = getCurrentSession().createCriteria(PostalAddress.class, "postalAddress");
+        final Criteria criteria = Criteria.create(getCurrentSession(), PostalAddress.class, "postalAddress");
         criteria.add(Restrictions.ilike("postalAddress.pincode", pincode, MatchMode.ANYWHERE));
         criteria.add(Restrictions.eq("postalAddress.isActive", true));
         return criteria.list();
     }
 
     public PostalAddress findById(Long id) {
-        return postalAddressRepository.findOne(id);
+        return postalAddressRepository.findById(id).orElse(null);
     }
 }

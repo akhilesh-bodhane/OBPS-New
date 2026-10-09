@@ -75,9 +75,9 @@ import org.egov.utils.BudgetDetailConfig;
 import org.egov.utils.BudgetingType;
 import org.egov.utils.Constants;
 import org.egov.utils.ReportHelper;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -246,7 +246,7 @@ public class BudgetAppropriationRegisterReportAction extends BaseFormAction {
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("BudgetAppropriationRegisterReportAction -- strQuery...." + strQuery);
 
-            query = persistenceService.getSession().createSQLQuery(strQuery.toString())
+            query = persistenceService.getSession().createNativeQuery(strQuery.toString())
                     .addScalar("bdgApprNumber")
                     .addScalar("voucherDate", StandardBasicTypes.DATE)
                     .addScalar("billDate", StandardBasicTypes.DATE)
@@ -255,8 +255,8 @@ public class BudgetAppropriationRegisterReportAction extends BaseFormAction {
                     .addScalar("description")
                     .addScalar("VoucherNumber")
                     .addScalar("billNumber")
-                    .addScalar("debitAmount", BigDecimalType.INSTANCE)
-                    .addScalar("creditAmount", BigDecimalType.INSTANCE)
+                    .addScalar("debitAmount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("creditAmount", StandardBasicTypes.BIG_DECIMAL)
                     .setResultTransformer(Transformers.aliasToBean(BudgetAppDisplay.class));
             query=setParameterForBudgetAppDisplay(query,dtAsOnDate,dStartDate);
         }
@@ -282,7 +282,7 @@ public class BudgetAppropriationRegisterReportAction extends BaseFormAction {
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("BudgetAppropriationRegisterReportAction -- strsubQuery...." + strsubQuery);
 
-            query = persistenceService.getSession().createSQLQuery(strsubQuery.toString())
+            query = persistenceService.getSession().createNativeQuery(strsubQuery.toString())
                     .addScalar("bdgApprNumber")
                     .addScalar("voucherDate", StandardBasicTypes.DATE)
                     .addScalar("billDate", StandardBasicTypes.DATE)
@@ -291,8 +291,8 @@ public class BudgetAppropriationRegisterReportAction extends BaseFormAction {
                     .addScalar("description")
                     .addScalar("VoucherNumber")
                     .addScalar("billNumber")
-                    .addScalar("debitAmount", BigDecimalType.INSTANCE)
-                    .addScalar("creditAmount", BigDecimalType.INSTANCE)
+                    .addScalar("debitAmount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("creditAmount", StandardBasicTypes.BIG_DECIMAL)
                     .setResultTransformer(Transformers.aliasToBean(BudgetAppDisplay.class));
             query=setParameterForBudgetAppDisplay(query,dtAsOnDate,dStartDate); 
             budgetApprRegNewList = query.list();
@@ -520,28 +520,28 @@ public class BudgetAppropriationRegisterReportAction extends BaseFormAction {
     {
         if (function.getId() != null && function.getId() != -1)
         {
-            query.setLong("functionId", function.getId()) ; 
+            query.setParameter("functionId", function.getId()) ; 
         }
         if (department.getId() != null && department.getId() != -1)
         {
-            query.setLong("departmentId", department.getId()) ; 
+            query.setParameter("departmentId", department.getId()) ; 
         }
         if (fund.getId() != null && fund.getId() != -1)
         {
-            query.setLong("fundId", fund.getId()) ; 
+            query.setParameter("fundId", fund.getId()) ; 
         }
         if (budgetGroup.getMinCode().getId() != null )
         {
-            query.setLong("glCodeId", budgetGroup.getMinCode().getId()) ; 
+            query.setParameter("glCodeId", budgetGroup.getMinCode().getId()) ; 
         }
         if (asOnDate != null )
         {
-            query.setDate("strAODate", asOnDate) ; 
+            query.setParameter("strAODate", asOnDate, jakarta.persistence.TemporalType.DATE) ; 
         }
         
         if (startDate != null )
         {
-            query.setDate("strStDate", startDate) ; 
+            query.setParameter("strStDate", startDate, jakarta.persistence.TemporalType.DATE) ; 
         }
         
         

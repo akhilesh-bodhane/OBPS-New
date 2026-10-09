@@ -51,16 +51,16 @@ package org.egov.infra.persistence.validator;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.persistence.validator.annotation.CompositeUnique;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Conjunction;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class CompositeUniqueCheckValidator implements ConstraintValidator<CompositeUnique, Object> {
 
@@ -91,8 +91,7 @@ public class CompositeUniqueCheckValidator implements ConstraintValidator<Compos
     }
 
     private boolean checkCompositeUniqueKey(final Object arg0, final Number id) throws IllegalAccessException {
-        final Criteria criteria = entityManager.unwrap(Session.class)
-                .createCriteria(unique.isSuperclass() ? arg0.getClass().getSuperclass() : arg0.getClass()).setReadOnly(true);
+        final Criteria criteria = Criteria.create(entityManager.unwrap(Session.class), unique.isSuperclass() ? arg0.getClass().getSuperclass() : arg0.getClass()).setReadOnly(true);
         final Conjunction conjunction = Restrictions.conjunction();
         for (final String fieldName : unique.fields()) {
             final Object fieldValue = FieldUtils.readField(arg0, fieldName, true);

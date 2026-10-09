@@ -47,13 +47,15 @@
  */
 package org.egov.dao.budget;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.model.budget.BudgetUsage;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -82,7 +84,7 @@ public class BudgetUsageHibernateDAO implements BudgetUsageDAO {
     }
 
     public List<BudgetUsage> findAll() {
-        return (List<BudgetUsage>) getCurrentSession().createCriteria(BudgetUsage.class).list();
+        return (List<BudgetUsage>) Criteria.create(getCurrentSession(), BudgetUsage.class).list();
     }
 
     @PersistenceContext

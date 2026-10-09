@@ -54,11 +54,11 @@ public class LettertoPartyFeeService {
     }
 	
 	public LetterToPartyFeeMaster getLPFeeMasterById(Long id) {
-        return letterToPartyFeeMasterRepository.findOne(id);
+        return letterToPartyFeeMasterRepository.findById(id).orElse(null);
     }
-	
+
 	public LetterToPartyFeeDetails getLPFeeDetailsById(Long id) {
-        return letterToPartyFeeDetailsRepository.findOne(id);
+        return letterToPartyFeeDetailsRepository.findById(id).orElse(null);
     }
 	
 	public List<LetterToPartyFee> getLPFeesByApplication(BpaApplication application) {
@@ -139,7 +139,7 @@ public class LettertoPartyFeeService {
 	@Transactional
     public void saveFeeDetails(final List<LetterToPartyFeeDetails> letterToPartyFeeDetails) {
         if (null!=letterToPartyFeeDetails && !letterToPartyFeeDetails.isEmpty()) {
-        	letterToPartyFeeDetailsRepository.save(letterToPartyFeeDetails);        	
+        	letterToPartyFeeDetailsRepository.saveAll(letterToPartyFeeDetails);
         }
     }
 }

@@ -65,7 +65,7 @@ public class PortalServiceTypeService {
     private PortalServiceTypeRepository portalServiceTypeRepository;
 
     public PortalServiceType getPortalServiceTypeById(final Long id) {
-        return portalServiceTypeRepository.findOne(id);
+        return portalServiceTypeRepository.findById(id).orElse(null);
     }
 
     public List<Module> getAllModules() {

@@ -77,8 +77,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.autonumber.OccupancyCertificateNumberGenerator;
 import org.egov.bpa.master.entity.BpaFeeMapping;
@@ -136,10 +136,10 @@ import org.egov.infra.utils.ApplicationNumberGenerator;
 import org.egov.infra.utils.FileStoreUtils;
 import org.egov.infra.utils.autonumber.AutonumberServiceBeanResolver;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -571,8 +571,7 @@ public class OccupancyCertificateService {
 
     public List<OccupancyCertificate> getOcApplicationsForScheduleAndReSchedule(List<BpaStatus> bpaStatusList,
             List<Boundary> boundaryList, Integer totalAvailableSlots) {
-        final Criteria criteria = entityManager.unwrap(Session.class)
-                .createCriteria(OccupancyCertificate.class, "oc")
+        final Criteria criteria = Criteria.create(entityManager.unwrap(Session.class), OccupancyCertificate.class, "oc")
                 .createAlias("oc.parent", "parent")
                 .createAlias("parent.siteDetail", "siteDetail")
                 .createAlias("oc.demand", "demand");
@@ -590,7 +589,7 @@ public class OccupancyCertificateService {
     }
 
     public OccupancyCertificate findById(Long id) {
-        return occupancyCertificateRepository.findOne(id);
+        return occupancyCertificateRepository.findById(id).orElse(null);
     }
 
     public List<OccupancyCertificate> findByStatusListOrderByCreatedDate(List<BpaStatus> listOfBpaStatus) {
@@ -639,7 +638,7 @@ public class OccupancyCertificateService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> hasFeeCollectionPending(
             final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> ocApplications = occupancyCertificateRepository
         		.findAll(SearchOcSpec.hasCollectionPendingSpecification(searchRequest), pageable);
@@ -656,16 +655,22 @@ public class OccupancyCertificateService {
     private String getProcessOwner(OccupancyCertificate ocApplication) {
         String processOwner;
         if (ocApplication.getState() != null && ocApplication.getState().getOwnerPosition() != null)
-            processOwner = workflowHistoryService
-                    .getUserPositionByPositionAndDate(ocApplication.getState().getOwnerPosition().getId(),
-                    		ocApplication.getState().getLastModifiedDate())
-                    .getName();
+            processOwner = workflowHistoryService.getOwnerNameLenient(ocApplication.getState().getOwnerPosition().getId(),
+                    		ocApplication.getState().getLastModifiedDate());
         else
             processOwner = ocApplication.getLastModifiedBy().getName();
         return processOwner;
     }
 
 	public List<Long> findFinalOCGenerationApplications(Date todayDate) {
-		return occupancyCertificateRepository.findAllFinalOCGenerationApplications(todayDate);
+		// applications last modified at least 60 days before today
+		final java.util.Calendar cutoff = java.util.Calendar.getInstance();
+		cutoff.setTime(todayDate);
+		cutoff.set(java.util.Calendar.HOUR_OF_DAY, 0);
+		cutoff.set(java.util.Calendar.MINUTE, 0);
+		cutoff.set(java.util.Calendar.SECOND, 0);
+		cutoff.set(java.util.Calendar.MILLISECOND, 0);
+		cutoff.add(java.util.Calendar.DAY_OF_MONTH, -59);
+		return occupancyCertificateRepository.findAllFinalOCGenerationApplications(cutoff.getTime());
 	}
 }

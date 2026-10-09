@@ -51,14 +51,20 @@ package org.egov.infra.web.spring.handler;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.net.ssl.SSLException;
+import java.util.UUID;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalExceptionHandler {
@@ -68,13 +74,52 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class, ApplicationRuntimeException.class})
     public RedirectView handleGenericException(HttpServletRequest request, Exception e) {
-        LOG.error("An error occurred while processing the request", e);
+        String reference = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        LOG.error("An error occurred while processing the request [ref {}]", reference, e);
         RedirectView rw = new RedirectView(DEFAULT_ERROR_VIEW, true);
         FlashMap outputFlashMap = RequestContextUtils.getOutputFlashMap(request);
         if (outputFlashMap != null) {
-            outputFlashMap.put("error", e.getMessage());
+            outputFlashMap.put("error", userMessage(e, reference));
             outputFlashMap.put("url", request.getRequestURL());
         }
         return rw;
+    }
+
+    /**
+     * Translates an exception into a message a user can act on. Application-level messages are shown as they are;
+     * technical failures (network, certificate, database, unexpected response) get a plain-language explanation
+     * plus a reference that can be searched for in the server log.
+     */
+    static String userMessage(Throwable e, String reference) {
+        String suffix = " (Reference: " + reference + ")";
+        if (e instanceof ApplicationRuntimeException && hasText(e.getMessage()))
+            return e.getMessage();
+        if (hasCause(e, SSLException.class))
+            return "A secure connection to an internal service could not be established because its security certificate is not trusted. Please contact the system administrator." + suffix;
+        if (e instanceof ResourceAccessException)
+            return "A required service (for example the drawing scrutiny service) could not be reached. Please try again in a few minutes; if the problem continues contact the system administrator." + suffix;
+        if (e instanceof RestClientException)
+            return "A required service returned an unexpected response, so the request could not be completed. Please try again; if the problem continues contact the system administrator." + suffix;
+        if (e instanceof DataAccessException)
+            return "The data for this request could not be read or saved because of a database problem. Please try again; if the problem continues contact the system administrator." + suffix;
+        if (hasText(e.getMessage()) && !looksTechnical(e.getMessage()))
+            return e.getMessage();
+        return "Something went wrong while processing your request. Please try again; if the problem continues contact the system administrator." + suffix;
+    }
+
+    private static boolean hasText(String s) {
+        return s != null && !s.trim().isEmpty();
+    }
+
+    private static boolean looksTechnical(String m) {
+        return m.contains("Exception") || m.contains("org.") || m.contains("java.") || m.contains("jakarta.")
+                || m.contains("	at ") || m.length() > 300;
+    }
+
+    private static boolean hasCause(Throwable e, Class<? extends Throwable> type) {
+        for (Throwable t = e; t != null; t = t.getCause() == t ? null : t.getCause())
+            if (type.isInstance(t))
+                return true;
+        return false;
     }
 }

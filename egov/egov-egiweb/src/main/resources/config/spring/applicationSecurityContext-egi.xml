@@ -59,27 +59,23 @@
         <constructor-arg>
             <list>
 
-                <security:filter-chain pattern="/resources/**" filters="none" />
-				<security:filter-chain pattern="/help*" filters="none" />
-				<security:filter-chain pattern="/jcaptcha*" filters="none"/>
-				<security:filter-chain pattern="/index.jsp" filters="none" />
-				<security:filter-chain pattern="/guide/**" filters="none" />
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/resources/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/help*"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/jcaptcha*"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/index.jsp"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/guide/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
 				
-				<security:filter-chain pattern="/login/secure**" filters="securityContextPersistenceFilter,sessionHijackProtectionFilter" />
-				<security:filter-chain pattern="/login/password/recover**" filters="securityContextPersistenceFilter,sessionHijackProtectionFilter" />
-				<security:filter-chain pattern="/login/password/reset**" filters="securityContextPersistenceFilter,sessionHijackProtectionFilter" />
-				<security:filter-chain pattern="/login/requiredlocations*" filters="none" />
-				<security:filter-chain pattern="/downloadfile/logo**" filters="none" />
-				<security:filter-chain pattern="/downloadfile/rural-logo**" filters="none" />
-				<security:filter-chain pattern="/downloadfile/gis**" filters="none" />
-				<security:filter-chain pattern="/error/**" filters="none" />
-				<security:filter-chain pattern="/city/details" filters="none" />
-				<security:filter-chain pattern="/public/**" filters="anonymousAuthenticationFilter"/>
-                <security:filter-chain pattern="/**"
-                                       filters="securityContextPersistenceFilter, sessionHijackProtectionFilter, concurrentSessionFilter,
-                                       logoutFilter,authenticationProcessingFilter,headerWriterFilter,
-                                       securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
-                                       anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/login/secure**"/></bean></constructor-arg><constructor-arg><list><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/login/password/recover**"/></bean></constructor-arg><constructor-arg><list><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/login/password/reset**"/></bean></constructor-arg><constructor-arg><list><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/login/requiredlocations*"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/downloadfile/logo**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/downloadfile/rural-logo**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/downloadfile/gis**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/error/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/city/details"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/public/**"/></bean></constructor-arg><constructor-arg><list><ref bean="anonymousAuthenticationFilter"/></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/**"/></bean></constructor-arg><constructor-arg><list><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/><ref bean="concurrentSessionFilter"/><ref bean="logoutFilter"/><ref bean="authenticationProcessingFilter"/><ref bean="headerWriterFilter"/><ref bean="securityContextHolderAwareRequestFilter"/><ref bean="rememberMeAuthenticationFilter"/><ref bean="anonymousAuthenticationFilter"/><ref bean="exceptionTranslationFilter"/><ref bean="filterSecurityInterceptor"/></list></constructor-arg></bean>
             </list>
         </constructor-arg>
     </bean>

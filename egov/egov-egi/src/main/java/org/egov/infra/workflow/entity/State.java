@@ -54,30 +54,30 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.utils.JsonUtils;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.SafeHtml;
+import jakarta.validation.constraints.NotBlank;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EG_WF_STATES")
@@ -96,12 +96,12 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
 
     @NotBlank
     @Length(max = 255)
-    @SafeHtml
+    @CustomSafeHtml
     private String type;
 
     @NotBlank
     @Length(max = 255)
-    @SafeHtml
+    @CustomSafeHtml
     private String value;
 
     @ManyToOne(targetEntity = OwnerGroup.class, fetch = FetchType.LAZY)
@@ -118,23 +118,23 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
     private Set<StateHistory<T>> history = new HashSet<>();
 
     @Length(max = 100)
-    @SafeHtml
+    @CustomSafeHtml
     private String senderName;
 
     @Length(max = 255)
-    @SafeHtml
+    @CustomSafeHtml
     private String nextAction;
 
     //@Length(max = 1024)
-    @SafeHtml
+    @CustomSafeHtml
     private String comments;
 
     @Length(max = 100)
-    @SafeHtml
+    @CustomSafeHtml
     private String natureOfTask;
 
     @Length(max = 1024)
-    @SafeHtml
+    @CustomSafeHtml
     private String extraInfo;
 
     private Date dateInfo;

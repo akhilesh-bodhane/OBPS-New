@@ -50,8 +50,8 @@ package org.egov.egf.web.actions.report;
 import com.exilant.eGov.src.reports.OpeningBalance;
 import com.exilant.eGov.src.reports.OpeningBalanceInputBean;
 import com.exilant.exility.common.TaskFailedException;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.Validations;
+import org.apache.struts2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.validator.annotations.Validations;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -107,7 +107,7 @@ public class OpeningBalanceReportAction extends BaseFormAction {
     public void prepareNewForm() {
         super.prepare();
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         addDropdownData("fundList", persistenceService.findAllBy(" from Fund where isactive=true and isnotleaf=false order by name"));
         addDropdownData("departmentList", persistenceService.findAllBy("from Department order by name"));
         addDropdownData("financialYearList", persistenceService.findAllBy("from CFinancialYear order by finYearRange desc "));
@@ -144,7 +144,7 @@ public class OpeningBalanceReportAction extends BaseFormAction {
             LOGGER.debug("OpeningBalanceReportAction | list | End");
         heading = getGLHeading();
         prepareNewForm();
-        persistenceService.getSession().setFlushMode(FlushMode.AUTO);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.AUTO);
         return "result";
     }
 

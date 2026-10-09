@@ -144,6 +144,31 @@ $(document).ready(function () {
 		}
 	});
 	
+	// Presentation only: tag rows with an icon key (rendered by sidepanel-modern.css) and a tooltip.
+	(function () {
+		var groupKeys = [['admin','admin'],['employee','employee'],['financ','finance'],['collection','collection'],
+			['dashboard','dashboard'],['scrutiny','scrutiny'],['permission','permission']];
+		var leafKeys = [['report','report'],['status','report'],['certificate','certificate'],['search','search']];
+		function pick(lower, keys, fallback) {
+			for (var i = 0; i < keys.length; i++) {
+				if (lower.indexOf(keys[i][0]) > -1) { return keys[i][1]; }
+			}
+			return fallback;
+		}
+		$('#menu_multilevelpushmenu li > a').each(function () {
+			var $a = $(this), label = $.trim($a.text()), lower = label.toLowerCase();
+			if (label) { $a.attr('title', label); }
+			var isGroup = $a.parent().children('div.levelHolderClass').length > 0;
+			if (isGroup) {
+				// groups that already carry their own icon (Applications, Favourites) are left as they are
+				if ($a.children('i[class*="fa-"]').not('.fa-angle-right').length) { return; }
+				$a.attr('data-mi', pick(lower, groupKeys, 'default'));
+			} else {
+				$a.attr('data-mi', pick(lower, leafKeys, 'doc'));
+			}
+		});
+	})();
+
 	var actionId='';
 	var favouriteName='';
 	var favouriteURL='';

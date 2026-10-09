@@ -41,7 +41,7 @@
 jQuery(document).ready(function($) {
 	
 	// to refresh inbox item after forwarding
-	$(window).unload(function(){
+	$(window).on('unload', function(){
         if (typeof inboxloadmethod === 'function')
 			parent.window.opener.inboxloadmethod();
 	});

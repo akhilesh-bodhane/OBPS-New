@@ -57,16 +57,12 @@
     <bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
         <constructor-arg>
             <list>
-                <security:filter-chain pattern="/resources/**" filters="none"/>
-                <security:filter-chain pattern="/citizen/signup" filters="anonymousAuthenticationFilter"/>
-                <security:filter-chain pattern="/citizen/signup/**" filters="anonymousAuthenticationFilter"/>
-                <security:filter-chain pattern="/error/**" filters="none"/>
-                <security:filter-chain pattern="/index.jsp" filters="none"/>
-                <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
-                                       sessionHijackProtectionFilter,
-                                       logoutFilter,authenticationProcessingFilter,headerWriterFilter,
-                                       securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
-                                       anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/resources/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/citizen/signup"/></bean></constructor-arg><constructor-arg><list><ref bean="anonymousAuthenticationFilter"/></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/citizen/signup/**"/></bean></constructor-arg><constructor-arg><list><ref bean="anonymousAuthenticationFilter"/></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/error/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/index.jsp"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/**"/></bean></constructor-arg><constructor-arg><list><ref bean="concurrentSessionFilter"/><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/><ref bean="logoutFilter"/><ref bean="authenticationProcessingFilter"/><ref bean="headerWriterFilter"/><ref bean="securityContextHolderAwareRequestFilter"/><ref bean="rememberMeAuthenticationFilter"/><ref bean="anonymousAuthenticationFilter"/><ref bean="exceptionTranslationFilter"/><ref bean="filterSecurityInterceptor"/></list></constructor-arg></bean>
             </list>
         </constructor-arg>
     </bean>

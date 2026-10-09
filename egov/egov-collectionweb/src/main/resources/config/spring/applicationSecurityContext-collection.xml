@@ -57,29 +57,25 @@
 	<bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<list>
-				<security:filter-chain pattern="/commonjs/**" filters="none" />
-				<security:filter-chain pattern="/js/**" filters="none" />
-				<security:filter-chain pattern="/commons/**" filters="none" />
-				<security:filter-chain pattern="/commonyui/**" filters="none" />
-				<security:filter-chain pattern="/css/**" filters="none" />
-				<security:filter-chain pattern="/images/**" filters="none" />
-				<security:filter-chain pattern="/image/**" filters="none" />
-				<security:filter-chain pattern="/javascript/**" filters="none" />
-				<security:filter-chain pattern="/resources/**" filters="none" />
-				<security:filter-chain pattern="/error/**" filters="none" />
-				<security:filter-chain pattern="/index.jsp" filters="none" />
-				<security:filter-chain pattern="/image/**" filters="none" />
-				<security:filter-chain pattern="/citizen/**" filters="none" />
-				<security:filter-chain pattern="/public/**" filters="none"/>
-				<security:filter-chain pattern="/reportViewer/**" filters="none" />
-				<security:filter-chain pattern="/reports/collectionSummary-criteria.action" filters="none" />
-				<security:filter-chain pattern="/reports/collectionSummary-report.action" filters="none" />
-				<security:filter-chain pattern="/receipts/ajaxReceiptCreate-ajaxLoadServiceByClassification.action" filters="none" />
-                <security:filter-chain pattern="/**" filters="concurrentSessionFilter,securityContextPersistenceFilter,
-                                       sessionHijackProtectionFilter,
-                                       logoutFilter,authenticationProcessingFilter,headerWriterFilter,
-                                       securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
-                                       anonymousAuthenticationFilter,exceptionTranslationFilter,filterSecurityInterceptor"/>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commonjs/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/js/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commons/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/commonyui/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/css/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/images/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/image/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/javascript/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/resources/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/error/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/index.jsp"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/image/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/citizen/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/public/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reportViewer/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/collectionSummary-criteria.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/collectionSummary-report.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/receipts/ajaxReceiptCreate-ajaxLoadServiceByClassification.action"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+                <bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/**"/></bean></constructor-arg><constructor-arg><list><ref bean="concurrentSessionFilter"/><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/><ref bean="logoutFilter"/><ref bean="authenticationProcessingFilter"/><ref bean="headerWriterFilter"/><ref bean="securityContextHolderAwareRequestFilter"/><ref bean="rememberMeAuthenticationFilter"/><ref bean="anonymousAuthenticationFilter"/><ref bean="exceptionTranslationFilter"/><ref bean="filterSecurityInterceptor"/></list></constructor-arg></bean>
 			</list>
 		</constructor-arg>
 	</bean>	

@@ -78,7 +78,7 @@ public class RegionalHeirarchyService {
     
     
     public  RegionalHeirarchy getObjectTypeByName(String code) {
-        return regionalHeirarchyRepository.findByCode(code);
+        return code != null && code.trim().matches("\\d+") ? regionalHeirarchyRepository.findByCode(Long.valueOf(code.trim())) : null;
     }
 
     public List<RegionalHeirarchy> getActiveRegionalHeirarchyByRegion(RegionalHeirarchyType region) {

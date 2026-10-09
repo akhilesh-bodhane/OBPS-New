@@ -60,8 +60,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
@@ -87,12 +87,12 @@ import org.egov.infra.microservice.models.RequestInfo;
 import org.egov.infra.microservice.models.UserInfo;
 import org.egov.infra.security.utils.SecurityUtils;
 import org.egov.infra.utils.TenantUtils;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -329,7 +329,7 @@ public class EdcrRestService {
                 }
             }
 
-            final Query query = getCurrentSession().createSQLQuery(queryStr.toString());
+            final Query query = getCurrentSession().createNativeQuery(queryStr.toString());
             for (final Map.Entry<String, String> param : params.entrySet())
                 query.setParameter(param.getKey(), param.getValue());
             List<Object[]> applns = query.list();
@@ -344,7 +344,7 @@ public class EdcrRestService {
                 return edcrDetails2;
             }
         } else {
-            final Criteria criteria = getCurrentSession().createCriteria(EdcrApplicationDetail.class, "edcrApplicationDetail");
+            final Criteria criteria = Criteria.create(getCurrentSession(), EdcrApplicationDetail.class, "edcrApplicationDetail");
             criteria.createAlias("edcrApplicationDetail.application", "application");
             if (edcrRequest != null && isNotBlank(edcrRequest.getEdcrNumber())) {
                 criteria.add(Restrictions.eq("edcrApplicationDetail.dcrNumber", edcrRequest.getEdcrNumber()));

@@ -70,6 +70,7 @@
               href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css?rnd=${app_release_no}' context='/egi'/>">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="<cdn:url value='/resources/css/citizen.css?rnd=${app_release_no}'/>" rel="stylesheet">
+        <link href="<cdn:url value='/resources/css/citizen-modern.css?rnd=${app_release_no}&v=2'/>" rel="stylesheet">
         <link href="<cdn:url value='/resources/css/scrollbar.css'/>" rel="stylesheet">
         <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 

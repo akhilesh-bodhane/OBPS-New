@@ -47,8 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.BpaFeeCommon;
 import org.egov.bpa.master.entity.BpaFeeDetail;
@@ -73,10 +73,10 @@ import org.egov.demand.model.EgDemandReasonMaster;
 import org.egov.demand.model.EgReasonCategory;
 import org.egov.infra.admin.master.entity.Module;
 import org.egov.infra.admin.master.service.ModuleService;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -334,8 +334,8 @@ public class BpaDemandService {
     public EgDemandReason getDemandReasonByCodeAndInstallment(final String demandReason,
             final Installment installment) {
         final Query demandQuery = getCurrentSession().getNamedQuery("DEMANDREASONBY_CODE_AND_INSTALLMENTID");
-        demandQuery.setString(0, demandReason);
-        demandQuery.setInteger(1, installment.getId());
+        demandQuery.setParameter(1, demandReason);
+        demandQuery.setParameter(2, installment.getId());
         return (EgDemandReason) demandQuery.uniqueResult();
     }
 
@@ -347,7 +347,7 @@ public class BpaDemandService {
                         + "eg_installment_master inst,eg_demand_reason_master dmdresmas where dmdDet.id_demand_reason=dmdRes.id "
                         + "and dmdDet.id_demand =:dmdId and dmdRes.id_installment = inst.id and dmdresmas.id = dmdres.id_demand_reason_master "
                         + "group by dmdRes.id,dmdRes.id_installment, inst.start_date order by inst.start_date ");
-        return getCurrentSession().createSQLQuery(queryStringBuilder.toString()).setLong("dmdId", egDemand.getId())
+        return getCurrentSession().createNativeQuery(queryStringBuilder.toString()).setParameter("dmdId", egDemand.getId())
                 .list();
     }
 
@@ -359,13 +359,13 @@ public class BpaDemandService {
                         + "state.eg_installment_master inst,state.eg_demand_reason_master dmdresmas where dmdDet.id_demand_reason=dmdRes.id "
                         + "and dmdDet.id_demand =:dmdId and dmdRes.id_installment = inst.id and dmdresmas.id = dmdres.id_demand_reason_master "
                         + "group by dmdRes.id,dmdRes.id_installment, inst.start_date order by inst.start_date ");
-        return getCurrentSession().createSQLQuery(queryStringBuilder.toString()).setLong("dmdId", egDemand.getId())
+        return getCurrentSession().createNativeQuery(queryStringBuilder.toString()).setParameter("dmdId", egDemand.getId())
                 .list();
     }
 
     public Criteria createCriteriaforFeeAmount(List<Long> serviceTypeList, final String feeType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeDetail.class, "bpafeeDtl")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeDetail.class, "bpafeeDtl")
                 .createAlias("bpafeeDtl.bpafee", "bpaFeeObj").createAlias("bpaFeeObj.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.in("servicetypeObj.id", serviceTypeList));
         feeCrit.add(Restrictions.eq("bpaFeeObj.isActive", Boolean.TRUE));
@@ -380,7 +380,7 @@ public class BpaDemandService {
     public Criteria createCriteriaforApplicationFeeAmount(List<Long> serviceTypeList, final String feeType,
             final FeeSubType feeSubType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.in("servicetypeObj.id", serviceTypeList));
         if (feeType != null)
@@ -395,7 +395,7 @@ public class BpaDemandService {
 
     public Criteria createCriteriaforApplicationFee(Long serviceType, final String feeType, final FeeSubType feeSubType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.eq("servicetypeObj.id", serviceType));
         if (feeType != null)
@@ -409,7 +409,7 @@ public class BpaDemandService {
 
     public Criteria createCriteriaforRegistrationFeeAmount(final String feeType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeDetail.class, "bpafeeDtl")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeDetail.class, "bpafeeDtl")
                 .createAlias("bpafeeDtl.bpafee", "bpaFeeObj").createAlias("bpaFeeObj.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.eq("bpaFeeObj.isActive", Boolean.TRUE));
         if (feeType != null)
@@ -422,7 +422,7 @@ public class BpaDemandService {
 
     public Criteria createCriteriaforRegistrationFee(final String feeType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         if (feeType != null)
             feeCrit.add(Restrictions.ilike("bpaFeeObj.name", feeType));
@@ -433,7 +433,7 @@ public class BpaDemandService {
     public Criteria createCriteriaforOCApplicationFeeAmount(List<Long> serviceTypeList, final String feeType,
             final FeeSubType feeSubType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.in("servicetypeObj.id", serviceTypeList));
         if (feeType != null)
@@ -447,7 +447,7 @@ public class BpaDemandService {
 
     public Criteria createCriteriaforOCApplicationFee(Long serviceType, final String feeType, final FeeSubType feeSubType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.eq("servicetypeObj.id", serviceType));
         if (feeType != null)
@@ -462,7 +462,7 @@ public class BpaDemandService {
     public Criteria createCriteriaforOTApplicationFeeAmount(Long serviceType, final String feeType,
             final FeeSubType feeSubType) {
 
-        final Criteria feeCrit = getCurrentSession().createCriteria(BpaFeeMapping.class, "bpaFeeMap")
+        final Criteria feeCrit = Criteria.create(getCurrentSession(), BpaFeeMapping.class, "bpaFeeMap")
                 .createAlias("bpaFeeMap.bpaFeeCommon", "bpaFeeObj").createAlias("bpaFeeMap.serviceType", "servicetypeObj");
         feeCrit.add(Restrictions.eq("servicetypeObj.id", serviceType));
         if (feeType != null)

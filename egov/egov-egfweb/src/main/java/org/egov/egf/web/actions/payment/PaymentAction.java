@@ -48,7 +48,6 @@
 package org.egov.egf.web.actions.payment;
 
 import com.exilant.eGov.src.transactions.VoucherTypeForULB;
-import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -113,7 +112,6 @@ import java.util.Map;
 import java.util.Set;
 
 @ParentPackage("egov")
-@Validation
 @Results({ @Result(name = "search", location = "payment-search.jsp"),
         @Result(name = "searchbills", location = "payment-searchbills.jsp"),
         @Result(name = "tnebSearch", location = "payment-tnebSearch.jsp"),

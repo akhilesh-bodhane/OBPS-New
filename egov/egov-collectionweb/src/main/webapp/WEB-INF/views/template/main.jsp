@@ -71,6 +71,7 @@
 		<script src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js' context='/egi'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script>	
+		<script src="<cdn:url value='/resources/global/js/egov/datatable-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>	
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 			<script src="/egi/resources/global/js/ie8/html5shiv.min.js"></script>

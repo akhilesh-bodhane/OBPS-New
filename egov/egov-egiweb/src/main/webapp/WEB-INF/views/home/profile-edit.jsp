@@ -46,7 +46,7 @@
   ~
   --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <div class="row">
@@ -61,7 +61,7 @@
 				</div>
 			</div>
 			<div class="panel-body custom-form">
-				<form:form role="form" action="edit" modelAttribute="user" commandName="user" id="user" cssClass="form-horizontal form-groups-bordered" >
+				<form:form role="form" action="edit" modelAttribute="user" id="user" cssClass="form-horizontal form-groups-bordered" >
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><spring:message code="lbl.fullname"/><span class="mandatory set-mandatory"></span></label>
 						<div class="col-sm-2 col-md-1 add-margin">

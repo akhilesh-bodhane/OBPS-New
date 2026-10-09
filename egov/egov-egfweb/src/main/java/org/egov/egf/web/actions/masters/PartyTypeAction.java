@@ -48,7 +48,6 @@
 package org.egov.egf.web.actions.masters;
 
 
-import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -70,7 +69,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @ParentPackage("egov")
-@Validation()
 
 @Results({
     @Result(name = PartyTypeAction.NEW, location = "partyType-" + PartyTypeAction.NEW + ".jsp"),

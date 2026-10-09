@@ -51,17 +51,17 @@ package org.egov.infra.persistence.validator;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.persistence.validator.annotation.UniqueDateOverlap;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Conjunction;
+import org.egov.infra.persistence.criteria.Disjunction;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Date;
 
 import static org.egov.infra.utils.DateUtils.endOfDay;
@@ -95,7 +95,7 @@ public class UniqueDateOverlapValidator implements ConstraintValidator<UniqueDat
 
     private boolean checkUnique(Object object) throws IllegalAccessException {
         Number id = (Number) FieldUtils.readField(object, uniqueDateOverlap.id(), true);
-        Criteria uniqueDateOverlapChecker = entityManager.unwrap(Session.class).createCriteria(object.getClass()).setReadOnly(true);
+        Criteria uniqueDateOverlapChecker = Criteria.create(entityManager.unwrap(Session.class), object.getClass()).setReadOnly(true);
         Conjunction uniqueCheck = Restrictions.conjunction();
         for (String fieldName : uniqueDateOverlap.uniqueFields()) {
             Object fieldValue = FieldUtils.readField(object, fieldName, true);

@@ -75,7 +75,7 @@ import org.egov.model.instrument.InstrumentHeader;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -148,7 +148,7 @@ public class BankAdviceReportAction extends BaseFormAction {
     @Override
     public void prepare() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         addDropdownData(
                 "bankList",
@@ -237,13 +237,13 @@ public class BankAdviceReportAction extends BaseFormAction {
                 " AND gl.voucherheaderid =m.billvhid AND gl.id=gld.generalledgerid AND gl.debitamount!=0 " +
                 " group by gld.detailtypeid ,gld.detailkeyid  ";
 
-        final Query WithNetPayableSubledgerQuery = persistenceService.getSession().createSQLQuery(query);
-        WithNetPayableSubledgerQuery.setParameter(0, instrumentHeader.getId());
+        final Query WithNetPayableSubledgerQuery = persistenceService.getSession().createNativeQuery(query);
+        WithNetPayableSubledgerQuery.setParameter(1, instrumentHeader.getId());
 
         // Get without subledger one
-        final Query getDebitsideSubledgerQuery = persistenceService.getSession().createSQLQuery(withNoSubledgerQry);
-        getDebitsideSubledgerQuery.setParameter(0, instrumentHeader.getId());
+        final Query getDebitsideSubledgerQuery = persistenceService.getSession().createNativeQuery(withNoSubledgerQry);
         getDebitsideSubledgerQuery.setParameter(1, instrumentHeader.getId());
+        getDebitsideSubledgerQuery.setParameter(2, instrumentHeader.getId());
 
         final List<Object[]> retList = WithNetPayableSubledgerQuery.list();
         retList.addAll(getDebitsideSubledgerQuery.list());

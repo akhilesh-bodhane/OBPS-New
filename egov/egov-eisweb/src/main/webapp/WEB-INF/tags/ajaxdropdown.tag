@@ -55,7 +55,7 @@
 <%@ attribute name="selectedValue" required="false" %>
 <%@ attribute name="afterSuccess" required="false" %>
 <%@ attribute name="contextToBeUsed" required="false" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <script>
 
 ${id}SuccessHandler=function(data, textStatus, xhr){

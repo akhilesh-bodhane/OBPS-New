@@ -53,8 +53,8 @@ import org.egov.infra.workflow.matrix.entity.WorkFlowAdditionalRule;
 import org.egov.infra.workflow.matrix.repository.WorkFlowAdditionalRuleRepository;
 import org.egov.infra.workflow.service.WorkflowTypeService;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -94,12 +94,12 @@ public class WorkFlowAdditionalDetailsService {
     }
 
     public List<WorkFlowAdditionalRule> getAdditionalRulesbyObject(final Long objectType) {
-        return entityQueryService.getSession().createCriteria(WorkFlowAdditionalRule.class).
+        return Criteria.create(entityQueryService.getSession(), WorkFlowAdditionalRule.class).
                 add(Restrictions.eq(OBJECTTYPEID_ID, objectType)).list();
     }
 
     public WorkFlowAdditionalRule getObjectbyTypeandRule(final Long objectType, final String additionalRules) {
-        final Criteria crit = entityQueryService.getSession().createCriteria(WorkFlowAdditionalRule.class);
+        final Criteria crit = Criteria.create(entityQueryService.getSession(), WorkFlowAdditionalRule.class);
         crit.add(Restrictions.eq(OBJECTTYPEID_ID, objectType));
         if ("-1".equals(additionalRules)) {
             crit.add(Restrictions.isNull(ADDITIONAL_RULE));
@@ -115,7 +115,7 @@ public class WorkFlowAdditionalDetailsService {
     }
 
     public WorkFlowAdditionalRule getObjectbyTypeandRule(final Long objectId, final Long objectType, final String additionalRules) {
-        final Criteria crit = entityQueryService.getSession().createCriteria(WorkFlowAdditionalRule.class);
+        final Criteria crit = Criteria.create(entityQueryService.getSession(), WorkFlowAdditionalRule.class);
         crit.add(Restrictions.eq(OBJECTTYPEID_ID, objectType));
         crit.add(Restrictions.ne("id", objectId));
         if (additionalRules == null) {

@@ -48,10 +48,10 @@
 package org.egov.commons;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -66,7 +66,7 @@ public class CGeneralLedger implements Serializable {
     private Date effectiveDate;
     @NotNull
     private CChartOfAccounts glcodeId;
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(max = 50)
     private String glcode;
@@ -74,7 +74,7 @@ public class CGeneralLedger implements Serializable {
     private Double debitAmount;
     @NotNull
     private Double creditAmount;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 250)
     private String description;
     private CVoucherHeader voucherHeaderId;

@@ -43,8 +43,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.entity.BpaFeeMapping;
 import org.egov.bpa.master.service.BpaFeeMappingService;

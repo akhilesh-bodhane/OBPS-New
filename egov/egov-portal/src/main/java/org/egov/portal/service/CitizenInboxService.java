@@ -138,7 +138,7 @@ public class CitizenInboxService {
     }
 
     public CitizenInbox getInboxMessageById(final Long id) {
-        return citizenInboxRepository.findOne(id);
+        return citizenInboxRepository.findById(id).orElse(null);
     }
 
 }

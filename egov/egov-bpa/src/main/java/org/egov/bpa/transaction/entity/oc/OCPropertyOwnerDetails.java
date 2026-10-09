@@ -1,22 +1,22 @@
 package org.egov.bpa.transaction.entity.oc;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "egbpa_oc_property_owner_details")
@@ -34,22 +34,22 @@ public class OCPropertyOwnerDetails extends AbstractAuditable {
 	    @JoinColumn(name = "oc")
 	    private OccupancyCertificate oc;
 
-	    @SafeHtml
+	    @CustomSafeHtml
 		@Column(name="categoryofproperty")
 	    @JsonProperty("CategoryOfProperty")
 		private String categoryOfProperty;
 		
-		@SafeHtml
+		@CustomSafeHtml
 		@Column(name="tenuretype")
 		@JsonProperty("TenureType")
 		private String tenureType;
 		
-		@SafeHtml
+		@CustomSafeHtml
 		@Column(name="nameofowners")
 		@JsonProperty("NameOfOwners")
 		private String nameOfOwners;
 		
-		@SafeHtml
+		@CustomSafeHtml
 		@Column(name="ownersshare")
 		@JsonProperty("OwnersShare")
 		private String ownersShare;

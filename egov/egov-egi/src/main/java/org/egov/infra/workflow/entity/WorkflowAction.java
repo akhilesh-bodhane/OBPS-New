@@ -50,15 +50,15 @@ package org.egov.infra.workflow.entity;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import static org.egov.infra.workflow.entity.WorkflowAction.SEQ_WF_ACTION;
 
@@ -74,17 +74,17 @@ public class WorkflowAction extends AbstractAuditable {
     private Long id;
 
     @NotNull
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 255)
     private String name;
 
     @NotNull
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String description;
 
     @NotNull
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 255)
     private String type;
 

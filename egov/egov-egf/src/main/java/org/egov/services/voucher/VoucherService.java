@@ -910,7 +910,7 @@ public class VoucherService extends PersistenceService<CVoucherHeader, Long> {
          * getGeneratedVoucherNumber(voucherHeader.getFundId().getId(), autoVoucherType, voucherHeader.getVoucherDate());
          * voucherHeader .setVoucherNumber (cmImpl.getTxnNumber(voucherHeader.getFundId().getId(
          * ).toString(),autoVoucherType,vDate,conn)); } else { Query query=getSession ().createQuery(
-         * "select f.identifier from Fund f where id=:fundId"); query.setInteger("fundId", voucherHeader.getFundId().getId());
+         * "select f.identifier from Fund f where id=:fundId"); query.setParameter("fundId", voucherHeader.getFundId().getId());
          * String fundIdentifier = query.uniqueResult().toString(); //String vn2 = getFormattedManualVoucherNumber(fundIdentifier,
          * autoVoucherType, voucherHeader.getVoucherNumber()); voucherHeader.setVoucherNumber(new
          * StringBuffer().append(fundIdentifier).append(autoVoucherType). append(voucherHeader.getVoucherNumber()).toString()); }

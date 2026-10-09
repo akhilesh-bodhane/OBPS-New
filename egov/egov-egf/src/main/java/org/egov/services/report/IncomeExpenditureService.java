@@ -53,7 +53,7 @@ import org.egov.egf.model.Statement;
 import org.egov.egf.model.StatementResultObject;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.Constants;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -477,11 +477,11 @@ public class IncomeExpenditureService extends ReportService {
         queryStr.append(" order by 1");
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("query is " + queryStr.toString());
-        final SQLQuery budgteQuery = persistenceService.getSession().createSQLQuery(queryStr.toString());
+        final NativeQuery budgteQuery = persistenceService.getSession().createNativeQuery(queryStr.toString());
         budgteQuery.addScalar("glCode").addScalar("amount")
         .setResultTransformer(Transformers.aliasToBean(StatementResultObject.class));
-        budgteQuery.setLong("finYearId", incomeExpenditureStatement.getFinancialYear().getId())
-        .setString("isBeRe", "RE");
+        budgteQuery.setParameter("finYearId", incomeExpenditureStatement.getFinancialYear().getId())
+        .setParameter("isBeRe", "RE");
         final List<StatementResultObject> list = budgteQuery.list();
         return list;
 
@@ -509,11 +509,11 @@ public class IncomeExpenditureService extends ReportService {
         queryStr.append(" order by 1 asc");
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("query is " + queryStr.toString());
-        final SQLQuery budgteReappQuery = persistenceService.getSession().createSQLQuery(queryStr.toString());
+        final NativeQuery budgteReappQuery = persistenceService.getSession().createNativeQuery(queryStr.toString());
         budgteReappQuery.addScalar("glCode").addScalar("amount")
         .setResultTransformer(Transformers.aliasToBean(StatementResultObject.class));
-        budgteReappQuery.setLong("finYearId", incomeExpenditureStatement.getFinancialYear().getId())
-        .setString("isBeRe", "RE");
+        budgteReappQuery.setParameter("finYearId", incomeExpenditureStatement.getFinancialYear().getId())
+        .setParameter("isBeRe", "RE");
         final List<StatementResultObject> list = budgteReappQuery.list();
         return list;
     }

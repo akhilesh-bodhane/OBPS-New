@@ -92,7 +92,7 @@ $(document).ready(function()
 	
 	$('#j_username').blur(function(){
 		$('#locationId').empty();
-		if(!$.trim($(this).val())){
+		if(!String($(this).val() ?? "").trim()){
 			//console.log('Trimmed - value is not there');
 		}else{
 			$.ajax({

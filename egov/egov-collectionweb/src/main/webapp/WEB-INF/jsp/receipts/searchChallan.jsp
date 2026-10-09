@@ -61,7 +61,7 @@
 	     doLoadingMask();
 	 });
 
-	jQuery(window).load(function () {
+	jQuery(window).on('load', function () {
 		undoLoadingMask();
 	});
 	

@@ -42,14 +42,14 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.RegistrarOfficeVillage;
 import org.egov.bpa.master.repository.RegistrarOfficeVillageRepository;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +69,7 @@ public class RegistrarOfficeVillageService {
 
     @SuppressWarnings("unchecked")
     public List<RegistrarOfficeVillage> getRegistrarOfficeByVillage(final Long villageId) {
-        final Criteria criteria = getCurrentSession().createCriteria(RegistrarOfficeVillage.class, "registrarOffice");
+        final Criteria criteria = Criteria.create(getCurrentSession(), RegistrarOfficeVillage.class, "registrarOffice");
         if (villageId != null) {
             criteria.createAlias("registrarOffice.village", "village");
             criteria.add(Restrictions.eq("village.id", villageId));
@@ -79,6 +79,6 @@ public class RegistrarOfficeVillageService {
     }
 
     public RegistrarOfficeVillage findById(Long id) {
-        return registrarOfficeVillageRepository.findOne(id);
+        return registrarOfficeVillageRepository.findById(id).orElse(null);
     }
 }

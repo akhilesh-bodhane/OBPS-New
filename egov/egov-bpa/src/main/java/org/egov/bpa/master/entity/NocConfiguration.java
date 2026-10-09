@@ -46,17 +46,17 @@
  */
 package org.egov.bpa.master.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "egbpa_master_nocconfiguration")
@@ -69,13 +69,13 @@ public class NocConfiguration {
     @GeneratedValue(generator = SEQ_NOCCONFIG, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 20)
     @Column(name = "department")
     private String department;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 25)
     @Column(name = "applicationType")
@@ -86,7 +86,7 @@ public class NocConfiguration {
     @Column(name = "integrationtype")
     private String integrationType;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 20)
     @Column(name = "integrationinitiation")

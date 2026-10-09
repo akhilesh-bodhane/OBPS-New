@@ -47,13 +47,15 @@
  */
 package org.egov.commons.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.commons.Functionary;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
@@ -91,7 +93,7 @@ public class FunctionaryDAO  {
         }
 
         public List< Functionary > findAll() {
-            return (List< Functionary >) getCurrentSession().createCriteria( Functionary .class).list();
+            return (List< Functionary >) Criteria.create(getCurrentSession(),  Functionary .class).list();
         }
 
 

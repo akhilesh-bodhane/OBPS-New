@@ -61,6 +61,6 @@ public class AccountPurposeService {
     private AccountPurposeRepository accountPurposeRepository;
 
     public EgfAccountcodePurpose getByPurposeId(final Long purposeId) {
-        return accountPurposeRepository.findOne(Integer.valueOf(purposeId.toString()));
+        return accountPurposeRepository.findById(Integer.valueOf(purposeId.toString())).orElse(null);
     }
 }

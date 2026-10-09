@@ -56,6 +56,7 @@
             <column name="ID" precision="10" scale="0" />
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
             <param name="sequence_name">SEQ_EG_DEDUCTION_DETAILS</param>
+            <param name="increment_size">1</param>
             </generator>
         </id>
         <many-to-one name="recovery" class="org.egov.model.recoveries.Recovery" fetch="select">

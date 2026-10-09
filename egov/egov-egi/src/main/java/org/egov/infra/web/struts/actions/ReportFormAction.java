@@ -110,7 +110,7 @@ public abstract class ReportFormAction extends BaseFormAction {
 	private ReportViewerUtil reportViewerUtil;
 	/*
 	 * (non-Javadoc)
-	 * @see com.opensymphony.xwork2.ModelDriven#getModel()
+	 * @see org.apache.struts2.ModelDriven#getModel()
 	 */
 	@Override
 	public Object getModel() {

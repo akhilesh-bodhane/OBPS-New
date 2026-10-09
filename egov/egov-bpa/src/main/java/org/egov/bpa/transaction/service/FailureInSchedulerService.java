@@ -41,15 +41,15 @@ package org.egov.bpa.transaction.service;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +111,7 @@ public class FailureInSchedulerService {
 
     @SuppressWarnings("unchecked")
     private List<BpaApplication> buildSearchCriteria(SearchBpaApplicationForm searchBpaApplicationForm) {
-        Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
+        Criteria criteria = Criteria.create(getCurrentSession(), BpaApplication.class, "bpaApplication");
         criteria.add(Restrictions.eq("bpaApplication.failureInScheduler", true));
         searchBpaApplicationService.buildCommonSearchCriterias(searchBpaApplicationForm, criteria);
         criteria.addOrder(Order.desc(BPA_APPLICATION_APPLICATION_DATE));

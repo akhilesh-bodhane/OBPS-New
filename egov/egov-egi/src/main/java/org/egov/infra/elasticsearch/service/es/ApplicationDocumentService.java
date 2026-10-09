@@ -63,7 +63,11 @@ import org.egov.infra.elasticsearch.entity.bean.Trend;
 import org.egov.infra.elasticsearch.entity.es.ApplicationDocument;
 import org.egov.infra.elasticsearch.repository.es.ApplicationDocumentRepository;
 import org.egov.infra.utils.DateUtils;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -75,17 +79,16 @@ import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
-import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountBuilder;
+import org.elasticsearch.search.aggregations.metrics.Sum;
+import org.elasticsearch.search.aggregations.metrics.ValueCount;
+import org.elasticsearch.search.aggregations.metrics.ValueCountAggregationBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,7 +197,7 @@ public class ApplicationDocumentService {
     private BeanMapperConfiguration beanMapperConfiguration;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private RestHighLevelClient restHighLevelClient;
 
     private static final String DATE_FORMAT_YYYYMMDD = "yyyy-MM-dd";
     private static final SimpleDateFormat DATEFORMATTER_YYYY_MM_DD = new SimpleDateFormat(DATE_FORMAT_YYYYMMDD);
@@ -202,6 +205,28 @@ public class ApplicationDocumentService {
     @Autowired
     public ApplicationDocumentService(ApplicationDocumentRepository applicationDocumentRepository) {
         this.applicationDocumentRepository = applicationDocumentRepository;
+    }
+
+    private Aggregations executeAggregation(BoolQueryBuilder boolQuery, AggregationBuilder... aggregationBuilders) {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQuery).size(0);
+        for (AggregationBuilder aggregationBuilder : aggregationBuilders)
+            if (aggregationBuilder != null)
+                sourceBuilder.aggregation(aggregationBuilder);
+        SearchRequest searchRequest = new SearchRequest(APPLICATIONS_INDEX).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT).getAggregations();
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch aggregation query", e);
+        }
+    }
+
+    private SearchResponse executeSearch(SearchSourceBuilder sourceBuilder) {
+        SearchRequest searchRequest = new SearchRequest(APPLICATIONS_INDEX).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch search query", e);
+        }
     }
 
     @Transactional
@@ -487,17 +512,12 @@ public class ApplicationDocumentService {
             boolQuery = boolQuery.filter(QueryBuilders.matchQuery(IS_CLOSED, 0));
 
         AggregationBuilder aggregationBuilder = AggregationBuilders.dateHistogram(DATE_AGGR).field(APPLICATION_DATE)
-                .interval(DateHistogramInterval.MONTH);
+                .calendarInterval(DateHistogramInterval.MONTH);
 
         aggregationBuilder.subAggregation(AggregationBuilders.terms(CHANNEL).field(CHANNEL)
                 .subAggregation(AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER)));
 
-        SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery)
-                .addAggregation(aggregationBuilder).build();
-
-        return elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        return executeAggregation(boolQuery, aggregationBuilder);
     }
 
     private void prepareMonthwiseServiceGroupDetails(Map<Integer, String> monthValuesMap,
@@ -912,15 +932,10 @@ public class ApplicationDocumentService {
             boolQuery = boolQuery.filter(QueryBuilders.matchQuery(IS_CLOSED, 0));
 
         AggregationBuilder aggregationBuilder = AggregationBuilders.dateHistogram(DATE_AGGR).field(APPLICATION_DATE)
-                .interval(DateHistogramInterval.MONTH)
+                .calendarInterval(DateHistogramInterval.MONTH)
                 .subAggregation(AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER));
 
-        SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery)
-                .addAggregation(aggregationBuilder).build();
-
-        return elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        return executeAggregation(boolQuery, aggregationBuilder);
     }
 
     @SuppressWarnings("rawtypes")
@@ -935,24 +950,18 @@ public class ApplicationDocumentService {
             boolQuery = boolQuery.filter(QueryBuilders.matchQuery(IS_CLOSED, 0));
 
         AggregationBuilder aggregationBuilder = AggregationBuilders.dateHistogram(DATE_AGGR).field(APPLICATION_DATE)
-                .interval(DateHistogramInterval.MONTH);
+                .calendarInterval(DateHistogramInterval.MONTH);
 
         aggregationBuilder.subAggregation(AggregationBuilders.terms(MODULE_NAME).field(MODULE_NAME)
                 .subAggregation(AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER)));
 
-        SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery)
-                .addAggregation(aggregationBuilder).build();
-
-        return elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        return executeAggregation(boolQuery, aggregationBuilder);
     }
 
     private Aggregations getDocumentCounts(ApplicationIndexRequest applicationIndexRequest, Date fromDate,
             Date toDate, String aggregationName, String applicationStatus, String aggregationField, int size) {
         AggregationBuilder aggregation = null;
-        SearchQuery searchQueryColl;
-        ValueCountBuilder countBuilder = AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER);
+        ValueCountAggregationBuilder countBuilder = AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER);
         BoolQueryBuilder boolQuery = prepareWhereClause(applicationIndexRequest, fromDate, toDate);
 
         if (StringUtils.isNotBlank(applicationStatus))
@@ -962,15 +971,7 @@ public class ApplicationDocumentService {
             aggregation = AggregationBuilders.terms(aggregationName).field(aggregationField).size(size)
                     .subAggregation(countBuilder);
 
-        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery).addAggregation(countBuilder);
-        if (StringUtils.isNotBlank(aggregationName))
-            searchQueryColl = queryBuilder.addAggregation(aggregation).build();
-        else
-            searchQueryColl = queryBuilder.build();
-
-        return elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        return executeAggregation(boolQuery, countBuilder, aggregation);
     }
 
     private BoolQueryBuilder prepareQueryForApplicationStatus(String applicationStatus, BoolQueryBuilder boolQuery) {
@@ -1055,14 +1056,13 @@ public class ApplicationDocumentService {
         }
 
         Map applicationTypeDetails = new HashMap<>();
-        SearchResponse response = elasticsearchTemplate.getClient()
-                .prepareSearch(APPLICATIONS_INDEX)
-                .setQuery(boolQuery).setSize(1)
-                .setFetchSource(requiredFields, null)
-                .execute().actionGet();
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+                .query(boolQuery).size(1)
+                .fetchSource(requiredFields, null);
+        SearchResponse response = executeSearch(sourceBuilder);
 
         for (SearchHit hit : response.getHits())
-            applicationTypeDetails = hit.sourceAsMap();
+            applicationTypeDetails = hit.getSourceAsMap();
 
         return applicationTypeDetails;
     }
@@ -1132,20 +1132,14 @@ public class ApplicationDocumentService {
             final Date toDate) {
         final List<ServiceDetails> serviceDetailsList = new ArrayList<>();
         AggregationBuilder aggregation;
-        SearchQuery searchQueryColl;
-        final ValueCountBuilder countBuilder = AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER);
+        final ValueCountAggregationBuilder countBuilder = AggregationBuilders.count(TOTAL_COUNT).field(APPLICATION_NUMBER);
         final BoolQueryBuilder boolQuery = prepareWhereClause(applicationIndexRequest, fromDate, toDate);
 
         aggregation = AggregationBuilders.terms("by_service1").field(APPLICATION_TYPE).size(5)
                 .subAggregation(countBuilder)
-                .order(Terms.Order.aggregation(TOTAL_COUNT, false));
+                .order(org.elasticsearch.search.aggregations.BucketOrder.aggregation(TOTAL_COUNT, false));
 
-        final NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery).addAggregation(aggregation);
-        searchQueryColl = queryBuilder.build();
-
-        final Aggregations aggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations aggr = executeAggregation(boolQuery, aggregation);
         final Map<String, Long> aggregationResults = new LinkedHashMap<>();
         final StringTerms serviceAggr = aggr.get("by_service1");
         ValueCount valueCount;
@@ -1184,12 +1178,7 @@ public class ApplicationDocumentService {
         AggregationBuilder aggregationBuilder = AggregationBuilders.terms("by_service").field(aggregationField).size(size)
                 .subAggregation(AggregationBuilders.sum(TOTAL_COUNT).field(SLA_GAP));
 
-        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder().withIndices(APPLICATIONS_INDEX)
-                .withQuery(boolQuery);
-        SearchQuery searchQueryColl = queryBuilder.addAggregation(aggregationBuilder).build();
-
-        Aggregations aggregation = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        Aggregations aggregation = executeAggregation(boolQuery, aggregationBuilder);
 
         StringTerms stringTerms = aggregation.get("by_service");
         for (Terms.Bucket entry : stringTerms.getBuckets()) {
@@ -1218,22 +1207,18 @@ public class ApplicationDocumentService {
         }
         BoolQueryBuilder boolQuery = prepareWhereClause(applicationIndexRequest, fromDate, toDate);
 
-        SearchResponse response = elasticsearchTemplate.getClient()
-                .prepareSearch(APPLICATIONS_INDEX)
-                .setQuery(boolQuery)
-                .execute().actionGet();
+        SearchResponse response = executeSearch(new SearchSourceBuilder().query(boolQuery));
 
-        int size = (int) response.getHits().totalHits();
-        response = elasticsearchTemplate.getClient()
-                .prepareSearch(APPLICATIONS_INDEX)
-                .setQuery(boolQuery).setSize(size)
-                .addSort(APPLICATION_DATE, SortOrder.DESC)
-                .setFetchSource(new String[] { APPLICATION_DATE, APPLICATION_NUMBER, APPLICATION_TYPE, "applicantName",
-                        "applicantAddress", "status", CHANNEL, SLA, MODULE_NAME, SLA_GAP, CITY_NAME, OWNER_NAME,"url",CITY_CODE }, null)
-                .execute().actionGet();
+        int size = (int) response.getHits().getTotalHits().value;
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+                .query(boolQuery).size(size)
+                .sort(APPLICATION_DATE, SortOrder.DESC)
+                .fetchSource(new String[] { APPLICATION_DATE, APPLICATION_NUMBER, APPLICATION_TYPE, "applicantName",
+                        "applicantAddress", "status", CHANNEL, SLA, MODULE_NAME, SLA_GAP, CITY_NAME, OWNER_NAME,"url",CITY_CODE }, null);
+        response = executeSearch(sourceBuilder);
 
         for (SearchHit hit : response.getHits())
-            appDetails.add(hit.sourceAsMap());
+            appDetails.add(hit.getSourceAsMap());
 
         if (!appDetails.isEmpty()) {
             for (Map details : appDetails) {

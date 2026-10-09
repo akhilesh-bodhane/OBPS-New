@@ -116,7 +116,7 @@ $(document).ready(function() {
     
     
     var myStr = $(".original").text();
-    var trimStr = $.trim(myStr);
+    var trimStr = String(myStr ?? "").trim();
     $(".trimmed").text(trimStr);
     
 

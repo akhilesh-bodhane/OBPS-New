@@ -59,7 +59,7 @@ public class BpaSchemeLandUsageService {
     }
 
     public BpaSchemeLandUsage findById(final Long id) {
-        return bpaSchemeLandUsageRepository.findOne(id);
+        return bpaSchemeLandUsageRepository.findById(id).orElse(null);
     }
 
 }

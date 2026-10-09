@@ -54,7 +54,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Date;  
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.entitiy.national.dashboard.NationalDashboardResponse;
 import org.egov.bpa.entitiy.national.dashboard.SearchCriteria;

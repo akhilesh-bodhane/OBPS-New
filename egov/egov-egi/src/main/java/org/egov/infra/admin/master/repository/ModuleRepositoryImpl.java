@@ -50,8 +50,8 @@ package org.egov.infra.admin.master.repository;
 
 import org.egov.infra.admin.master.entity.Role;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Set;
 
@@ -67,7 +67,7 @@ public class ModuleRepositoryImpl implements ModuleRepositoryCustom {
                 append("WHERE act.id IN (SELECT DISTINCT actionid FROM eg_roleaction WHERE roleid IN (:roles)) ").
                 append("AND mod.enabled=true AND act.enabled = true AND act.application=mod.id AND mod.parentmodule is null ORDER BY mod.ordernumber ASC");
         return entityManager.createNativeQuery(sql.toString()).
-                setParameter("roles", roles).
+                setParameter("roles", roles.stream().map(Role::getId).collect(java.util.stream.Collectors.toList())).
                 getResultList();
     }
 

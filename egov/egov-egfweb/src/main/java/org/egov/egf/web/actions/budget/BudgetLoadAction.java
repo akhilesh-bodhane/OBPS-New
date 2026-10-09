@@ -601,12 +601,12 @@ public class BudgetLoadAction extends BaseFormAction {
         String strValue = "";
         switch (cell.getCellType())
         {
-        case HSSFCell.CELL_TYPE_NUMERIC:
+        case NUMERIC:
             numericCellValue = cell.getNumericCellValue();
             final DecimalFormat decimalFormat = new DecimalFormat("#");
             strValue = decimalFormat.format(numericCellValue);
             break;
-        case HSSFCell.CELL_TYPE_STRING:
+        case STRING:
             strValue = cell.getStringCellValue();
             break;
         }
@@ -623,11 +623,11 @@ public class BudgetLoadAction extends BaseFormAction {
 
         switch (cell.getCellType())
         {
-        case HSSFCell.CELL_TYPE_NUMERIC:
+        case NUMERIC:
             numericCellValue = cell.getNumericCellValue();
             bigDecimalValue = BigDecimal.valueOf(numericCellValue);
             break;
-        case HSSFCell.CELL_TYPE_STRING:
+        case STRING:
             strValue = cell.getStringCellValue();
             strValue = strValue.replaceAll("[^\\p{L}\\p{Nd}]", "");
             if (strValue != null && strValue.contains("E+"))

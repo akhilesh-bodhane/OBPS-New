@@ -65,7 +65,7 @@ import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.service.AppConfigValueService;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -240,47 +240,47 @@ public class RptSubLedgerSchedule {
             +" group by  slid order by slid";
             
             int i = 0;
-            pst = persistenceService.getSession().createSQLQuery(query);
-            pst.setLong(i++, Integer.valueOf(accEntityId));
-            pst.setString(i++, glCode);
-            pst.setString(i++, startDate);
-            pst.setString(i++, endDate);
-            pst.setLong(i++, Long.parseLong(fundId));
+            pst = persistenceService.getSession().createNativeQuery(query);
+            pst.setParameter(i++, Integer.valueOf(accEntityId));
+            pst.setParameter(i++, glCode);
+            pst.setParameter(i++, startDate);
+            pst.setParameter(i++, endDate);
+            pst.setParameter(i++, Long.parseLong(fundId));
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pst.setLong(i++, Long.parseLong(deptId));
+                pst.setParameter(i++, Long.parseLong(deptId));
   
-            pst.setLong(i++, Integer.valueOf(accEntityId));
-            pst.setString(i++, glCode);
-            pst.setString(i++, startDate);
-            pst.setString(i++, endDate);
-            pst.setLong(i++, Long.parseLong(fundId));
+            pst.setParameter(i++, Integer.valueOf(accEntityId));
+            pst.setParameter(i++, glCode);
+            pst.setParameter(i++, startDate);
+            pst.setParameter(i++, endDate);
+            pst.setParameter(i++, Long.parseLong(fundId));
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pst.setLong(i++, Long.parseLong(deptId));
+                pst.setParameter(i++, Long.parseLong(deptId));
  
-            pst.setLong(i++, Integer.valueOf(accEntityId));
-            pst.setString(i++, glCode);
-            pst.setString(i++, startDate);
-            pst.setString(i++, endDate);
-            pst.setString(i++, startDate);
+            pst.setParameter(i++, Integer.valueOf(accEntityId));
+            pst.setParameter(i++, glCode);
+            pst.setParameter(i++, startDate);
+            pst.setParameter(i++, endDate);
+            pst.setParameter(i++, startDate);
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pst.setLong(i++, Long.parseLong(deptId));
-            pst.setLong(i++, Long.parseLong(fundId));
+                pst.setParameter(i++, Long.parseLong(deptId));
+            pst.setParameter(i++, Long.parseLong(fundId));
 
-            pst.setLong(i++, Integer.valueOf(accEntityId));
-            pst.setString(i++, glCode);
-            pst.setString(i++, startDate);
-            pst.setString(i++, endDate);
-            pst.setString(i++, startDate);
+            pst.setParameter(i++, Integer.valueOf(accEntityId));
+            pst.setParameter(i++, glCode);
+            pst.setParameter(i++, startDate);
+            pst.setParameter(i++, endDate);
+            pst.setParameter(i++, startDate);
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pst.setLong(i++, Long.parseLong(deptId));
-            pst.setLong(i++, Long.parseLong(fundId));
+                pst.setParameter(i++, Long.parseLong(deptId));
+            pst.setParameter(i++, Long.parseLong(fundId));
 
-            pst.setString(i++, glCode);
-            pst.setLong(i++, Integer.valueOf(accEntityId));
-            pst.setLong(i++, Long.parseLong(fundId));
-            pst.setLong(i++, Long.parseLong(fyId));
+            pst.setParameter(i++, glCode);
+            pst.setParameter(i++, Integer.valueOf(accEntityId));
+            pst.setParameter(i++, Long.parseLong(fundId));
+            pst.setParameter(i++, Long.parseLong(fyId));
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pst.setLong(i++, Long.parseLong(deptId));
+                pst.setParameter(i++, Long.parseLong(deptId));
 
             if (LOGGER.isInfoEnabled())
             LOGGER.info("Main QUERY..." + query);
@@ -415,8 +415,8 @@ public class RptSubLedgerSchedule {
         String accName = "";
         try {
             final String query = "select name from chartofaccounts where glCode= ?";
-            pst = persistenceService.getSession().createSQLQuery(query);
-            pst.setString(0, glCode);
+            pst = persistenceService.getSession().createNativeQuery(query);
+            pst.setParameter(1, glCode);
               final List list = pst.list();
             if (list.get(0) != null)
                 accName = list.get(0).toString();

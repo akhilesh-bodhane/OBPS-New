@@ -62,12 +62,12 @@ import org.egov.infra.validation.exception.ValidationError;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.Constants;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.hibernate.query.Query;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -109,19 +109,19 @@ public abstract class ReportService {
     }
 
     public List<Fund> getFunds() {
-        final Criteria voucherHeaderCriteria = persistenceService.getSession().createCriteria(
+        final Criteria voucherHeaderCriteria = Criteria.create(persistenceService.getSession(), 
                 CVoucherHeader.class);
         final List fundIdList = voucherHeaderCriteria.setProjection(
                 Projections.distinct(Projections.property("fundId.id"))).list();
         if (!fundIdList.isEmpty())
-            return persistenceService.getSession().createCriteria(Fund.class).add(
+            return Criteria.create(persistenceService.getSession(), Fund.class).add(
                     Restrictions.in("id", fundIdList)).list();
         return new ArrayList<Fund>();
     }
 
     //TODO- find the api for this in COA hibernate dao
     public String getGlcodeForPurposeCode(final Integer purposeId) {
-        final Query query = persistenceService.getSession().createSQLQuery(
+        final Query query = persistenceService.getSession().createNativeQuery(
                 "select majorcode from chartofaccounts where purposeid="
                         + purposeId);
         final List list = query.list();
@@ -276,7 +276,7 @@ public abstract class ReportService {
     protected List<StatementResultObject> getAllGlCodesFor(
             final String scheduleReportType) {
         final Query query = persistenceService.getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select distinct coa.majorcode as glCode,s.schedule as scheduleNumber,"
                                 + "s.schedulename as scheduleName,coa.type as type from chartofaccounts coa, schedulemapping s "
                                 + "where s.id=coa.scheduleid and coa.classification=2 and s.reporttype = '"
@@ -294,7 +294,7 @@ public abstract class ReportService {
                 "statusexcludeReport");
         
         final Query query = persistenceService.getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select c.majorcode as glCode,v.fundid as fundId,c.type as type,sum(debitamount)-sum(creditamount) as amount"
                                 + " from generalledger g,chartofaccounts c,voucherheader v ,vouchermis mis where v.id=mis.voucherheaderid and "
                                 + "v.id=g.voucherheaderid and c.type in("
@@ -314,8 +314,8 @@ public abstract class ReportService {
                                 + "') "
                                 + filterQuery
                                 + " group by c.majorcode,v.fundid,c.type order by c.majorcode")
-                                .addScalar("glCode").addScalar("fundId",BigDecimalType.INSTANCE).addScalar("type")
-                                .addScalar("amount",BigDecimalType.INSTANCE).setResultTransformer(
+                                .addScalar("glCode").addScalar("fundId",StandardBasicTypes.BIG_DECIMAL).addScalar("type")
+                                .addScalar("amount",StandardBasicTypes.BIG_DECIMAL).setResultTransformer(
                                         Transformers.aliasToBean(StatementResultObject.class));
         return query.list();
     }
@@ -323,7 +323,7 @@ public abstract class ReportService {
     protected Map<String, String> getSubSchedule(final String subReportType) {
         final Map<String, String> scheduleNumberToName = new HashMap<String, String>();
         final List<Object[]> rows = persistenceService.getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select s.schedule,sub.subschedulename from egf_subschedule sub,schedulemapping s "
                                 + "where sub.reporttype='"
                                 + subReportType
@@ -425,7 +425,7 @@ public abstract class ReportService {
     protected void populateSchedule(final Statement statement, final String reportSubType) {
         //TODO change the query parameter
         final Query query = persistenceService.getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select c.majorcode,s.schedulename,s.schedule from chartofaccounts c,schedulemapping s "
                                 + "where s.id=c.scheduleid and s.reporttype = '"
                                 + reportSubType

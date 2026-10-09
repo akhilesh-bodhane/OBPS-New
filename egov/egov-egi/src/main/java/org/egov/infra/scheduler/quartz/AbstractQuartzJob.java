@@ -52,7 +52,7 @@ import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.egov.infra.admin.master.entity.City;
 import org.egov.infra.admin.master.entity.CityPreferences;

@@ -45,8 +45,8 @@ import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.egov.bpa.transaction.entity.PermitInspection;
 import org.egov.bpa.transaction.entity.common.DocketDetailCommon;

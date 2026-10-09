@@ -76,7 +76,7 @@ import org.egov.model.bills.EgBillregistermis;
 import org.egov.services.payment.PaymentService;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.VoucherHelper;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -172,7 +172,7 @@ public class CancelVoucherAction extends BaseFormAction {
     }
 
     private boolean isSuperUser() {
-        final Query queryFnd = persistenceService.getSession().createSQLQuery(
+        final Query queryFnd = persistenceService.getSession().createNativeQuery(
                 " SELECT usrr.USERID FROM state.EG_USERROLE usrr,  state.EG_ROLE r WHERE " +
                         " usrr.ROLEID=r.ID and " +
                         " usrr.userid     =" + loggedInUser + " AND  lower(r.NAME)='" + FinancialConstants.SUPERUSER + "'");
@@ -269,7 +269,7 @@ public class CancelVoucherAction extends BaseFormAction {
 
             // Query for cancelling BPVs for which cheque is assigned and cancelled
             final Query query1 = persistenceService.getSession()
-                    .createSQLQuery(
+                    .createNativeQuery(
                             "SELECT distinct vh.id FROM egw_status status"
                                     + misTab
                                     + ", voucherheader vh 	"
@@ -341,9 +341,9 @@ public class CancelVoucherAction extends BaseFormAction {
             case FinancialConstants.STANDARD_VOUCHER_TYPE_JOURNAL: {
 
                 final Query query = session.createQuery(cancelVhQuery);
-                query.setLong("modifiedby", loggedInUser);
-                query.setTimestamp("modifiedDate", modifiedDate);
-                query.setLong("vhId", selectedVhs[i]);
+                query.setParameter("modifiedby", loggedInUser);
+                query.setParameter("modifiedDate", modifiedDate, jakarta.persistence.TemporalType.DATE);
+                query.setParameter("vhId", selectedVhs[i]);
                 query.executeUpdate();
                 // for old vouchers when workflow was not implemented
                 if (voucherObj.getState() == null
@@ -356,9 +356,9 @@ public class CancelVoucherAction extends BaseFormAction {
             }
             case FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT: {
                 final Query query = session.createQuery(cancelVhQuery);
-                query.setLong("vhId", selectedVhs[i]);
-                query.setLong("modifiedby", loggedInUser);
-                query.setTimestamp("modifiedDate", modifiedDate);
+                query.setParameter("vhId", selectedVhs[i]);
+                query.setParameter("modifiedby", loggedInUser);
+                query.setParameter("modifiedDate", modifiedDate, jakarta.persistence.TemporalType.DATE);
                 query.executeUpdate();
                 if (FinancialConstants.PAYMENTVOUCHER_NAME_REMITTANCE.equalsIgnoreCase(voucherObj.getName())) {
                     int count = paymentService.backUpdateRemittanceDateInGL(voucherHeader.getId());
@@ -367,26 +367,26 @@ public class CancelVoucherAction extends BaseFormAction {
             }
             case FinancialConstants.STANDARD_VOUCHER_TYPE_CONTRA: {
                 final Query query = session.createQuery(cancelVhQuery);
-                query.setLong("vhId", selectedVhs[i]);
-                query.setLong("modifiedby", loggedInUser);
-                query.setTimestamp("modifiedDate", modifiedDate);
+                query.setParameter("vhId", selectedVhs[i]);
+                query.setParameter("modifiedby", loggedInUser);
+                query.setParameter("modifiedDate", modifiedDate, jakarta.persistence.TemporalType.DATE);
                 query.executeUpdate();
                 if (FinancialConstants.CONTRAVOUCHER_NAME_INTERFUND.equalsIgnoreCase(voucherObj.getName())) {
                     Long vhId;
                     vhId = voucherObj.getId();
                     final Query queryFnd = session.createQuery(cancelVhByCGNQuery);
-                    queryFnd.setLong("vhId", vhId);
-                    queryFnd.setLong("modifiedby", loggedInUser);
-                    queryFnd.setDate("modifiedDate", modifiedDate);
+                    queryFnd.setParameter("vhId", vhId);
+                    queryFnd.setParameter("modifiedby", loggedInUser);
+                    queryFnd.setParameter("modifiedDate", modifiedDate, jakarta.persistence.TemporalType.DATE);
                     queryFnd.executeUpdate();
                 }
                 break;
             }
             case FinancialConstants.STANDARD_VOUCHER_TYPE_RECEIPT: {
                 final Query query = session.createQuery(cancelVhQuery);
-                query.setLong("vhId", selectedVhs[i]);
-                query.setLong("modifiedby", loggedInUser);
-                query.setTimestamp("modifiedDate", modifiedDate);
+                query.setParameter("vhId", selectedVhs[i]);
+                query.setParameter("modifiedby", loggedInUser);
+                query.setParameter("modifiedDate", modifiedDate, jakarta.persistence.TemporalType.DATE);
                 query.executeUpdate();
                 break;
             }
@@ -450,11 +450,11 @@ public class CancelVoucherAction extends BaseFormAction {
                     moduleType = FinancialConstants.PENSIONBILL;
                 }
 
-            final Query billQry = persistenceService.getSession().createSQLQuery(cancelQuery.toString());
-            billQry.setString("module", moduleType);
-            billQry.setString("description", description);
-            billQry.setString("billstatus", billstatus);
-            billQry.setLong("billId", (Long) bill[1]);
+            final Query billQry = persistenceService.getSession().createNativeQuery(cancelQuery.toString());
+            billQry.setParameter("module", moduleType);
+            billQry.setParameter("description", description);
+            billQry.setParameter("billstatus", billstatus);
+            billQry.setParameter("billId", (Long) bill[1]);
             billQry.executeUpdate();
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("Bill Cancelled Successfully" + bill[1]);

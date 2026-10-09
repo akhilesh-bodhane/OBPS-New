@@ -1,34 +1,34 @@
 package org.egov.edcr.entity;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.common.entity.edcr.PlanInformation;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -48,14 +48,14 @@ public class EdcrApplication extends AbstractAuditable {
     @Enumerated(EnumType.STRING)
     private ApplicationType applicationType;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String status;
 
     @OneToMany(mappedBy = "application", fetch = LAZY, cascade = ALL)
@@ -65,7 +65,7 @@ public class EdcrApplication extends AbstractAuditable {
     private transient PlanInformation planInformation;
     
     @Length(min = 1, max = 128)
-    @SafeHtml
+    @CustomSafeHtml
     private String planPermitNumber;
     
     @Temporal(value = TemporalType.DATE)
@@ -75,7 +75,7 @@ public class EdcrApplication extends AbstractAuditable {
     @JoinColumn(name = "buildingLicensee")
     private User buildingLicensee;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String transactionNumber;
     
@@ -90,32 +90,32 @@ public class EdcrApplication extends AbstractAuditable {
 
     private transient EdcrApplicationDetail savedEdcrApplicationDetail;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String occupancy;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceType;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String amenities;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String architectInformation;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String projectType;
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String permitDateTemp;
     
-    @SafeHtml
+    @CustomSafeHtml
     private  Boolean addowner;
     
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String newOwner;
 
     @Override

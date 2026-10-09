@@ -47,16 +47,16 @@
 
 package org.egov.bpa.master.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "egbpa_mstr_permit_conditions")
@@ -70,19 +70,19 @@ public class PermitConditions extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_PERMIT_CONDITIONS, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Size(min = 1, max = 32)
     private String code;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Size(min = 1, max = 1560)
     private String description;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Size(min = 1, max = 32)
     private String orderNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Size(min = 1, max = 30)
     private String conditionType;
 

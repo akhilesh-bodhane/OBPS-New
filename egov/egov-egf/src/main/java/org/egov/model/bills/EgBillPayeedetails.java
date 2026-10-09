@@ -50,17 +50,17 @@ package org.egov.model.bills;
 import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.model.recoveries.Recovery;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -91,11 +91,11 @@ public class EgBillPayeedetails extends AbstractPersistable<Integer> implements 
 
     private Date lastUpdatedTime;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String detailTypeName;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String detailKeyName;
 
@@ -106,7 +106,7 @@ public class EgBillPayeedetails extends AbstractPersistable<Integer> implements 
     @JoinColumn(name = "tdsid")
     private Recovery recovery;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 250)
     private String narration;
 

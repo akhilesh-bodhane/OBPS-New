@@ -27,7 +27,7 @@ import com.netflix.zuul.context.RequestContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 import java.util.zip.ZipException

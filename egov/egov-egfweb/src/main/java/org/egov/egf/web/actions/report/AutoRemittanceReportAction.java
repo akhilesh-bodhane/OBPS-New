@@ -74,7 +74,7 @@ import org.egov.model.recoveries.Recovery;
 import org.egov.services.deduction.RemitRecoveryService;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +163,7 @@ public class AutoRemittanceReportAction extends BaseFormAction {
     @Override
     public void prepare() {
         // persistenceService.getSession().setDefaultReadOnly(true);
-        // persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        // persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         addDropdownData("departmentList", persistenceService.findAllBy("from Department order by deptName"));
         addDropdownData("fundList",
@@ -569,14 +569,14 @@ public class AutoRemittanceReportAction extends BaseFormAction {
         final Session session = persistenceService.getSession();
         Query sqlQuery = null;
         if (level.equals("atcoc"))
-            sqlQuery = session.createSQLQuery(query.toString())
+            sqlQuery = session.createNativeQuery(query.toString())
                     .addScalar("remittanceCOA").addScalar("department").addScalar("drawingOfficer")
                     .addScalar("bankbranchAccount")
                     .addScalar("remittancePaymentNo").addScalar("rtgsNoDate")
                     .addScalar("rtgsAmount").addScalar("remittanceDTId").addScalar("paymentVoucherId")
                     .setResultTransformer(Transformers.aliasToBean(AutoRemittanceBeanReport.class));
         else
-            sqlQuery = session.createSQLQuery(query.toString())
+            sqlQuery = session.createNativeQuery(query.toString())
                     .addScalar("remittanceCOA").addScalar("fundName").addScalar("bankbranchAccount")
                     .addScalar("remittancePaymentNo").addScalar("rtgsNoDate")
                     .addScalar("rtgsAmount").addScalar("remittanceDTId").addScalar("paymentVoucherId")
@@ -636,7 +636,7 @@ public class AutoRemittanceReportAction extends BaseFormAction {
 
         queryString1.append(" )) ");
         final Session session = persistenceService.getSession();
-        final Query sqlQuery = session.createSQLQuery(queryString1.toString())
+        final Query sqlQuery = session.createNativeQuery(queryString1.toString())
                 .addScalar("incomeTaxRemittedAmt").addScalar("salesTaxRemittedAmt").addScalar("mwgwfRemittedAmt")
                 .addScalar("serviceTaxRemittedAmt").addScalar("grandTotal")
                 .setResultTransformer(Transformers.aliasToBean(AutoRemittanceCOCLevelBeanReport.class));
@@ -689,7 +689,7 @@ public class AutoRemittanceReportAction extends BaseFormAction {
                     + "'");
         queryString2.append(" ))GROUP BY departmentcode  ORDER BY departmentcode ");
 
-        final Query sqlQuery2 = session.createSQLQuery(queryString2.toString())
+        final Query sqlQuery2 = session.createNativeQuery(queryString2.toString())
                 .addScalar("departmentCode")
                 .addScalar("incomeTaxRemittedAmt").addScalar("salesTaxRemittedAmt").addScalar("mwgwfRemittedAmt")
                 .addScalar("serviceTaxRemittedAmt").addScalar("departmentTotal")

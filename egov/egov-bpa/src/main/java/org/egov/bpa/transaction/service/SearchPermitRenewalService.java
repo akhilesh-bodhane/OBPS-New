@@ -43,8 +43,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -101,7 +101,7 @@ public class SearchPermitRenewalService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         Page<PermitRenewal> renewalApplications = renewalRepository
@@ -119,10 +119,8 @@ public class SearchPermitRenewalService {
     private String getProcessOwner(PermitRenewal renewal) {
         String processOwner;
         if (renewal.getState() != null && renewal.getState().getOwnerPosition() != null)
-            processOwner = workflowHistoryService
-                    .getUserPositionByPositionAndDate(renewal.getState().getOwnerPosition().getId(),
-                    		renewal.getState().getLastModifiedDate())
-                    .getName();
+            processOwner = workflowHistoryService.getOwnerNameLenient(renewal.getState().getOwnerPosition().getId(),
+                    		renewal.getState().getLastModifiedDate());
         else
             processOwner = renewal.getLastModifiedBy().getName();
         return processOwner;

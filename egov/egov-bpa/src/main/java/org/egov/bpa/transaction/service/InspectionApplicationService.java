@@ -47,8 +47,8 @@ import static org.egov.bpa.utils.BpaConstants.WF_SAVE_BUTTON;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.autonumber.InspectionApplicationNumberGenerator;
 import org.egov.bpa.transaction.entity.BpaStatus;

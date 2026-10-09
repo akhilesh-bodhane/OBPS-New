@@ -72,11 +72,11 @@ import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -169,7 +169,7 @@ public class TrialBalanceAction extends BaseFormAction {
     public void prepare()
     {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
 
         addDropdownData("fundList", masterDataCache.get("egi-fund"));
@@ -450,28 +450,28 @@ public class TrialBalanceAction extends BaseFormAction {
         try
         {
             new Double(0);
-            final SQLQuery SQLQuery = persistenceService.getSession().createSQLQuery(query);
-            SQLQuery.addScalar("accCode")
+            final NativeQuery NativeQuery = persistenceService.getSession().createNativeQuery(query);
+            NativeQuery.addScalar("accCode")
                     .addScalar("accName")
-                    .addScalar("fundId", StringType.INSTANCE)
-                    .addScalar("amount", BigDecimalType.INSTANCE)
+                    .addScalar("fundId", StandardBasicTypes.STRING)
+                    .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
                     .setResultTransformer(Transformers.aliasToBean(TrialBalanceBean.class));
             if (null != rb.getFundId())
-                SQLQuery.setInteger("fundId", rb.getFundId());
+                NativeQuery.setParameter("fundId", rb.getFundId());
             if (null != rb.getDepartmentId())
-                SQLQuery.setInteger("departmentId", rb.getDepartmentId());
+                NativeQuery.setParameter("departmentId", rb.getDepartmentId());
             if (null != rb.getFunctionaryId())
-                SQLQuery.setInteger("functionaryId", rb.getFunctionaryId());
+                NativeQuery.setParameter("functionaryId", rb.getFunctionaryId());
             if (null != rb.getFunctionId())
-                SQLQuery.setInteger("functionId", rb.getFunctionId());
+                NativeQuery.setParameter("functionId", rb.getFunctionId());
             if (null != rb.getDivisionId())
-                SQLQuery.setInteger("divisionId", rb.getDivisionId());
+                NativeQuery.setParameter("divisionId", rb.getDivisionId());
             if (null != rb.getFromDate())
-                SQLQuery.setDate("fromDate", rb.getFromDate());
-            SQLQuery.setDate("toDate", rb.getToDate());
+                NativeQuery.setParameter("fromDate", rb.getFromDate(), jakarta.persistence.TemporalType.DATE);
+            NativeQuery.setParameter("toDate", rb.getToDate(), jakarta.persistence.TemporalType.DATE);
             if (LOGGER.isInfoEnabled())
-                LOGGER.info("query ---->" + SQLQuery);
-            forAllFunds = SQLQuery.list();
+                LOGGER.info("query ---->" + NativeQuery);
+            forAllFunds = NativeQuery.list();
 
         } catch (final Exception e)
         {
@@ -661,25 +661,25 @@ public class TrialBalanceAction extends BaseFormAction {
                 " GROUP BY ts.glcodeid,coa.glcode,coa.name ORDER BY coa.glcode ASC";
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Query Str" + openingBalanceStr);
-        final Query openingBalanceQry = persistenceService.getSession().createSQLQuery(openingBalanceStr)
+        final Query openingBalanceQry = persistenceService.getSession().createNativeQuery(openingBalanceStr)
                 .addScalar("accCode")
                 .addScalar("accName")
-                .addScalar("creditOPB", BigDecimalType.INSTANCE)
-                .addScalar("debitOPB", BigDecimalType.INSTANCE)
+                .addScalar("creditOPB", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("debitOPB", StandardBasicTypes.BIG_DECIMAL)
                 .setResultTransformer(Transformers.aliasToBean(TrialBalanceBean.class));
 
-        openingBalanceQry.setInteger("fundId", rb.getFundId());
+        openingBalanceQry.setParameter("fundId", rb.getFundId());
 
         if (null != rb.getDepartmentId())
-            openingBalanceQry.setInteger("departmentId", rb.getDepartmentId());
+            openingBalanceQry.setParameter("departmentId", rb.getDepartmentId());
         if (null != rb.getFunctionaryId())
-            openingBalanceQry.setInteger("functionaryId", rb.getFunctionaryId());
+            openingBalanceQry.setParameter("functionaryId", rb.getFunctionaryId());
         if (null != rb.getFunctionId())
-            openingBalanceQry.setInteger("functionId", rb.getFunctionId());
+            openingBalanceQry.setParameter("functionId", rb.getFunctionId());
         if (null != rb.getDivisionId())
-            openingBalanceQry.setInteger("divisionId", rb.getDivisionId());
-        openingBalanceQry.setDate("fromDate", rb.getFromDate());
-        openingBalanceQry.setDate("toDate", rb.getToDate());
+            openingBalanceQry.setParameter("divisionId", rb.getDivisionId());
+        openingBalanceQry.setParameter("fromDate", rb.getFromDate(), jakarta.persistence.TemporalType.DATE);
+        openingBalanceQry.setParameter("toDate", rb.getToDate(), jakarta.persistence.TemporalType.DATE);
         final List<TrialBalanceBean> openingBalanceList = openingBalanceQry.list();
         if (LOGGER.isInfoEnabled())
             LOGGER.info("Opening balance query ---->" + openingBalanceQry);
@@ -703,30 +703,30 @@ public class TrialBalanceAction extends BaseFormAction {
                 " AND fy.startingdate<=:fromDate AND fy.endingdate>=:toDate" +
                 " AND vh.status not in (" + defaultStatusExclude + ")" +
                 " GROUP BY gl.glcodeid,coa.glcode,coa.name ORDER BY coa.glcode ASC";
-        final Query tillDateOPBQry = persistenceService.getSession().createSQLQuery(tillDateOPBStr)
+        final Query tillDateOPBQry = persistenceService.getSession().createNativeQuery(tillDateOPBStr)
                 .addScalar("accCode")
                 .addScalar("accName")
-                .addScalar("tillDateCreditOPB", BigDecimalType.INSTANCE)
-                .addScalar("tillDateDebitOPB", BigDecimalType.INSTANCE)
+                .addScalar("tillDateCreditOPB", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("tillDateDebitOPB", StandardBasicTypes.BIG_DECIMAL)
                 .setResultTransformer(Transformers.aliasToBean(TrialBalanceBean.class));
-        tillDateOPBQry.setInteger("fundId", rb.getFundId());
+        tillDateOPBQry.setParameter("fundId", rb.getFundId());
 
         if (null != rb.getDepartmentId())
-            tillDateOPBQry.setInteger("departmentId", rb.getDepartmentId());
+            tillDateOPBQry.setParameter("departmentId", rb.getDepartmentId());
         if (null != rb.getFunctionaryId())
-            tillDateOPBQry.setInteger("functionaryId", rb.getFunctionaryId());
+            tillDateOPBQry.setParameter("functionaryId", rb.getFunctionaryId());
         if (null != rb.getFunctionId())
-            tillDateOPBQry.setInteger("functionId", rb.getFunctionId());
+            tillDateOPBQry.setParameter("functionId", rb.getFunctionId());
         if (null != rb.getDivisionId())
-            tillDateOPBQry.setInteger("divisionId", rb.getDivisionId());
+            tillDateOPBQry.setParameter("divisionId", rb.getDivisionId());
 
-        tillDateOPBQry.setDate("fromDate", rb.getFromDate());
-        // tillDateOPBQry.setDate("fromDate",rb.getFromDate());
-        tillDateOPBQry.setDate("toDate", rb.getToDate());
+        tillDateOPBQry.setParameter("fromDate", rb.getFromDate(), jakarta.persistence.TemporalType.DATE);
+        // tillDateOPBQry.setParameter("fromDate",rb.getFromDate(), jakarta.persistence.TemporalType.DATE);
+        tillDateOPBQry.setParameter("toDate", rb.getToDate(), jakarta.persistence.TemporalType.DATE);
         final Calendar cal = Calendar.getInstance();
         cal.setTime(rb.getFromDate());
         cal.add(Calendar.DATE, -1);
-        tillDateOPBQry.setDate("fromDateMinus1", cal.getTime());
+        tillDateOPBQry.setParameter("fromDateMinus1", cal.getTime(), jakarta.persistence.TemporalType.DATE);
         final List<TrialBalanceBean> tillDateOPBList = tillDateOPBQry.list();
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("get till date balance for all account codes reulted in " + tillDateOPBList.size());
@@ -746,23 +746,23 @@ public class TrialBalanceAction extends BaseFormAction {
                 " AND fy.startingdate<=:fromDate AND fy.endingdate>=:toDate" +
                 " AND vh.status not in (" + defaultStatusExclude + ") " +
                 " GROUP BY gl.glcodeid,coa.glcode,coa.name ORDER BY coa.glcode ASC";
-        final Query currentDebitCreditQry = persistenceService.getSession().createSQLQuery(currentDebitCreditStr)
+        final Query currentDebitCreditQry = persistenceService.getSession().createNativeQuery(currentDebitCreditStr)
                 .addScalar("accCode")
                 .addScalar("accName")
-                .addScalar("creditAmount", BigDecimalType.INSTANCE)
-                .addScalar("debitAmount", BigDecimalType.INSTANCE)
+                .addScalar("creditAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("debitAmount", StandardBasicTypes.BIG_DECIMAL)
                 .setResultTransformer(Transformers.aliasToBean(TrialBalanceBean.class));
-        currentDebitCreditQry.setInteger("fundId", rb.getFundId());
+        currentDebitCreditQry.setParameter("fundId", rb.getFundId());
         if (null != rb.getDepartmentId())
-            currentDebitCreditQry.setInteger("departmentId", rb.getDepartmentId());
+            currentDebitCreditQry.setParameter("departmentId", rb.getDepartmentId());
         if (null != rb.getFunctionaryId())
-            currentDebitCreditQry.setInteger("functionaryId", rb.getFunctionaryId());
+            currentDebitCreditQry.setParameter("functionaryId", rb.getFunctionaryId());
         if (null != rb.getFunctionId())
-            currentDebitCreditQry.setInteger("functionId", rb.getFunctionId());
+            currentDebitCreditQry.setParameter("functionId", rb.getFunctionId());
         if (null != rb.getDivisionId())
-            currentDebitCreditQry.setInteger("divisionId", rb.getDivisionId());
-        currentDebitCreditQry.setDate("fromDate", rb.getFromDate());
-        currentDebitCreditQry.setDate("toDate", rb.getToDate());
+            currentDebitCreditQry.setParameter("divisionId", rb.getDivisionId());
+        currentDebitCreditQry.setParameter("fromDate", rb.getFromDate(), jakarta.persistence.TemporalType.DATE);
+        currentDebitCreditQry.setParameter("toDate", rb.getToDate(), jakarta.persistence.TemporalType.DATE);
 
         final List<TrialBalanceBean> currentDebitCreditList = currentDebitCreditQry.list();
         if (LOGGER.isInfoEnabled())

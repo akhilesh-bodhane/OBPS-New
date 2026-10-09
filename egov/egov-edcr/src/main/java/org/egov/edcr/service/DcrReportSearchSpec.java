@@ -53,8 +53,10 @@ import org.egov.edcr.entity.EdcrApplicationDetail;
 import org.egov.edcr.entity.SearchBuildingPlanScrutinyForm;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Join;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 public final class DcrReportSearchSpec {
 
@@ -65,31 +67,25 @@ public final class DcrReportSearchSpec {
     public static Specification<EdcrApplicationDetail> searchReportsSpecification(
             final SearchBuildingPlanScrutinyForm requestForm) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             Join<EdcrApplicationDetail, EdcrApplication> dcrApplicationJoin = root.join("application");
             if (requestForm.getBuildingPlanScrutinyNumber() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("dcrNumber"), requestForm.getBuildingPlanScrutinyNumber()));
+                predicates.add(builder.equal(root.get("dcrNumber"), requestForm.getBuildingPlanScrutinyNumber()));
             if (requestForm.getStatus() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("status"), requestForm.getStatus()));
+                predicates.add(builder.equal(root.get("status"), requestForm.getStatus()));
             if (requestForm.getApplicationNumber() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(dcrApplicationJoin.get("applicationNumber"), requestForm.getApplicationNumber()));
+                predicates.add(builder.equal(dcrApplicationJoin.get("applicationNumber"), requestForm.getApplicationNumber()));
             if (requestForm.getFromDate() != null)
-                predicate.getExpressions()
-                        .add(builder.greaterThanOrEqualTo(dcrApplicationJoin.get("createdDate"), requestForm.getFromDate()));
+                predicates.add(builder.greaterThanOrEqualTo(dcrApplicationJoin.get("createdDate"), requestForm.getFromDate()));
             if (requestForm.getToDate() != null)
-                predicate.getExpressions()
-                        .add(builder.lessThanOrEqualTo(dcrApplicationJoin.get("createdDate"), requestForm.getToDate()));
+                predicates.add(builder.lessThanOrEqualTo(dcrApplicationJoin.get("createdDate"), requestForm.getToDate()));
             if (requestForm.getBuildingLicenceeName() != null)
-                predicate.getExpressions()
-                        .add(builder.equal(dcrApplicationJoin.get("createdBy").get("id"),
+                predicates.add(builder.equal(dcrApplicationJoin.get("createdBy").get("id"),
                                 Long.valueOf(requestForm.getBuildingLicenceeName())));
 
             query.orderBy(builder.desc(root.get("id")));
             query.distinct(true);
-            return predicate;
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

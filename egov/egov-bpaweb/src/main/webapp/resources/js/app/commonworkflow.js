@@ -62,7 +62,7 @@ $(document).ready(function()
 	
 	$.each(chandigarhDepartments, function( i, val ) {
 		$('[name=approvalDepartment] option').filter(function(){
-		    return ($.trim($(this).text()) ==  val);
+		    return (String($(this).text() ?? "").trim() ==  val);
 		}).remove();
 	});
 	

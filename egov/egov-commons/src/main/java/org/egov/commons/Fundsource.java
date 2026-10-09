@@ -50,19 +50,19 @@ package org.egov.commons;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -80,17 +80,17 @@ public class Fundsource extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_FUNDSOURCE, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @NotNull
     private String code;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @NotNull
     private String name;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     private String type;
 
@@ -108,7 +108,7 @@ public class Fundsource extends AbstractAuditable {
     @JoinColumn(name = "financialinstid")
     private FinancingInstitution finInstId;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "funding_type")
     private String fundingType;
@@ -128,7 +128,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "moratorium_period")
     private Double moratoriumPeriod;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "repayment_frequency")
     private String repaymentFrequency;
@@ -140,7 +140,7 @@ public class Fundsource extends AbstractAuditable {
     @JoinColumn(name = "bankaccountid")
     private Bankaccount bankAccountId;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "govt_order")
     private String govtOrder;
@@ -156,7 +156,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "dp_code_resg")
     private String dpCodeResistration;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "fin_inst_letter_num")
     private String finInstLetterNum;
@@ -164,7 +164,7 @@ public class Fundsource extends AbstractAuditable {
     @Column(name = "fin_inst_letter_date")
     private Date finInstLetterDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 25)
     @Column(name = "fin_inst_schm_num")
     private String finInstSchmNum;

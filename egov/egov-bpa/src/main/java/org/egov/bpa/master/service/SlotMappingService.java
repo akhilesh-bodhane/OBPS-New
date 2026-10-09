@@ -44,18 +44,18 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_TYPE_ONEDAYPERMIT;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.entity.SlotMapping;
 import org.egov.bpa.master.repository.SlotMappingRepository;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.security.utils.SecurityUtils;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +88,7 @@ public class SlotMappingService {
 	}
 
 	public void updateSlotMapping(SlotMapping slotMapping) {
-		SlotMapping slotMap = noOfApplicationsRepository.findOne(slotMapping.getId());
+		SlotMapping slotMap = noOfApplicationsRepository.findById(slotMapping.getId()).orElse(null);
 		slotMap.setApplicationType(slotMapping.getApplicationType());
 		if(slotMapping.getApplicationType().getName().equals(APPLICATION_TYPE_ONEDAYPERMIT))
 			slotMap.setDay(slotMapping.getDays().getHolidayTypeVal());
@@ -109,7 +109,7 @@ public class SlotMappingService {
 	}
 
 	private Criteria buildSearchCriteria(SlotMapping slotMapping) {
-		Criteria criteria = getCurrentSession().createCriteria(SlotMapping.class, "slotMapping");
+		Criteria criteria = Criteria.create(getCurrentSession(), SlotMapping.class, "slotMapping");
 		if (slotMapping.getZone() != null) {
 			criteria.add(Restrictions.eq("slotMapping.zone", slotMapping.getZone()));
 		}
@@ -130,7 +130,7 @@ public class SlotMappingService {
 	}
 
 	public SlotMapping findById(Long id) {
-	 return	noOfApplicationsRepository.findOne(id);		
+	 return	noOfApplicationsRepository.findById(id).orElse(null);
 	}
 
 	public List<SlotMapping> findByZoneAndAppType(Boundary zone, ApplicationSubType applType) {

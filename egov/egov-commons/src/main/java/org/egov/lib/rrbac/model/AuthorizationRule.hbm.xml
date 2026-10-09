@@ -54,6 +54,7 @@
 		<id name="id" column="ID" type="java.lang.Long">
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_AUTH_RULE</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<many-to-one name="action" class="org.egov.infra.admin.master.entity.Action">

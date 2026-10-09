@@ -51,7 +51,7 @@ import com.exilant.eGov.src.domain.User;
 import com.exilant.exility.common.DataCollection;
 import org.apache.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class SecurityGuard {
 

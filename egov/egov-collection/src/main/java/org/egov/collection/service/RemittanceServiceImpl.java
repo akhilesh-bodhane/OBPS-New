@@ -71,7 +71,7 @@ import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infstr.models.ServiceDetails;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.model.instrument.InstrumentHeader;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,9 +151,9 @@ public class RemittanceServiceImpl extends RemittanceService {
                 + CollectionConstants.INSTRUMENTTYPE_CHEQUE + "'";
         final String cardPaymentQueryString = instrumentGlCodeQueryString + "'"
                 + CollectionConstants.INSTRUMENTTYPE_CARD + "'";
-        final Query cashInHand = persistenceService.getSession().createSQLQuery(cashInHandQueryString);
-        final Query chequeInHand = persistenceService.getSession().createSQLQuery(chequeInHandQueryString);
-        final Query cardPaymentAccount = persistenceService.getSession().createSQLQuery(cardPaymentQueryString);
+        final Query cashInHand = persistenceService.getSession().createNativeQuery(cashInHandQueryString);
+        final Query chequeInHand = persistenceService.getSession().createNativeQuery(chequeInHandQueryString);
+        final Query cardPaymentAccount = persistenceService.getSession().createNativeQuery(cardPaymentQueryString);
 
         String cashInHandGLCode = null;
         String chequeInHandGlcode = null;
@@ -511,7 +511,7 @@ public class RemittanceServiceImpl extends RemittanceService {
         queryStringForCashChequeDDCard.append(groupByClause);
 
         final Query query = receiptHeaderService.getSession()
-                .createSQLQuery(queryStringForCashChequeDDCard.toString() + orderBy);
+                .createNativeQuery(queryStringForCashChequeDDCard.toString() + orderBy);
 
         final List<Object[]> queryResults = query.list();
 

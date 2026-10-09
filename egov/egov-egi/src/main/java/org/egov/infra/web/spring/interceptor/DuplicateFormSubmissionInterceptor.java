@@ -56,11 +56,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -68,7 +68,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class DuplicateFormSubmissionInterceptor extends HandlerInterceptorAdapter {
+public class DuplicateFormSubmissionInterceptor implements HandlerInterceptor {
     private static final String TOKEN_NAME = "tokenName";
     private static final String ERROR_PAGE = "/error/409";
     private String errorPage = ERROR_PAGE;
@@ -92,7 +92,7 @@ public class DuplicateFormSubmissionInterceptor extends HandlerInterceptorAdapte
                 }
             }
         }
-        return super.preHandle(request, response, handler);
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override

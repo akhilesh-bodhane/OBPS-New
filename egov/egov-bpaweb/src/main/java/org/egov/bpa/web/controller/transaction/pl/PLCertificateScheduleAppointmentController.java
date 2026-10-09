@@ -4,7 +4,7 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_SITE_INS;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.service.AppointmentLocationsService;
 import org.egov.bpa.transaction.entity.common.AppointmentScheduleCommon;

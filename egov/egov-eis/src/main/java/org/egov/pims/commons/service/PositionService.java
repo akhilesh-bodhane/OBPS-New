@@ -50,16 +50,16 @@ package org.egov.pims.commons.service;
 import org.egov.eis.entity.Assignment;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.pims.commons.Position;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
+import org.egov.infra.persistence.criteria.DetachedCriteria;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Projections;
+import org.egov.infra.persistence.criteria.Restrictions;
+import org.egov.infra.persistence.criteria.Subqueries;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.Date;
 
 public class PositionService extends PersistenceService<Position, Integer> {  
@@ -97,7 +97,7 @@ public class PositionService extends PersistenceService<Position, Integer> {
 		detachAssignment.add(Restrictions.eq("assignment.isPrimary", 'Y'));
 		detachAssignment.setProjection(Projections.distinct(Projections.property("assignment.position.id")));
 		
-		Criteria criteria=getCurrentSession().createCriteria(Position.class, "position");
+		Criteria criteria=Criteria.create(getCurrentSession(), Position.class, "position");
 		if(designationMasterId!=null && !designationMasterId.equals("0")) 
 		{
 			criteria.add(Restrictions.eq("position.deptDesig.designation.id", designationMasterId));

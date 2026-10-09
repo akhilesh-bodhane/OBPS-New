@@ -106,7 +106,7 @@ public class OccupancyCertificateNocService {
 	
 	@Transactional
 	public List<OccupancyNocApplication> save(final List<OccupancyNocApplication> ocNoc) {
-		return ocNocRepository.save(ocNoc);
+		return ocNocRepository.saveAll(ocNoc);
 	}
 	
 	public OccupancyNocApplication findByNocApplicationNumber(String appNo) {

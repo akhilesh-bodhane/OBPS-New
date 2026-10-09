@@ -1,0 +1,340 @@
+/*
+ * Modern look for the home-page side panel (multilevelpushmenu + Quick Find).
+ * Presentation only: loaded after custom.css by home.jsp; no markup or behaviour is changed.
+ * Group rows (with a chevron) are categories; leaf rows are lighter navigation rows.
+ */
+nav.multilevelpushmenu_wrapper,
+.page-container.horizontal-menu .search,
+.page-container.horizontal-menu .search_list {
+  --sp-bg: #f4f7fb;
+  --sp-surface: #fff;
+  --sp-primary: #1f4f8f;
+  --sp-primary-soft: rgba(31, 79, 143, 0.08);
+  --sp-primary-active: rgba(31, 79, 143, 0.14);
+  --sp-accent: #E17C1B;
+  --sp-border: #dde3ec;
+  --sp-text: #1f2a37;
+  --sp-muted: #6b7686;
+  --sp-star: #e6a100;
+  --sp-font: regular, "Open Sans", Arial, sans-serif;
+  --sp-font-strong: semibold, "Open Sans", Arial, sans-serif;
+}
+
+/* ---------- Surface and separation from the main content ---------- */
+nav.multilevelpushmenu_wrapper .levelHolderClass {
+  background: var(--sp-bg);
+  border-right: 1px solid var(--sp-border);
+  box-shadow: 2px 0 6px rgba(16, 24, 40, 0.05);
+}
+
+/* ---------- Quick Find ---------- */
+.page-container.horizontal-menu .search {
+  box-sizing: border-box;
+  height: 51px;
+  padding: 8px 10px;
+  background: var(--sp-bg);
+  border-right: 1px solid var(--sp-border);
+  border-bottom: 1px solid var(--sp-border);
+}
+.page-container.horizontal-menu .search #searchtree {
+  box-sizing: border-box;
+  width: 100%;
+  height: 35px;
+  padding: 0 12px 0 34px;
+  font-family: var(--sp-font);
+  font-size: 14px;
+  color: var(--sp-text);
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+  outline: 0;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.page-container.horizontal-menu .search #searchtree:focus {
+  border-color: var(--sp-primary);
+  box-shadow: 0 0 0 3px var(--sp-primary-soft);
+}
+.page-container.horizontal-menu .search #searchtree ~ .applyanimation {
+  display: none;
+}
+.page-container.horizontal-menu .search .searchicon {
+  right: auto;
+  left: 21px;
+  top: 19px;
+  color: var(--sp-muted);
+  pointer-events: none;
+}
+.page-container.horizontal-menu .search_list {
+  background: var(--sp-surface);
+  border-right: 1px solid var(--sp-border);
+  border-bottom: 1px solid var(--sp-border);
+  box-shadow: 0 4px 10px rgba(16, 24, 40, 0.08);
+}
+.page-container.horizontal-menu .search_list .list ul a {
+  padding: 9px 16px;
+  font-size: 13px;
+  color: var(--sp-text);
+  transition: background-color .15s ease;
+}
+.page-container.horizontal-menu .search_list .list ul a:focus,
+.page-container.horizontal-menu .search_list .list ul a:hover,
+.page-container.horizontal-menu .search_list .list ul li.focus {
+  background: var(--sp-primary-soft);
+}
+
+/* ---------- Context header (level title, e.g. "Urban") ---------- */
+nav.multilevelpushmenu_wrapper .levelHolderClass h2 {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 48px;
+  margin: 0;
+  padding: 14px 16px;
+  overflow: visible;
+  font-family: var(--sp-font-strong);
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--sp-text);
+  background: var(--sp-surface);
+  border-bottom: 1px solid var(--sp-border);
+  border-left: 3px solid var(--sp-accent);
+}
+nav.multilevelpushmenu_wrapper .levelHolderClass h2 .cursorPointer {
+  color: var(--sp-muted);
+}
+
+/* ---------- Back control ---------- */
+nav.multilevelpushmenu_wrapper .backItemClass {
+  margin: 0;
+  padding: 6px 8px;
+  background: transparent;
+  border-bottom: 1px solid var(--sp-border);
+}
+nav.multilevelpushmenu_wrapper .backItemClass:hover {
+  background: transparent;
+}
+nav.multilevelpushmenu_wrapper .backItemClass > a {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 6px 10px;
+  font-family: var(--sp-font);
+  font-size: 14px;
+  color: var(--sp-muted);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color .15s ease, color .15s ease;
+}
+nav.multilevelpushmenu_wrapper .backItemClass > a:hover,
+nav.multilevelpushmenu_wrapper .backItemClass > a:focus-visible {
+  color: var(--sp-text);
+  background: var(--sp-primary-soft);
+}
+nav.multilevelpushmenu_wrapper .backItemClass > a > i {
+  float: none;
+  width: 22px;
+  margin-right: 8px;
+  text-align: center;
+  font-size: 15px;
+  color: inherit;
+}
+nav.multilevelpushmenu_wrapper .backItemClass > a > i.fa-angle-left::before {
+  content: "\f060";
+}
+
+/* ---------- List ---------- */
+nav.multilevelpushmenu_wrapper .levelHolderClass ul {
+  padding: 8px 0 12px;
+  font-family: var(--sp-font);
+  scrollbar-width: thin;
+  scrollbar-color: #c3cad5 transparent;
+}
+nav.multilevelpushmenu_wrapper .levelHolderClass ul::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+nav.multilevelpushmenu_wrapper .levelHolderClass ul::-webkit-scrollbar-thumb {
+  background-color: #c3cad5;
+  border-radius: 6px;
+}
+nav.multilevelpushmenu_wrapper .levelHolderClass ul::-webkit-scrollbar-thumb:hover {
+  background-color: #9aa4b2;
+}
+nav.multilevelpushmenu_wrapper .levelHolderClass ul::-webkit-scrollbar-track {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* ---------- Row base (group and leaf) ---------- */
+nav.multilevelpushmenu_wrapper li {
+  margin: 2px 8px;
+  border-radius: 6px;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+nav.multilevelpushmenu_wrapper li > a {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 10px;
+  font-family: var(--sp-font);
+  font-size: 13px;
+  line-height: 1.3;
+  vertical-align: baseline;
+  overflow-wrap: anywhere;
+  color: var(--sp-text);
+  border-radius: 6px;
+  text-decoration: none;
+}
+nav.multilevelpushmenu_wrapper li > a > i {
+  float: none;
+  flex: 0 0 auto;
+  order: -1;
+  width: 22px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--sp-muted);
+}
+/* the plugin emits an empty icon element on group rows */
+nav.multilevelpushmenu_wrapper li > a > i:not([class*="fa-"]) {
+  display: none;
+}
+
+/* ---------- Group rows: categories ---------- */
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right) {
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+}
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right) > a {
+  font-size: 14px;
+  font-weight: 600;
+}
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right):hover {
+  background: var(--sp-primary-soft);
+  border-color: #c8d3e3;
+}
+nav.multilevelpushmenu_wrapper li > a > i.fa-angle-right {
+  order: 5;
+  width: auto;
+  margin: 0 0 0 auto;
+  padding-left: 8px;
+  font-size: 18px;
+  color: var(--sp-muted);
+}
+/* icon tile on group rows (own icon, e.g. Applications/Favourites, or data-mi icon) */
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right) > a > i[class*="fa-"]:not(.fa-angle-right),
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right) > a[data-mi]::before {
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  margin-right: 10px;
+  border-radius: 6px;
+  background: var(--sp-primary-soft);
+  color: var(--sp-primary);
+  font-size: 14px;
+}
+
+/* ---------- Leaf rows: lighter navigation rows ---------- */
+nav.multilevelpushmenu_wrapper li:not(:has(> a > i.fa-angle-right)) {
+  margin: 0 8px 0 18px;
+  padding: 1px 0;
+  border-left: 2px solid var(--sp-border);
+  border-radius: 0 6px 6px 0;
+}
+nav.multilevelpushmenu_wrapper li:not(:has(> a > i.fa-angle-right)):hover {
+  background: var(--sp-primary-soft);
+  border-left-color: #b4c3da;
+}
+nav.multilevelpushmenu_wrapper li > a[data-mi]::before {
+  flex: 0 0 auto;
+  order: -1;
+  width: 22px;
+  margin-right: 10px;
+  text-align: center;
+  font: normal normal normal 14px/1 FontAwesome;
+  color: var(--sp-muted);
+}
+/* group icons */
+nav.multilevelpushmenu_wrapper li > a[data-mi="admin"]::before { content: "\f013"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="employee"]::before { content: "\f0c0"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="finance"]::before { content: "\f156"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="collection"]::before { content: "\f0d6"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="dashboard"]::before { content: "\f0e4"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="scrutiny"]::before { content: "\f002"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="permission"]::before { content: "\f0f6"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="default"]::before { content: "\f114"; }
+/* leaf icons */
+nav.multilevelpushmenu_wrapper li > a[data-mi="search"]::before { content: "\f002"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="report"]::before { content: "\f080"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="certificate"]::before { content: "\f0a3"; }
+nav.multilevelpushmenu_wrapper li > a[data-mi="doc"]::before { content: "\f0f6"; }
+
+/* ---------- Favourite star: hidden until the row is hovered/focused ---------- */
+nav.multilevelpushmenu_wrapper li > a > i.add-to-favourites,
+nav.multilevelpushmenu_wrapper li > a > i.added-as-fav,
+nav.multilevelpushmenu_wrapper li > a > i.remove-favourite {
+  order: 5;
+  width: auto;
+  margin: 0 0 0 auto;
+  padding-left: 8px;
+}
+nav.multilevelpushmenu_wrapper li > a > i.add-to-favourites {
+  opacity: 0;
+  pointer-events: none;
+  color: #aab2bf;
+  transition: opacity .15s ease, color .15s ease;
+}
+nav.multilevelpushmenu_wrapper li:hover > a > i.add-to-favourites,
+nav.multilevelpushmenu_wrapper li:focus-within > a > i.add-to-favourites {
+  opacity: 1;
+  pointer-events: auto;
+}
+nav.multilevelpushmenu_wrapper li > a > i.add-to-favourites:hover {
+  color: var(--sp-star);
+}
+nav.multilevelpushmenu_wrapper li > a > i.added-as-fav {
+  opacity: 1;
+  color: var(--sp-star);
+}
+nav.multilevelpushmenu_wrapper li > a > i.remove-favourite {
+  font-size: 15px;
+  color: #aab2bf;
+}
+nav.multilevelpushmenu_wrapper li > a > i.remove-favourite:hover {
+  color: #c0392b;
+}
+@media (hover: none) {
+  nav.multilevelpushmenu_wrapper li > a > i.add-to-favourites {
+    opacity: .5;
+    pointer-events: auto;
+  }
+}
+
+/* ---------- Active / focus ---------- */
+nav.multilevelpushmenu_wrapper li.li-active {
+  background: var(--sp-primary-active);
+}
+nav.multilevelpushmenu_wrapper li:has(> a > i.fa-angle-right).li-active {
+  border-color: var(--sp-primary);
+}
+nav.multilevelpushmenu_wrapper li:not(:has(> a > i.fa-angle-right)).li-active {
+  border-left-color: var(--sp-primary);
+}
+nav.multilevelpushmenu_wrapper li.li-active > a {
+  font-weight: 600;
+  color: var(--sp-primary);
+}
+nav.multilevelpushmenu_wrapper li.li-active > a[data-mi]::before,
+nav.multilevelpushmenu_wrapper li.li-active > a > i:not(.added-as-fav):not(.add-to-favourites):not(.remove-favourite) {
+  color: var(--sp-primary);
+}
+nav.multilevelpushmenu_wrapper li > a:focus-visible,
+nav.multilevelpushmenu_wrapper .backItemClass > a:focus-visible,
+.page-container.horizontal-menu .search_list .list ul a:focus-visible {
+  outline: 2px solid var(--sp-primary);
+  outline-offset: -2px;
+}

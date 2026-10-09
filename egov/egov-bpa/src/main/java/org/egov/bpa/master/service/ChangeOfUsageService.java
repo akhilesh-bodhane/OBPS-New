@@ -59,7 +59,7 @@ public class ChangeOfUsageService {
     }
 
     public ChangeOfUsage findById(Long id) {
-        return changeOfUsageRepository.findOne(id);
+        return changeOfUsageRepository.findById(id).orElse(null);
     }
 
 }

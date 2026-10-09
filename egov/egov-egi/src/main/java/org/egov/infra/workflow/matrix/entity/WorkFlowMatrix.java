@@ -49,17 +49,17 @@
 package org.egov.infra.workflow.matrix.entity;
 
 import org.egov.infra.persistence.entity.AbstractPersistable;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -76,41 +76,41 @@ public class WorkFlowMatrix extends AbstractPersistable<Long> implements Cloneab
     @GeneratedValue(generator = SEQ_WF_MATRIX, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String department;
 
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     private String objectType;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String currentState;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String currentStatus;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String pendingActions;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String currentDesignation;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String additionalRule;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String nextState;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String nextAction;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String nextDesignation;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String nextStatus;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String validActions;
 
     private BigDecimal fromQty;

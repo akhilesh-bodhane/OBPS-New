@@ -2018,3 +2018,27 @@ footer.main a {
 .DTTT_print_info {
   display: none;
 }
+
+/* internal scrolling table with sticky header (datatable-ui.js) */
+.dt-scroll {
+  max-height: max(320px, calc(100vh - 330px));
+  overflow: auto;
+  width: 100%;
+}
+.dt-scroll > table {
+  margin-bottom: 0;
+  /* a table with its own overflow (e.g. .multiheadertbl) can become the sticky scrollport */
+  overflow: visible;
+}
+/* table.dataTable thead .sorting (DataTables css) sets position:relative on sortable headers; this selector must out-rank it */
+.dt-scroll thead th,
+.dt-scroll table.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-clip: padding-box;
+}
+.dt-all-notice {
+  font-size: 12px;
+  margin: 2px 0;
+}

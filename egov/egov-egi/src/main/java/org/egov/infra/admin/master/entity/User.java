@@ -58,27 +58,27 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import org.apache.commons.lang3.LocaleUtils;
 import org.egov.infra.persistence.entity.AbstractAuditable;
@@ -90,9 +90,9 @@ import org.egov.infra.persistence.validator.annotation.Unique;
 import org.egov.infra.validation.regex.Constants;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.Email;
+import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -131,16 +131,16 @@ public class User extends AbstractAuditable {
 
     private String salutation;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 2, max = 64)
     private String guardian;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 2, max = 64)
     private String guardianRelation;
 
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 2, max = 100)
     @Pattern(regexp = "^[A-Za-z][A-Za-z .'-]*$", message = "Name must contain only letters, spaces, dot, apostrophe, or hyphen")
     @Audited
@@ -150,26 +150,26 @@ public class User extends AbstractAuditable {
     private Gender gender;
 
     @Pattern(regexp = Constants.MOBILE_NUM)
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 15)
     @Audited
     private String mobileNumber;
 
     @Email(regexp = Constants.EMAIL)
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 128)
     @Audited
     private String emailId;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String altContactNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 10)
     @Pattern(regexp = Constants.PANNUMBER)
     private String pan;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 20)
     @Pattern(regexp = "^\\d{12}$")
     private String aadhaarNumber;

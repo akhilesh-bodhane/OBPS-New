@@ -2,15 +2,15 @@ package org.egov.edcr.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name= "EGDCR_MSTR_DATA_UPLOAD")
@@ -24,70 +24,70 @@ public class EdcrMasterData implements Serializable {
     @GeneratedValue(generator = SEQ_EDCR_MSTR_DATA_UPLOAD, strategy = GenerationType.SEQUENCE)
     private Long id;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String occupancyType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String subOccupancyType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String code;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String phase;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String sector;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotNo;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String bycWidth;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String bycHeight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotArea;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotAreaSqYards;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String areaType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotDepthAvg;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotDepthWidthAvg;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String permissibleBuildingStories;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String permissibleBuildingHeight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String maxPermissibleFar;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackFront;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackRear;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackRight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackLeft;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String drawingNumber;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String jobNumber; 
     
     

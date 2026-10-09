@@ -62,7 +62,7 @@ public interface OccupancyCertificateRepository
 	@Query("select occupancycertificate from OccupancyCertificate occupancycertificate where occupancycertificate.eDcrNumber in :edcrNumber order by id desc")
 	List<OccupancyCertificate> findByEDcrNumber(@Param("edcrNumber") String edcrNumber);
 
-	@Query("select occupancycertificate from OccupancyCertificate occupancycertificate where occupancycertificate.status in :status order by createddate asc")
+	@Query("select occupancycertificate from OccupancyCertificate occupancycertificate where occupancycertificate.status in :status order by occupancycertificate.createdDate asc")
 	List<OccupancyCertificate> findByStatusListOrderByCreatedDateAsc(@Param("status") List<BpaStatus> listOfBpaStatus);
 	
 	@Query("select occupancycertificate from OccupancyCertificate occupancycertificate where occupancycertificate.parent.planPermissionNumber =:permitNumber order by occupancycertificate.createdDate desc")
@@ -80,7 +80,7 @@ public interface OccupancyCertificateRepository
     @Query("select count(app.applicationNumber) from OccupancyCertificate app where app.status.code=:status and app.createdDate>=:today")
     int findAllByRejectedStatusWithToday(@Param("status") String status, @Param("today") Date today);
     
-    @Query("select oc.id from OccupancyCertificate oc where (:todayDate - DATE(oc.lastModifiedDate))>=60 and oc.status.code in ('Approved','Order Issued to Applicant')")
-	List<Long> findAllFinalOCGenerationApplications(@Param("todayDate") Date todayDate);
+    @Query("select oc.id from OccupancyCertificate oc where oc.lastModifiedDate < :cutoffDate and oc.status.code in ('Approved','Order Issued to Applicant')")
+	List<Long> findAllFinalOCGenerationApplications(@Param("cutoffDate") Date cutoffDate);
 
 }

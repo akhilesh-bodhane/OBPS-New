@@ -119,7 +119,7 @@ public class PermitNocApplicationService {
 
     @Transactional
     public List<PermitNocApplication> save(final List<PermitNocApplication> permitNoc) {
-        return permitNocRepository.save(permitNoc);
+        return permitNocRepository.saveAll(permitNoc);
     }
 
     public PermitNocApplication findByNocApplicationNumber(String appNo) {
@@ -287,7 +287,7 @@ public class PermitNocApplicationService {
     	String status = "";
     	BpaNocApplication  bpaNocApplication = getBpaNocByNocApplicationNumber(nocApplicationNumber);
     	if(null != bpaNocApplication && null != bpaNocApplication.getStatus() && null != bpaNocApplication.getStatus().getId()) {
-    		BpaStatus bpaStatus = bpaStatusRepository.findOne(bpaNocApplication.getStatus().getId());
+    		BpaStatus bpaStatus = bpaStatusRepository.findById(bpaNocApplication.getStatus().getId()).orElse(null);
     		if(null !=bpaStatus && null != bpaStatus.getCode() )
     			status = bpaStatus.getCode();
     	}

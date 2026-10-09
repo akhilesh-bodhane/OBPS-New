@@ -49,13 +49,13 @@ package org.egov.demand.dao;
 
 import org.egov.demand.model.EgBill;
 import org.egov.demand.model.EgBillType;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository(value = "egBillDAO")
@@ -72,7 +72,7 @@ public class EgBillHibernateDao implements EgBillDao {
     @Override
     public EgBillType getBillTypeByCode(String code) {
         final Query qry = this.getCurrentSession().createQuery("from EgBillType bt where bt.code =:BTCODE");
-        qry.setString("BTCODE", code);
+        qry.setParameter("BTCODE", code);
         qry.setMaxResults(1);
         return (EgBillType) qry.uniqueResult();
     }

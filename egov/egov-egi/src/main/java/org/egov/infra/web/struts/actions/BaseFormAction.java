@@ -48,15 +48,19 @@
 
 package org.egov.infra.web.struts.actions;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
-import com.opensymphony.xwork2.Preparable;
-import com.opensymphony.xwork2.interceptor.ParameterNameAware;
+import org.apache.struts2.ActionContext;
+import org.apache.struts2.ActionSupport;
+import org.apache.struts2.ModelDriven;
+import org.apache.struts2.Preparable;
+import org.apache.struts2.action.ParameterNameAware;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.interceptor.ParameterAware;
-import org.apache.struts2.interceptor.RequestAware;
-import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.action.ParametersAware;
+import org.apache.struts2.action.ServletRequestAware;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.dispatcher.RequestMap;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.struts2.action.SessionAware;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infstr.services.PersistenceService;
 import org.slf4j.Logger;
@@ -77,7 +81,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ParentPackage("egov")
 public abstract class BaseFormAction extends ActionSupport
-        implements ModelDriven<Object>, ParameterAware, SessionAware, Preparable, RequestAware, ParameterNameAware {
+        implements ModelDriven<Object>, ParametersAware, SessionAware, Preparable, ServletRequestAware, ParameterNameAware {
     public static final String INDEX = "index";
     public static final String NEW = "new";
     public static final String EDIT = "edit";
@@ -107,8 +111,12 @@ public abstract class BaseFormAction extends ActionSupport
     }
 
     @Override
-    public void setSession(final Map<String, Object> session) {
+    public void withSession(final Map<String, Object> session) {
         this.session = session;
+    }
+
+    public void setSession(final Map<String, Object> session) {
+        withSession(session);
     }
 
     public PersistenceService getPersistenceService() {
@@ -161,8 +169,8 @@ public abstract class BaseFormAction extends ActionSupport
     }
 
     @Override
-    public void setRequest(final Map<String, Object> request) {
-        this.request = request;
+    public void withServletRequest(final HttpServletRequest servletRequest) {
+        this.request = new RequestMap(servletRequest);
     }
 
     protected void setupDropdownDataExcluding(final String... excluded) {
@@ -199,8 +207,11 @@ public abstract class BaseFormAction extends ActionSupport
     }
 
     @Override
-    public void setParameters(Map<String, String[]> parameters) {
-        this.parameters = parameters;
+    public void withParameters(final HttpParameters httpParameters) {
+        final Map<String, String[]> params = new HashMap<>();
+        for (final Entry<String, Parameter> entry : httpParameters.entrySet())
+            params.put(entry.getKey(), entry.getValue().getMultipleValues());
+        this.parameters = params;
     }
 
     public Map<String, String> getOrdering() {

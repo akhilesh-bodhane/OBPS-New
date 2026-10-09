@@ -55,6 +55,7 @@
 		<id name="id" column="ID" type="int">
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_OBJECT_HISTORY</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<timestamp column="MODIFIEDDATE" name="modifiedDate" access="property" unsaved-value="null" />

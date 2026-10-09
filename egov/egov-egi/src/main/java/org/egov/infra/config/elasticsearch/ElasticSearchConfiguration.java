@@ -48,26 +48,26 @@
 
 package org.egov.infra.config.elasticsearch;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.ClientConfiguration;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 
+/**
+ * Spring Data Elasticsearch 5 (Elasticsearch Java client) provides the repositories and the
+ * {@code ElasticsearchOperations} bean. The legacy 7.x {@link RestHighLevelClient} is still exposed for the
+ * dashboard/search services that build requests with the 7.x query builders.
+ */
 @Configuration
 @EnableElasticsearchRepositories(basePackages = {"org.egov.**.repository.es", "org.egov.**.elasticsearch.repository"})
-public class ElasticSearchConfiguration {
-
-    @Value("${elasticsearch.cluster.name}")
-    private String clusterName;
+public class ElasticSearchConfiguration extends ElasticsearchConfiguration {
 
     @Value("#{'${elasticsearch.hosts}'.split(',')}")
     private List<String> searchHosts;
@@ -75,19 +75,18 @@ public class ElasticSearchConfiguration {
     @Value("${elasticsearch.port}")
     private Integer searchPort;
 
-    private Client transportClient() {
-        Settings settings = Settings.settingsBuilder()
-                .put("cluster.name", clusterName).build();
-        Client client = TransportClient.builder().settings(settings).build();
-        searchHosts.forEach(host ->
-                ((TransportClient) client).addTransportAddress(
-                        new InetSocketTransportAddress(new InetSocketAddress(host, searchPort)))
-        );
-        return client;
+    @Override
+    public ClientConfiguration clientConfiguration() {
+        return ClientConfiguration.builder()
+                .connectedTo(searchHosts.stream().map(host -> host.trim() + ":" + searchPort).toArray(String[]::new))
+                .build();
     }
 
-    @Bean
-    public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchTemplate(transportClient());
+    @Bean(destroyMethod = "close")
+    public RestHighLevelClient restHighLevelClient() {
+        HttpHost[] httpHosts = searchHosts.stream()
+                .map(host -> new HttpHost(host.trim(), searchPort, "http"))
+                .toArray(HttpHost[]::new);
+        return new RestHighLevelClient(RestClient.builder(httpHosts));
     }
 }

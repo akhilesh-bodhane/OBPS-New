@@ -163,7 +163,7 @@ public class SearchAdvanceRequisitionForPaymentAction extends SearchFormAction {
 
     public String searchList() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         boolean isError = false;
         if (fromDate != null && toDate == null) {
             addFieldError("toDate", getText("search.toDate.null"));

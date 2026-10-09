@@ -52,7 +52,7 @@ import static org.egov.eis.utils.constants.EisConstants.EMPLOYEE_JURISDICTION_HI
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.egov.commons.Accountdetailkey;
@@ -67,7 +67,6 @@ import org.egov.eis.utils.EisUtils;
 import org.egov.eis.utils.constants.EisConstants;
 import org.egov.infra.admin.master.service.BoundaryTypeService;
 import org.egov.infra.admin.master.service.DepartmentService;
-import org.postgresql.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,7 +148,7 @@ public class CreateEmployeeController {
 
         String image = null;
         if (null != employee.getSignature())
-            image = Base64.encodeBytes(employee.getSignature());
+            image = java.util.Base64.getEncoder().encodeToString(employee.getSignature());
         model.addAttribute("image", image);
         redirectAttrs.addFlashAttribute("employee", employee);
         model.addAttribute("message", "Employee created successfully");

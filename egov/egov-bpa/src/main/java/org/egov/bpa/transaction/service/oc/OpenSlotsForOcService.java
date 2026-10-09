@@ -142,6 +142,6 @@ public class OpenSlotsForOcService {
                 }
             }
         }
-        slotRepository.save(slots);
+        slotRepository.saveAll(slots);
     }
 }

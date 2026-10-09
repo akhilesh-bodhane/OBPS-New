@@ -50,7 +50,9 @@ package org.egov.portal.repository.specs;
 import org.egov.portal.entity.PortalServiceType;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 public class SearchPortalServiceTypeSpec {
 
@@ -60,13 +62,12 @@ public class SearchPortalServiceTypeSpec {
 
     public static Specification<PortalServiceType> searchPortalServiceType(final Long module, final String name) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             if (module != null)
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("module"), module));
+                predicates.add(builder.equal(root.get("module"), module));
             if (name != null && !"select".equalsIgnoreCase(name))
-                predicate.getExpressions().add(builder.equal(root.get("name"), name));
-            return predicate;
+                predicates.add(builder.equal(root.get("name"), name));
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

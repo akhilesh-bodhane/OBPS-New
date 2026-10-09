@@ -51,14 +51,14 @@ import org.apache.commons.lang.StringUtils;
 import org.egov.collection.constants.CollectionConstants;
 import org.egov.collection.entity.CollectionSummaryHeadWiseReport;
 import org.egov.collection.entity.CollectionSummaryHeadWiseReportResult;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.DoubleType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -183,38 +183,38 @@ public class CollectionReportHeadWiseService {
         final StringBuilder finalRebateQueryStr = new StringBuilder(finalSelectQueryStr).append(rebateQueryStr)
                 .append(finalGroupQuery);
 
-        final SQLQuery aggrQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRevQueryStr.toString())
-                .addScalar("cashCount", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", DoubleType.INSTANCE)
-                .addScalar("chequeddCount", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("chequeddAmount", DoubleType.INSTANCE)
-                .addScalar("onlineCount", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", DoubleType.INSTANCE)
-                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("cardAmount", DoubleType.INSTANCE).addScalar("cardCount", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("totalReceiptCount", org.hibernate.type.StringType.INSTANCE)
+        final NativeQuery aggrQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalRevQueryStr.toString())
+                .addScalar("cashCount", org.hibernate.type.StandardBasicTypes.STRING).addScalar("cashAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("chequeddCount", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("chequeddAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("onlineCount", org.hibernate.type.StandardBasicTypes.STRING).addScalar("onlineAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("glCode", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("cardAmount", StandardBasicTypes.DOUBLE).addScalar("cardCount", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("totalReceiptCount", org.hibernate.type.StandardBasicTypes.STRING)
                 .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadWiseReport.class));
 
-        final SQLQuery rebateQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRebateQueryStr.toString())
-                .addScalar("cashCount", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", DoubleType.INSTANCE)
-                .addScalar("chequeddCount", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("chequeddAmount", DoubleType.INSTANCE)
-                .addScalar("onlineCount", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", DoubleType.INSTANCE)
-                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("cardAmount", DoubleType.INSTANCE).addScalar("cardCount", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("totalReceiptCount", org.hibernate.type.StringType.INSTANCE)
+        final NativeQuery rebateQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalRebateQueryStr.toString())
+                .addScalar("cashCount", org.hibernate.type.StandardBasicTypes.STRING).addScalar("cashAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("chequeddCount", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("chequeddAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("onlineCount", org.hibernate.type.StandardBasicTypes.STRING).addScalar("onlineAmount", StandardBasicTypes.DOUBLE)
+                .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("glCode", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("cardAmount", StandardBasicTypes.DOUBLE).addScalar("cardCount", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("totalReceiptCount", org.hibernate.type.StandardBasicTypes.STRING)
                 .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadWiseReport.class));
         if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
-            aggrQuery.setString("source", source);
-            rebateQuery.setString("source", source);
+            aggrQuery.setParameter("source", source);
+            rebateQuery.setParameter("source", source);
         }
         if (glCode != null) {
-            aggrQuery.setString("glCode", glCode);
-            rebateQuery.setString("glCode", glCode);
+            aggrQuery.setParameter("glCode", glCode);
+            rebateQuery.setParameter("glCode", glCode);
         }
         if (status != -1) {
-            aggrQuery.setLong("searchStatus", status);
-            rebateQuery.setLong("searchStatus", status);
+            aggrQuery.setParameter("searchStatus", status);
+            rebateQuery.setParameter("searchStatus", status);
         }
 
         if (StringUtils.isNotBlank(paymentMode) && !paymentMode.equals(CollectionConstants.ALL))
@@ -222,12 +222,12 @@ public class CollectionReportHeadWiseService {
                 aggrQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
                 rebateQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
             } else {
-                aggrQuery.setString("paymentMode", paymentMode);
-                rebateQuery.setString("paymentMode", paymentMode);
+                aggrQuery.setParameter("paymentMode", paymentMode);
+                rebateQuery.setParameter("paymentMode", paymentMode);
             }
         if (branchId != null && branchId != -1) {
-            aggrQuery.setInteger("branchId", branchId);
-            rebateQuery.setInteger("branchId", branchId);
+            aggrQuery.setParameter("branchId", branchId);
+            rebateQuery.setParameter("branchId", branchId);
         }
         final List<CollectionSummaryHeadWiseReport> rebateReportResultList = populateQueryResults(rebateQuery.list());
         final List<CollectionSummaryHeadWiseReport> aggrReportResults = populateQueryResults(aggrQuery.list());

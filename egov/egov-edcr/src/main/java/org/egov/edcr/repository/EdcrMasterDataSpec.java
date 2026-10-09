@@ -2,7 +2,9 @@ package org.egov.edcr.repository;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 import org.egov.edcr.contract.EdcrMasterDataRequest;
 import org.egov.edcr.entity.EdcrMasterData;
@@ -16,14 +18,12 @@ public class EdcrMasterDataSpec {
 
 	public static final Specification<EdcrMasterData> edcrMasterDataSearchSpec(EdcrMasterDataRequest edcrMasterDataRequest) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             if (isNotBlank(edcrMasterDataRequest.getCode()))
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("code"), edcrMasterDataRequest.getCode()));
+                predicates.add(builder.equal(root.get("code"), edcrMasterDataRequest.getCode()));
             if (isNotBlank(edcrMasterDataRequest.getSector()))
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("sector"), edcrMasterDataRequest.getSector()));
-            return predicate;
+                predicates.add(builder.equal(root.get("sector"), edcrMasterDataRequest.getSector()));
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

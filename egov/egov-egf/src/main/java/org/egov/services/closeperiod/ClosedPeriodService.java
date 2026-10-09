@@ -58,14 +58,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.metamodel.Metamodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -115,7 +115,7 @@ public class ClosedPeriodService {
 	}
 
 	public List<ClosedPeriod> findAll() {
-		return closedPeriodRepository.findAll(new Sort(Sort.Direction.ASC,
+		return closedPeriodRepository.findAll(Sort.by(Sort.Direction.ASC,
 				"cFinancialYearId"));
 	}
 
@@ -145,7 +145,7 @@ public class ClosedPeriodService {
 		Root<ClosedPeriod> closedPeriods = createQuery.from(ClosedPeriod.class);
 		createQuery.select(closedPeriods);
 		Metamodel m = entityManager.getMetamodel();
-		javax.persistence.metamodel.EntityType<ClosedPeriod> ClosedPeriod_ = m
+		jakarta.persistence.metamodel.EntityType<ClosedPeriod> ClosedPeriod_ = m
 				.entity(ClosedPeriod.class);
 
 		List<Predicate> predicates = new ArrayList<Predicate>();

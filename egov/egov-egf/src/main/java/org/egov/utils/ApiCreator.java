@@ -121,7 +121,7 @@ public class ApiCreator {
 
             }
         // if id has different name like user_id replace the below id with actual id name
-        apiString.append("pstmt.setString(i++,id);\n");
+        apiString.append("pstmt.setParameter(i++,id);\n");
         apiString.append("\n pstmt.executeQuery();\n");
         apiString.append("}catch(Exception e){	LOGGER.error(\"Exp in update: \"+e.getMessage()); throw taskExc;} finally{");
         apiString.append("try{ pstmt.close(); }catch(Exception e){LOGGER.error(\"Inside finally block of update\");}} \n }");

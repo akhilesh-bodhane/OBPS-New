@@ -88,7 +88,7 @@ public class RescheduleAppointmentsForDocumentScrutinyService {
 	@Transactional
 	public SlotApplication rescheduleAppointmentsForDocumentScrutinyByCitizen(Long applicationId,
 			Date rescheduleAppointmentDate, String appointmentTime) {
-        BpaApplication application = applicationBpaRepository.findById(applicationId);
+        BpaApplication application = applicationBpaRepository.findApplicationById(applicationId);
         application.setIsRescheduledByCitizen(true);
         List<SlotApplication> slotApplication = slotApplicationRepository.findByApplicationOrderByIdDesc(application);
         // free up previous slot
@@ -123,7 +123,7 @@ public class RescheduleAppointmentsForDocumentScrutinyService {
 	@Transactional
 	public SlotApplication rescheduleAppointmentsForDocumentScrutinyByEmployee(Long applicationId,
 			Date rescheduleAppointmentDate, String appointmentTime) {
-        BpaApplication bpaApplication = applicationBpaRepository.findById(applicationId);
+        BpaApplication bpaApplication = applicationBpaRepository.findApplicationById(applicationId);
         bpaApplication.setIsRescheduledByEmployee(true);
         List<SlotApplication> slotApplication = slotApplicationRepository
                 .findByApplicationOrderByIdDesc(bpaApplication);
@@ -161,7 +161,7 @@ public class RescheduleAppointmentsForDocumentScrutinyService {
 	}
 
 	public List<SlotDetail> searchAvailableSlotsForReschedule(Long applicationId) {
-		BpaApplication bpaApplication = applicationBpaRepository.findById(applicationId);
+		BpaApplication bpaApplication = applicationBpaRepository.findApplicationById(applicationId);
 		Boundary zone = bpaApplication.getSiteDetail().get(0).getAdminBoundary().getParent();
 		List<SlotApplication> slotApplication = slotApplicationRepository
 				.findByApplicationOrderByIdDesc(bpaApplication);
@@ -172,7 +172,7 @@ public class RescheduleAppointmentsForDocumentScrutinyService {
 
 	@Transactional
 	public void rescheduleAppointmentWhenSlotsNotAvailable(Long id, String scheduleBy) {
-        BpaApplication bpaApplication = applicationBpaRepository.findById(id);
+        BpaApplication bpaApplication = applicationBpaRepository.findApplicationById(id);
         if ("EMPLOYEE".equals(scheduleBy)) {
             bpaApplication.setIsRescheduledByEmployee(true);
         } else if ("CITIZENPORTAL".equals(scheduleBy)) {

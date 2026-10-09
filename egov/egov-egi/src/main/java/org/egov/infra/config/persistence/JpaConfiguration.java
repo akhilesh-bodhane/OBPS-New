@@ -69,12 +69,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.SharedCacheMode;
-import javax.persistence.ValidationMode;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.SharedCacheMode;
+import jakarta.persistence.ValidationMode;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.egov.infra.config.persistence.hql.LegacyHqlSupport;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 import static org.hibernate.cfg.AvailableSettings.*;
 
@@ -127,7 +130,9 @@ public class JpaConfiguration {
         hbmScanner.setMappingFileNamePattern("**/*hbm.xml");
         entityManagerFactory.setPersistenceUnitPostProcessors(hbmScanner);
         entityManagerFactory.afterPropertiesSet();
-        return entityManagerFactory.getObject();
+        final EntityManagerFactory nativeFactory = entityManagerFactory.getObject();
+        LegacyHqlSupport.install(nativeFactory.unwrap(SessionFactoryImplementor.class));
+        return nativeFactory;
     }
 
     @Bean
@@ -141,6 +146,8 @@ public class JpaConfiguration {
 
     private Map<String, Object> additionalProperties() {
         HashMap<String, Object> properties = new HashMap<>();
+        // named hbm queries are translated lazily, after LegacyHqlSupport has been installed
+        properties.put("hibernate.query.startup_check", false);
         properties.put("hibernate.validator.apply_to_ddl", false);
         properties.put("hibernate.validator.autoregister_listeners", false);
         properties.put("hibernate.temp.use_jdbc_metadata_defaults", false);
@@ -150,22 +157,24 @@ public class JpaConfiguration {
         properties.put(USE_SECOND_LEVEL_CACHE, enableSecondLevelCache);
         properties.put(USE_QUERY_CACHE, enableQueryCache);
         properties.put(USE_MINIMAL_PUTS, env.getProperty(USE_MINIMAL_PUTS));
+        // Hibernate 6.6.x hbm binder throws an NPE when no default access type is configured
+        properties.put("hibernate.cache.default_cache_concurrency_strategy", "read-write");
         properties.put("hibernate.cache.infinispan.cachemanager", env.getProperty("hibernate.cache.infinispan.cachemanager"));
         properties.put(JTA_PLATFORM, env.getProperty(JTA_PLATFORM));
         properties.put(AUTO_CLOSE_SESSION, env.getProperty(AUTO_CLOSE_SESSION));
-        properties.put(USE_STREAMS_FOR_BINARY, env.getProperty(USE_STREAMS_FOR_BINARY));
         properties.put(DEFAULT_BATCH_FETCH_SIZE, batchUpdateSize);
         properties.put(BATCH_VERSIONED_DATA, true);
         properties.put(ORDER_INSERTS, true);
         properties.put(ORDER_UPDATES, true);
         properties.put(AUTOCOMMIT, false);
-        properties.put(RELEASE_CONNECTIONS, "after_statement");
+        // Hibernate 5 "hibernate.connection.release_mode=after_statement" (extended entity managers span JTA transactions)
+        properties.put("hibernate.connection.handling_mode", "DELAYED_ACQUISITION_AND_RELEASE_AFTER_STATEMENT");
         properties.put("jadira.usertype.autoRegisterUserTypes", true);
         properties.put("jadira.usertype.databaseZone", "jvm");
 
         // Multitenancy Configuration
         if (multiTenancyEnabled) {
-            properties.put(MULTI_TENANT, env.getProperty(MULTI_TENANT));
+            properties.put("hibernate.multiTenancy", env.getProperty("hibernate.multiTenancy"));
             properties.put("hibernate.database.type", env.getProperty("jpa.database"));
             properties.put(MULTI_TENANT_CONNECTION_PROVIDER, multiTenantSchemaConnectionProvider());
             properties.put(MULTI_TENANT_IDENTIFIER_RESOLVER, domainBasedSchemaTenantIdentifierResolver());

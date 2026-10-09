@@ -149,6 +149,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<build.number>${timestamp}</build.number>
 		<app.version>${project.version}</app.version>
+		<maven.compiler.release>17</maven.compiler.release>
 		<versioneye.key />
 		<db.driver />
 		<db.url />
@@ -156,99 +157,113 @@
 		<db.password />
 		<disable.drop.db>true</disable.drop.db>
 		<!-- Application server provided dependency versions -->
-		<hibernate-version>5.1.10.Final</hibernate-version>
+		<hibernate-version>6.6.58.Final</hibernate-version>
 		<hibernate-search-version>5.5.8.Final</hibernate-search-version>
-		<hibernate-validator-version>5.3.5.Final</hibernate-validator-version>
-		<javax-validation-version>1.1.0.Final</javax-validation-version>
-		<javax-servlet-api-version>1.0.0.Final</javax-servlet-api-version>
-		<javax-servlet-jstl-version>1.2.6-RC1</javax-servlet-jstl-version>
-		<javax-servlet-jsp-version>1.0.1.Final</javax-servlet-jsp-version>
-		<javax-jms-version>1.0.1.Final</javax-jms-version>
-		<javax-mail-version>1.5.6</javax-mail-version>
-		<javax-el-version>3.0.1-b08</javax-el-version>
+		<hibernate-validator-version>8.0.5.Final</hibernate-validator-version>
+		<javax-validation-version>3.0.2</javax-validation-version>
+		<javax-servlet-api-version>6.0.0</javax-servlet-api-version>
+		<javax-servlet-jstl-version>3.0.1</javax-servlet-jstl-version>
+		<javax-servlet-jsp-version>3.1.1</javax-servlet-jsp-version>
+		<javax-jms-version>3.1.0</javax-jms-version>
+		<javax-mail-version>2.1.5</javax-mail-version>
+		<javax-el-version>5.0.1</javax-el-version>
 		<xerces-version>2.11.0.SP5</xerces-version>
-		<postgres-version>42.1.4</postgres-version>
+		<postgres-version>42.7.13</postgres-version>
+		<!-- JDK11+ removed these from the runtime; explicit javax-namespaced deps needed for JDK17 -->
+		<jaxb-api-version>4.0.5</jaxb-api-version>
+		<jaxb-runtime-version>4.0.9</jaxb-runtime-version>
+		<javax-soap-api-version>3.0.2</javax-soap-api-version>
+		<saaj-impl-version>3.0.6</saaj-impl-version>
+		<javax-activation-api-version>2.1.4</javax-activation-api-version>
+		<javax-annotation-api-version>2.1.1</javax-annotation-api-version>
 
 		<!-- Other application dependency versions -->
-		<struts2-version>2.5.14.1</struts2-version>
-		<struts2-jquery-version>4.0.2</struts2-jquery-version>
-		<xstream-version>1.4.10</xstream-version>
-		<spring-version>4.3.11.RELEASE</spring-version>
-		<spring-session-version>1.3.1.RELEASE</spring-session-version>
-		<spring-data-jpa-version>1.10.6.RELEASE</spring-data-jpa-version>
-		<spring-data-jpa-envers-version>1.0.6.RELEASE</spring-data-jpa-envers-version>
-		<spring-security-version>4.2.3.RELEASE</spring-security-version>
-		<spring-security-oauth2-version>2.2.0.RELEASE</spring-security-oauth2-version>
-		<spring-data-elasticsearch>2.0.6.RELEASE</spring-data-elasticsearch>
-		<elastic-search-version>2.4.6</elastic-search-version>
-		<apache-tiles-version>3.0.7</apache-tiles-version>
+		<struts2-version>7.1.1</struts2-version>
+		<xstream-version>1.4.21</xstream-version>
+		<spring-version>6.2.19</spring-version>
+		<spring-session-version>3.5.7</spring-session-version>
+		<!-- Spring Session 2.x defaults to Lettuce; the app wires JedisConnectionFactory, so Jedis is now declared explicitly (3.x is what spring-data-redis 2.7 supports best) -->
+		<jedis-version>5.2.0</jedis-version>
+		<!-- Jackson 1.x (codehaus): no longer pulled by spring-security-oauth2 2.5.x; still imported by egov-egi's ApplicationRestException* classes -->
+		<jackson1-version>1.9.13</jackson1-version>
+		<spring-data-jpa-version>3.5.13</spring-data-jpa-version>
+		<spring-data-jpa-envers-version>3.5.13</spring-data-jpa-envers-version>
+		<spring-security-version>6.5.11</spring-security-version>
+		<spring-data-elasticsearch>5.5.13</spring-data-elasticsearch>
+		<!-- Required by spring-data-elasticsearch 4.4.x (excluded from spring-data-jpa/-elasticsearch below to avoid convergence conflicts) -->
+		<spring-data-commons-version>3.5.13</spring-data-commons-version>
+		<elastic-search-version>7.17.28</elastic-search-version>
+		<apache-tiles-version>3.0.8</apache-tiles-version>
 		<embedded-redis-version>0.6</embedded-redis-version>
-		<quartz-version>2.3.0</quartz-version>
-		<jasper-report-version>6.1.0</jasper-report-version>
+		<quartz-version>2.5.2</quartz-version>
+		<jasper-report-version>6.21.5</jasper-report-version>
 		<json-simple-version>1.1.1</json-simple-version>
-		<jackson-version>2.9.2</jackson-version>
+		<jackson-version>2.22.3</jackson-version>
+		<!-- jackson-annotations uses a two-part version (no patch releases) since 2.20 -->
+		<jackson-annotations-version>2.22</jackson-annotations-version>
 		<orika-core.version>1.5.2</orika-core.version>
-		<gson-version>2.8.2</gson-version>
-		<antisamy-version>1.5.7</antisamy-version>
-		<jasypt-version>1.9.2</jasypt-version>
-		<display-tag-version>1.2</display-tag-version>
+		<gson-version>2.14.0</gson-version>
+		<antisamy-version>1.7.8</antisamy-version>
+		<jasypt-version>1.9.3</jasypt-version>
 		<jfreechart-version>1.0.19</jfreechart-version>
 		<groovy-all-version>2.4.12</groovy-all-version>
 		<itext-version>2.1.7</itext-version>
+		<itextpdf-version>5.5.13.6</itextpdf-version>
+		<poi-version>5.5.1</poi-version>
 		<commons-javaflow-version>20060411</commons-javaflow-version>
 		<jexcelapi-version>2.6.12</jexcelapi-version>
-		<commons-beanutils-version>1.9.3</commons-beanutils-version>
+		<commons-beanutils-version>1.11.0</commons-beanutils-version>
 		<commons-config-version>1.10</commons-config-version>
 		<commons-lang-version>2.6</commons-lang-version>
-		<commons-lang3-version>3.6</commons-lang3-version>
-		<commons-email-version>1.5</commons-email-version>
+		<commons-lang3-version>3.21.0</commons-lang3-version>
+		<commons-email-version>1.6.0</commons-email-version>
 		<commons-collections-version>3.2.2</commons-collections-version>
-		<commons-collections4-version>4.1</commons-collections4-version>
-		<commons-codec-version>1.11</commons-codec-version>
+		<commons-collections4-version>4.6.0</commons-collections4-version>
+		<commons-codec-version>1.22.1</commons-codec-version>
 		<commons-dbcp-version>1.4</commons-dbcp-version>
-		<commons-io-version>2.6</commons-io-version>
-		<commons-fileupload-version>1.3.3</commons-fileupload-version>
-		<commons.text.version>1.1</commons.text.version>
-		<commons.compress.version>1.15</commons.compress.version>
-		<httpclient-version>4.5.3</httpclient-version>
-		<sitemesh-version>2.4.2</sitemesh-version>
-		<ehcache-web-version>2.0.4</ehcache-web-version>
-		<joda-time-version>2.9.9</joda-time-version>
-		<joda-time-jsptag-version>1.1.1</joda-time-jsptag-version>
-		<jsoup-version>1.10.3</jsoup-version>
-		<jython-version>2.7.1b3</jython-version>
-		<flyway-core-version>5.0.3</flyway-core-version>
-		<junit-version>4.12</junit-version>
-		<mockito-all-version>1.10.19</mockito-all-version>
+		<commons-io-version>2.22.0</commons-io-version>
+		<commons-fileupload-version>1.6.0</commons-fileupload-version>
+		<commons.text.version>1.15.0</commons.text.version>
+		<commons.compress.version>1.28.0</commons.compress.version>
+		<httpclient-version>4.5.14</httpclient-version>
+		<joda-time-version>2.14.4</joda-time-version>
+		<jsoup-version>1.23.2</jsoup-version>
+		<jython-version>2.7.4</jython-version>
+		<flyway-core-version>9.22.3</flyway-core-version>
+		<junit-version>4.13.2</junit-version>
+		<mockito-version>4.11.0</mockito-version>
 		<springockito-version>1.0.9</springockito-version>
-		<easymock-version>3.5</easymock-version>
-		<easymockclassextension-version>3.2</easymockclassextension-version>
+		<easymock-version>5.7.0</easymock-version>
 		<hamcrest-all-version>1.3</hamcrest-all-version>
-		<slf4j-version>1.7.25</slf4j-version>
-		<log4j-version>1.2.17</log4j-version>
-		<google-guava-version>23.2-jre</google-guava-version>
-		<google.zxing.version>3.3.0</google.zxing.version>
+		<slf4j-version>1.7.36</slf4j-version>
+		<!-- log4j2 api/core are pulled transitively (struts2, elasticsearch) at mismatched versions; pin them together -->
+		<log4j2-version>2.26.1</log4j2-version>
+		<!-- reload4j: drop-in, security-patched fork of log4j 1.2 (same org.apache.log4j API) -->
+		<reload4j-version>1.2.26</reload4j-version>
+		<google-guava-version>33.7.2-jre</google-guava-version>
+		<google.zxing.version>3.5.4</google.zxing.version>
 		<recaptcha.version>0.0.8</recaptcha.version>
 		<jcaptcha.version>2.0-alpha-1</jcaptcha.version>
 		<javaxt.core.version>1.7.8</javaxt.core.version>
-		<pdfbox.version>2.0.4</pdfbox.version>
+		<pdfbox.version>2.0.37</pdfbox.version>
 		<!-- Plugin dependency versions -->
 		<mvn.javadoc.plugin.version>2.10.4</mvn.javadoc.plugin.version>
 		<mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
-		<mvn.jacoco.plugin.version>0.7.9</mvn.jacoco.plugin.version>
+		<mvn.jacoco.plugin.version>0.8.11</mvn.jacoco.plugin.version>
 		<mvn.ear.plugin.version>2.10.1</mvn.ear.plugin.version>
-		<mvn.war.plugin.version>3.2.0</mvn.war.plugin.version>
-		<mvn.jar.plugin.version>3.0.2</mvn.jar.plugin.version>
-		<mvn.compiler.plugin.version>3.7.0</mvn.compiler.plugin.version>
-		<mvn.dependency.plugin.version>3.0.2</mvn.dependency.plugin.version>
-		<mvn.resource.plugin.version>3.0.1</mvn.resource.plugin.version>
+		<mvn.war.plugin.version>3.4.0</mvn.war.plugin.version>
+		<mvn.jar.plugin.version>3.4.2</mvn.jar.plugin.version>
+		<mvn.compiler.plugin.version>3.11.0</mvn.compiler.plugin.version>
+		<mvn.dependency.plugin.version>3.8.1</mvn.dependency.plugin.version>
+		<mvn.resource.plugin.version>3.3.1</mvn.resource.plugin.version>
 		<mvn.versioneye.plugin.version>3.11.4</mvn.versioneye.plugin.version>
-		<mvn.surefire.plugin.version>2.20.1</mvn.surefire.plugin.version>
+		<mvn.surefire.plugin.version>3.0.0-M9</mvn.surefire.plugin.version>
 		<mvn.eclipse.lifecycle.plugin.version>1.0.0</mvn.eclipse.lifecycle.plugin.version>
-		<mvn.clean.plugin.version>3.0.0</mvn.clean.plugin.version>
+		<mvn.clean.plugin.version>3.4.0</mvn.clean.plugin.version>
 	</properties>
 
     <modules>
+        <module>egov-jakarta-libs</module>
         <module>egov-config</module>
         <module>egov-database</module>
         <module>egov-egi</module>
@@ -286,41 +301,51 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+				<groupId>org.elasticsearch.client</groupId>
+				<artifactId>elasticsearch-rest-high-level-client</artifactId>
+				<version>${elastic-search-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.elasticsearch.client</groupId>
+						<artifactId>elasticsearch-rest-client</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.elasticsearch.client</groupId>
+				<artifactId>elasticsearch-rest-client</artifactId>
+				<version>8.18.8</version>
+			</dependency>
 
 			<!-- HIBERNATE DEPENDENCIES START -->
 			<dependency>
-				<groupId>org.hibernate</groupId>
+				<groupId>org.hibernate.orm</groupId>
 				<artifactId>hibernate-core</artifactId>
 				<version>${hibernate-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate-version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
+				<groupId>org.hibernate.orm</groupId>
 				<artifactId>hibernate-envers</artifactId>
 				<version>${hibernate-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-infinispan</artifactId>
-				<version>${hibernate-version}</version>
+				<groupId>org.infinispan</groupId>
+				<artifactId>infinispan-core</artifactId>
+				<version>14.0.35.Final</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.hibernate</groupId>
+				<groupId>org.hibernate.validator</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernate-validator-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
 				<version>${javax-validation-version}</version>
 				<scope>provided</scope>
 			</dependency>
@@ -331,54 +356,81 @@
 
 			<!-- SERVLET SPEC JBOSS DEPENDENCIES START -->
 			<dependency>
-				<groupId>org.jboss.spec.javax.servlet</groupId>
-				<artifactId>jboss-servlet-api_3.1_spec</artifactId>
+				<groupId>jakarta.servlet</groupId>
+				<artifactId>jakarta.servlet-api</artifactId>
 				<version>${javax-servlet-api-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-compat</artifactId>
+				<groupId>jakarta.servlet.jsp.jstl</groupId>
+				<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+				<version>3.0.2</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.web</groupId>
+				<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 				<version>${javax-servlet-jstl-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-spec</artifactId>
-				<version>${javax-servlet-jstl-version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-impl</artifactId>
-				<version>${javax-servlet-jstl-version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.spec.javax.servlet.jsp</groupId>
-				<artifactId>jboss-jsp-api_2.3_spec</artifactId>
+				<groupId>jakarta.servlet.jsp</groupId>
+				<artifactId>jakarta.servlet.jsp-api</artifactId>
 				<version>${javax-servlet-jsp-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.jboss.spec.javax.jms</groupId>
-				<artifactId>jboss-jms-api_2.0_spec</artifactId>
+				<groupId>jakarta.jms</groupId>
+				<artifactId>jakarta.jms-api</artifactId>
 				<version>${javax-jms-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.glassfish</groupId>
-				<artifactId>javax.el</artifactId>
+				<groupId>jakarta.el</groupId>
+				<artifactId>jakarta.el-api</artifactId>
 				<version>${javax-el-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>javax.mail-api</artifactId>
+				<groupId>jakarta.mail</groupId>
+				<artifactId>jakarta.mail-api</artifactId>
 				<version>${javax-mail-version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<!-- SERVLET SPEC JBOSS DEPENDENCIES END -->
+
+			<!-- JDK11+ REMOVED MODULES, RESTORED AS EXPLICIT javax-NAMESPACED DEPENDENCIES START -->
+			<dependency>
+				<groupId>jakarta.xml.bind</groupId>
+				<artifactId>jakarta.xml.bind-api</artifactId>
+				<version>${jaxb-api-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>${jaxb-runtime-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.xml.soap</groupId>
+				<artifactId>jakarta.xml.soap-api</artifactId>
+				<version>${javax-soap-api-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.messaging.saaj</groupId>
+				<artifactId>saaj-impl</artifactId>
+				<version>${saaj-impl-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.activation</groupId>
+				<artifactId>jakarta.activation-api</artifactId>
+				<version>${javax-activation-api-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.annotation</groupId>
+				<artifactId>jakarta.annotation-api</artifactId>
+				<version>${javax-annotation-api-version}</version>
+			</dependency>
+			<!-- JDK11+ REMOVED MODULES, RESTORED AS EXPLICIT javax-NAMESPACED DEPENDENCIES END -->
 
 			<!-- STRUTS2 DEPENDENCIES START -->
 			<dependency>
@@ -408,11 +460,6 @@
 				<version>${struts2-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.jgeppert.struts2.jquery</groupId>
-				<artifactId>struts2-jquery-plugin</artifactId>
-				<version>${struts2-jquery-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.thoughtworks.xstream</groupId>
 				<artifactId>xstream</artifactId>
 				<version>${xstream-version}</version>
@@ -438,7 +485,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson-version}</version>
+				<version>${jackson-annotations-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -447,7 +494,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-hibernate5</artifactId>
+				<artifactId>jackson-datatype-hibernate6</artifactId>
 				<version>${jackson-version}</version>
 			</dependency>
 			<dependency>
@@ -458,6 +505,11 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.dataformat</groupId>
 				<artifactId>jackson-dataformat-cbor</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-xml</artifactId>
 				<version>${jackson-version}</version>
 			</dependency>
 			<dependency>
@@ -542,6 +594,11 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-commons</artifactId>
+				<version>${spring-data-commons-version}</version>
+			</dependency>
 			<!-- SPRING END -->
 
 			<!-- SECURITY START -->
@@ -566,11 +623,6 @@
 				<version>${spring-security-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.security.oauth</groupId>
-				<artifactId>spring-security-oauth2</artifactId>
-				<version>${spring-security-oauth2-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.owasp.antisamy</groupId>
 				<artifactId>antisamy</artifactId>
 				<version>${antisamy-version}</version>
@@ -585,7 +637,6 @@
 				<groupId>xerces</groupId>
 				<artifactId>xercesImpl</artifactId>
 				<version>${xerces-version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.jasypt</groupId>
@@ -595,11 +646,32 @@
 			</dependency>
 			<!-- SECURITY END -->
 
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>${jedis-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>${jackson1-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>${jackson1-version}</version>
+			</dependency>
 			<!-- EMBEDDED REDIS STARTS -->
 			<dependency>
 				<groupId>com.orange.redis-embedded</groupId>
 				<artifactId>embedded-redis</artifactId>
 				<version>${embedded-redis-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>redis.clients</groupId>
+						<artifactId>jedis</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<!-- EMBEDDED REDIS ENDS -->
 
@@ -617,30 +689,6 @@
 			<!-- QUARTZ END -->
 
 			<!-- DISPLAYTAG START -->
-			<dependency>
-				<groupId>displaytag</groupId>
-				<artifactId>displaytag</artifactId>
-				<version>${display-tag-version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-log4j12</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>jcl104-over-slf4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.poi</groupId>
-						<artifactId>poi</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>displaytag</groupId>
-				<artifactId>displaytag-export-poi</artifactId>
-				<version>${display-tag-version}</version>
-			</dependency>
 			<!-- DISPLAYTAG END -->
 
 			<!-- VIEWS RELATED END -->
@@ -654,11 +702,6 @@
 						<artifactId>commons-beanutils</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tiles</groupId>
-				<artifactId>tiles-jsp</artifactId>
-				<version>${apache-tiles-version}</version>
 			</dependency>
 			<!-- VIEWS RELATED END -->
 
@@ -682,7 +725,12 @@
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>
-				<version>3.10.1</version>
+				<version>${poi-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jfree</groupId>
@@ -813,24 +861,19 @@
 				<version>${httpclient-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>opensymphony</groupId>
-				<artifactId>sitemesh</artifactId>
-				<version>${sitemesh-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache-web</artifactId>
-				<version>${ehcache-web-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
 				<version>${joda-time-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time-jsptags</artifactId>
-				<version>${joda-time-jsptag-version}</version>
+				<groupId>net.minidev</groupId>
+				<artifactId>accessors-smart</artifactId>
+				<version>2.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>net.minidev</groupId>
+				<artifactId>json-smart</artifactId>
+				<version>2.5.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jsoup</groupId>
@@ -903,7 +946,7 @@
 			<dependency>
 				<groupId>net.coobird</groupId>
 				<artifactId>thumbnailator</artifactId>
-				<version>0.4.8</version>
+				<version>0.4.21</version>
 			</dependency>
 			<!-- IMAGE PROCESSING API END -->
 
@@ -916,8 +959,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito-all-version}</version>
+				<artifactId>mockito-core</artifactId>
+				<version>${mockito-version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -925,23 +968,29 @@
 				<artifactId>springockito</artifactId>
 				<version>${springockito-version}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.mockito</groupId>
+						<artifactId>mockito-all</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.kubek2k</groupId>
 				<artifactId>springockito-annotations</artifactId>
 				<version>${springockito-version}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.mockito</groupId>
+						<artifactId>mockito-all</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.easymock</groupId>
 				<artifactId>easymock</artifactId>
 				<version>${easymock-version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.easymock</groupId>
-				<artifactId>easymockclassextension</artifactId>
-				<version>${easymockclassextension-version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -953,6 +1002,16 @@
 			<!-- TESTING END -->
 
 			<!-- LOGGING START -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j2-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j2-version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -970,9 +1029,9 @@
 				<version>${slf4j-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j-version}</version>
+				<groupId>ch.qos.reload4j</groupId>
+				<artifactId>reload4j</artifactId>
+				<version>${reload4j-version}</version>
 			</dependency>
 			<!-- LOGGING END -->
 
@@ -1065,36 +1124,52 @@
 	<dependencies>
 		<!-- SERVLET SPEC JBOSS DEPENDENCIES START -->
 		<dependency>
-			<groupId>org.jboss.spec.javax.servlet</groupId>
-			<artifactId>jboss-servlet-api_3.1_spec</artifactId>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.taglibs</groupId>
-			<artifactId>taglibs-standard-compat</artifactId>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.taglibs</groupId>
-			<artifactId>taglibs-standard-spec</artifactId>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.taglibs</groupId>
-			<artifactId>taglibs-standard-impl</artifactId>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.spec.javax.servlet.jsp</groupId>
-			<artifactId>jboss-jsp-api_2.3_spec</artifactId>
+			<groupId>jakarta.servlet.jsp</groupId>
+			<artifactId>jakarta.servlet.jsp-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.spec.javax.jms</groupId>
-			<artifactId>jboss-jms-api_2.0_spec</artifactId>
+			<groupId>jakarta.jms</groupId>
+			<artifactId>jakarta.jms-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.el</artifactId>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.30.2-GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.expressly</groupId>
+			<artifactId>expressly</artifactId>
+			<version>5.0.0</version>
+			<scope>test</scope>
 		</dependency>
 		<!-- SERVLET SPEC JBOSS DEPENDENCIES END -->
 
@@ -1175,10 +1250,6 @@
 			<artifactId>spring-jms</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
@@ -1189,6 +1260,11 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.84</version>
 		</dependency>
 		<!-- SPRING DEPENDENCIES END -->
 
@@ -1203,6 +1279,10 @@
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 		</dependency>
 		<!-- ELASTICSEARCH DEPENDANCY ENDS -->
 
@@ -1234,8 +1314,8 @@
 			<artifactId>joda-time</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time-jsptags</artifactId>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -1302,23 +1382,31 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
+			<artifactId>mockito-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.kubek2k</groupId>
 			<artifactId>springockito</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-all</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.kubek2k</groupId>
 			<artifactId>springockito-annotations</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-all</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymockclassextension</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -1338,8 +1426,8 @@
 			<artifactId>slf4j-nop</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
+			<groupId>ch.qos.reload4j</groupId>
+			<artifactId>reload4j</artifactId>
 		</dependency>
 		<!-- LOGGING END -->
 
@@ -1354,24 +1442,11 @@
 		</dependency>
 		<!-- DATABASE END -->
 
+		<!-- jakarta builds of libraries without a jakarta release (displaytag, sitemesh, ehcache-web, joda tags, zuul, tiles-jsp/el/extras), built by egov-jakarta-libs -->
 		<dependency>
-			<groupId>com.netflix.zuul</groupId>
-			<artifactId>zuul-core</artifactId>
-			<version>1.3.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.codehaus.jackson</groupId>
-					<artifactId>jackson-core-asl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.codehaus.jackson</groupId>
-					<artifactId>jackson-mapper-asl</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.egov</groupId>
+			<artifactId>egov-jakarta-libs</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -1387,8 +1462,12 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${mvn.compiler.plugin.version}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>${maven.compiler.release}</release>
+					<parameters>true</parameters>
+					<compilerArgs>
+						<arg>-Xmaxerrs</arg>
+						<arg>10000</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -1487,6 +1566,16 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${mvn.surefire.plugin.version}</version>
+				<configuration>
+					<!-- Temporary workaround for JDK17's stronger encapsulation, needed by the old
+						 cglib/reflection-based mocking in mockito-all/easymock. Remove once those
+						 test dependencies are upgraded past their cglib-based versions. -->
+					<argLine>
+						--add-opens java.base/java.lang=ALL-UNNAMED
+						--add-opens java.base/java.util=ALL-UNNAMED
+						--add-opens java.base/java.lang.reflect=ALL-UNNAMED
+					</argLine>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.flywaydb</groupId>

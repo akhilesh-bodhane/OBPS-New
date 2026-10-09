@@ -52,7 +52,7 @@ import static org.egov.bpa.utils.BpaConstants.RENEWALSTATUS_MODULETYPE;
 
 import java.util.Collections;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.transaction.entity.PermitRenewal;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;

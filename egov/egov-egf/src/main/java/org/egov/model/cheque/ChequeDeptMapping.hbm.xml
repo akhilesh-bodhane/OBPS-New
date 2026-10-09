@@ -61,6 +61,7 @@
 			unsaved-value="null">
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_CHEQUE_DEPT_MAPPING</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		

@@ -14,7 +14,7 @@ public class StakeHolderStateService {
 	   private StakeHolderStateRepository stakeHolderStateRepository;
 	 
 	   public StakeHolderState findById(final Long id) {
-	        return stakeHolderStateRepository.findOne(id);
+	        return stakeHolderStateRepository.findById(id).orElse(null);
 	    }
 	   public StakeHolderState findByStakeHolder(final StakeHolder stakeHolder) {
 	        return stakeHolderStateRepository.findByStakeHolder(stakeHolder);

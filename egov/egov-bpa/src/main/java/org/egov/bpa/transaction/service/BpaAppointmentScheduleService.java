@@ -62,7 +62,7 @@ public class BpaAppointmentScheduleService {
     }
 
     public BpaAppointmentSchedule findById(Long id) {
-        return appointmentScheduleRepository.findOne(id);
+        return appointmentScheduleRepository.findById(id).orElse(null);
     }
 
     public List<BpaAppointmentSchedule> findByApplication(BpaApplication bpaApplication,AppointmentSchedulePurpose type) {

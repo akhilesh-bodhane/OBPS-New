@@ -59,14 +59,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.metamodel.Metamodel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,7 +109,7 @@ public class AccountEntityService implements EntityTypeService {
     }
 
     public List<AccountEntity> findAll() {
-        return accountEntityRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+        return accountEntityRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public AccountEntity findByName(String name) {
@@ -121,7 +121,7 @@ public class AccountEntityService implements EntityTypeService {
     }
 
     public AccountEntity findOne(Integer id) {
-        return accountEntityRepository.findOne(id);
+        return accountEntityRepository.findById(id).orElse(null);
     }
 
     public List<AccountEntity> search(AccountEntity accountEntity) {
@@ -136,7 +136,7 @@ public class AccountEntityService implements EntityTypeService {
         Root<AccountEntity> accountEntitys = createQuery.from(AccountEntity.class);
         createQuery.select(accountEntitys);
         Metamodel m = entityManager.getMetamodel();
-        javax.persistence.metamodel.EntityType<AccountEntity> AccountEntity_ = m.entity(AccountEntity.class);
+        jakarta.persistence.metamodel.EntityType<AccountEntity> AccountEntity_ = m.entity(AccountEntity.class);
 
         List<Predicate> predicates = new ArrayList<Predicate>();
         if (accountEntity.getName() != null) {
@@ -175,7 +175,7 @@ public class AccountEntityService implements EntityTypeService {
     public List<? extends EntityType> filterActiveEntities(String filterKey, int maxRecords,
             Integer accountDetailTypeId) {
         // final Integer pageSize = maxRecords > 0 ? maxRecords : null;
-        // Pageable pageable= new PageRequest(1, maxRecords);
+        // Pageable pageable= PageRequest.of(1, maxRecords);
         final List<EntityType> entities = new ArrayList<EntityType>();
         filterKey = "%" + filterKey + "%";
         List<AccountEntity> pagedEntities = accountEntityRepository.findBy20(accountDetailTypeId, filterKey);

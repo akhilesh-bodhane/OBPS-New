@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.config.reports.properties.BpaApplicationReportProperties;
 import org.egov.bpa.transaction.entity.PermitCoApplicant;

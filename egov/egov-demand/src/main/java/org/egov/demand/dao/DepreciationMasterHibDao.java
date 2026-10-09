@@ -51,13 +51,13 @@ package org.egov.demand.dao;
 import org.egov.commons.Installment;
 import org.egov.demand.model.DepreciationMaster;
 import org.egov.infra.admin.master.entity.Module;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository(value = "depreciationMasterDAO")
@@ -84,8 +84,8 @@ public class DepreciationMasterHibDao implements DepreciationMasterDao {
 				"from DepreciationMaster DM where DM.module=:mod and DM.year=:year ");// and
 																						// DM.IsHistory='N'
 																						// ");
-		qry.setEntity("mod", mod);
-		qry.setInteger("year", year);
+		qry.setParameter("mod", mod);
+		qry.setParameter("year", year);
 		return (DepreciationMaster) qry.uniqueResult();
 	}
 
@@ -105,9 +105,9 @@ public class DepreciationMasterHibDao implements DepreciationMasterDao {
 		Query qry = getCurrentSession()
 				.createQuery(
 						"from DepreciationMaster DM where DM.module=:mod and DM.year=:year and DM.IsHistory='N' and DM.startInstallment=:insYear ");
-		qry.setEntity("mod", mod);
-		qry.setInteger("year", year);
-		qry.setEntity("insYear", insYear);
+		qry.setParameter("mod", mod);
+		qry.setParameter("year", year);
+		qry.setParameter("insYear", insYear);
 		return (DepreciationMaster) qry.uniqueResult();
 	}
 
@@ -116,7 +116,7 @@ public class DepreciationMasterHibDao implements DepreciationMasterDao {
 
 		Query qry = getCurrentSession().createQuery(
 				"from DepreciationMaster DM where DM.module=:module");
-		qry.setEntity("module", mod);
+		qry.setParameter("module", mod);
 		return qry.list();
 	}
 
@@ -125,7 +125,7 @@ public class DepreciationMasterHibDao implements DepreciationMasterDao {
 
 		Query qry = getCurrentSession().createQuery(
 				"from DepreciationMaster DM where DM.module=:module and DM.IsHistory='N'");
-		qry.setEntity("module", mod);
+		qry.setParameter("module", mod);
 		return qry.list();
 	}
 
@@ -133,7 +133,7 @@ public class DepreciationMasterHibDao implements DepreciationMasterDao {
 	public Float getDepreciationPercent(Integer year) {
 		Query qry = getCurrentSession().createQuery(
 				"select DM.depreciationPct from DepreciationMaster DM where DM.year=:year");
-		qry.setInteger("year", year);
+		qry.setParameter("year", year);
 		return (Float) qry.uniqueResult();
 	}
 

@@ -53,7 +53,7 @@ public interface BpaNocApplicationRepository extends JpaRepository<BpaNocApplica
 	BpaNocApplication findByNocApplicationNumber(@Param("nocAppNo") String nocAppNo);
 	
 	@Modifying
-	@Query("update BpaNocApplication noc set noc.status = '62' where noc.nocApplicationNumber =:nocAppNo")
+	@Query("update BpaNocApplication noc set noc.status = (select s from BpaStatus s where s.id = 62L) where noc.nocApplicationNumber =:nocAppNo")
 	void updateNocApplicationStatus(@Param("nocAppNo") String nocAppNo);
 	  
 }

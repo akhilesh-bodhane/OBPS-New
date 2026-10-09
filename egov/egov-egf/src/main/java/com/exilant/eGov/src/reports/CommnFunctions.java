@@ -56,7 +56,7 @@ package com.exilant.eGov.src.reports;
 import com.exilant.exility.common.TaskFailedException;
 import org.apache.log4j.Logger;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -111,9 +111,9 @@ public class CommnFunctions
             final String query = " select id,name from fund where isactive=true and isnotleaf!=true " + fundCondition + " order by id";
             if (LOGGER.isInfoEnabled())
                 LOGGER.info("getFundList: " + query);
-            pstmt = persistenceService.getSession().createSQLQuery(query);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setString(0, fundId);
+                pstmt.setParameter(1, fundId);
             resultset = pstmt.list();
             int resSize = 0, i = 0;
             resSize = resultset.size();
@@ -172,14 +172,14 @@ public class CommnFunctions
         {
             int j = 1;
             getFundList(fundId, startDate, endDate);
-            pstmt = persistenceService.getSession().createSQLQuery(query);
-            pstmt.setString(j++, type2);
-            pstmt.setString(j++, type1);
-            pstmt.setString(j++, type2);
-            pstmt.setString(j++, startDate);
-            pstmt.setString(j++, endDate);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
+            pstmt.setParameter(j++, type2);
+            pstmt.setParameter(j++, type1);
+            pstmt.setParameter(j++, type2);
+            pstmt.setParameter(j++, startDate);
+            pstmt.setParameter(j++, endDate);
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setString(j++, fundId);
+                pstmt.setParameter(j++, fundId);
             resultset = pstmt.list();
             Double opeBal = null;
             HashMap openingBalsubList = null;
@@ -242,12 +242,12 @@ public class CommnFunctions
         try
         {
             int j = 1;
-            pstmt = persistenceService.getSession().createSQLQuery(query1);
-            pstmt.setString(j++, type1);
-            pstmt.setString(j++, startDate);
-            pstmt.setString(j++, endDate);
+            pstmt = persistenceService.getSession().createNativeQuery(query1);
+            pstmt.setParameter(j++, type1);
+            pstmt.setParameter(j++, startDate);
+            pstmt.setParameter(j++, endDate);
             if (fundid != null && !fundid.equals(""))
-                pstmt.setString(j++, fundid);
+                pstmt.setParameter(j++, fundid);
             resultset = pstmt.list();
             final Object[] firstElement = resultset != null && resultset.size() > 0 ? resultset.get(1) : null;
             for (final Object[] element : resultset) {
@@ -317,15 +317,15 @@ public class CommnFunctions
         try
         {
             int j = 1;
-            pstmt = persistenceService.getSession().createSQLQuery(query);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
             if (type1 == null || type1.trim().equals("")) {
-                pstmt.setString(j++, type1);
-                pstmt.setString(j++, type2);
+                pstmt.setParameter(j++, type1);
+                pstmt.setParameter(j++, type2);
             }
-            pstmt.setString(j++, startDate);
-            pstmt.setString(j++, endDate);
+            pstmt.setParameter(j++, startDate);
+            pstmt.setParameter(j++, endDate);
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setString(j++, fundId);
+                pstmt.setParameter(j++, fundId);
             resultset = pstmt.list();
             Double opeBal = null;
             HashMap creditBalsubList = null;
@@ -389,13 +389,13 @@ public class CommnFunctions
         try
         {
             int j = 1;
-            pstmt = persistenceService.getSession().createSQLQuery(query);
-            pstmt.setString(j++, type1);
-            pstmt.setString(j++, type2);
-            pstmt.setString(j++, startDate);
-            pstmt.setString(j++, endDate);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
+            pstmt.setParameter(j++, type1);
+            pstmt.setParameter(j++, type2);
+            pstmt.setParameter(j++, startDate);
+            pstmt.setParameter(j++, endDate);
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setString(j++, fundId);
+                pstmt.setParameter(j++, fundId);
             resultset = pstmt.list();
             Double opeBal = null;
             HashMap debitBalsubList = null;
@@ -466,8 +466,8 @@ public class CommnFunctions
         final String query = "SELECT TO_CHAR(startingdate,'DD/MM/YYYY') FROM FINANCIALYEAR WHERE id= ?";
         try
         {
-            pstmt = persistenceService.getSession().createSQLQuery(query);
-            pstmt.setInteger(0, finYearId);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
+            pstmt.setParameter(1, finYearId);
 
             List list = pstmt.list();
             if(list!=null)
@@ -494,8 +494,8 @@ public class CommnFunctions
         final String query = "SELECT TO_CHAR(endingdate,'DD/MM/YYYY') FROM FINANCIALYEAR WHERE id= ?";
         try
         {
-            pstmt = persistenceService.getSession().createSQLQuery(query);
-            pstmt.setInteger(0, finYearId);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
+            pstmt.setParameter(1, finYearId);
             resultset = pstmt.list();
             for (final Object[] element : resultset)
                 endDate = element[0].toString();

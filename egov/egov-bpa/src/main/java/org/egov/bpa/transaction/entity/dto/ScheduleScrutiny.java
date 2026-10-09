@@ -49,14 +49,14 @@ package org.egov.bpa.transaction.entity.dto;
 
 import java.util.Date;
 
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class ScheduleScrutiny {
     private Long applicationId;
-    @SafeHtml
+    @CustomSafeHtml
     private String appointmentTime;
     private Date appointmentDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String reScheduledBy;
 
 	public Long getApplicationId() {

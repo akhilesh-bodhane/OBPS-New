@@ -55,22 +55,27 @@ import org.egov.egf.es.utils.FinancialsDashBoardUtils;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.utils.StringUtils;
 import org.egov.utils.FinancialConstants;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
+import org.elasticsearch.search.aggregations.metrics.Sum;
+import org.elasticsearch.search.aggregations.metrics.TopHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +110,16 @@ public class FinancialsDashboardService {
 
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private RestHighLevelClient restHighLevelClient;
+
+    private SearchResponse executeSearch(String indexName, SearchSourceBuilder sourceBuilder) {
+        SearchRequest searchRequest = new SearchRequest(indexName).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch search query", e);
+        }
+    }
 
 
     public List<FinancialsDetailResponse> getFinancialsData(final FinancialsDetailsRequest financialsDetailsRequest,
@@ -202,32 +216,32 @@ public class FinancialsDashboardService {
 
     private SearchResponse getDateFromIndex(String aggrField, BoolQueryBuilder boolQry, String year) {
         if (!MONTH.equalsIgnoreCase(aggrField)) {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
                             .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
                             .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))
-                            .subAggregation(AggregationBuilders.topHits(year).addField(FinancialConstants.DISTNAME)
-                                    .addField(FinancialConstants.ULBNAME)
-                                    .addField(FinancialConstants.ULBGRADE).addField(FinancialConstants.REGNAME).addField(FinancialConstants.MAJORCODEDESCRIPTION)
-                                    .addField(FinancialConstants.MINORCODEDESCRIPTION).addField(FinancialConstants.DETAILEDCODEDESCRIPTION)
-                                    .addField(FinancialConstants.VOUCHERFUNDNAME).addField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
-                                    .addField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).addField(FinancialConstants.VOUCHERMISSCHEMENAME)
-                                    .addField(FinancialConstants.VOUCHERMISSUBSCHEMENAME).setSize(1)))
-                    .execute().actionGet();
+                            .subAggregation(AggregationBuilders.topHits(year).docValueField(FinancialConstants.DISTNAME)
+                                    .docValueField(FinancialConstants.ULBNAME)
+                                    .docValueField(FinancialConstants.ULBGRADE).docValueField(FinancialConstants.REGNAME).docValueField(FinancialConstants.MAJORCODEDESCRIPTION)
+                                    .docValueField(FinancialConstants.MINORCODEDESCRIPTION).docValueField(FinancialConstants.DETAILEDCODEDESCRIPTION)
+                                    .docValueField(FinancialConstants.VOUCHERFUNDNAME).docValueField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).docValueField(FinancialConstants.VOUCHERMISSCHEMENAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISSUBSCHEMENAME).size(1)));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         } else {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
-                            .interval(DateHistogramInterval.MONTH)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
+                            .calendarInterval(DateHistogramInterval.MONTH)
                             .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
                             .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))
-                            .subAggregation(AggregationBuilders.topHits(year).addField(FinancialConstants.DISTNAME)
-                                    .addField(FinancialConstants.ULBNAME)
-                                    .addField(FinancialConstants.ULBGRADE).addField(FinancialConstants.REGNAME).addField(FinancialConstants.MAJORCODEDESCRIPTION)
-                                    .addField(FinancialConstants.MINORCODEDESCRIPTION).addField(FinancialConstants.DETAILEDCODEDESCRIPTION)
-                                    .addField(FinancialConstants.VOUCHERFUNDNAME).addField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
-                                    .addField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).addField(FinancialConstants.VOUCHERMISSCHEMENAME)
-                                    .addField(FinancialConstants.VOUCHERMISSUBSCHEMENAME).setSize(1)))
-                    .execute().actionGet();
+                            .subAggregation(AggregationBuilders.topHits(year).docValueField(FinancialConstants.DISTNAME)
+                                    .docValueField(FinancialConstants.ULBNAME)
+                                    .docValueField(FinancialConstants.ULBGRADE).docValueField(FinancialConstants.REGNAME).docValueField(FinancialConstants.MAJORCODEDESCRIPTION)
+                                    .docValueField(FinancialConstants.MINORCODEDESCRIPTION).docValueField(FinancialConstants.DETAILEDCODEDESCRIPTION)
+                                    .docValueField(FinancialConstants.VOUCHERFUNDNAME).docValueField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).docValueField(FinancialConstants.VOUCHERMISSCHEMENAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISSUBSCHEMENAME).size(1)));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         }
     }
 
@@ -237,12 +251,11 @@ public class FinancialsDashboardService {
             aggrField = AGGRTYPE;
         }
 
-        return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_OPENINGBALANCE_INDEX_NAME).setQuery(boolQuery)
-                .addAggregation(AggregationBuilders.terms(OBAGGRFIELD).field(aggrField).size(5000)
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQuery).size(0)
+                .aggregation(AggregationBuilders.terms(OBAGGRFIELD).field(aggrField).size(5000)
                         .subAggregation(AggregationBuilders.sum(OBDEBITAMOUNT).field(OBDEBITAMOUNT))
-                        .subAggregation(AggregationBuilders.sum(OBCREDITAMOUNT).field(OBCREDITAMOUNT)))
-                .execute().actionGet();
-
+                        .subAggregation(AggregationBuilders.sum(OBCREDITAMOUNT).field(OBCREDITAMOUNT)));
+        return executeSearch(FinancialConstants.FINANCIAL_OPENINGBALANCE_INDEX_NAME, sourceBuilder);
     }
 
     private BoolQueryBuilder prepareQuery(FinancialsDetailsRequest financialsDetailsRequest, String coaType) {
@@ -928,9 +941,8 @@ public class FinancialsDashboardService {
         if (StringUtils.isBlank(aggrField)) {
             aggrField = AGGRTYPE;
         }
-        return elasticsearchTemplate.getClient()
-                .prepareSearch(FinancialConstants.FINANCIAL_BUDGET_INDEX_DATA).setQuery(boolQuery)
-                .addAggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQuery).size(0)
+                .aggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
                         .subAggregation(
                                 AggregationBuilders.sum(FinancialConstants.BUDGETAPPROVEDAMOUNT).field(FinancialConstants.BUDGETAPPROVEDAMOUNT))
                         .subAggregation(
@@ -943,25 +955,25 @@ public class FinancialsDashboardService {
                                 .field(FinancialConstants.PREVIOUYEARACTUALAMOUNT))
                         .subAggregation(AggregationBuilders.sum(FinancialConstants.COMMITTEDEXPENDITURE)
                                 .field(FinancialConstants.COMMITTEDEXPENDITURE))
-                        .subAggregation(AggregationBuilders.topHits("finRecordsBudget").addField(FinancialConstants.DISTNAME)
-                                .addField(FinancialConstants.ULBNAME)
-                                .addField(FinancialConstants.ULBGRADE).addField(FinancialConstants.REGNAME).addField(FinancialConstants.MAJORCODEDESCRIPTION.toLowerCase())
-                                .addField(FinancialConstants.MINORCODEDESCRIPTION.toLowerCase()).addField(FinancialConstants.DETAILEDCODEDESCRIPTION.toLowerCase())
-                                .addField(FinancialConstants.FUND_NAME.toLowerCase()).addField(FinancialConstants.FUNCTION_NAME.toLowerCase())
-                                .addField(FinancialConstants.DEPARTMENT_NAME.toLowerCase()).addField(FinancialConstants.SCHEME_NAME.toLowerCase())
-                                .addField(FinancialConstants.SUBSCHEME_NAME.toLowerCase())
-                                .setSize(1)))
-                .execute().actionGet();
+                        .subAggregation(AggregationBuilders.topHits("finRecordsBudget").docValueField(FinancialConstants.DISTNAME)
+                                .docValueField(FinancialConstants.ULBNAME)
+                                .docValueField(FinancialConstants.ULBGRADE).docValueField(FinancialConstants.REGNAME).docValueField(FinancialConstants.MAJORCODEDESCRIPTION.toLowerCase())
+                                .docValueField(FinancialConstants.MINORCODEDESCRIPTION.toLowerCase()).docValueField(FinancialConstants.DETAILEDCODEDESCRIPTION.toLowerCase())
+                                .docValueField(FinancialConstants.FUND_NAME.toLowerCase()).docValueField(FinancialConstants.FUNCTION_NAME.toLowerCase())
+                                .docValueField(FinancialConstants.DEPARTMENT_NAME.toLowerCase()).docValueField(FinancialConstants.SCHEME_NAME.toLowerCase())
+                                .docValueField(FinancialConstants.SUBSCHEME_NAME.toLowerCase())
+                                .size(1)));
+        return executeSearch(FinancialConstants.FINANCIAL_BUDGET_INDEX_DATA, sourceBuilder);
     }
 
     private FinancialsBudgetDetailResponse setBudgetResponseDetails(final TopHits topHits) {
         FinancialsBudgetDetailResponse finBudgetResponse = new FinancialsBudgetDetailResponse();
         final SearchHit[] hit = topHits.getHits().getHits();
-        SearchHitField fund = hit[0].field(FinancialConstants.FUND_NAME.toLowerCase());
-        SearchHitField function = hit[0].field(FinancialConstants.FUNCTION_NAME.toLowerCase());
-        SearchHitField department = hit[0].field(FinancialConstants.DEPARTMENT_NAME.toLowerCase());
-        SearchHitField scheme = hit[0].field(FinancialConstants.SCHEME_NAME.toLowerCase());
-        SearchHitField subScheme = hit[0].field(FinancialConstants.SUBSCHEME_NAME.toLowerCase());
+        DocumentField fund = hit[0].field(FinancialConstants.FUND_NAME.toLowerCase());
+        DocumentField function = hit[0].field(FinancialConstants.FUNCTION_NAME.toLowerCase());
+        DocumentField department = hit[0].field(FinancialConstants.DEPARTMENT_NAME.toLowerCase());
+        DocumentField scheme = hit[0].field(FinancialConstants.SCHEME_NAME.toLowerCase());
+        DocumentField subScheme = hit[0].field(FinancialConstants.SUBSCHEME_NAME.toLowerCase());
 
         finBudgetResponse.setRegion(hit[0].field(FinancialConstants.REGNAME).getValue());
         finBudgetResponse.setDistrict(hit[0].field(FinancialConstants.DISTNAME).getValue());

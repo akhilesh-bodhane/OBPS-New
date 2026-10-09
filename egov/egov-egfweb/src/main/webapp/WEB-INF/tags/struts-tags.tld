@@ -7,7 +7,7 @@
                                     to ensure that input is correct and output is localized.
                                     The Struts Tags can be used with JSP FreeMarker or Velocity."]]></description>
   <display-name>Struts Tags</display-name>
-  <tlib-version>2.3</tlib-version>
+  <tlib-version>6.0</tlib-version>
   <short-name>s</short-name>
   <uri>/struts-tags</uri>
   <tag>
@@ -46,13 +46,19 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[Whether an exception should be rethrown, if the target action throws an exception]]></description>
       <name>rethrowException</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -67,12 +73,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -143,14 +143,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -241,6 +241,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -342,12 +348,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -414,14 +414,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -512,6 +512,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -625,12 +631,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -675,6 +675,12 @@
     <attribute>
       <description><![CDATA[Specifies whether to escape ampersand (&amp;) to (&amp;amp;) or not]]></description>
       <name>escapeAmp</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Specifies whether to HTML-escape the tag body or not]]></description>
+      <name>escapeHtmlBody</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -727,14 +733,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -843,6 +849,12 @@
     <attribute>
       <description><![CDATA[Set template to use for opening the rendered html.]]></description>
       <name>openTemplate</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -962,6 +974,12 @@
     <tag-class>org.apache.struts2.views.jsp.iterator.AppendIteratorTag</tag-class>
     <body-content>JSP</body-content>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The name of which if supplied will have the resultant appended iterator stored under in the stack's context]]></description>
       <name>var</name>
       <required>false</required>
@@ -981,7 +999,13 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -996,12 +1020,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1072,14 +1090,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left), also 'right' is supported when using 'xhtml' theme]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1174,6 +1192,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -1188,6 +1212,12 @@
     <attribute>
       <description><![CDATA[The css style definitions for element to use - it's an alias of cssStyle attribute.]]></description>
       <name>style</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[If set to true, unchecked elements will be submitted with the form. Since Struts 6.1.1 you can use a constant "struts.ui.checkbox.submitUnchecked" to set this attribute globally]]></description>
+      <name>submitUnchecked</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1271,12 +1301,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -1337,14 +1361,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1487,6 +1511,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -1584,12 +1614,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -1668,14 +1692,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1694,12 +1718,6 @@
     <attribute>
       <description><![CDATA[Set the value used to retrieve the option value.]]></description>
       <name>listValue</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Deprecated. Use maxlength instead.]]></description>
-      <name>maxLength</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1796,6 +1814,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -1927,13 +1951,19 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The specific timezone in which to format the date]]></description>
       <name>timezone</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -1948,12 +1978,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2024,14 +2048,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2122,6 +2146,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2212,19 +2242,13 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
   <tag>
-    <description><![CDATA[Prints debugging information]]></description>
+    <description><![CDATA[Prints debugging information (Only if 'struts.devMode' is enabled)]]></description>
     <name>debug</name>
     <tag-class>org.apache.struts2.views.jsp.ui.DebugTag</tag-class>
     <body-content>JSP</body-content>
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2289,14 +2313,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2387,6 +2411,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2484,12 +2514,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2770,14 +2794,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -2926,6 +2950,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -3022,6 +3052,12 @@
     <name>else</name>
     <tag-class>org.apache.struts2.views.jsp.ElseTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <dynamic-attributes>false</dynamic-attributes>
   </tag>
   <tag>
@@ -3029,6 +3065,12 @@
     <name>elseif</name>
     <tag-class>org.apache.struts2.views.jsp.ElseIfTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <attribute>
       <description><![CDATA[Expression to determine if body of tag is to be displayed]]></description>
       <name>test</name>
@@ -3045,12 +3087,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3127,14 +3163,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3225,6 +3261,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3332,12 +3374,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -3398,14 +3434,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3500,6 +3536,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -3584,7 +3626,7 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Preset the value of input element.]]></description>
+      <description><![CDATA[Ignored during file upload]]></description>
       <name>value</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -3611,12 +3653,6 @@
     <attribute>
       <description><![CDATA[Set action name to submit to, without .action suffix]]></description>
       <name>action</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3699,14 +3735,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3827,6 +3863,12 @@
     <attribute>
       <description><![CDATA[Set template to use for opening the rendered html.]]></description>
       <name>openTemplate</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -3952,12 +3994,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -4018,14 +4054,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4116,6 +4152,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4217,12 +4259,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -4283,14 +4319,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4381,6 +4417,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4482,12 +4524,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -4548,14 +4584,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4646,6 +4682,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4746,6 +4788,12 @@
       <required>true</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <dynamic-attributes>false</dynamic-attributes>
   </tag>
   <tag>
@@ -4753,6 +4801,12 @@
     <name>if</name>
     <tag-class>org.apache.struts2.views.jsp.IfTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <attribute>
       <description><![CDATA[Expression to determine if body of tag is to be displayed]]></description>
       <name>test</name>
@@ -4766,6 +4820,12 @@
     <name>include</name>
     <tag-class>org.apache.struts2.views.jsp.IncludeTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <attribute>
       <description><![CDATA[The jsp/servlet output to include]]></description>
       <name>value</name>
@@ -4812,12 +4872,6 @@
     <attribute>
       <description><![CDATA[the css style used for rendering buttons]]></description>
       <name>buttonCssStyle</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -4900,14 +4954,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -5062,6 +5116,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[the label used for the remove all button]]></description>
       <name>removeAllLabel</name>
       <required>false</required>
@@ -5195,6 +5255,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If specified, an instanceof IteratorStatus will be pushed into stack upon each iteration]]></description>
       <name>status</name>
       <required>false</required>
@@ -5213,7 +5279,7 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -5228,12 +5294,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -5304,14 +5364,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -5406,6 +5466,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -5492,10 +5558,335 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
   <tag>
+    <description><![CDATA[Link tag automatically adds nonces to link elements - should be used in combination with Struts' CSP Interceptor.]]></description>
+    <name>link</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.LinkTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link as attribute]]></description>
+      <name>as</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link crossorigin attribute]]></description>
+      <name>crossorigin</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css class to use for element]]></description>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css error class to use for element]]></description>
+      <name>cssErrorClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css error style definitions for element to use]]></description>
+      <name>cssErrorStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css style definitions for element to use]]></description>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define error position of form element (top|bottom)]]></description>
+      <name>errorPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link href attribute]]></description>
+      <name>href</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link hreflang attribute]]></description>
+      <name>hreflang</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML id attribute]]></description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Use JavaScript to generate tooltips]]></description>
+      <name>javascriptTooltip</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Label expression used for rendering an element specific label]]></description>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link media attribute]]></description>
+      <name>media</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The name to set for element]]></description>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+      <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link referrerpolicy attribute]]></description>
+      <name>referrerpolicy</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link rel attribute]]></description>
+      <name>rel</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+      <name>requiredLabel</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define required position of required form element (left|right)]]></description>
+      <name>requiredPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link sizes attribute]]></description>
+      <name>sizes</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css style definitions for element to use - it's an alias of cssStyle attribute.]]></description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The template directory.]]></description>
+      <name>templateDir</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+      <name>theme</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the tooltip of this particular component]]></description>
+      <name>tooltip</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
+      <name>tooltipConfig</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+      <name>tooltipCssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+      <name>tooltipDelay</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+      <name>tooltipIconPath</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML link type attribute]]></description>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Preset the value of input element.]]></description>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+  <tag>
     <description><![CDATA[Merge the values of a list of iterators into one iterator]]></description>
     <name>merge</name>
     <tag-class>org.apache.struts2.views.jsp.iterator.MergeIteratorTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <attribute>
       <description><![CDATA[The name where the resultant merged iterator will be stored in the stack's context]]></description>
       <name>var</name>
@@ -5558,6 +5949,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The rounding mode to use, possible values: ceiling, down, floor, half-down, half-even, half-up, unnecessary, up]]></description>
       <name>roundingMode</name>
       <required>false</required>
@@ -5570,7 +5967,7 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -5601,14 +5998,38 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Property of list objects to get css class from]]></description>
+      <name>listCssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Property of list objects to get css style from]]></description>
+      <name>listCssStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[Set the listKey attribute.]]></description>
       <name>listKey</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Property of list objects to get title from]]></description>
+      <name>listTitle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[Set the listValue attribute.]]></description>
       <name>listValue</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -5724,12 +6145,6 @@
     <attribute>
       <description><![CDATA[Set button css style]]></description>
       <name>buttonCssStyle</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6010,14 +6425,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6184,6 +6599,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -6329,6 +6750,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[Whether to suppress empty parameters]]></description>
       <name>suppressEmptyParameters</name>
       <required>false</required>
@@ -6350,12 +6777,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6420,20 +6841,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[String that will be appended to the label]]></description>
       <name>labelSeparator</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Deprecated. Use maxlength instead.]]></description>
-      <name>maxLength</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6530,6 +6945,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6679,6 +7100,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[Value to be displayed]]></description>
       <name>value</name>
       <required>false</required>
@@ -6691,6 +7118,12 @@
     <name>push</name>
     <tag-class>org.apache.struts2.views.jsp.PushTag</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
     <attribute>
       <description><![CDATA[Value to push on stack]]></description>
       <name>value</name>
@@ -6707,12 +7140,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6777,14 +7204,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -6927,6 +7354,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -7030,12 +7463,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -7096,14 +7523,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7210,6 +7637,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -7308,9 +7741,9 @@
     <dynamic-attributes>true</dynamic-attributes>
   </tag>
   <tag>
-    <description><![CDATA[Render a select element]]></description>
-    <name>select</name>
-    <tag-class>org.apache.struts2.views.jsp.ui.SelectTag</tag-class>
+    <description><![CDATA[Script tag automatically adds nonces to script blocks - should be used in combination with Struts' CSP Interceptor.]]></description>
+    <name>script</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.ScriptTag</tag-class>
     <body-content>JSP</body-content>
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
@@ -7319,8 +7752,327 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
+      <description><![CDATA[HTML script async attribute]]></description>
+      <name>async</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script charset attribute]]></description>
+      <name>charset</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script crossorigin attribute]]></description>
+      <name>crossorigin</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css class to use for element]]></description>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css error class to use for element]]></description>
+      <name>cssErrorClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css error style definitions for element to use]]></description>
+      <name>cssErrorStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css style definitions for element to use]]></description>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script defer attribute]]></description>
+      <name>defer</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define error position of form element (top|bottom)]]></description>
+      <name>errorPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML id attribute]]></description>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script integrity attribute]]></description>
+      <name>integrity</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Use JavaScript to generate tooltips]]></description>
+      <name>javascriptTooltip</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Label expression used for rendering an element specific label]]></description>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The name to set for element]]></description>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script nomodule attribute]]></description>
+      <name>nomodule</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+      <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set template to use for opening the rendered html.]]></description>
+      <name>openTemplate</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script referrerpolicy attribute]]></description>
+      <name>referrerpolicy</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+      <name>requiredLabel</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Define required position of required form element (left|right)]]></description>
+      <name>requiredPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script src attribute]]></description>
+      <name>src</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The css style definitions for element to use - it's an alias of cssStyle attribute.]]></description>
+      <name>style</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The template directory.]]></description>
+      <name>templateDir</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+      <name>theme</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set the tooltip of this particular component]]></description>
+      <name>tooltip</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
+      <name>tooltipConfig</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+      <name>tooltipCssClass</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+      <name>tooltipDelay</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+      <name>tooltipIconPath</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML script type attribute]]></description>
+      <name>type</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Preset the value of input element.]]></description>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <dynamic-attributes>true</dynamic-attributes>
+  </tag>
+  <tag>
+    <description><![CDATA[Render a select element]]></description>
+    <name>select</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.SelectTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+      <name>accesskey</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7403,14 +8155,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7559,6 +8311,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -7656,8 +8414,20 @@
     <tag-class>org.apache.struts2.views.jsp.SetTag</tag-class>
     <body-content>JSP</body-content>
     <attribute>
-      <description><![CDATA[The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.]]></description>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b> (action scope <em>also</em> adds it to the page scope).]]></description>
       <name>scope</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Set to false to prevent the default whitespace-trim of this tag's body content]]></description>
+      <name>trimBody</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7668,7 +8438,7 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (default scope: action,<em>override</em> with the scope attribute).]]></description>
       <name>var</name>
       <required>true</required>
       <rtexprvalue>false</rtexprvalue>
@@ -7689,12 +8459,6 @@
     <attribute>
       <description><![CDATA[Set action attribute.]]></description>
       <name>action</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7735,6 +8499,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Specifies whether to HTML-escape the tag body or not]]></description>
+      <name>escapeHtmlBody</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[HTML id attribute]]></description>
       <name>id</name>
       <required>false</required>
@@ -7759,14 +8529,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -7869,6 +8639,12 @@
     <attribute>
       <description><![CDATA[Set template to use for opening the rendered html.]]></description>
       <name>openTemplate</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8006,13 +8782,13 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Search the stack if property is not found on resources]]></description>
-      <name>searchValueStack</name>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -8027,12 +8803,6 @@
     <attribute>
       <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
       <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8103,14 +8873,26 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[String that will be appended to the label]]></description>
       <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[HTML maxlength attribute]]></description>
+      <name>maxlength</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[HTML minlength attribute]]></description>
+      <name>minlength</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8201,6 +8983,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8320,12 +9108,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -8386,20 +9168,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[String that will be appended to the label]]></description>
       <name>labelSeparator</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[Deprecated. Use maxlength instead.]]></description>
-      <name>maxLength</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8496,6 +9272,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8615,12 +9397,6 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
       <description><![CDATA[The css class to use for element]]></description>
       <name>cssClass</name>
       <required>false</required>
@@ -8681,14 +9457,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8779,6 +9555,12 @@
     <attribute>
       <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
       <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -8928,6 +9710,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The resulting portlet mode]]></description>
       <name>portletMode</name>
       <required>false</required>
@@ -8952,7 +9740,7 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+      <description><![CDATA[Name used to reference the value pushed into the Value Stack (scope: action).]]></description>
       <name>var</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
@@ -8991,12 +9779,6 @@
     <attribute>
       <description><![CDATA[Whether or not select all button should be displayed]]></description>
       <name>allowSelectAll</name>
-      <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
-    </attribute>
-    <attribute>
-      <description><![CDATA[The css class to use for element - it's an alias of cssClass attribute.]]></description>
-      <name>class</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -9079,14 +9861,14 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[String that will be appended to the label]]></description>
-      <name>labelSeparator</name>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+      <name>labelPosition</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-      <name>labelposition</name>
+      <description><![CDATA[String that will be appended to the label]]></description>
+      <name>labelSeparator</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>
@@ -9247,6 +10029,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing (if applicable)]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
       <name>requiredLabel</name>
       <required>false</required>
@@ -9362,6 +10150,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The separator to be used in separating the <i>val</i> into entries of the iterator]]></description>
       <name>separator</name>
       <required>true</required>
@@ -9393,6 +10187,12 @@
       <rtexprvalue>false</rtexprvalue>
     </attribute>
     <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
       <description><![CDATA[The iterable source to sort]]></description>
       <name>source</name>
       <required>false</required>
@@ -9420,6 +10220,12 @@
     <attribute>
       <description><![CDATA[Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator]]></description>
       <name>decider</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[Whether to clear all tag state during doEndTag() processing]]></description>
+      <name>performClearTagStateForTagPoolingServers</name>
       <required>false</required>
       <rtexprvalue>false</rtexprvalue>
     </attribute>

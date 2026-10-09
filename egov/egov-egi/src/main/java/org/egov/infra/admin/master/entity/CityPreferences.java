@@ -53,19 +53,19 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.SafeHtml;
+import jakarta.validation.constraints.NotBlank;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.egov.infra.admin.master.entity.CityPreferences.SEQ_CITY_PREF;
@@ -94,47 +94,47 @@ public class CityPreferences extends AbstractAuditable {
 
 
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 75)
     private String municipalityName;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 20)
     private String municipalityContactNo;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 200)
     private String municipalityAddress;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String municipalityContactEmail;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 100)
     private String municipalityGisLocation;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 20)
     private String municipalityCallCenterNo;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 100)
     private String municipalityFacebookLink;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 100)
     private String municipalityTwitterLink;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 64)
     private String recaptchaPK;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 64)
     private String recaptchaPub;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotBlank
     @Length(max = 50)
     private String googleApiKey;

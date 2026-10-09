@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.autonumber.LettertoPartyNumberGenerator;
 import org.egov.bpa.autonumber.LettertoPartyReplyAckNumberGenerator;
@@ -112,7 +112,7 @@ public class OCLetterToPartyService {
     }
 
     public OCLetterToParty findById(Long id) {
-        return letterToPartyRepository.findOne(id);
+        return letterToPartyRepository.findById(id).orElse(null);
     }
 
     @Transactional

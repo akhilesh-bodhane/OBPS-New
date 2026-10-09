@@ -2,8 +2,8 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.NocConfig;
 import org.egov.bpa.master.entity.NocDepartment;
@@ -42,7 +42,7 @@ public class NocDepartmentService {
 	}
 
 	public List<NocDepartment> findAll() {
-		return nocDepartmentRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+		return nocDepartmentRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 	}
 
 	public NocDepartment findByName(String name) {
@@ -54,7 +54,7 @@ public class NocDepartmentService {
 	}
 
 	public NocDepartment findOne(Long id) {
-		return nocDepartmentRepository.findOne(id);
+		return nocDepartmentRepository.findById(id).orElse(null);
 	}
 
 	public List<NocDepartment> search(NocDepartment nocDepartment) {

@@ -63,7 +63,7 @@ public class SlotApplicationService {
 
         }
         public SlotApplication findById(final Long slotApplicationId) {
-           return slotApplicationRepository.findOne(slotApplicationId);
+           return slotApplicationRepository.findById(slotApplicationId).orElse(null);
 
     }
 

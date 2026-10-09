@@ -1,6 +1,6 @@
 package org.egov.portal.web.controller.common;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.infra.admin.master.entity.City;
 import org.egov.portal.utils.PortalUtils;

@@ -47,7 +47,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import javax.net.ssl.SSLContext
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import java.util.concurrent.atomic.AtomicReference
 
 class SimpleHostRoutingFilter extends ZuulFilter {

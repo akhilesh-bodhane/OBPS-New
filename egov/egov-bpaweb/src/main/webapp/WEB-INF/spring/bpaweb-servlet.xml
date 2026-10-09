@@ -101,9 +101,9 @@
         </property>
     </bean>
 
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"/>
+    <bean id="viewResolver" class="org.egov.infra.web.view.tiles3.TilesViewResolver"/>
 
-    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+    <bean id="tilesConfigurer" class="org.egov.infra.web.view.tiles3.TilesConfigurer">
         <property name="definitions">
             <list>
                 <value>/WEB-INF/layout/tiles.xml</value>

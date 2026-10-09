@@ -56,32 +56,34 @@ import org.egov.collection.bean.dashboard.CollectionTableData;
 import org.egov.collection.bean.dashboard.TaxPayerDashBoardDetails;
 import org.egov.collection.bean.dashboard.TaxPayerDashBoardResponseDetails;
 import org.egov.collection.constants.CollectionConstants;
-import org.egov.collection.entity.es.CollectionDocument;
 import org.egov.commons.CFinancialYear;
 import org.egov.infra.utils.DateUtils;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
+import org.elasticsearch.search.aggregations.metrics.Sum;
+import org.elasticsearch.search.aggregations.metrics.ValueCount;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,23 +128,45 @@ public class CollectionDocumentElasticSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectionDocumentElasticSearchService.class);
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private RestHighLevelClient restHighLevelClient;
+
+    private Aggregations executeAggregation(BoolQueryBuilder boolQuery, String indexName, AggregationBuilder... aggregationBuilders) {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().size(0);
+        if (boolQuery != null)
+            sourceBuilder.query(boolQuery);
+        for (AggregationBuilder aggregationBuilder : aggregationBuilders)
+            if (aggregationBuilder != null)
+                sourceBuilder.aggregation(aggregationBuilder);
+        SearchRequest searchRequest = new SearchRequest(indexName).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT).getAggregations();
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch aggregation query", e);
+        }
+    }
+
+    private SearchResponse executeSearch(String indexName, SearchSourceBuilder sourceBuilder) {
+        SearchRequest searchRequest = new SearchRequest(indexName).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch search query", e);
+        }
+    }
 
     public Set<String> getServices() {
 
-        SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME)
-                .addAggregation(AggregationBuilders.count("services_count").field(BILLING_SERVICE)).build();
-        final Aggregations collCountAggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations collCountAggr = executeAggregation(null, COLLECTION_INDEX_NAME,
+                AggregationBuilders.count("services_count").field(BILLING_SERVICE));
 
         final ValueCount aggr = collCountAggr.get("services_count");
-        searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME).withFields(BILLING_SERVICE)
-                .withPageable(new PageRequest(0, (int) (aggr.getValue() == 0 ? 1 : aggr.getValue()))).build();
-        final List<CollectionDocument> list = elasticsearchTemplate.queryForList(searchQueryColl,
-                CollectionDocument.class);
+        final int size = (int) (aggr.getValue() == 0 ? 1 : aggr.getValue());
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().size(size)
+                .fetchSource(new String[] { BILLING_SERVICE }, null);
+        final SearchResponse response = executeSearch(COLLECTION_INDEX_NAME, sourceBuilder);
         final Set<String> services = new TreeSet<>();
-        for (final CollectionDocument colDoc : list)
-            services.add(colDoc.getBillingService());
+        for (final SearchHit hit : response.getHits())
+            services.add(String.valueOf(hit.getSourceAsMap().get(BILLING_SERVICE)));
         return services;
     }
 
@@ -163,12 +187,9 @@ public class CollectionDocumentElasticSearchService {
                 .mustNot(QueryBuilders.matchQuery(STATUS, CANCELLED));
         if (!serviceDetails.isEmpty())
             boolQuery = boolQuery.must(QueryBuilders.termsQuery(BILLING_SERVICE, serviceDetails));
-        final SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME)
-                .withQuery(boolQuery).addAggregation(AggregationBuilders.sum(COLLECTIONTOTAL).field(TOTAL_AMOUNT))
-                .build();
 
-        final Aggregations collAggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations collAggr = executeAggregation(boolQuery, COLLECTION_INDEX_NAME,
+                AggregationBuilders.sum(COLLECTIONTOTAL).field(TOTAL_AMOUNT));
 
         final Sum aggr = collAggr.get(COLLECTIONTOTAL);
         return BigDecimal.valueOf(aggr.getValue()).setScale(0, BigDecimal.ROUND_HALF_UP);
@@ -335,12 +356,8 @@ public class CollectionDocumentElasticSearchService {
         if (!serviceDetails.isEmpty())
             boolQuery = boolQuery.filter(QueryBuilders.termsQuery(BILLING_SERVICE, serviceDetails));
 
-        final SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME)
-                .withQuery(boolQuery).addAggregation(AggregationBuilders.sum(COLLECTIONTOTAL).field(TOTAL_AMOUNT))
-                .build();
-
-        final Aggregations collAggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations collAggr = executeAggregation(boolQuery, COLLECTION_INDEX_NAME,
+                AggregationBuilders.sum(COLLECTIONTOTAL).field(TOTAL_AMOUNT));
 
         final Sum aggr = collAggr.get(COLLECTIONTOTAL);
         final Long timeTaken = System.currentTimeMillis() - startTime;
@@ -475,13 +492,12 @@ public class CollectionDocumentElasticSearchService {
             requiredFields[3] = CITY_NAME;
         }
         Map collectionTypeDetails = new HashMap<>();
-        SearchResponse response = elasticsearchTemplate.getClient()
-                .prepareSearch(COLLECTION_INDEX_NAME)
-                .setQuery(boolQuery).setSize(1)
-                .setFetchSource(requiredFields, null)
-                .execute().actionGet();
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+                .query(boolQuery).size(1)
+                .fetchSource(requiredFields, null);
+        SearchResponse response = executeSearch(COLLECTION_INDEX_NAME, sourceBuilder);
         for (SearchHit hit : response.getHits())
-            collectionTypeDetails = hit.sourceAsMap();
+            collectionTypeDetails = hit.getSourceAsMap();
         return collectionTypeDetails;
     }
 
@@ -519,11 +535,7 @@ public class CollectionDocumentElasticSearchService {
         final AggregationBuilder aggregation = AggregationBuilders.terms(BY_CITY).field(aggregationField).size(120)
                 .subAggregation(AggregationBuilders.sum("total").field(fieldName));
 
-        final SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME)
-                .withQuery(boolQuery).addAggregation(aggregation).build();
-
-        final Aggregations collAggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations collAggr = executeAggregation(boolQuery, COLLECTION_INDEX_NAME, aggregation);
 
         final StringTerms cityAggr = collAggr.get(BY_CITY);
         final Map<String, BigDecimal> cytdCollMap = new HashMap<>();
@@ -671,13 +683,10 @@ public class CollectionDocumentElasticSearchService {
             boolQuery = boolQuery.filter(QueryBuilders.termsQuery(BILLING_SERVICE, serviceDetail));
 
         final AggregationBuilder monthAggregation = AggregationBuilders.dateHistogram(DATE_AGG).field(RECEIPT_DATE)
-                .interval(DateHistogramInterval.MONTH)
+                .calendarInterval(DateHistogramInterval.MONTH)
                 .subAggregation(AggregationBuilders.sum("current_total").field(TOTAL_AMOUNT));
 
-        final SearchQuery searchQueryColl = new NativeSearchQueryBuilder().withIndices(COLLECTION_INDEX_NAME)
-                .withQuery(boolQuery).addAggregation(monthAggregation).build();
-
-        return elasticsearchTemplate.query(searchQueryColl, response -> response.getAggregations());
+        return executeAggregation(boolQuery, COLLECTION_INDEX_NAME, monthAggregation);
     }
 
     public List<TaxPayerDashBoardDetails> returnUlbWiseAggregationResults(
@@ -697,14 +706,10 @@ public class CollectionDocumentElasticSearchService {
 
         Long startTime = System.currentTimeMillis();
         AggregationBuilder aggregation;
-        SearchQuery searchQueryColl;
         aggregation = AggregationBuilders.terms(BY_AGGREGATION_FIELD).field(groupingField).size(size)
-                .order(Terms.Order.aggregation(orderingAggregationName, order))
+                .order(BucketOrder.aggregation(orderingAggregationName, order))
                 .subAggregation(AggregationBuilders.sum(TOTAL_COLLECTION).field(TOTAL_AMOUNT));
-        searchQueryColl = new NativeSearchQueryBuilder().withIndices(indexName).withQuery(boolQuery)
-                .addAggregation(aggregation).build();
-        final Aggregations collAggr = elasticsearchTemplate.query(searchQueryColl,
-                response -> response.getAggregations());
+        final Aggregations collAggr = executeAggregation(boolQuery, indexName, aggregation);
 
         Long timeTaken = System.currentTimeMillis() - startTime;
         if (LOGGER.isDebugEnabled())

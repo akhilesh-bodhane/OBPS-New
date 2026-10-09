@@ -66,7 +66,7 @@ import org.egov.model.instrument.InstrumentType;
 import org.egov.model.instrument.InstrumentVoucher;
 import org.egov.utils.FinancialConstants;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -811,9 +811,9 @@ public class InstrumentService {
                 .createQuery(
                         "select iv from InstrumentVoucher iv inner join iv.instrumentHeaderId as  ih   where ih.statusId.description=:status"
                                 + " and ih in (select iih from InstrumentOtherDetails io inner join io.instrumentHeaderId as iih where io.instrumentStatusDate>=:startDate and io.instrumentStatusDate<=:endDate )");
-        qry.setString("status", FinancialConstants.INSTRUMENT_RECONCILED_STATUS);
-        qry.setDate("startDate", reconcilationFromDate);
-        qry.setDate("endDate", reconcilationToDate);
+        qry.setParameter("status", FinancialConstants.INSTRUMENT_RECONCILED_STATUS);
+        qry.setParameter("startDate", reconcilationFromDate, jakarta.persistence.TemporalType.DATE);
+        qry.setParameter("endDate", reconcilationToDate, jakarta.persistence.TemporalType.DATE);
         return qry.list();
     }
 
@@ -834,9 +834,9 @@ public class InstrumentService {
                 .createQuery(
                         "select iv from InstrumentVoucher iv inner join iv.instrumentHeaderId as  ih   where ih.statusId.description=:status"
                                 + " and ih in (select iih from InstrumentOtherDetails io inner join io.instrumentHeaderId as iih where io.modifiedDate>=:startDate and io.modifiedDate<=:endDate ) order by iv.instrumentHeaderId desc");
-        qry.setString("status", FinancialConstants.INSTRUMENT_DISHONORED_STATUS);
-        qry.setDate("startDate", dishonoredFromDate);
-        qry.setDate("endDate", dishonoredToDate);
+        qry.setParameter("status", FinancialConstants.INSTRUMENT_DISHONORED_STATUS);
+        qry.setParameter("startDate", dishonoredFromDate, jakarta.persistence.TemporalType.DATE);
+        qry.setParameter("endDate", dishonoredToDate, jakarta.persistence.TemporalType.DATE);
         return qry.list();
     }
 

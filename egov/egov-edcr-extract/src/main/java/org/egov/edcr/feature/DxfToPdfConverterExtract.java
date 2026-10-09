@@ -46,8 +46,8 @@ public class DxfToPdfConverterExtract extends FeatureExtract {
 // import java.util.regex.Pattern;
 // import java.util.stream.Collectors;
 // 
-// import javax.persistence.EntityManager;
-// import javax.persistence.PersistenceContext;
+// import jakarta.persistence.EntityManager;
+// import jakarta.persistence.PersistenceContext;
 // 
 // import org.apache.commons.lang3.StringUtils;
 // import org.apache.log4j.Logger;
@@ -829,7 +829,7 @@ public class DxfToPdfConverterExtract extends FeatureExtract {
 //                 content = "" + length;
 //                 LOG.debug("length...." + length);
 //                 text1.setHeight(0.25d);
-//                 text1.setText("" + content);
+//                 text1.setParameter("" + content);
 //                 text1.setAlign(1);
 // 
 //                 text1.setX(p.getX());
@@ -871,7 +871,7 @@ public class DxfToPdfConverterExtract extends FeatureExtract {
 //                 content1 = "" + length;
 //                 LOG.debug("length...." + length);
 //                 text1.setHeight(0.25d);
-//                 text1.setText("" + content1);
+//                 text1.setParameter("" + content1);
 //                 text1.setAlign(1);
 // 
 //                 text1.setX(p.getX());
@@ -958,7 +958,7 @@ public class DxfToPdfConverterExtract extends FeatureExtract {
 //                     content = "" + length;
 //                 LOG.debug("length...." + length);
 //                 text1.setHeight(0.25d);
-//                 text1.setText("" + content);
+//                 text1.setParameter("" + content);
 //                 text1.setAlign(1);
 // 
 //                 text1.setX(p.getX());

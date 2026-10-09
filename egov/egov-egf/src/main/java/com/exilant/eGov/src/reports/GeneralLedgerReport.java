@@ -65,7 +65,7 @@ import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.service.AppConfigValueService;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -231,7 +231,7 @@ public class GeneralLedgerReport {
         try {
 
             try {
-                pstmt = persistenceService.getSession().createSQLQuery(query);
+                pstmt = persistenceService.getSession().createNativeQuery(query);
             } catch (final Exception e) {
                 LOGGER.error("Exception in creating statement:" + pstmt, e);
                 throw taskExc;
@@ -276,8 +276,8 @@ public class GeneralLedgerReport {
                     LOGGER.info("openingBalance--------------->" + openingBalance);
 
                 final String sqlString = "select name as \"glname\" from chartofaccounts where glcode=?";
-                pstmt = persistenceService.getSession().createSQLQuery(sqlString);
-                pstmt.setString(0, glCode1);
+                pstmt = persistenceService.getSession().createNativeQuery(sqlString);
+                pstmt.setParameter(1, glCode1);
                 final List res = pstmt.list();
                 String aName = "";
                 if (res != null)
@@ -364,8 +364,8 @@ public class GeneralLedgerReport {
                         if (element[13].toString() != null)
                             fundName = element[13].toString();
                         final String sqlString1 = "select name as \"glname\" from chartofaccounts where glcode=?";
-                        pstmt = persistenceService.getSession().createSQLQuery(sqlString1);
-                        pstmt.setString(0, code);
+                        pstmt = persistenceService.getSession().createNativeQuery(sqlString1);
+                        pstmt.setParameter(1, code);
                         final List res = pstmt.list();
                         String aName = "";
                         if (res != null)
@@ -963,21 +963,21 @@ public class GeneralLedgerReport {
             LOGGER.info("**********************: OPBAL: " + queryYearOpBal);
         try {
             int i = 0;
-            pstmt = persistenceService.getSession().createSQLQuery(queryYearOpBal);
+            pstmt = persistenceService.getSession().createNativeQuery(queryYearOpBal);
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setLong(i++, Long.valueOf(fundId));
+                pstmt.setParameter(i++, Long.valueOf(fundId));
             if (!fundSourceId.equalsIgnoreCase(""))
-                pstmt.setLong(i++, Long.valueOf(fundSourceId));
+                pstmt.setParameter(i++, Long.valueOf(fundSourceId));
             if (!StringUtils.isEmpty(functionId))
-                pstmt.setLong(i++, Long.valueOf(functionId));
+                pstmt.setParameter(i++, Long.valueOf(functionId));
             if (!accEntityId.equalsIgnoreCase("")) {
-                pstmt.setLong(i++, Long.valueOf(accEntityId));
-                pstmt.setLong(i++, Long.valueOf(accEntityKey));
+                pstmt.setParameter(i++, Long.valueOf(accEntityId));
+                pstmt.setParameter(i++, Long.valueOf(accEntityKey));
             }
             if (deptId != null && !deptId.equalsIgnoreCase(""))
-                pstmt.setLong(i++, Long.valueOf(deptId));
-            pstmt.setLong(i++, Long.valueOf(fyId));
-            pstmt.setString(i++, glCode);
+                pstmt.setParameter(i++, Long.valueOf(deptId));
+            pstmt.setParameter(i++, Long.valueOf(fyId));
+            pstmt.setParameter(i++, glCode);
             resultset = null;
             final List list = pstmt.list();
             resultset = list;
@@ -1058,51 +1058,51 @@ public class GeneralLedgerReport {
         if (LOGGER.isInfoEnabled())
             LOGGER.info("***********: OPBAL: " + queryTillDateOpBal);
         try {
-            pstmt = persistenceService.getSession().createSQLQuery(queryTillDateOpBal);
+            pstmt = persistenceService.getSession().createNativeQuery(queryTillDateOpBal);
             int i = 0;
             if (!accEntityId.equalsIgnoreCase("") && !accEntityKey.equalsIgnoreCase("")) {
                 if (!fundId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundId));
+                    pstmt.setParameter(i++, Long.parseLong(fundId));
                 if (!fundSourceId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundSourceId));
+                    pstmt.setParameter(i++, Long.parseLong(fundSourceId));
                 if (!StringUtils.isEmpty(functionId))
-                    pstmt.setLong(i++, Long.parseLong(functionId));
+                    pstmt.setParameter(i++, Long.parseLong(functionId));
                 if (!accEntityId.equalsIgnoreCase("")) {
-                    pstmt.setLong(i++, Long.parseLong(accEntityId));
-                    pstmt.setLong(i++, Long.parseLong(accEntityKey));
+                    pstmt.setParameter(i++, Long.parseLong(accEntityId));
+                    pstmt.setParameter(i++, Long.parseLong(accEntityKey));
                 }
                 if (deptId != null && !deptId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(deptId));
-                pstmt.setString(i++, startDate);
-                pstmt.setString(i++, tillDate);
+                    pstmt.setParameter(i++, Long.parseLong(deptId));
+                pstmt.setParameter(i++, startDate);
+                pstmt.setParameter(i++, tillDate);
                 if (deptId != null && !deptId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(deptId));
+                    pstmt.setParameter(i++, Long.parseLong(deptId));
                 if (!fundId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundId));
+                    pstmt.setParameter(i++, Long.parseLong(fundId));
                 if (!fundSourceId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundSourceId));
+                    pstmt.setParameter(i++, Long.parseLong(fundSourceId));
                 if (!StringUtils.isEmpty(functionId))
-                    pstmt.setLong(i++, Long.parseLong(functionId));
+                    pstmt.setParameter(i++, Long.parseLong(functionId));
                 if (!accEntityId.equalsIgnoreCase("")) {
-                    pstmt.setLong(i++, Long.parseLong(accEntityId));
-                    pstmt.setLong(i++, Long.parseLong(accEntityKey));
+                    pstmt.setParameter(i++, Long.parseLong(accEntityId));
+                    pstmt.setParameter(i++, Long.parseLong(accEntityKey));
                 }
-                pstmt.setString(i++, startDate);
-                pstmt.setString(i++, tillDate);
-                pstmt.setString(i++, glCode);
+                pstmt.setParameter(i++, startDate);
+                pstmt.setParameter(i++, tillDate);
+                pstmt.setParameter(i++, glCode);
             } else {
 
                 if (deptId != null && !deptId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(deptId));
-                pstmt.setString(i++, glCode);
+                    pstmt.setParameter(i++, Long.parseLong(deptId));
+                pstmt.setParameter(i++, glCode);
                 if (!fundId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundId));
+                    pstmt.setParameter(i++, Long.parseLong(fundId));
                 if (!fundSourceId.equalsIgnoreCase(""))
-                    pstmt.setLong(i++, Long.parseLong(fundSourceId));
+                    pstmt.setParameter(i++, Long.parseLong(fundSourceId));
                 if (!StringUtils.isEmpty(functionId))
-                    pstmt.setLong(i++, Long.parseLong(functionId));
-                pstmt.setString(i++, startDate);
-                pstmt.setString(i++, tillDate);
+                    pstmt.setParameter(i++, Long.parseLong(functionId));
+                pstmt.setParameter(i++, startDate);
+                pstmt.setParameter(i++, tillDate);
             }
             resultset = null;
             final List<Object[]> list = pstmt.list();
@@ -1137,8 +1137,8 @@ public class GeneralLedgerReport {
         Query pst = null;
         try {
             final String query = "select name as \"name\" from  CHARTOFACCOUNTS where GLCODE=?";
-            pst = persistenceService.getSession().createSQLQuery(query);
-            pst.setString(0, glCode);
+            pst = persistenceService.getSession().createNativeQuery(query);
+            pst.setParameter(1, glCode);
             final List list = pst.list();
             final Object[] objects = list.toArray();
             accountName = objects[0].toString();
@@ -1156,11 +1156,11 @@ public class GeneralLedgerReport {
         Query pst = null;
         try {
             final String query = "select name  as \"name\" from fund where id=?";
-            pst = persistenceService.getSession().createSQLQuery(query);
+            pst = persistenceService.getSession().createNativeQuery(query);
             if (fundId.isEmpty())
-                pst.setInteger(0, 0);
+                pst.setParameter(1, 0);
             else
-                pst.setInteger(0, Integer.valueOf(fundId));
+                pst.setParameter(1, Integer.valueOf(fundId));
             final List<Object[]> list = pst.list();
             final Object[] objects = list.toArray();
             if (objects.length == 0)

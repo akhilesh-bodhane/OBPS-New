@@ -77,6 +77,7 @@
 		<script src="<cdn:url value='/resources/global/js/bts/typeahead.bundle.js' context='/egi'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.inputmask.bundle.min.js' context='/egi'/>"></script>
         <script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script>
+        <script src="<cdn:url value='/resources/global/js/egov/datatable-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 			
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">

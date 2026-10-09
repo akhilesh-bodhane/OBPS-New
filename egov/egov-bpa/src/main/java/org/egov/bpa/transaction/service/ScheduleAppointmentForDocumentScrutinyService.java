@@ -196,7 +196,7 @@ public class ScheduleAppointmentForDocumentScrutinyService {
     private void processSchedulingForNormalApplications(Slot slot, Map<Long, SlotApplication> processedApplication,
             BpaApplication bpaApp) {
         for (SlotDetail slotDetail : slot.getSlotDetail()) {
-            slotDetail = slotDetailRepository.findOne(slotDetail.getId());
+            slotDetail = slotDetailRepository.findById(slotDetail.getId()).orElse(null);
             if (bpaApp.getStatus().getCode()
                     .equals(BpaConstants.APPLICATION_STATUS_PENDING_FOR_RESCHEDULING)) {
                 List<SlotApplication> slotApplications = slotApplicationRepository
@@ -416,7 +416,7 @@ public class ScheduleAppointmentForDocumentScrutinyService {
     private void processSchedulingForOneDayPermitApplications(Slot slot, Map<Long, SlotApplication> processedApplication,
             BpaApplication bpaApp) {
         for (SlotDetail slotDetail : slot.getSlotDetail()) {
-            slotDetail = slotDetailRepository.findOne(slotDetail.getId());
+            slotDetail = slotDetailRepository.findById(slotDetail.getId()).orElse(null);
           
                 LOGGER.debug(
                         "******************Inside Transaction --- Slot Details List Size ------>>>>>>"

@@ -59,7 +59,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.transaction.entity.PermitRenewal;

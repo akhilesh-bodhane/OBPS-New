@@ -54,12 +54,10 @@ import org.egov.commons.CChartOfAccounts;
 import org.egov.commons.service.ChartOfAccountDetailService;
 import org.egov.infra.cache.impl.ApplicationCacheManager;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.IntegerType;
-import org.hibernate.type.LongType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -111,9 +109,9 @@ public class CoaCache implements Serializable {
                 ",nbrOfLevels as  \"nbrOfLevels\" from AccountDetailType";
 
         final Session currentSession = persistenceService.getSession();
-        SQLQuery createSQLQuery = currentSession.createSQLQuery(sql);
+        NativeQuery createSQLQuery = currentSession.createNativeQuery(sql);
         createSQLQuery
-                .addScalar("id", IntegerType.INSTANCE)
+                .addScalar("id", StandardBasicTypes.INTEGER)
                 .addScalar("name")
                 .addScalar("tableName")
                 .addScalar("description")
@@ -129,14 +127,14 @@ public class CoaCache implements Serializable {
             accountDetailType.put(type.getAttributeName(), type);
         sql = "select ID as \"ID\", glCode as \"glCode\" ,name as \"name\" ," +
                 "isActiveForPosting as \"isActiveForPosting\" ,classification as \"classification\", functionReqd as \"functionRequired\" from chartofaccounts ";
-        createSQLQuery = currentSession.createSQLQuery(sql);
+        createSQLQuery = currentSession.createNativeQuery(sql);
         createSQLQuery
-                .addScalar("ID", IntegerType.INSTANCE)
+                .addScalar("ID", StandardBasicTypes.INTEGER)
                 .addScalar("glCode")
                 .addScalar("name")
-                .addScalar("isActiveForPosting", BooleanType.INSTANCE)
-                .addScalar("classification", LongType.INSTANCE)
-                .addScalar("functionRequired", BooleanType.INSTANCE)
+                .addScalar("isActiveForPosting", StandardBasicTypes.BOOLEAN)
+                .addScalar("classification", StandardBasicTypes.LONG)
+                .addScalar("functionRequired", StandardBasicTypes.BOOLEAN)
                 .setResultTransformer(Transformers.aliasToBean(GLAccount.class));
 
         glAccountCodesList = createSQLQuery.list();

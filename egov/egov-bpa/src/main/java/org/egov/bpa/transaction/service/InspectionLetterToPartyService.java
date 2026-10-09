@@ -109,8 +109,8 @@ public class InspectionLetterToPartyService {
 
 
     public InspectionLetterToParty findById(final Long id) {
-        return lettertoPartyRepository.findOne(id);
-    }   
+        return lettertoPartyRepository.findById(id).orElse(null);
+    }
 
     public List<InspectionLetterToParty> findByInspectionApplicationOrderByIdDesc(final InspectionApplication application) {
         return lettertoPartyRepository.findByInspectionApplicationOrderByIdDesc(application);

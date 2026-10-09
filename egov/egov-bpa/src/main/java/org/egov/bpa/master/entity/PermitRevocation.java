@@ -51,24 +51,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_PERMIT_REVOCATION")
@@ -90,25 +90,25 @@ public class PermitRevocation extends AbstractAuditable {
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String revocationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date revocationDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String initiateRemarks;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String approveCancelRemarks;
 
@@ -116,7 +116,7 @@ public class PermitRevocation extends AbstractAuditable {
     @OrderBy("id asc")
     private List<PermitRevocationDetail> revocationDetails = new ArrayList<>();
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String workflowAction;
 
     @Override

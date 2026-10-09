@@ -70,9 +70,9 @@ public interface BudgetDetailRepository extends JpaRepository<BudgetDetail, java
 
     List<BudgetDetail> findByBudgetIdAndStatusId(Long budgetId, Integer status);
 
-    List<BudgetDetail> findByBudgetIdInAndStatusIdNotIn(Long budgetId, Integer status);
+    List<BudgetDetail> findByBudgetIdInAndStatusIdNotIn(java.util.Collection<Long> budgetId, java.util.Collection<Integer> status);
 
-    @Query("from BudgetDetail where uniqueNo=:uniqueNo and budget in (select id from Budget where referenceBudget.id=:budgetId)")
+    @Query("from BudgetDetail where uniqueNo=:uniqueNo and budget.id in (select id from Budget where referenceBudget.id=:budgetId)")
     BudgetDetail findByReferenceBudget(@Param("uniqueNo") String uniqueNo, @Param("budgetId") Long budgetId);
 
 }

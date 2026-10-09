@@ -48,9 +48,8 @@
 package org.egov.egf.web.actions.masters;
 
 
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.Validation;
-import com.opensymphony.xwork2.validator.annotations.Validations;
+import org.apache.struts2.validator.annotations.RequiredFieldValidator;
+import org.apache.struts2.validator.annotations.Validations;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -71,7 +70,6 @@ import java.util.Date;
 import java.util.List;
 
 @ParentPackage("egov")
-@Validation()
 
 @Results({
     @Result(name = ContractTypeAction.NEW, location = "contractType-" + ContractTypeAction.NEW + ".jsp"),

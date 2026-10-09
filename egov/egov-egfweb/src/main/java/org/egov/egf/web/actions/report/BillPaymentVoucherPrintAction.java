@@ -76,7 +76,7 @@ import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -255,7 +255,7 @@ public class BillPaymentVoucherPrintAction extends BaseFormAction {
 
     private void populateVoucher() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
 
         if (!StringUtils.isBlank(parameters.get("id")[0])) {
             chequeNosList = new ArrayList<>();
@@ -380,7 +380,7 @@ public class BillPaymentVoucherPrintAction extends BaseFormAction {
     }
 
     String getUlbName() {
-        final SQLQuery query = persistenceService.getSession().createSQLQuery("SELECT name FROM companydetail");
+        final NativeQuery query = persistenceService.getSession().createNativeQuery("SELECT name FROM companydetail");
         final List<String> result = query.list();
         if (result != null)
             return result.get(0);

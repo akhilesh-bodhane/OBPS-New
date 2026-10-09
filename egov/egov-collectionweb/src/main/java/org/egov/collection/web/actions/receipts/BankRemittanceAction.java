@@ -74,7 +74,7 @@ import org.egov.infra.validation.exception.ValidationError;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infra.web.struts.actions.BaseFormAction;
 import org.egov.infra.web.struts.annotation.ValidationErrorPage;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
@@ -222,8 +222,8 @@ public class BankRemittanceAction extends BaseFormAction {
         remitAccountNumber = "";
         if (accountNumberId != null) {
 
-            final Query bankAccountQry = persistenceService.getSession().createSQLQuery(BANK_ACCOUNT_NUMBER_QUERY);
-            bankAccountQry.setLong("accountNumberId", accountNumberId);
+            final Query bankAccountQry = persistenceService.getSession().createNativeQuery(BANK_ACCOUNT_NUMBER_QUERY);
+            bankAccountQry.setParameter("accountNumberId", accountNumberId);
             final Object bankAccountResult = bankAccountQry.uniqueResult();
             remitAccountNumber = (String) bankAccountResult;
         }
@@ -232,8 +232,8 @@ public class BankRemittanceAction extends BaseFormAction {
         if (fromDate != null && toDate != null && toDate.before(fromDate))
             addActionError(getText("bankremittance.before.fromdate"));
         if (!hasErrors() && accountNumberId != null) {
-            final Query serviceFundQuery = persistenceService.getSession().createSQLQuery(SERVICE_FUND_QUERY);
-            serviceFundQuery.setLong("accountNumberId", accountNumberId);
+            final Query serviceFundQuery = persistenceService.getSession().createNativeQuery(SERVICE_FUND_QUERY);
+            serviceFundQuery.setParameter("accountNumberId", accountNumberId);
             final List<Object[]> queryResults = serviceFundQuery.list();
 
             final List<String> serviceCodeList = new ArrayList<>(0);

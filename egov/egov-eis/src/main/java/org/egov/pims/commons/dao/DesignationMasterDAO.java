@@ -52,11 +52,11 @@ import org.egov.commons.exception.NoSuchObjectException;
 import org.egov.infra.exception.ApplicationException;
 import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.pims.commons.Designation;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -122,7 +122,7 @@ public class DesignationMasterDAO
             Query qry = getCurrentSession().createQuery("from Designation DM ");
             Map retMap = new LinkedHashMap();
             Designation designation=null;
-            for(Iterator iter = qry.iterate(); iter.hasNext(); retMap.put(designation.getId(), designation.getName()))
+            for(Iterator iter = qry.list().iterator(); iter.hasNext(); retMap.put(designation.getId(), designation.getName()))
             {
                 designation = (Designation)(Designation)iter.next();
             }
@@ -147,8 +147,8 @@ public class DesignationMasterDAO
             }
         	boolean b = false;
             Query qry = getCurrentSession().createQuery((new StringBuilder("from ")).append(className).append(" CA where trim(upper(CA.designationName)) = :designationName ").toString());
-            qry.setString("designationName", designationName);
-            Iterator iter = qry.iterate();
+            qry.setParameter("designationName", designationName);
+            Iterator iter = qry.list().iterator();
             LOGGER.info((new StringBuilder("iter")).append(iter).toString());
             if(iter.hasNext())
             {
@@ -181,7 +181,7 @@ public class DesignationMasterDAO
         {
             
         	Query qry = getCurrentSession().createQuery("select d from  Designation d where trim(upper(d.name)) = :designationName ");
-            qry.setString   ("designationName", designationName.toUpperCase());
+            qry.setParameter("designationName", designationName.toUpperCase());
             Designation desig =(Designation) qry.uniqueResult();
             if (desig == null) {
             	throw new NoSuchObjectException("designation.master.notFound");

@@ -102,7 +102,7 @@ import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.egov.utils.VoucherHelper;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -561,7 +561,7 @@ public class ChequeAssignmentAction extends BaseVoucherAction {
     public String getReceiptDetails() {
         Query query = null;
         query = persistenceService.getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select  vh.id as voucherid ,vh.voucherNumber as voucherNumber ," +
                                 " redtl.remittedamt as receiptAmount,redtl.remittedamt as deductedAmount" +
                                 " FROM voucherheader vh,eg_remittance re,eg_remittance_detail redtl,generalledger gl" +

@@ -76,8 +76,12 @@ public final class VirtualSanitizer {
 	}
 
 	private static Policy getPolicy(final String name) throws PolicyException {
-		final Policy policy = Policy.getInstance(VirtualSanitizer.class.getResource(name));
-		return policy;
+		// AntiSamy 1.7 only accepts file/jar URLs; the application server serves resources as vfs: URLs, so use a stream
+		try (java.io.InputStream in = VirtualSanitizer.class.getResourceAsStream(name)) {
+			return Policy.getInstance(in);
+		} catch (java.io.IOException e) {
+			throw new PolicyException(e);
+		}
 	}
 
 	public static String sanitize(final String input) {

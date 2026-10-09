@@ -55,7 +55,7 @@ public class ApplicationSubTypeService {
     private ApplicationSubTypeRepository applicationTypeRepository;
     
     public ApplicationSubType findById(Long id) {
-        return applicationTypeRepository.findOne(id);
+        return applicationTypeRepository.findById(id).orElse(null);
     }
 
     public List<ApplicationSubType> findAll() {

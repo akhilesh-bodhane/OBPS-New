@@ -59,7 +59,28 @@ import static org.egov.infra.utils.JsonUtils.fromJSON;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataTableSearchRequest {
 
+    /**
+     * Upper bound on rows returned when the user picks "All" (length = -1) on screen.
+     * Larger datasets should be taken through the Excel export. Override with -Ddatatable.all.rows.limit.
+     */
+    public static final int ALL_ROWS_LIMIT = Integer.getInteger("datatable.all.rows.limit", 10000);
+
     private DataTableSearchParam searchParam;
+
+    public boolean allRequested() {
+        return searchParam != null && searchParam.isAll();
+    }
+
+    /**
+     * Re-points this request at the given zero-based chunk so a screen's own paged search can be walked in full,
+     * keeping the filters and sort order the user applied. Used by Excel export.
+     */
+    public void exportPage(int page, int size) {
+        if (searchParam == null)
+            searchParam = new DataTableSearchParam();
+        searchParam.setStart(page * size);
+        searchParam.setLength(size);
+    }
 
     public int pageNumber() {
         return searchParam.getPageNumber();
@@ -100,12 +121,16 @@ public class DataTableSearchRequest {
             this.length = length;
         }
 
+        public boolean isAll() {
+            return length <= 0;
+        }
+
         public int getPageNumber() {
-            return (start / length + 1) - 1;
+            return isAll() ? 0 : start / length;
         }
 
         public int getPageSize() {
-            return length == -1 ? Integer.MAX_VALUE : length;
+            return isAll() ? ALL_ROWS_LIMIT : length;
         }
 
         public int getDraw() {
@@ -117,11 +142,13 @@ public class DataTableSearchRequest {
         }
 
         public String orderBy() {
+            if (columns == null || order == null || order.isEmpty())
+                return "id";
             return defaultIfBlank(this.columns.get(order.get(0).column).name, "id");
         }
 
         public String orderDir() {
-            return order.get(0).dir;
+            return order == null || order.isEmpty() ? "asc" : order.get(0).dir;
         }
 
         public void setColumns(List<Columns> columns) {

@@ -104,8 +104,8 @@ public class PermitRenewalLetterToPartyService {
 
 
     public PermitRenewalLetterToParty findById(final Long id) {
-        return lettertoPartyRepository.findOne(id);
-    }   
+        return lettertoPartyRepository.findById(id).orElse(null);
+    }
 
     public List<PermitRenewalLetterToParty> findByPermitRenewalOrderByIdDesc(final PermitRenewal permitRenewal) {
         return lettertoPartyRepository.findByPermitRenewalOrderByIdDesc(permitRenewal);

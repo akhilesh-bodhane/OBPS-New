@@ -33,25 +33,25 @@ import org.egov.bpa.master.entity.BuildingCategory;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_BUILDINGDETAIL")
@@ -62,7 +62,7 @@ public class BuildingDetail extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQEGBPABUILDINGDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String name;
     private Integer number;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -71,7 +71,7 @@ public class BuildingDetail extends AbstractAuditable {
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
     private Integer unitCount;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String unitClassification;
     private Integer floorCount;
@@ -98,9 +98,9 @@ public class BuildingDetail extends AbstractAuditable {
     private BigDecimal heightFromGroundWithOutStairRoom;
     private BigDecimal fromStreetLevelWithStairRoom;
     private BigDecimal fromStreetLevelWithOutStairRoom;
-    @SafeHtml
+    @CustomSafeHtml
     private String townPlanningZone;
-    @SafeHtml
+    @CustomSafeHtml
     private String crzZone;
     @OneToMany(mappedBy = "buildingDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("orderOfFloor")

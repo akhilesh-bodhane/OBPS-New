@@ -54,6 +54,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FunctionaryRepository extends JpaRepository<Functionary, Integer> {
-	Functionary findByCode(final String code);
+	Functionary findByCode(final java.math.BigDecimal code);
 
 }

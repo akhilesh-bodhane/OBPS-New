@@ -58,6 +58,7 @@
             <column name="ID"  />
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 			<param name="sequence_name">SEQ_EG_BILL_EXTRAFIELD</param>
+			<param name="increment_size">1</param>
 			</generator>
         </id>
         <many-to-one name="egBill" class="org.egov.demand.model.EgBill" >

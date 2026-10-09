@@ -59,17 +59,17 @@ import org.egov.demand.model.EgReasonCategory;
 import org.egov.demand.model.EgdmCollectedReceipt;
 import org.egov.infra.admin.master.entity.Module;
 import org.egov.infra.exception.ApplicationRuntimeException;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 		if (module != null) {
 			qry = getCurrentSession().createQuery(
 					" from EgDemandReasonMaster where egModule =:module ");
-			qry.setEntity("module", module);
+			qry.setParameter("module", module);
 			list = qry.list();
 		}
 
@@ -146,8 +146,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							" from EgDemandReasonMaster where egModule =:module and egReasonCategory =:egReasonCategory   ");
-			qry.setEntity("module", module);
-			qry.setEntity("egReasonCategory", egReasonCategory);
+			qry.setParameter("module", module);
+			qry.setParameter("egReasonCategory", egReasonCategory);
 			list = qry.list();
 		}
 		return list;
@@ -181,8 +181,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							" from EgDemandReasonMaster ReasonMaster where  ReasonMaster.egModule =:module and  ReasonMaster.code =:code  ");
-			qry.setEntity("module", module);
-			qry.setString("code", code);
+			qry.setParameter("module", module);
+			qry.setParameter("code", code);
 			egDemandReasonMaster = (EgDemandReasonMaster) qry.uniqueResult();
 		}
 		return egDemandReasonMaster;
@@ -217,8 +217,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							" select DmdReason from EgDemandReason DmdReason , EgDemandReasonMaster master  where DmdReason.egDemandReasonMaster.id = master.id and master.egModule =:module and DmdReason.egInstallmentMaster =:installment   ");
-			qry.setEntity("module", module);
-			qry.setEntity("installment", installment);
+			qry.setParameter("module", module);
+			qry.setParameter("installment", installment);
 			list = qry.list();
 		}
 		return list;
@@ -251,7 +251,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							" from EgDemandReason DmdReason  where  DmdReason.egDemandReasonMaster =:egDemandReasonMaster  ");
-			qry.setEntity("egDemandReasonMaster", egDemandReasonMaster);
+			qry.setParameter("egDemandReasonMaster", egDemandReasonMaster);
 			list = qry.list();
 		}
 		return list;
@@ -280,7 +280,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 		Query qry = null;
 		if (code != null && !code.equals("")) {
 			qry = getCurrentSession().createQuery(" from EgReasonCategory  where code =:code ");
-			qry.setString("code", code);
+			qry.setParameter("code", code);
 			list = qry.list();
 		}
 		return list;
@@ -319,9 +319,9 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							" select DmdReason from EgDemandReason DmdReason left join fetch DmdReason.egDemandReasonMaster reasonMaster where reasonMaster = :demandReasonMaster and reasonMaster.egModule =:module and DmdReason.egInstallmentMaster =:installment   ");
-			qry.setEntity("demandReasonMaster", demandReasonMaster);
-			qry.setEntity("module", module);
-			qry.setEntity("installment", installment);
+			qry.setParameter("demandReasonMaster", demandReasonMaster);
+			qry.setParameter("module", module);
+			qry.setParameter("installment", installment);
 			if (qry.list().size() == 1)
 				egDemandReason = (EgDemandReason) qry.uniqueResult();
 			else if (qry.list().size() > 1)
@@ -362,9 +362,9 @@ public class DemandGenericHibDao implements DemandGenericDao {
 				qryStr.append(" and DmdDetails.egwStatus =:status ");
 			}
 			qry = getCurrentSession().createQuery(qryStr.toString());
-			qry.setEntity("demand", demand);
+			qry.setParameter("demand", demand);
 			if (status != null) {
-				qry.setEntity("status", status);
+				qry.setParameter("status", status);
 			}
 			list = qry.list();
 		}
@@ -401,7 +401,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qry = getCurrentSession()
 					.createQuery(
 							"select DmdDetails from EgDemand egdemand left join egdemand.egDemandDetails DmdDetails  where egdemand =:demand and DmdDetails.egDemandReason in (:demandReasonList) ");
-			qry.setEntity("demand", demand);
+			qry.setParameter("demand", demand);
 			qry.setParameterList("demandReasonList", demandReasonList);
 			list = qry.list();
 		}
@@ -446,10 +446,10 @@ public class DemandGenericHibDao implements DemandGenericDao {
 			qryStr.append(" order by createDate desc ");  
 			qry = getCurrentSession().createQuery(qryStr.toString());
 			if (demand != null) {
-				qry.setEntity("demand", demand);
+				qry.setParameter("demand", demand);
 			}
-			qry.setString("includeHistory", includeHistory);
-			qry.setString("includeCancelled", includeCancelled);
+			qry.setParameter("includeHistory", includeHistory);
+			qry.setParameter("includeCancelled", includeCancelled);
 
 			list = qry.list();
 		}
@@ -482,8 +482,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 		if (BillNo != null && !BillNo.equals("0") && module != null) {
 			qry = getCurrentSession().createQuery(
 					"from EgBill egBill  where billNo =:BillNo and module =:module ");
-			qry.setString("BillNo", BillNo);
-			qry.setEntity("module", module);
+			qry.setParameter("BillNo", BillNo);
+			qry.setParameter("module", module);
 			list = qry.list();
 		}
 
@@ -518,9 +518,9 @@ public class DemandGenericHibDao implements DemandGenericDao {
 					.append(" where dmdDet.id_demand_reason=dmdRes.id and dmdDet.id_demand =:dmdId and dmdres.id_installment =:installId ")
 					.append(" and  dmdresmas.id= dmdres.id_demand_reason_master and dmdresmas.code not in('PENALTY','ADVANCE') ")
 					.append(" group by dmdRes.id_installment	 ");
-			Query qry = getCurrentSession().createSQLQuery(strBuf.toString())
-					.setLong("dmdId", egDemand.getId())
-					.setInteger("installId", installment.getId());
+			Query qry = getCurrentSession().createNativeQuery(strBuf.toString())
+					.setParameter("dmdId", egDemand.getId())
+					.setParameter("installId", installment.getId());
 			list = qry.list();
 		}
 		return list;
@@ -598,8 +598,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 					+ "AND cate.id = master.category " 
 					+ "GROUP BY dmdres.ID_INSTALLMENT, master.id, master.category "
 					+ "ORDER BY dmdres.id_installment, master.category  ";
-			Query qry = getCurrentSession().createSQLQuery(query)
-					.setLong("dmdId", egDemand.getId()).setLong("moduleId", module.getId());
+			Query qry = getCurrentSession().createNativeQuery(query)
+					.setParameter("dmdId", egDemand.getId()).setParameter("moduleId", module.getId());
 			list = qry.list();
 		}
 		return list;
@@ -626,8 +626,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 				+ " AND dr.id_installment = i.id "
 				+ " AND dr.id_demand_reason_master = drm.id " + " AND dd.id_demand =:dmdId "
 				+ " AND drm.module  =:moduleId " + "ORDER BY i.start_date ";
-		Query qry = getCurrentSession().createSQLQuery(query).setLong("dmdId", egDemand.getId())
-				.setLong("moduleId", module.getId());
+		Query qry = getCurrentSession().createNativeQuery(query).setParameter("dmdId", egDemand.getId())
+				.setParameter("moduleId", module.getId());
 		list = qry.list();
 		return list;
 	}
@@ -652,8 +652,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
 					+ "  WHERE id IN " + "    (SELECT id_demand_reason "
 					+ "    FROM eg_demand_details dmddet " + "    WHERE id_demand =:dmdId "
 					+ "    )) " + " ";
-			Query qry = getCurrentSession().createSQLQuery(query)
-					.setLong("dmdId", egDemand.getId());
+			Query qry = getCurrentSession().createNativeQuery(query)
+					.setParameter("dmdId", egDemand.getId());
 			list = qry.list();
 		}
 		return list;
@@ -702,7 +702,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 		List<BillReceipt> billReceipts = new ArrayList<BillReceipt>();
 		Query qry = null;
 		if (egDemand != null && !egDemand.isEmpty()) {
-			Criteria criteria = getCurrentSession().createCriteria(BillReceipt.class, "billRct")
+			Criteria criteria = Criteria.create(getCurrentSession(), BillReceipt.class, "billRct")
 					.createAlias("billRct.billId", "egBill", CriteriaSpecification.LEFT_JOIN)
 					.add(Restrictions.in("egBill.egDemand", egDemand))
 					.add(Restrictions.eq("billRct.isCancelled", Boolean.FALSE))
@@ -734,7 +734,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 		Query qry = null;
 		if (code != null && !code.equals("")) {
 			qry = getCurrentSession().createQuery(" from EgReasonCategory where code =:codeStr ");
-			qry.setString("codeStr", code);
+			qry.setParameter("codeStr", code);
 			egReasonCategory = (EgReasonCategory) qry.uniqueResult();
 		}
 		return egReasonCategory;
@@ -800,7 +800,7 @@ public class DemandGenericHibDao implements DemandGenericDao {
 	@Override
 	public List<EgdmCollectedReceipt> getAllEgdmCollectedReceipts(String receiptNo) {
 		List<EgdmCollectedReceipt> CollectedReceipts = new ArrayList<EgdmCollectedReceipt>();
-		Criteria criteria = getCurrentSession().createCriteria(EgdmCollectedReceipt.class,
+		Criteria criteria = Criteria.create(getCurrentSession(), EgdmCollectedReceipt.class,
 				"CollReceipt").add(Restrictions.eq("CollReceipt.receiptNumber", receiptNo));
 		CollectedReceipts = criteria.list();
 		return CollectedReceipts;
@@ -822,8 +822,8 @@ public class DemandGenericHibDao implements DemandGenericDao {
                             + " AND dr.id_installment = i.id "
                             + " AND dr.id_demand_reason_master = drm.id " + " AND dd.id_demand =:dmdId "
                             + " AND drm.module  =:moduleId AND drm.code=:reasonCode " + "ORDER BY i.start_date ";
-            Query qry = getCurrentSession().createSQLQuery(query).setLong("dmdId", egDemand.getId())
-                            .setLong("moduleId", module.getId()).setString("reasonCode", reasonCode);
+            Query qry = getCurrentSession().createNativeQuery(query).setParameter("dmdId", egDemand.getId())
+                            .setParameter("moduleId", module.getId()).setParameter("reasonCode", reasonCode);
             list = qry.list();
             return list;
     }

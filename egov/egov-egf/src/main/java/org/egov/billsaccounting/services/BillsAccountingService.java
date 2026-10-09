@@ -57,7 +57,7 @@ import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.model.voucher.PreApprovedVoucher;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -230,7 +230,7 @@ public class BillsAccountingService {
             final Session session = persistenceService.getSession();
             final Query query = session
                     .createQuery("select br.egBillregistermis.voucherHeader from EgBillregister br where br.billnumber=:billNumber");
-            query.setString("billNumber", billNumber);
+            query.setParameter("billNumber", billNumber);
             if (null == query.uniqueResult())
                 throw new ApplicationException("PJV is not created for this bill number [" + billNumber + "]");
 

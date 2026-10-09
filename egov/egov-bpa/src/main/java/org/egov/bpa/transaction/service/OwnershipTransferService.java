@@ -370,7 +370,7 @@ public class OwnershipTransferService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         Page<OwnershipTransfer> ownershipApplications = ownershipRepository
@@ -388,8 +388,8 @@ public class OwnershipTransferService {
 
     private String getProcessOwner(OwnershipTransfer ownershipTransfer) {
         return ownershipTransfer.getState() != null && ownershipTransfer.getState().getOwnerPosition() != null
-                ? workflowHistoryService.getUserPositionByPositionAndDate(ownershipTransfer.getState().getOwnerPosition().getId(),
-                        ownershipTransfer.getState().getLastModifiedDate()).getName()
+                ? workflowHistoryService.getOwnerNameLenient(ownershipTransfer.getState().getOwnerPosition().getId(),
+                        ownershipTransfer.getState().getLastModifiedDate())
                 : ownershipTransfer.getLastModifiedBy().getName();
     }
 

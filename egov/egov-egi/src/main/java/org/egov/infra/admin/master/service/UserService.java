@@ -92,7 +92,7 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findOne(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     public User getUserRefById(Long id) {
@@ -100,7 +100,7 @@ public class UserService {
     }
 
     public User getCurrentUser() {
-        return userRepository.findOne(ApplicationThreadLocals.getUserId());
+        return userRepository.findById(ApplicationThreadLocals.getUserId()).orElse(null);
     }
 
     public User getUserByUsername(String userName) {

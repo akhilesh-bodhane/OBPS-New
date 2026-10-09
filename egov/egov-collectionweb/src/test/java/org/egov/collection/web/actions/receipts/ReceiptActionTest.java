@@ -1111,16 +1111,16 @@ public class ReceiptActionTest {/*extends AbstractPersistenceServiceTest<Receipt
 
 		ReceiptHeader receipt1 = objectFactory.createReceiptHeader("RN1234");
 
-		ReceiptHeaderService receiptHeaderService = org.easymock.classextension.EasyMock.createMock(ReceiptHeaderService.class);
+		ReceiptHeaderService receiptHeaderService = org.easymock.EasyMock.createMock(ReceiptHeaderService.class);
 		action.setReceiptHeaderService(receiptHeaderService);
-		org.easymock.classextension.EasyMock.expect(receiptHeaderService.findById(org.easymock.classextension.EasyMock.isA(Long.class), org.easymock.classextension.EasyMock.eq(false))).andReturn(receipt1);
-		org.easymock.classextension.EasyMock.replay(receiptHeaderService);
+		org.easymock.EasyMock.expect(receiptHeaderService.findById(org.easymock.EasyMock.isA(Long.class), org.easymock.EasyMock.eq(false))).andReturn(receipt1);
+		org.easymock.EasyMock.replay(receiptHeaderService);
 		
 		action.setSelectedReceipts(new Long[]{receipt1.getId()});
 		String result =action.viewReceipts();
 
 		EasyMock.verify(reportService);
-		org.easymock.classextension.EasyMock.verify(receiptHeaderService);
+		org.easymock.EasyMock.verify(receiptHeaderService);
 		assertEquals("report",result);
 		assertEquals(action.getReceipts()[0].getId(),action.getSelectedReceipts()[0]);
 	}
@@ -1145,16 +1145,16 @@ public class ReceiptActionTest {/*extends AbstractPersistenceServiceTest<Receipt
 
 		ReceiptHeader receipt1 = objectFactory.createReceiptHeader("RN1234");
 
-		ReceiptHeaderService receiptHeaderService = org.easymock.classextension.EasyMock.createMock(ReceiptHeaderService.class);
+		ReceiptHeaderService receiptHeaderService = org.easymock.EasyMock.createMock(ReceiptHeaderService.class);
 		action.setReceiptHeaderService(receiptHeaderService);
-		org.easymock.classextension.EasyMock.expect(receiptHeaderService.findById(org.easymock.classextension.EasyMock.isA(Long.class), org.easymock.classextension.EasyMock.eq(false))).andReturn(receipt1);
-		org.easymock.classextension.EasyMock.replay(receiptHeaderService);
+		org.easymock.EasyMock.expect(receiptHeaderService.findById(org.easymock.EasyMock.isA(Long.class), org.easymock.EasyMock.eq(false))).andReturn(receipt1);
+		org.easymock.EasyMock.replay(receiptHeaderService);
 		
 		action.setSelectedReceipts(new Long[]{receipt1.getId()});
 		String result =action.printReceipts();
 
 		EasyMock.verify(reportService);
-		org.easymock.classextension.EasyMock.verify(receiptHeaderService);
+		org.easymock.EasyMock.verify(receiptHeaderService);
 		assertEquals("report",result);
 	}
 	

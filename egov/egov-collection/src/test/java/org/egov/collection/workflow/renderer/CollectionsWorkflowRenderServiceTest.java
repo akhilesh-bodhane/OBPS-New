@@ -75,7 +75,7 @@ public class CollectionsWorkflowRenderServiceTest  {/* extends
 		assignedItems.add(mockReceiptHeader);
 
 		when(query.list()).thenReturn(assignedItems);
-		when(query.setString(anyString(), anyString())).thenReturn(null);
+		when(query.setParameter(anyString(), anyString())).thenReturn(null);
 
 		when(session.createQuery(anyString())).thenReturn(query);
 		when(persistenceService.getSession()).thenReturn(session);

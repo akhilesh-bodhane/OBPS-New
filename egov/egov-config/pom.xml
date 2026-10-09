@@ -58,6 +58,14 @@
     <name>e-governments config</name>
     <artifactId>egov-config</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

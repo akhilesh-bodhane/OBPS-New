@@ -73,11 +73,11 @@ public interface ApplicationBpaRepository extends JpaRepository<BpaApplication, 
 	
 	List<BpaApplication> findApplicationByEDcrNumberOrderByIdDesc(String eDcrNumber);
 
-	BpaApplication findById(Long id);
+	BpaApplication findApplicationById(Long id);
 
 	BpaApplication findByPlanPermissionNumber(String permitNumber);
 
-    @Query("select app from BpaApplication app where app.status in :status and app.isOneDayPermitApplication = false order by createddate asc")
+    @Query("select app from BpaApplication app where app.status in :status and app.isOneDayPermitApplication = false order by app.createdDate asc")
 	List<BpaApplication> findByStatusListOrderByCreatedDateAsc(@Param("status") List<BpaStatus> listOfBpaStatus);
 
     List<BpaApplication> findApplicationByPlotNumberAndSectorOrderByIdDesc(String plotNumber,String sector);

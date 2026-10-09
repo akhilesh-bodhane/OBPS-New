@@ -58,7 +58,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.master.entity.StakeHolder;

@@ -56,7 +56,7 @@ import java.util.Map;
 import static org.egov.edcr.utility.DcrConstants.OBJECTNOTDEFINED;
 import static org.egov.edcr.utility.DcrConstants.OBJECTDEFINED;
 
-import javax.mail.Flags.Flag;
+import jakarta.mail.Flags.Flag;
 
 import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Block;

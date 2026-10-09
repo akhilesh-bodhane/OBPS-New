@@ -47,6 +47,8 @@
  */
 package org.egov.commons.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.commons.Accountdetailtype;
@@ -56,16 +58,16 @@ import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.infra.validation.exception.ValidationError;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.Query;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,7 +105,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
 
     @Override
     public List<CChartOfAccounts> findAll() {
-        return (List<CChartOfAccounts>) getCurrentSession().createCriteria(CChartOfAccounts.class).list();
+        return (List<CChartOfAccounts>) Criteria.create(getCurrentSession(), CChartOfAccounts.class).list();
     }
 
     @PersistenceContext
@@ -152,8 +154,8 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
         final Query qry = getCurrentSession()
                 .createQuery(
                         "from CChartOfAccounts where classification='4' and isActiveForPosting=true and (glcode like :glCode or upper(name) like :name) order by glcode");
-        qry.setString("glCode", searchString + "%");
-        qry.setString("name", "%" + searchString.toUpperCase() + "%");
+        qry.setParameter("glCode", searchString + "%");
+        qry.setParameter("name", "%" + searchString.toUpperCase() + "%");
         return (List<CChartOfAccounts>) qry.list();
     }
 
@@ -161,13 +163,13 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
     public CChartOfAccounts findCodeByPurposeId(final int purposeId) {
         final Query qry = getCurrentSession().createQuery(
                 "select acc from CChartOfAccounts acc where acc.purposeId=:purposeId ");
-        qry.setLong("purposeId", purposeId);
+        qry.setParameter("purposeId", purposeId);
         return (CChartOfAccounts) qry.uniqueResult();
     }
 
     public CChartOfAccounts getCChartOfAccountsByGlCode(final String glCode) {
         final Query qry = getCurrentSession().createQuery("from CChartOfAccounts coa where coa.glcode =:glCode");
-        qry.setString("glCode", glCode);
+        qry.setParameter("glCode", glCode);
         return (CChartOfAccounts) qry.uniqueResult();
     }
 
@@ -196,12 +198,12 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
 
     @Deprecated
     public int getDetailTypeIdByName(final String glCode, final Connection connection, final String name) {
-        final SQLQuery query = persistenceService
+        final NativeQuery query = persistenceService
                 .getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "SELECT a.ID FROM accountdetailtype a,chartofaccountdetail coad  WHERE coad.DETAILTYPEID =a.ID  AND coad.glcodeid=(SELECT ID FROM chartofaccounts WHERE glcode=:glCode) AND a.NAME=:name");
-        query.setString("glCode", glCode);
-        query.setString("name", name);
+        query.setParameter("glCode", glCode);
+        query.setParameter("name", name);
         List accountDtlTypeList = query.list();
         return (accountDtlTypeList != null) && (accountDtlTypeList.size() != 0) ? Integer.valueOf(accountDtlTypeList
                 .get(0).toString()) : 0;
@@ -220,7 +222,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
             throw new ApplicationRuntimeException("Account Code or Account Detail Type Name is empty");
         }
         Query query = getCurrentSession().createQuery("from CChartOfAccounts where glcode=:glCode");
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         if (query.list().isEmpty()) {
             throw new ApplicationRuntimeException("GL Code not found in Chart of Accounts");
         }
@@ -228,8 +230,8 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                 .createQuery(
                         "from Accountdetailtype where id in (select cd.detailTypeId from "
                                 + "CChartOfAccountDetail  as cd,CChartOfAccounts as c where cd.glCodeId=c.id and c.glcode=:glCode) and name=:name");
-        query.setString("glCode", glCode);
-        query.setString("name", name);
+        query.setParameter("glCode", glCode);
+        query.setParameter("name", name);
         return (Accountdetailtype) query.uniqueResult();
     }
 
@@ -239,16 +241,16 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
         if (StringUtils.isNotBlank(minGlcode) && StringUtils.isNotBlank(maxGlcode)) {
             qryStr.append(" coa.glcode between :minGlcode and :maxGlcode ");
             qry = getCurrentSession().createQuery(qryStr.toString());
-            qry.setString("minGlcode", minGlcode + "%");
-            qry.setString("maxGlcode", maxGlcode + "%");
+            qry.setParameter("minGlcode", minGlcode + "%");
+            qry.setParameter("maxGlcode", maxGlcode + "%");
         } else if (StringUtils.isNotBlank(maxGlcode)) {
             qryStr.append(" coa.glcode like :maxGlcode ");
             qry = getCurrentSession().createQuery(qryStr.toString());
-            qry.setString("maxGlcode", maxGlcode + "%");
+            qry.setParameter("maxGlcode", maxGlcode + "%");
         } else if (StringUtils.isNotBlank(majGlcode)) {
             qryStr.append(" coa.glcode =:majGlcode ");
             qry = getCurrentSession().createQuery(qryStr.toString());
-            qry.setString("majGlcode", majGlcode);
+            qry.setParameter("majGlcode", majGlcode);
         }
         return qry == null ? null : qry.list();
     }
@@ -264,7 +266,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                 .createQuery(
                         "select acc from CChartOfAccounts acc where acc.classification='4' and acc.isActiveForPosting=true and type=:type order by acc.name");
 
-        query.setCharacter("type", type);
+        query.setParameter("type", type);
         return query.list();
     }
 
@@ -291,24 +293,24 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE purposeid=:purposeId))) AND classification=4 AND isActiveForPosting=true ");
-            query.setLong("purposeId", purposeId);
+            query.setParameter("purposeId", purposeId);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = persistenceService
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE purposeid=:purposeId)) AND classification=4 AND isActiveForPosting=true ");
-            query.setLong("purposeId", purposeId);
+            query.setParameter("purposeId", purposeId);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = persistenceService
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE purposeid=:purposeId) AND classification=4 AND isActiveForPosting=true ");
-            query.setLong("purposeId", purposeId);
+            query.setParameter("purposeId", purposeId);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = getCurrentSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE purposeid=:purposeId AND classification=4 AND isActiveForPosting=true ");
-            query.setLong("purposeId", purposeId);
+            query.setParameter("purposeId", purposeId);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
         } catch (final Exception e) {
             LOG.error(e);
@@ -358,7 +360,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                     .createQuery(
                             "from Accountdetailtype where id in (select cd.detailTypeId "
                                     + "from CChartOfAccountDetail  as cd,CChartOfAccounts as c where cd.glCodeId=c.id and c.glcode=:glCode)");
-            query.setString("glCode", glCode);
+            query.setParameter("glCode", glCode);
             query.setCacheable(true);
             return query.list().isEmpty() ? null : query.list(); // NOPMD
         } catch (final Exception e) {
@@ -450,7 +452,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                     "the glcode value supplied can not be null or blank")));
         }
         Query query = getCurrentSession().createQuery("from CChartOfAccounts where glcode=:glCode");
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         query.setCacheable(true);
         if (query.list().isEmpty()) {
             throw new ValidationException(Arrays.asList(new ValidationError("glcode not exist",
@@ -459,26 +461,26 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
         final List<CChartOfAccounts> listChartOfAcc = new ArrayList<CChartOfAccounts>();
         query = getCurrentSession().createQuery(
                 " FROM CChartOfAccounts WHERE glcode=:glCode  AND classification=4 AND isActiveForPosting=true ");
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         query.setCacheable(true);
         listChartOfAcc.addAll(query.list());
         query = getCurrentSession()
                 .createQuery(
                         " from CChartOfAccounts where parentId IN (select id  FROM CChartOfAccounts WHERE glcode=:glCode) AND classification=4 AND isActiveForPosting=true ");
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         query.setCacheable(true);
         listChartOfAcc.addAll(query.list());
         query = getCurrentSession()
                 .createQuery(
                         " from CChartOfAccounts where parentId IN (select id from CChartOfAccounts where parentId IN ( select id  FROM CChartOfAccounts WHERE glcode=:glCode)) AND classification=4 AND isActiveForPosting=true ");
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         query.setCacheable(true);
         listChartOfAcc.addAll(query.list());
         query = getCurrentSession()
                 .createQuery(
                         " from CChartOfAccounts where parentId IN (select id from  CChartOfAccounts where   parentId IN (select id from CChartOfAccounts where parentId IN ( select id  FROM CChartOfAccounts WHERE glcode=:glCode)))AND classification=4 AND isActiveForPosting=true ");
 
-        query.setString("glCode", glCode);
+        query.setParameter("glCode", glCode);
         query.setCacheable(true);
         listChartOfAcc.addAll(query.list());
         return listChartOfAcc;
@@ -493,7 +495,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
 
         final Query query = getCurrentSession().createQuery(
                 "from CChartOfAccounts where  " + "type =:type and classification=1");
-        query.setCharacter("type", type);
+        query.setParameter("type", type);
         // query.setCacheable(true);
         return query.list();
     }
@@ -502,7 +504,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
     public List<CChartOfAccounts> findByMajorCodeAndClassification(String majorCode, Long classification) {
         final Query query = getCurrentSession().createQuery(
                 "from CChartOfAccounts where  " + "majorcode =:majorcode and classification=2");
-        query.setString("majorcode", majorCode);
+        query.setParameter("majorcode", majorCode);
         // query.setCacheable(true);
         return query.list();
     }
@@ -525,7 +527,7 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                 .getSession()
                 .createQuery(
                         "from CChartOfAccounts where id in (select glCodeId.id from CChartOfAccountDetail where lower(detailTypeId.name) =:subLedgerCode  ) and type = 'L' and classification=4 and isActiveForPosting = true and id not in (select chartofaccounts.id from Recovery)");
-        query.setString("subLedgerCode", subLedgerCode.toLowerCase());
+        query.setParameter("subLedgerCode", subLedgerCode.toLowerCase());
         return query.list();
     }
 
@@ -558,24 +560,24 @@ public class ChartOfAccountsHibernateDAO implements ChartOfAccountsDAO {
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT coa.id FROM CChartOfAccounts coa,EgfAccountcodePurpose purpose WHERE coa.purposeId=purpose.id and purpose.name = :purposeName))) AND classification=4 AND isActiveForPosting=true ");
-            query.setString("purposeName", purposeName);
+            query.setParameter("purposeName", purposeName);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = persistenceService
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT id FROM CChartOfAccounts WHERE parentId IN (SELECT coa.id FROM CChartOfAccounts coa,EgfAccountcodePurpose purpose WHERE coa.purposeId=purpose.id and purpose.name = :purposeName)) AND classification=4 AND isActiveForPosting=true ");
-            query.setString("purposeName", purposeName);
+            query.setParameter("purposeName", purposeName);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = persistenceService
                     .getSession()
                     .createQuery(
                             " FROM CChartOfAccounts WHERE parentId IN (SELECT coa.id FROM CChartOfAccounts coa,EgfAccountcodePurpose purpose WHERE coa.purposeId=purpose.id and purpose.name = :purposeName) AND classification=4 AND isActiveForPosting=true ");
-            query.setString("purposeName", purposeName);
+            query.setParameter("purposeName", purposeName);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
             query = getCurrentSession()
                     .createQuery(
                             "SELECT coa FROM CChartOfAccounts coa,EgfAccountcodePurpose purpose WHERE coa.purposeId=purpose.id and purpose.name = :purposeName AND coa.classification=4 AND coa.isActiveForPosting=true ");
-            query.setString("purposeName", purposeName);
+            query.setParameter("purposeName", purposeName);
             accountCodeList.addAll((List<CChartOfAccounts>) query.list());
         } catch (final Exception e) {
             LOG.error(e);

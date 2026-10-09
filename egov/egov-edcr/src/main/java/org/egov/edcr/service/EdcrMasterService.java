@@ -24,7 +24,7 @@ public class EdcrMasterService {
     }
 
     public Page<EdcrMasterData> getEdcrMasterData(EdcrMasterDataRequest edcrMasterDataRequest) {
-        Pageable pageable = new PageRequest(edcrMasterDataRequest.pageNumber(),
+        Pageable pageable = PageRequest.of(edcrMasterDataRequest.pageNumber(),
         		edcrMasterDataRequest.pageSize(),
         		edcrMasterDataRequest.orderDir(), edcrMasterDataRequest.orderBy());
         return edcrMasterDataRepository.findAll(EdcrMasterDataSpec.edcrMasterDataSearchSpec(edcrMasterDataRequest), pageable);

@@ -48,12 +48,12 @@
 
 package org.egov.infra.web.struts.interceptors;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.AbstractInterceptor;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.HttpParameters;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +67,7 @@ public class TrimInterceptor extends AbstractInterceptor implements StrutsStatic
     public String intercept(final ActionInvocation invocation) throws Exception {
         HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext().get(HTTP_REQUEST);
         Map<String, String[]> trimmedParameter = new HashMap<>();
-        for (String requestParam : invocation.getInvocationContext().getParameters().toMap().keySet()) {
+        for (String requestParam : invocation.getInvocationContext().getParameters().keySet()) {
             String[] values = request.getParameterValues(requestParam);
             if (values != null) {
                 for (int i = 0; i < values.length; i++) {
@@ -76,7 +76,7 @@ public class TrimInterceptor extends AbstractInterceptor implements StrutsStatic
             }
             trimmedParameter.put(requestParam, values);
         }
-        invocation.getInvocationContext().setParameters(HttpParameters.create(trimmedParameter).build());
+        invocation.getInvocationContext().withParameters(HttpParameters.create(trimmedParameter).build());
         return invocation.invoke();
     }
 }

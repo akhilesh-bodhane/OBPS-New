@@ -55,6 +55,7 @@
 			<column name="ID" precision="22" scale="0" />
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">seq_relationtype</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<timestamp column="LASTMODIFIED" name="lastmodified" access="property"

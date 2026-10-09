@@ -121,7 +121,7 @@ public class SchemeUtilizationReport
 
             cstmt.setInt(1, pschemeid);
             cstmt.setString(2, formatter.format(sdf.parse(startDate)));
-            // cstmt.setString(4,formatter.format(sdf.parse(endDate)));
+            // cstmt.setParameter(4,formatter.format(sdf.parse(endDate)));
 
             cstmt.setInt(4, majorCodeLength);
             cstmt.setString(5, filterGlcode);

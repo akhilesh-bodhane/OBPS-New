@@ -48,9 +48,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <input type="hidden" id="dcrDocsAutoPopulate" name="dcrDocsAutoPopulate" value="${dcrDocsAutoPopulate}"/>
 <input type="hidden" id="dcrDocsManuallyUpload" name="dcrDocsManuallyUpload" value="${dcrDocsManuallyUpload}"/>

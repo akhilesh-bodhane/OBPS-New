@@ -47,13 +47,15 @@
  */
 package org.egov.commons.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.commons.Vouchermis;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 public class VouchermisHibernateDAO  {
@@ -79,7 +81,7 @@ public class VouchermisHibernateDAO  {
     }
 
     public List<Vouchermis> findAll() {
-        return (List<Vouchermis>) getCurrentSession().createCriteria(Vouchermis.class).list();
+        return (List<Vouchermis>) Criteria.create(getCurrentSession(), Vouchermis.class).list();
     }
 
     @PersistenceContext
@@ -93,7 +95,7 @@ public class VouchermisHibernateDAO  {
 
     public Vouchermis getVouchermisByVhId(final Integer vhId) {
         final Query qry = getCurrentSession().createQuery("from Vouchermis where voucherheaderid =:vhId");
-        qry.setInteger("vhId", vhId);
+        qry.setParameter("vhId", vhId);
         return (Vouchermis) qry.uniqueResult();
     }
 

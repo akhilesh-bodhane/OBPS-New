@@ -56,26 +56,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.bpa.master.entity.ApplicationSubType;
 import org.egov.bpa.master.entity.PermitRevocation;
@@ -95,7 +95,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -111,14 +111,14 @@ public class BpaApplication extends StateAware<Position> {
     @GeneratedValue(generator = SEQ_APPLICATION, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String buildingplanapprovalnumber;
     @Temporal(value = TemporalType.DATE)
     private Date buildingPlanApprovalDate;    
 	@Temporal(value = TemporalType.DATE)
     private Date planValidTillDate;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String applicationNumber;
     @NotNull
     @Temporal(value = TemporalType.DATE)
@@ -126,13 +126,13 @@ public class BpaApplication extends StateAware<Position> {
     @Temporal(value = TemporalType.DATE)
     private Date approvalDate;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String assessmentNumber;
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Source source;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String applicantType;
     // same as source
     @NotNull
@@ -149,7 +149,7 @@ public class BpaApplication extends StateAware<Position> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Applicant owner;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String planPermissionNumber;
     @Temporal(value = TemporalType.DATE)
     private Date planPermissionDate;
@@ -160,10 +160,10 @@ public class BpaApplication extends StateAware<Position> {
     @JoinColumn(name = "approverUser")
     private User approverUser;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String oldApplicationNumber;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String tapalNumber;
     @Enumerated(EnumType.STRING)
     @Column(name = "governmentType")
@@ -175,27 +175,27 @@ public class BpaApplication extends StateAware<Position> {
     @JoinColumn(name = "applicationSubType")
     private ApplicationSubType applicationType;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String remarks;
     @Length(min = 1, max = 256)
-	@SafeHtml
+	@CustomSafeHtml
     private String projectName;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String groupDevelopment;
     private BigDecimal admissionfeeAmount;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String feeAmountRecieptNo;
     private BigDecimal approvedFeeAmount;
     private BigDecimal constructionCost;
     private BigDecimal infrastructureCost;
     private Date approvedReceiptDate;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String revisedApplicationNumber;
     @Length(min = 1, max = 128)
-	@SafeHtml
+	@CustomSafeHtml
     private String revisedPermitNumber;
     private Boolean isExistingApprovedPlan = false;
     private boolean citizenAccepted;
@@ -205,7 +205,7 @@ public class BpaApplication extends StateAware<Position> {
     private String additionalRejectionReasons;
     private Boolean isSentToPreviousOwner = false;
     @Length(min = 1, max = 5000)
-	@SafeHtml
+	@CustomSafeHtml
     private String townSurveyorRemarks;
     private Boolean isTownSurveyorInspectionRequire = false;
     private Boolean isRescheduledByCitizen = false;
@@ -213,7 +213,7 @@ public class BpaApplication extends StateAware<Position> {
     private Boolean isOneDayPermitApplication = false;
     private Boolean isLPRequestInitiated;
     private Boolean failureInScheduler = false;
-	@SafeHtml
+	@CustomSafeHtml
     private String schedulerFailedRemarks;
     private Boolean authorizedToSubmitPlan = false;
     private Boolean mailPwdRequired = false;
@@ -225,7 +225,7 @@ public class BpaApplication extends StateAware<Position> {
     @Column(name = "typeOfLand")
     private OneDayPermitLandType typeOfLand;// Garden Land or Wet Land
     @Length(min = 1, max = 20)
-	@SafeHtml
+	@CustomSafeHtml
     private String eDcrNumber;
     private BigDecimal totalBuiltUpArea;
     private String drawingPreference;
@@ -318,7 +318,7 @@ public class BpaApplication extends StateAware<Position> {
     private transient Long approvalDepartment;
     private transient Long zoneId;
     private transient Long wardId;
-	@SafeHtml
+	@CustomSafeHtml
     private transient String approvalComent;
     private transient Set<Receipt> receipts = new HashSet<>();
     private transient List<ApplicationPermitConditions> dynamicPermitConditionsTemp = new ArrayList<>(0);
@@ -330,46 +330,46 @@ public class BpaApplication extends StateAware<Position> {
     private transient List<BuildingDetail> buildingDetailFromEdcr = new ArrayList<>(0);
     private transient List<ExistingBuildingDetail> existingBldgDetailFromEdcr = new ArrayList<>(0);
     private transient List<Occupancy> permitOccupanciesTemp = new ArrayList<>(0);
-	@SafeHtml
+	@CustomSafeHtml
     private transient String adminBoundary;
-	@SafeHtml
+	@CustomSafeHtml
     private transient String revenueBoundary;
-	@SafeHtml
+	@CustomSafeHtml
     private transient String locationBoundary;
-	@SafeHtml
+	@CustomSafeHtml
     private transient String currentStatus;
 	
 	private transient WorkflowFile workflowFile = new WorkflowFile();
 	
     private transient String wfFileRefId;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="plotnumber")
 	private String plotNumber;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="filenumber")
 	private String fileNumber;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="sector")
 	private String sector;
 	
 	private Boolean isPreviousPlan = false;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="property_file_type")
 	private String propertyFileType;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="property_file_number")
 	private String propertyFileNumber;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="property_plot_number")
 	private String propertyPlotNumber;
 	
-	@SafeHtml
+	@CustomSafeHtml
 	@Column(name="property_sector_number")
 	private String propertySectorNumber;
 	

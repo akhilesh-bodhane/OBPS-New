@@ -58,7 +58,7 @@ public class BpaSchemeService {
         return bpaSchemeRepository.findAllActiveSchemes();
     }
     public BpaScheme findById(final Long id){
-        return bpaSchemeRepository.findOne(id);  
+        return bpaSchemeRepository.findById(id).orElse(null);
 }
 
 }

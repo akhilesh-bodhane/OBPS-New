@@ -69,8 +69,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
@@ -110,12 +110,10 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.workflow.entity.State;
 import org.egov.infra.workflow.entity.StateHistory;
 import org.egov.pims.commons.Position;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.DoubleType;
-import org.hibernate.type.LongType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -329,7 +327,7 @@ public class BpaReportsService {
     }
 
     public Page<SlotDetailsHelper> searchSlotDetails(final SlotDetailsHelper slotDetailsHelper, final String applicationType) {
-        final Pageable pageable = new PageRequest(slotDetailsHelper.pageNumber(),
+        final Pageable pageable = PageRequest.of(slotDetailsHelper.pageNumber(),
                 slotDetailsHelper.pageSize(), slotDetailsHelper.orderDir(), slotDetailsHelper.orderBy());
         Page<SlotDetail> slotDetails = slotDetailRepository
                 .findAll(BpaReportsSearchSpec.searchReportsSpecification(slotDetailsHelper), pageable);
@@ -362,7 +360,7 @@ public class BpaReportsService {
 
     public Page<BpaRegisterReportHelper> getBpaRegisterReportDetails(final SearchBpaApplicationForm searchRequest,
             final List<Long> userIds) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         List<Long> positionIds = new ArrayList<>();
         for (Long userId : userIds) {
@@ -378,7 +376,7 @@ public class BpaReportsService {
     }
     
     public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetails(SearchBpaApplicationForm searchRequest, List<Long> appTypeList) {
-    	 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+    	 final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                  searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
     	 final Page<ReceiptRegisterReportHelper> receiptRegisterReportList = getReceiptRegisterData(searchRequest,pageable,appTypeList);
@@ -486,7 +484,7 @@ public class BpaReportsService {
 
 	public Page<ReceiptRegisterReportHelper> getReceiptRegisterReportDetailsForOC(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList) {
-		final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+		final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
    	 final Page<ReceiptRegisterReportHelper> receiptRegisterReportList = getOCReceiptRegisterData(searchRequest,pageable,appTypeList);
@@ -825,23 +823,23 @@ public class BpaReportsService {
         
         System.out.println("finalQuery::::"+finalQuery);
         
-        final SQLQuery registerQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
-                .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("sector", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("plotNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("receiptNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("paymentDate", org.hibernate.type.DateType.INSTANCE)
-                .addScalar("fileNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("id",LongType.INSTANCE)
+        final NativeQuery registerQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalQuery.toString())
+                .addScalar("applicationNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("sector", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("plotNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("receiptNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("paymentDate", org.hibernate.type.StandardBasicTypes.DATE)
+                .addScalar("fileNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("id",StandardBasicTypes.LONG)
                 .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
 
 //        if (searchRequest.getApplicationTypeId() != null && searchRequest.getApplicationTypeId() !=-1) {
-//        	registerQuery.setLong("applicationTypeId", searchRequest.getApplicationTypeId());
+//        	registerQuery.setParameter("applicationTypeId", searchRequest.getApplicationTypeId());
 //	     }
 
 
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
-        	registerQuery.setString("paymentMode", searchRequest.getPaymentMode());
+        	registerQuery.setParameter("paymentMode", searchRequest.getPaymentMode());
         
         if(appTypeList!=null)
         	registerQuery.setParameterList("appTypeList", appTypeList);
@@ -915,23 +913,23 @@ public class BpaReportsService {
         
         System.out.println("finalQuery::::"+finalQuery);
         
-        final SQLQuery registerQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
-                .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("sector", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("plotNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("receiptNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("paymentDate", org.hibernate.type.DateType.INSTANCE)
-                .addScalar("fileNumber", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("id",LongType.INSTANCE)
+        final NativeQuery registerQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalQuery.toString())
+                .addScalar("applicationNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("sector", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("plotNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("receiptNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("paymentDate", org.hibernate.type.StandardBasicTypes.DATE)
+                .addScalar("fileNumber", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("id",StandardBasicTypes.LONG)
                 .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
 
 //        if (searchRequest.getApplicationTypeId() != null && searchRequest.getApplicationTypeId() !=-1) {
-//        	registerQuery.setLong("applicationTypeId", searchRequest.getApplicationTypeId());
+//        	registerQuery.setParameter("applicationTypeId", searchRequest.getApplicationTypeId());
 //	     }
 
 
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
-        	registerQuery.setString("paymentMode", searchRequest.getPaymentMode());
+        	registerQuery.setParameter("paymentMode", searchRequest.getPaymentMode());
         
         if(appTypeList!=null)
         	registerQuery.setParameterList("appTypeList", appTypeList);
@@ -994,39 +992,39 @@ public class BpaReportsService {
       
       System.out.println("finalQuery::::"+finalQuery);
       
-      final SQLQuery feeQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalQuery.toString())
-    		  .addScalar("SecurityFee", DoubleType.INSTANCE)
-    		  .addScalar("ScrutinyFee", DoubleType.INSTANCE)
-    		  .addScalar("gst", DoubleType.INSTANCE)
-    		  .addScalar("AdditionFee", DoubleType.INSTANCE)
-              .addScalar("LabourCess", DoubleType.INSTANCE)
-              .addScalar("Rule5", DoubleType.INSTANCE)
+      final NativeQuery feeQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalQuery.toString())
+    		  .addScalar("SecurityFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("ScrutinyFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("gst", StandardBasicTypes.DOUBLE)
+    		  .addScalar("AdditionFee", StandardBasicTypes.DOUBLE)
+              .addScalar("LabourCess", StandardBasicTypes.DOUBLE)
+              .addScalar("Rule5", StandardBasicTypes.DOUBLE)
               
-              .addScalar("additionalHeightFee", DoubleType.INSTANCE)
-    		  .addScalar("constructionDemolision", DoubleType.INSTANCE)
-    		  .addScalar("conversionCharges", DoubleType.INSTANCE)
-    		  .addScalar("AdditionFee", DoubleType.INSTANCE)
-              .addScalar("developmentChargesRoads", DoubleType.INSTANCE)
-              .addScalar("DPCCertificateMissingFee", DoubleType.INSTANCE)
+              .addScalar("additionalHeightFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("constructionDemolision", StandardBasicTypes.DOUBLE)
+    		  .addScalar("conversionCharges", StandardBasicTypes.DOUBLE)
+    		  .addScalar("AdditionFee", StandardBasicTypes.DOUBLE)
+              .addScalar("developmentChargesRoads", StandardBasicTypes.DOUBLE)
+              .addScalar("DPCCertificateMissingFee", StandardBasicTypes.DOUBLE)
               
-              .addScalar("falseCeilingFee", DoubleType.INSTANCE)
-    		  .addScalar("additionalHeightSCFConvertSCOFee", DoubleType.INSTANCE)
-    		  .addScalar("barsatiFloorHeightFee", DoubleType.INSTANCE)
-    		  .addScalar("excessCoverageAreaFee", DoubleType.INSTANCE)
-              .addScalar("excessCoverageBeyondRoning6Fee", DoubleType.INSTANCE)
-              .addScalar("glazingVerandahFee", DoubleType.INSTANCE)
+              .addScalar("falseCeilingFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("additionalHeightSCFConvertSCOFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("barsatiFloorHeightFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("excessCoverageAreaFee", StandardBasicTypes.DOUBLE)
+              .addScalar("excessCoverageBeyondRoning6Fee", StandardBasicTypes.DOUBLE)
+              .addScalar("glazingVerandahFee", StandardBasicTypes.DOUBLE)
 
-              .addScalar("internalChangesConstruction", DoubleType.INSTANCE)
-    		  .addScalar("stairHeadwayHeightFee", DoubleType.INSTANCE)
-    		  .addScalar("waterTankLocationFee", DoubleType.INSTANCE)
-    		  .addScalar("loftsFee", DoubleType.INSTANCE)
-              .addScalar("minorChangesDoorsWindowsFee", DoubleType.INSTANCE)
-              .addScalar("nichesCommonWallFee", DoubleType.INSTANCE)
+              .addScalar("internalChangesConstruction", StandardBasicTypes.DOUBLE)
+    		  .addScalar("stairHeadwayHeightFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("waterTankLocationFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("loftsFee", StandardBasicTypes.DOUBLE)
+              .addScalar("minorChangesDoorsWindowsFee", StandardBasicTypes.DOUBLE)
+              .addScalar("nichesCommonWallFee", StandardBasicTypes.DOUBLE)
 
-              .addScalar("nonStdGateFee", DoubleType.INSTANCE)
-    		  .addScalar("transferFee", DoubleType.INSTANCE)
-    		  .addScalar("transferBuildingPlanFee", DoubleType.INSTANCE)
-    		  .addScalar("totalPartitionsOnGroundFee", DoubleType.INSTANCE)
+              .addScalar("nonStdGateFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("transferFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("transferBuildingPlanFee", StandardBasicTypes.DOUBLE)
+    		  .addScalar("totalPartitionsOnGroundFee", StandardBasicTypes.DOUBLE)
               .setResultTransformer(Transformers.aliasToBean(ReceiptRegisterReportHelper.class));
 
       List<ReceiptRegisterReportHelper> feeList = populateQueryResults(feeQuery.list());
@@ -1111,7 +1109,7 @@ public class BpaReportsService {
 	public Page<CollectionSummaryReportHelper> getCollectionSummaryReportDetails(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList,String source) {
 		
-		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+		 final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                  searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
     	 final Page<CollectionSummaryReportHelper> collectionSummaryReportList = getCollectionSummaryData(searchRequest,pageable,appTypeList,source,"USERWISE");
@@ -1125,7 +1123,7 @@ public class BpaReportsService {
 	}
 	public Page<CollectionSummaryReportHelper> getCollectionSummaryReportDetailsForOCUrban(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList, String source) {
-		final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+		final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
    	 final Page<CollectionSummaryReportHelper> collectionSummaryReportList = getCollectionSummaryData(searchRequest,pageable,appTypeList,source,"USERWISE");
@@ -1142,7 +1140,7 @@ public class BpaReportsService {
 	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetails(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList,String source) {
 		
-		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+		 final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                  searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
     	 final Page<CollectionSummaryHeadwiseReportHelper> collectionSummaryHeadwiseReportList = getCollectionSummaryHeadwiseData(searchRequest,pageable,appTypeList,source,"AGGREGATE");
@@ -1166,7 +1164,7 @@ public class BpaReportsService {
 	public Page<CollectionSummaryHeadwiseReportHelper> getCollectionSummaryHeadwiseReportDetailsForOCUrban(SearchBpaApplicationForm searchRequest,
 			List<Long> appTypeList,String source) {
 		
-		 final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+		 final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                  searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
     	 final Page<CollectionSummaryHeadwiseReportHelper> collectionSummaryHeadwiseReportList = getCollectionSummaryHeadwiseData(searchRequest,pageable,appTypeList,source,"AGGREGATE");
@@ -1317,29 +1315,29 @@ public class BpaReportsService {
         finalUserwiseQuery.append(finalSelectQuery).append(userwiseQuery).append(finalGroupQuery);
         finalAggregateQuery.append(finalSelectQuery).append(aggregateQuery).append(finalGroupQuery);
 
-        final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
-        final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
+        final NativeQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
+        final NativeQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
 
         if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
-            userwiseSqluery.setString("source", source);
-            aggregateSqlQuery.setString("source", source);
+            userwiseSqluery.setParameter("source", source);
+            aggregateSqlQuery.setParameter("source", source);
         }
         if (searchRequest.getServiceTypeId() != null && searchRequest.getServiceTypeId() != -1) {
-            userwiseSqluery.setLong("serviceId", searchRequest.getServiceTypeId());
-            aggregateSqlQuery.setLong("serviceId", searchRequest.getServiceTypeId());
+            userwiseSqluery.setParameter("serviceId", searchRequest.getServiceTypeId());
+            aggregateSqlQuery.setParameter("serviceId", searchRequest.getServiceTypeId());
         }
         if (urbanApplicationTypeList != null ) {
             userwiseSqluery.setParameterList("urbanApplicationTypeList", urbanApplicationTypeList);
             aggregateSqlQuery.setParameterList("urbanApplicationTypeList", urbanApplicationTypeList);
         }
 //        if (status != -1) {
-//            userwiseSqluery.setLong("searchStatus", status);
-//            aggregateSqlQuery.setLong("searchStatus", status);
+//            userwiseSqluery.setParameter("searchStatus", status);
+//            aggregateSqlQuery.setParameter("searchStatus", status);
 //        }
 
 //        if (!searchRequest.getServiceType().equals(CollectionConstants.ALL)) {
-//            userwiseSqluery.setString("serviceType", searchRequest.getServiceType());
-//            aggregateSqlQuery.setString("serviceType", searchRequest.getServiceType());
+//            userwiseSqluery.setParameter("serviceType", searchRequest.getServiceType());
+//            aggregateSqlQuery.setParameter("serviceType", searchRequest.getServiceType());
 //        }
 
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
@@ -1347,8 +1345,8 @@ public class BpaReportsService {
                 userwiseSqluery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
                 aggregateSqlQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
             } else {
-                userwiseSqluery.setString("paymentMode", searchRequest.getPaymentMode());
-                aggregateSqlQuery.setString("paymentMode", searchRequest.getPaymentMode());
+                userwiseSqluery.setParameter("paymentMode", searchRequest.getPaymentMode());
+                aggregateSqlQuery.setParameter("paymentMode", searchRequest.getPaymentMode());
             }
         List<CollectionSummaryReportHelper> reportResults = new ArrayList<>();
         if(queryType.equalsIgnoreCase("USERWISE")) {
@@ -1494,46 +1492,46 @@ public class BpaReportsService {
         final StringBuilder finalRebateQueryStr = new StringBuilder(finalSelectQueryStr).append(rebateQueryStr)
                 .append(finalGroupQuery);
 
-        final SQLQuery aggrQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRevQueryStr.toString())
-                .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", BigDecimalType.INSTANCE)
-                .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("chequeAmount", BigDecimalType.INSTANCE)
-                .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", BigDecimalType.INSTANCE)
-                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("cardAmount", BigDecimalType.INSTANCE).addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
+        final NativeQuery aggrQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalRevQueryStr.toString())
+                .addScalar("cashReceipt", org.hibernate.type.StandardBasicTypes.STRING).addScalar("cashAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("chequeReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("chequeAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("onlineReceipt", org.hibernate.type.StandardBasicTypes.STRING).addScalar("onlineAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("glCode", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("cardAmount", StandardBasicTypes.BIG_DECIMAL).addScalar("cardReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("totalReceipt", org.hibernate.type.StandardBasicTypes.STRING)
                 .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadwiseReportHelper.class));
 
-        final SQLQuery rebateQuery = (SQLQuery) getCurrentSession().createSQLQuery(finalRebateQueryStr.toString())
-                .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("cashAmount", BigDecimalType.INSTANCE)
-                .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("chequeAmount", BigDecimalType.INSTANCE)
-                .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE).addScalar("onlineAmount", BigDecimalType.INSTANCE)
-                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("glCode", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("cardAmount", BigDecimalType.INSTANCE).addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
-                .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
+        final NativeQuery rebateQuery = (NativeQuery) getCurrentSession().createNativeQuery(finalRebateQueryStr.toString())
+                .addScalar("cashReceipt", org.hibernate.type.StandardBasicTypes.STRING).addScalar("cashAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("chequeReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("chequeAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("onlineReceipt", org.hibernate.type.StandardBasicTypes.STRING).addScalar("onlineAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("glCode", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("cardAmount", StandardBasicTypes.BIG_DECIMAL).addScalar("cardReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+                .addScalar("totalReceipt", org.hibernate.type.StandardBasicTypes.STRING)
                 .setResultTransformer(Transformers.aliasToBean(CollectionSummaryHeadwiseReportHelper.class));
         if (!source.isEmpty() && !source.equals(CollectionConstants.ALL)) {
-            aggrQuery.setString("source", source);
-            rebateQuery.setString("source", source);
+            aggrQuery.setParameter("source", source);
+            rebateQuery.setParameter("source", source);
         }
 //        if (glCode != null) {
-//            aggrQuery.setString("glCode", glCode);
-//            rebateQuery.setString("glCode", glCode);
+//            aggrQuery.setParameter("glCode", glCode);
+//            rebateQuery.setParameter("glCode", glCode);
 //        }
         if (appTypeList != null && !appTypeList.isEmpty()) {
         	aggrQuery.setParameterList("appTypeList", appTypeList);
         	rebateQuery.setParameterList("appTypeList", appTypeList);
         }
 //        else {
-//	    	 aggrQuery.setString("rootBoundaryType", rootBoundaryType);
-//	            rebateQuery.setString("rootBoundaryType", rootBoundaryType);
+//	    	 aggrQuery.setParameter("rootBoundaryType", rootBoundaryType);
+//	            rebateQuery.setParameter("rootBoundaryType", rootBoundaryType);
 //	     }
 //        if (status != -1) {
-//            aggrQuery.setLong("searchStatus", status);
-//            rebateQuery.setLong("searchStatus", status);
+//            aggrQuery.setParameter("searchStatus", status);
+//            rebateQuery.setParameter("searchStatus", status);
 //        }
 
         if (StringUtils.isNotBlank(searchRequest.getPaymentMode()) && !searchRequest.getPaymentMode().equals(CollectionConstants.ALL))
@@ -1541,8 +1539,8 @@ public class BpaReportsService {
                 aggrQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
                 rebateQuery.setParameterList("paymentMode", new ArrayList<>(Arrays.asList("cheque", "dd")));
             } else {
-                aggrQuery.setString("paymentMode", searchRequest.getPaymentMode());
-                rebateQuery.setString("paymentMode", searchRequest.getPaymentMode());
+                aggrQuery.setParameter("paymentMode", searchRequest.getPaymentMode());
+                rebateQuery.setParameter("paymentMode", searchRequest.getPaymentMode());
             }
         List<CollectionSummaryHeadwiseReportHelper> finalReportList = new ArrayList<>();
         if(queryType.equalsIgnoreCase("REBATE")) {
@@ -1638,23 +1636,23 @@ public class BpaReportsService {
 	        return queryString;
 	    }
 
-	    public SQLQuery createSQLQuery(String query) {
-	        return (SQLQuery) getCurrentSession().createSQLQuery(query)
-	                .addScalar("cashReceipt", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("cashAmount", BigDecimalType.INSTANCE)
-	                .addScalar("chequeReceipt", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("chequeAmount", BigDecimalType.INSTANCE)
-	                .addScalar("onlineReceipt", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("onlineAmount", BigDecimalType.INSTANCE)
-	                .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("serviceName", org.hibernate.type.StringType.INSTANCE)
-//	                .addScalar("counterName", org.hibernate.type.StringType.INSTANCE)
-//	                .addScalar("employeeName", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("bankReceipt", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("bankAmount", BigDecimalType.INSTANCE)
-	                .addScalar("cardAmount", BigDecimalType.INSTANCE)
-	                .addScalar("cardReceipt", org.hibernate.type.StringType.INSTANCE)
-	                .addScalar("totalReceipt", org.hibernate.type.StringType.INSTANCE)
+	    public NativeQuery createSQLQuery(String query) {
+	        return (NativeQuery) getCurrentSession().createNativeQuery(query)
+	                .addScalar("cashReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("cashAmount", StandardBasicTypes.BIG_DECIMAL)
+	                .addScalar("chequeReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("chequeAmount", StandardBasicTypes.BIG_DECIMAL)
+	                .addScalar("onlineReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("onlineAmount", StandardBasicTypes.BIG_DECIMAL)
+	                .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("serviceName", org.hibernate.type.StandardBasicTypes.STRING)
+//	                .addScalar("counterName", org.hibernate.type.StandardBasicTypes.STRING)
+//	                .addScalar("employeeName", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("bankReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("bankAmount", StandardBasicTypes.BIG_DECIMAL)
+	                .addScalar("cardAmount", StandardBasicTypes.BIG_DECIMAL)
+	                .addScalar("cardReceipt", org.hibernate.type.StandardBasicTypes.STRING)
+	                .addScalar("totalReceipt", org.hibernate.type.StandardBasicTypes.STRING)
 	                .setResultTransformer(Transformers.aliasToBean(CollectionSummaryReportHelper.class));
 	    }
 

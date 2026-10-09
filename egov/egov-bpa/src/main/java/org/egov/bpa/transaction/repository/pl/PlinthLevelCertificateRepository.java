@@ -15,7 +15,7 @@ public interface PlinthLevelCertificateRepository
 			extends JpaRepository<PlinthLevelCertificate, Long>, JpaSpecificationExecutor<PlinthLevelCertificate> {
 	PlinthLevelCertificate findByApplicationNumber(String applicationNumber);
 	
-	@Query("select plinthLevelCertificate from PlinthLevelCertificate plinthLevelCertificate where plinthLevelCertificate.status in :status order by createddate asc")
+	@Query("select plinthLevelCertificate from PlinthLevelCertificate plinthLevelCertificate where plinthLevelCertificate.status in :status order by plinthLevelCertificate.createdDate asc")
 	List<PlinthLevelCertificate> findByStatusListOrderByCreatedDateAsc(@Param("status") List<BpaStatus> listOfBpaStatus);
 	
 	@Query("select plinthLevelCertificate from PlinthLevelCertificate plinthLevelCertificate where plinthLevelCertificate.parent.planPermissionNumber =:permitNumber order by plinthLevelCertificate.createdDate desc")

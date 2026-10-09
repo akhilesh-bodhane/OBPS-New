@@ -81,9 +81,9 @@ import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -194,7 +194,7 @@ public class BankBookReportAction extends BaseFormAction {
     @Override
     public void prepare() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         if (!parameters.containsKey("skipPrepare")) {
             addDropdownData("bankList", egovCommon.getBankBranchForActiveBanks());
@@ -540,7 +540,7 @@ public class BankBookReportAction extends BaseFormAction {
                 " AND ih2.id_status = es2.id AND vh2.id in (select vh.id as vhId" + queryFrom + ")";
         mainQuery = mainQuery + getInstrumentsByVoucherIdsQuery;
 
-        final List<Object[]> objs = persistenceService.getSession().createSQLQuery(mainQuery).list();
+        final List<Object[]> objs = persistenceService.getSession().createNativeQuery(mainQuery).list();
 
         for (final Object[] obj : objs)
             if (voucherIdAndInstrumentMap.containsKey(getLongValue(obj[0])))
@@ -556,7 +556,7 @@ public class BankBookReportAction extends BaseFormAction {
 
         final List<Object[]> objs = persistenceService
                 .getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "SELECT ih.id,vh1.id as voucherHeaderId"
                                 +
                                 " FROM VOUCHERHEADER vh1,egf_instrumentvoucher iv ,egf_instrumentheader ih,egw_status es1 WHERE vh1.id = iv.voucherheaderid AND iv.instrumentheaderid=ih.id"
@@ -666,12 +666,12 @@ public class BankBookReportAction extends BaseFormAction {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Main query :" + query1 + queryFrom + OrderBy);
 
-        final Query query = persistenceService.getSession().createSQLQuery(query1 + queryFrom + OrderBy)
-                .addScalar("voucherId", new BigDecimalType())
+        final Query query = persistenceService.getSession().createNativeQuery(query1 + queryFrom + OrderBy)
+                .addScalar("voucherId", StandardBasicTypes.BIG_DECIMAL)
                 .addScalar("voucherDate")
                 .addScalar("voucherNumber")
                 .addScalar("particulars")
-                .addScalar("amount", new BigDecimalType())
+                .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
                 .addScalar("type")
                 .addScalar("chequeDetail")
                 .addScalar("glCode")
@@ -730,7 +730,7 @@ public class BankBookReportAction extends BaseFormAction {
 
     /*
      * public String getUlbName() { final Query query =
-     * persistenceService.getSession().createSQLQuery("select name from companydetail"); final List<String> result = query.list();
+     * persistenceService.getSession().createNativeQuery("select name from companydetail"); final List<String> result = query.list();
      * if (result != null) return result.get(0); return EMPTY_STRING; }
      */
 

@@ -59,7 +59,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -118,8 +118,8 @@ public class DEReportService {
         final Query query = persistenceService.getSession()
                 .createQuery(
                         " from CFinancialYear cfinancialyear where cfinancialyear.startingDate <=:sDate and cfinancialyear.endingDate >=:eDate");
-        query.setDate("sDate", date);
-        query.setDate("eDate", date);
+        query.setParameter("sDate", date, jakarta.persistence.TemporalType.DATE);
+        query.setParameter("eDate", date, jakarta.persistence.TemporalType.DATE);
         final ArrayList list = (ArrayList) query.list();
         if (list.size() > 0)
             cFinancialYear = (CFinancialYear) list.get(0);
@@ -179,7 +179,7 @@ public class DEReportService {
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT
                                             + "' group by  TO_date(ph.concurrenceDate)" +
                                             " order by  TO_date(ph.concurrenceDate) ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount").addScalar("concurrenceDate");
         } else {
             stringQry = stringQry
@@ -201,7 +201,7 @@ public class DEReportService {
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT
                                             + "' group by  TO_date(ph.concurrenceDate)" +
                                             " order by  TO_date(ph.concurrenceDate) ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount").addScalar("concurrenceDate");
         }
         return query;
@@ -245,7 +245,7 @@ public class DEReportService {
                                             + FinancialConstants.PAYMENTVOUCHER_NAME_DIRECTBANK +
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT + "' group by dept.dept_name" +
                                             "  order by dept.dept_name ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount");
         } else {
             stringQry = stringQry
@@ -265,7 +265,7 @@ public class DEReportService {
                                             + FinancialConstants.PAYMENTVOUCHER_NAME_DIRECTBANK +
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT + "' group by dept.dept_name" +
                                             "  order by dept.dept_name ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount");
         }
         query.setResultTransformer(Transformers.aliasToBean(DepartmentwiseExpenditureReport.class));
@@ -310,7 +310,7 @@ public class DEReportService {
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT
                                             + "' group by dept.dept_name,  TO_date(ph.concurrenceDate)" +
                                             " order by  TO_date(ph.concurrenceDate) ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount").addScalar("concurrenceDate");
             query.setResultTransformer(Transformers.aliasToBean(DepartmentwiseExpenditureReport.class));
 
@@ -331,7 +331,7 @@ public class DEReportService {
                                             "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT
                                             + "' group by dept.dept_name, TO_date(ph.concurrenceDate)" +
                                             " order by  TO_date(ph.concurrenceDate) ");
-            query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+            query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                     .addScalar("concurrenceAmount").addScalar("concurrenceDate");
             query.setResultTransformer(Transformers.aliasToBean(DepartmentwiseExpenditureReport.class));
         }
@@ -414,7 +414,7 @@ public class DEReportService {
                                     " AND vh.status  =0 AND vh.name!='" + FinancialConstants.PAYMENTVOUCHER_NAME_DIRECTBANK +
                                     "' AND vh.type ='" + FinancialConstants.STANDARD_VOUCHER_TYPE_PAYMENT + "' group by dept.dept_name" +
                                     " order by dept.dept_name");
-        final Query query = persistenceService.getSession().createSQLQuery(stringQry.toString()).addScalar("departmentName")
+        final Query query = persistenceService.getSession().createNativeQuery(stringQry.toString()).addScalar("departmentName")
                 .addScalar("concurrenceAmount");
         return query;
     }

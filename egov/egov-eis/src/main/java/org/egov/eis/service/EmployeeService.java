@@ -78,15 +78,15 @@ import org.egov.infra.workflow.service.StateHistoryService;
 import org.egov.infra.workflow.service.StateService;
 import org.egov.pims.commons.Designation;
 import org.egov.pims.commons.Position;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -370,7 +370,7 @@ public class EmployeeService implements EntityTypeService {
      * @return Employee Object
      */
     public Employee getEmployeeById(final Long id) {
-        return employeeRepository.findOne(id);
+        return employeeRepository.findById(id).orElse(null);
     }
 
     /**

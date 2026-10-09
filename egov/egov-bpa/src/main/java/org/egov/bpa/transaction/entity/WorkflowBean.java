@@ -54,18 +54,18 @@ import java.util.List;
 import org.egov.infra.admin.master.entity.Department;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.pims.commons.Designation;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class WorkflowBean {
-    @SafeHtml
+    @CustomSafeHtml
     private String actionName;
-    @SafeHtml
+    @CustomSafeHtml
     private String additionalRule;
-    @SafeHtml
+    @CustomSafeHtml
     private String actionState;
     private List<User> appoverUserList;
     private Long approverUserId;
-    @SafeHtml
+    @CustomSafeHtml
     private String approverComments;
     private Integer departmentId;
     private List<Department> departmentList;
@@ -73,9 +73,9 @@ public class WorkflowBean {
     private List<Designation> designationList;
     private String workFlowAction;
     private Long approverPositionId;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentState;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentDesignation;
     private Long zoneId;
     private Long wardId;

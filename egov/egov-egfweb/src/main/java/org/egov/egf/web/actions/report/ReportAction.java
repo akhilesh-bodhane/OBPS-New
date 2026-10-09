@@ -112,7 +112,7 @@ public class ReportAction extends BaseFormAction
     public void prepare()
     {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         getHeaderFields();
         if (headerFields.contains(Constants.DEPARTMENT))

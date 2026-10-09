@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.entitiy.national.dashboard.ApplicationData;
 import org.egov.bpa.entitiy.national.dashboard.GroupBy;
@@ -43,10 +43,10 @@ import org.egov.commons.service.OccupancyService;
 import org.egov.commons.service.SubOccupancyService;
 import org.egov.infra.microservice.contract.RequestInfoWrapper;
 import org.egov.infra.microservice.models.UserInfo;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,14 +184,14 @@ private int fetchScrutinizedCount(SearchBpaApplicationForm bpaApplicationForm, S
 		query.append(" and edcr.lastmodifieddate>= '"+today+"'");
 	 
 	
-	final SQLQuery sqlQuery = createEdcrApplicationQuery(query.toString());
+	final NativeQuery sqlQuery = createEdcrApplicationQuery(query.toString());
 	 List<ApplicationData> reportResults = sqlQuery.list();
 	 return reportResults.size();
 	}
 
-private SQLQuery createEdcrApplicationQuery(String query) {
-	 return (SQLQuery) getCurrentSession().createSQLQuery(query)
-	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
+private NativeQuery createEdcrApplicationQuery(String query) {
+	 return (NativeQuery) getCurrentSession().createNativeQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StandardBasicTypes.STRING)
 	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
 }
 
@@ -236,17 +236,17 @@ private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
 			query.append(" and eoc.lastmodifieddate>= '"+today+"'");
 		 
 		
-		final SQLQuery sqlQuery = createOCApplicationQuery(query.toString());
+		final NativeQuery sqlQuery = createOCApplicationQuery(query.toString());
 		 List<ApplicationData> reportResults = sqlQuery.list();
 		 return reportResults;
 	}
 	
-	public SQLQuery createOCApplicationQuery(String query) {
-	    return (SQLQuery) getCurrentSession().createSQLQuery(query)
-	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
-	            .addScalar("applicationSubType", org.hibernate.type.StringType.INSTANCE)
-	            .addScalar("applicationDate", org.hibernate.type.DateType.INSTANCE)
-	            .addScalar("planPermissionDate", org.hibernate.type.DateType.INSTANCE)
+	public NativeQuery createOCApplicationQuery(String query) {
+	    return (NativeQuery) getCurrentSession().createNativeQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StandardBasicTypes.STRING)
+	            .addScalar("applicationSubType", org.hibernate.type.StandardBasicTypes.STRING)
+	            .addScalar("applicationDate", org.hibernate.type.StandardBasicTypes.DATE)
+	            .addScalar("planPermissionDate", org.hibernate.type.StandardBasicTypes.DATE)
 	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
 	}
 	private List<ApplicationData> fetchApplications(SearchBpaApplicationForm bpaApplicationForm, String today) {
@@ -263,17 +263,17 @@ private long findAverageApprovalDays(List<ApplicationData> bpaApplications) {
 			query.append(" and ea.lastmodifieddate>= '"+today+"'");
 		 
 		
-		final SQLQuery sqlQuery = createApplicationQuery(query.toString());
+		final NativeQuery sqlQuery = createApplicationQuery(query.toString());
 		 List<ApplicationData> reportResults = sqlQuery.list();
 		 return reportResults;
 	}
-	public SQLQuery createApplicationQuery(String query) {
-	    return (SQLQuery) getCurrentSession().createSQLQuery(query)
-	            .addScalar("applicationNumber", org.hibernate.type.StringType.INSTANCE)
-	            .addScalar("applicationSubType", org.hibernate.type.StringType.INSTANCE)
-	            .addScalar("edcrNumber", org.hibernate.type.StringType.INSTANCE)
-	            .addScalar("applicationDate", org.hibernate.type.DateType.INSTANCE)
-	            .addScalar("planPermissionDate", org.hibernate.type.DateType.INSTANCE)
+	public NativeQuery createApplicationQuery(String query) {
+	    return (NativeQuery) getCurrentSession().createNativeQuery(query)
+	            .addScalar("applicationNumber", org.hibernate.type.StandardBasicTypes.STRING)
+	            .addScalar("applicationSubType", org.hibernate.type.StandardBasicTypes.STRING)
+	            .addScalar("edcrNumber", org.hibernate.type.StandardBasicTypes.STRING)
+	            .addScalar("applicationDate", org.hibernate.type.StandardBasicTypes.DATE)
+	            .addScalar("planPermissionDate", org.hibernate.type.StandardBasicTypes.DATE)
 	            .setResultTransformer(Transformers.aliasToBean(ApplicationData.class));
 	}
 
@@ -516,8 +516,8 @@ private List<CollectionSummaryReportHelper> getCollectionData(SearchBpaApplicati
     finalUserwiseQuery.append(finalSelectQuery).append(userwiseQuery).append(finalGroupQuery);
     finalAggregateQuery.append(finalSelectQuery).append(aggregateQuery).append(finalGroupQuery);
     
-    final SQLQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
-    final SQLQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
+    final NativeQuery userwiseSqluery = createSQLQuery(finalUserwiseQuery.toString());
+    final NativeQuery aggregateSqlQuery = createSQLQuery(finalAggregateQuery.toString());
     
 
     List<CollectionSummaryReportHelper> reportResults = new ArrayList<>();
@@ -576,17 +576,17 @@ public List<CollectionSummaryReportHelper> populateCollectionSummaryQueryResults
     return queryResults;
 }
 
-public SQLQuery createSQLQuery(String query) {
-    return (SQLQuery) getCurrentSession().createSQLQuery(query)
-            .addScalar("cashAmount", BigDecimalType.INSTANCE)
-            .addScalar("chequeAmount", BigDecimalType.INSTANCE)
-            .addScalar("onlineAmount", BigDecimalType.INSTANCE)
-            .addScalar("source", org.hibernate.type.StringType.INSTANCE)
-            .addScalar("serviceName", org.hibernate.type.StringType.INSTANCE)
-//            .addScalar("counterName", org.hibernate.type.StringType.INSTANCE)
-//            .addScalar("employeeName", org.hibernate.type.StringType.INSTANCE)
-            .addScalar("bankAmount", BigDecimalType.INSTANCE)
-            .addScalar("cardAmount", BigDecimalType.INSTANCE)
+public NativeQuery createSQLQuery(String query) {
+    return (NativeQuery) getCurrentSession().createNativeQuery(query)
+            .addScalar("cashAmount", StandardBasicTypes.BIG_DECIMAL)
+            .addScalar("chequeAmount", StandardBasicTypes.BIG_DECIMAL)
+            .addScalar("onlineAmount", StandardBasicTypes.BIG_DECIMAL)
+            .addScalar("source", org.hibernate.type.StandardBasicTypes.STRING)
+            .addScalar("serviceName", org.hibernate.type.StandardBasicTypes.STRING)
+//            .addScalar("counterName", org.hibernate.type.StandardBasicTypes.STRING)
+//            .addScalar("employeeName", org.hibernate.type.StandardBasicTypes.STRING)
+            .addScalar("bankAmount", StandardBasicTypes.BIG_DECIMAL)
+            .addScalar("cardAmount", StandardBasicTypes.BIG_DECIMAL)
             .setResultTransformer(Transformers.aliasToBean(CollectionSummaryReportHelper.class));
 }
 

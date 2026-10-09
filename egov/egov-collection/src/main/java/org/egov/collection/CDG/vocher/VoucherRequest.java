@@ -3,7 +3,7 @@ package org.egov.collection.CDG.vocher;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.infra.microservice.models.RequestInfo;
 

@@ -64,8 +64,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class ApplicationConfiguration {
         return new SessionLocaleResolver();
     }
 
-    @Bean(name = "cities", autowire = Autowire.BY_NAME)
+    @Bean(name = "cities")
     @DependsOn(value = "tenants")
     public List<String> cities() {
         final List<String> cities = new ArrayList<>(tenants);

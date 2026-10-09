@@ -72,7 +72,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;

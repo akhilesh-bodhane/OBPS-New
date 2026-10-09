@@ -43,16 +43,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.transaction.entity.BpaNocApplication;
 import org.egov.bpa.transaction.entity.PermitNocApplication;
 import org.egov.bpa.transaction.entity.dto.NocDetailsHelper;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +89,7 @@ public class BpaNocApplicationReportService {
 	}
 	
 	public Criteria buildSearchCriteria(final NocDetailsHelper nocDetailsHelper) {
-		final Criteria criteria = getCurrentSession().createCriteria(PermitNocApplication.class, "permitNoc")
+		final Criteria criteria = Criteria.create(getCurrentSession(), PermitNocApplication.class, "permitNoc")
                 .createAlias("permitNoc.bpaApplication", "permitApplication")
 				                  .createAlias("permitNoc.bpaNocApplication", "nocApplication");
 

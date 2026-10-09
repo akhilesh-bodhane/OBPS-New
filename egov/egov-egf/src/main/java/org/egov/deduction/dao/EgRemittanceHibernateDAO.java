@@ -50,17 +50,19 @@
 
 package org.egov.deduction.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.apache.log4j.Logger;
 import org.egov.commons.CFinancialYear;
 import org.egov.commons.Fund;
 import org.egov.deduction.model.EgRemittance;
 import org.egov.model.recoveries.Recovery;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -94,7 +96,7 @@ public class EgRemittanceHibernateDAO {
     }
 
     public List<EgRemittance> findAll() {
-        return (List<EgRemittance>) getCurrentSession().createCriteria(EgRemittance.class).list();
+        return (List<EgRemittance>) Criteria.create(getCurrentSession(), EgRemittance.class).list();
     }
 
     @PersistenceContext
@@ -136,13 +138,13 @@ public class EgRemittanceHibernateDAO {
         qry = getCurrentSession().createQuery(qryStr.toString());
 
         if (fund != null)
-            qry.setEntity("fund", fund);
+            qry.setParameter("fund", fund);
         if (recovery != null)
-            qry.setEntity("recovery", recovery);
+            qry.setParameter("recovery", recovery);
         if (month != null)
-            qry.setString("month", month);
+            qry.setParameter("month", month);
         if (financialyear != null)
-            qry.setEntity("financialyear", financialyear);
+            qry.setParameter("financialyear", financialyear);
 
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("qryStr " + qryStr.toString());

@@ -48,12 +48,12 @@
 package org.egov.commons.dao;
 
 import org.egov.commons.EgwStatus;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,14 +80,14 @@ public class EgwStatusHibernateDAO {
      */
     public EgwStatus getStatusByModuleAndCode(String moduleType, String code) {
         Query qry = this.getCurrentSession().createQuery("from EgwStatus S where S.moduletype =:moduleType and S.code =:code");
-        qry.setString("moduleType", moduleType);
-        qry.setString("code", code);
+        qry.setParameter("moduleType", moduleType);
+        qry.setParameter("code", code);
         return (EgwStatus) qry.uniqueResult();
     }
 
     public List<EgwStatus> getStatusByModule(String moduleType) {
         Query qry = this.getCurrentSession().createQuery("from EgwStatus S where S.moduletype =:moduleType  order by orderId");
-        qry.setString("moduleType", moduleType);
+        qry.setParameter("moduleType", moduleType);
         return qry.list();
     }
 
@@ -98,14 +98,14 @@ public class EgwStatusHibernateDAO {
      */
     public List<EgwStatus> getStatusListByModuleAndCodeList(String moduleType, List codeList) {
         Query qry = this.getCurrentSession().createQuery("from EgwStatus S where S.moduletype =:moduleType and S.code in(:codeList)  order by orderId");
-        qry.setString("moduleType", moduleType);
+        qry.setParameter("moduleType", moduleType);
         qry.setParameterList("codeList", codeList);
         return qry.list();
     }
 
     public EgwStatus getEgwStatusByCode(String code) {
         Query qry = this.getCurrentSession().createQuery("from EgwStatus S where S.code =:code ");
-        qry.setString("code", code);
+        qry.setParameter("code", code);
         return (EgwStatus) qry.uniqueResult();
     }
 

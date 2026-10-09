@@ -42,22 +42,22 @@ package org.egov.bpa.transaction.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.bpa.master.entity.BpaScheme;
 import org.egov.bpa.master.entity.BpaSchemeLandUsage;
@@ -69,7 +69,7 @@ import org.egov.bpa.transaction.entity.enums.BpaUom;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_SITEDETAIL")
@@ -85,46 +85,46 @@ public class SiteDetail extends AbstractAuditable {
     @NotNull
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 12)
     private String plotdoornumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String plotlandmark;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String plotnumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String plotsurveynumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String surveynumberType;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String oldSurveyNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String reSurveyNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String townSurveyNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String khataNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String holdingNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String mspPlotNumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String streetaddress1;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String streetaddress2;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String area;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -137,7 +137,7 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "electionBoundary")
     private Boundary electionBoundary;
     @Length(min = 1, max = 128)
-    @SafeHtml
+    @CustomSafeHtml
     private String citytown;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "street")
@@ -148,7 +148,7 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postalAddress")
     private PostalAddress postalAddress;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String natureofOwnership;
     private BigDecimal extentOfLand;
@@ -159,21 +159,21 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "registrarOffice")
     private RegistrarOfficeVillage registrarOffice;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 12)
     private String nearestbuildingnumber;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 12)
     private String subdivisionNumber;
     @Length(min = 1, max = 128)
     private Boolean encroachmentIssuesPresent;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String encroachmentRemarks;
     /// this need to be check as we can refer master --statusofsite -- construction
     /// in progress,vacant ,completed
     private Boolean siteinApprovedLayout;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String approvedLayoutDetail;
     private BigDecimal setBackFront;
@@ -182,7 +182,7 @@ public class SiteDetail extends AbstractAuditable {
     private BigDecimal setBackSide2;
     private BigDecimal lengthOfCompoundWall;
     private BigDecimal dwellingunitnt;
-    @SafeHtml
+    @CustomSafeHtml
     private String locationOfPlot;
     private BigDecimal roofConversion;
     private BigDecimal shutter;
@@ -193,7 +193,7 @@ public class SiteDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "conststages")
     private ConstructionStages constStages;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String stateOfConstruction;
     private Boolean isappForRegularization = false;
@@ -213,10 +213,10 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "landUsage")
     private BpaSchemeLandUsage landUsage;
     private transient Long registrarVillageId;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 4000)
     private String previousownerdetails;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 4000)
     private String landregistrationdetails;
 

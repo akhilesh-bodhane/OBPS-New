@@ -29,18 +29,18 @@
  */
 package org.egov.bpa.master.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_LPREASON")
@@ -53,13 +53,13 @@ public class LpReason extends AbstractAuditable {
     @GeneratedValue(generator = SEQ_LPREASON, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     private String code;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 256)
     private String description;
@@ -67,7 +67,7 @@ public class LpReason extends AbstractAuditable {
     @NotNull
     private Boolean isActive;
 
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(min = 1, max = 1024)
     private String reason;

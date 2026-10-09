@@ -53,7 +53,9 @@ import org.egov.infra.security.audit.entity.LoginAudit;
 import org.egov.infra.utils.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -64,24 +66,20 @@ public class LoginAuditSpec {
 
     public static final Specification<LoginAudit> loginAuditSearchSpec(LoginAuditReportRequest loginAuditReportRequest) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             if (isNotBlank(loginAuditReportRequest.getUserName()))
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("user").get("name"), loginAuditReportRequest.getUserName()));
+                predicates.add(builder.equal(root.get("user").get("name"), loginAuditReportRequest.getUserName()));
             if (loginAuditReportRequest.getUserType() != null)
-                predicate.getExpressions().add(builder.equal(root.get("user").get("type"),
+                predicates.add(builder.equal(root.get("user").get("type"),
                         loginAuditReportRequest.getUserType()));
             if (isNotBlank(loginAuditReportRequest.getIpAddress()))
-                predicate.getExpressions()
-                        .add(builder.equal(root.get("ipAddress"), loginAuditReportRequest.getIpAddress()));
+                predicates.add(builder.equal(root.get("ipAddress"), loginAuditReportRequest.getIpAddress()));
             if (loginAuditReportRequest.getLoginFrom() != null)
-                predicate.getExpressions()
-                        .add(builder.greaterThanOrEqualTo(root.get("loginTime"), loginAuditReportRequest.getLoginFrom()));
+                predicates.add(builder.greaterThanOrEqualTo(root.get("loginTime"), loginAuditReportRequest.getLoginFrom()));
             if (loginAuditReportRequest.getLoginTo() != null)
-                predicate.getExpressions()
-                        .add(builder.lessThanOrEqualTo(root.get("loginTime"),
+                predicates.add(builder.lessThanOrEqualTo(root.get("loginTime"),
                                 DateUtils.endOfDay(loginAuditReportRequest.getLoginTo())));
-            return predicate;
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

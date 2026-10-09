@@ -54,7 +54,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 
-public class DomainBasedSchemaTenantIdentifierResolver implements CurrentTenantIdentifierResolver {
+public class DomainBasedSchemaTenantIdentifierResolver implements CurrentTenantIdentifierResolver<String> {
 
     @Value("${default.schema.name}")
     private String defaultSchema;

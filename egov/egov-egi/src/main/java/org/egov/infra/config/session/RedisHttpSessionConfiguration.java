@@ -53,59 +53,35 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.FindByIndexNameSessionRepository;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisIndexedHttpSession;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-import org.springframework.session.web.http.CookieHttpSessionStrategy;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_NAME;
 import static org.egov.infra.security.utils.SecurityConstants.SESSION_COOKIE_PATH;
 
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
+@EnableRedisIndexedHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class RedisHttpSessionConfiguration {
 
     private static final String SAME_SITE_POLICY = "Lax";
-    private static final String SET_COOKIE_HEADER = "Set-Cookie";
 
     @Value("${common.domain.name}")
     private String commonDomainName;
 
     @Bean
     public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer() {
-            @Override
-            public void writeCookieValue(CookieValue cookieValue) {
-                HttpServletResponse sameSiteResponse = new SameSiteResponseWrapper(cookieValue.getResponse());
-                CookieValue sameSiteCookieValue = new CookieValue(
-                        cookieValue.getRequest(),
-                        sameSiteResponse,
-                        cookieValue.getCookieValue()
-                );
-
-                super.writeCookieValue(sameSiteCookieValue);
-            }
-        };
-
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
         serializer.setCookieName(SESSION_COOKIE_NAME);
         serializer.setCookiePath(SESSION_COOKIE_PATH);
         serializer.setDomainName(commonDomainName);
         serializer.setUseSecureCookie(true);
         serializer.setUseHttpOnlyCookie(true);
-
+        serializer.setSameSite(SAME_SITE_POLICY);
+        // Spring Session 2.x base64-encodes the cookie value by default; keep it plain as with 1.x
+        serializer.setUseBase64Encoding(false);
         return serializer;
-    }
-
-    @Bean
-    public CookieHttpSessionStrategy cookieHttpSessionStrategy(CookieSerializer cookieSerializer) {
-        CookieHttpSessionStrategy cookieHttpSession = new CookieHttpSessionStrategy();
-        cookieHttpSession.setCookieSerializer(cookieSerializer);
-        return cookieHttpSession;
     }
 
     @Bean
@@ -117,41 +93,5 @@ public class RedisHttpSessionConfiguration {
     @Bean
     public UserSessionDestroyListener httpSessionEventPublisher() {
         return new UserSessionDestroyListener();
-    }
-
-    private static final class SameSiteResponseWrapper extends HttpServletResponseWrapper {
-
-        private SameSiteResponseWrapper(HttpServletResponse response) {
-            super(response);
-        }
-
-        @Override
-        public void addCookie(Cookie cookie) {
-            addHeader(SET_COOKIE_HEADER, buildSetCookieHeader(cookie));
-        }
-
-        private String buildSetCookieHeader(Cookie cookie) {
-            StringBuilder header = new StringBuilder();
-            header.append(cookie.getName()).append('=').append(cookie.getValue());
-
-            if (cookie.getMaxAge() >= 0) {
-                header.append("; Max-Age=").append(cookie.getMaxAge());
-            }
-            if (cookie.getDomain() != null) {
-                header.append("; Domain=").append(cookie.getDomain());
-            }
-            if (cookie.getPath() != null) {
-                header.append("; Path=").append(cookie.getPath());
-            }
-            if (cookie.getSecure()) {
-                header.append("; Secure");
-            }
-            if (cookie.isHttpOnly()) {
-                header.append("; HttpOnly");
-            }
-
-            header.append("; SameSite=").append(SAME_SITE_POLICY);
-            return header.toString();
-        }
     }
 }

@@ -62,7 +62,7 @@ public class InspectionAppointmentScheduleService {
     }
 
     public InspectionAppointmentSchedule findById(Long id) {
-        return inspectionRepository.findOne(id);
+        return inspectionRepository.findById(id).orElse(null);
     }
 
     public List<InspectionAppointmentSchedule> findByApplication(InspectionApplication application, AppointmentSchedulePurpose type) {

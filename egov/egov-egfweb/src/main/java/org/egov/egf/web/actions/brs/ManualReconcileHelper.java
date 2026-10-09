@@ -60,11 +60,9 @@ import org.egov.model.instrument.InstrumentHeader;
 import org.egov.services.instrument.InstrumentHeaderService;
 import org.egov.services.instrument.InstrumentOtherDetailsService;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -149,10 +147,10 @@ public class ManualReconcileHelper {
 		
 		try
 		{
-			SQLQuery totalSQLQuery = persistenceService.getSession().createSQLQuery(totalQuery);
-			totalSQLQuery.setLong("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			NativeQuery totalSQLQuery = persistenceService.getSession().createNativeQuery(totalQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			
 			List list = totalSQLQuery.list();
 			if (list.size()>0)
@@ -164,10 +162,10 @@ public class ManualReconcileHelper {
 			}
 
 			if(LOGGER.isInfoEnabled())     LOGGER.info("  query  for other than cheque/DD: "+otherTotalQuery);
-			totalSQLQuery = persistenceService.getSession().createSQLQuery(otherTotalQuery);
-			totalSQLQuery.setLong("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			totalSQLQuery = persistenceService.getSession().createNativeQuery(otherTotalQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			list = totalSQLQuery.list();
 			if (list.size()>0)
 			{
@@ -178,10 +176,10 @@ public class ManualReconcileHelper {
 			}
 			if(LOGGER.isInfoEnabled())     LOGGER.info("  query  for bankEntries: "+brsEntryQuery);
 
-			totalSQLQuery = persistenceService.getSession().createSQLQuery(brsEntryQuery);
-			totalSQLQuery.setLong("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			totalSQLQuery = persistenceService.getSession().createNativeQuery(brsEntryQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			list = totalSQLQuery.list();
 			if (list.size()>0)
 			{
@@ -278,16 +276,16 @@ public class ManualReconcileHelper {
 */
         
         
-		SQLQuery createSQLQuery = persistenceService.getSession().createSQLQuery(query.toString());
-		createSQLQuery.setLong("bankAccId", reconBean.getAccountId());
-		createSQLQuery.setDate("toDate", reconBean.getReconciliationDate());
-		createSQLQuery.addScalar("voucherNumber",StringType.INSTANCE);
-		createSQLQuery.addScalar("ihId",LongType.INSTANCE);
-		createSQLQuery.addScalar("chequeDate",StringType.INSTANCE);
-		createSQLQuery.addScalar("chequeNumber",StringType.INSTANCE);
-		createSQLQuery.addScalar("chequeAmount",BigDecimalType.INSTANCE);
-		createSQLQuery.addScalar("txnType",StringType.INSTANCE);
-		createSQLQuery.addScalar("type",StringType.INSTANCE);
+		NativeQuery createSQLQuery = persistenceService.getSession().createNativeQuery(query.toString());
+		createSQLQuery.setParameter("bankAccId", reconBean.getAccountId());
+		createSQLQuery.setParameter("toDate", reconBean.getReconciliationDate(), jakarta.persistence.TemporalType.DATE);
+		createSQLQuery.addScalar("voucherNumber",StandardBasicTypes.STRING);
+		createSQLQuery.addScalar("ihId",StandardBasicTypes.LONG);
+		createSQLQuery.addScalar("chequeDate",StandardBasicTypes.STRING);
+		createSQLQuery.addScalar("chequeNumber",StandardBasicTypes.STRING);
+		createSQLQuery.addScalar("chequeAmount",StandardBasicTypes.BIG_DECIMAL);
+		createSQLQuery.addScalar("txnType",StandardBasicTypes.STRING);
+		createSQLQuery.addScalar("type",StandardBasicTypes.STRING);
 		createSQLQuery.setResultTransformer(Transformers.aliasToBean(ReconcileBean.class));
 	    list = (List<ReconcileBean>)createSQLQuery.list();
          

@@ -1,1 +1,3 @@
+set JAVA_HOME=C:\Program Files\Java\jdk-17.0.12
+set PATH=%JAVA_HOME%\bin;%PATH%
 mvn clean package -DskipTests -s settings.xml -Ddb.user=postgres -Ddb.password=postgres -Ddb.driver=org.postgresql.Driver -Ddb.url=jdbc:postgresql://localhost:5432/obps_test

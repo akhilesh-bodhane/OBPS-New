@@ -56,24 +56,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.commons.entity.Source;
 import org.egov.dcb.bean.Receipt;
@@ -84,7 +84,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -116,14 +116,14 @@ public class OwnershipTransfer extends StateAware<Position> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Applicant owner;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String ownershipNumber;
 
@@ -146,7 +146,7 @@ public class OwnershipTransfer extends StateAware<Position> {
     @JoinColumn(name = "approverUser")
     private User approverUser;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String remarks;
 
@@ -181,11 +181,11 @@ public class OwnershipTransfer extends StateAware<Position> {
 
     private transient MultipartFile[] files;
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String workflowAction;
     private transient Long approvalDepartment;
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String approvalComent;
     private transient List<OwnershipTransferConditions> dynamicOwenrshipConditionsTemp = new ArrayList<>(0);
     private transient List<OwnershipTransferConditions> staticOwenrshipConditionsTemp = new ArrayList<>(0);

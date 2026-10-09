@@ -55,7 +55,11 @@ import org.egov.egf.es.utils.FinancialsDashBoardUtils;
 import org.egov.infra.utils.DateUtils;
 import org.egov.infra.utils.StringUtils;
 import org.egov.utils.FinancialConstants;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -63,12 +67,13 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.metrics.sum.Sum;
-import org.elasticsearch.search.aggregations.metrics.tophits.TopHits;
+import org.elasticsearch.search.aggregations.metrics.Sum;
+import org.elasticsearch.search.aggregations.metrics.TopHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +104,16 @@ public class RatioAnalysisDashboardService {
 
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private RestHighLevelClient restHighLevelClient;
+
+    private SearchResponse executeSearch(String indexName, SearchSourceBuilder sourceBuilder) {
+        SearchRequest searchRequest = new SearchRequest(indexName).source(sourceBuilder);
+        try {
+            return restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ElasticsearchException("Failed to execute Elasticsearch search query", e);
+        }
+    }
 
 
     public List<FinancialsRatioAnalysisResponse> getRatios(FinancialsDetailsRequest financialsDetailsRequest,
@@ -408,37 +422,37 @@ public class RatioAnalysisDashboardService {
             aggrField = AGGRTYPE;
         }
         if (!MONTH.equalsIgnoreCase(aggrField)) {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
                             .subAggregation(AggregationBuilders.terms(SUBAGGREGATION).field(subAggrFieldName).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)).subAggregation(AggregationBuilders.topHits(yearRecords).addField(MAJOR_CODE)))
+                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)).subAggregation(AggregationBuilders.topHits(yearRecords).docValueField(MAJOR_CODE)))
                             .subAggregation(AggregationBuilders.terms(DEPTWISEAGG).field(DEPT_NAME).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
                                     .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)))
 
-                            .subAggregation(AggregationBuilders.topHits(TOPHITS).addField(FinancialConstants.DISTNAME)
-                                    .addField(FinancialConstants.ULBNAME)
-                                    .addField(FinancialConstants.ULBGRADE).addField(FinancialConstants.REGNAME)
-                                    .addField(FinancialConstants.VOUCHERFUNDNAME).addField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
-                                    .addField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).setSize(1)))
-                    .execute().actionGet();
+                            .subAggregation(AggregationBuilders.topHits(TOPHITS).docValueField(FinancialConstants.DISTNAME)
+                                    .docValueField(FinancialConstants.ULBNAME)
+                                    .docValueField(FinancialConstants.ULBGRADE).docValueField(FinancialConstants.REGNAME)
+                                    .docValueField(FinancialConstants.VOUCHERFUNDNAME).docValueField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).size(1)));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         } else {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
                             .subAggregation(AggregationBuilders.terms(SUBAGGREGATION).field(subAggrFieldName).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))).subAggregation(AggregationBuilders.topHits(yearRecords).addField(MAJOR_CODE)).interval(DateHistogramInterval.MONTH)
+                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))).subAggregation(AggregationBuilders.topHits(yearRecords).docValueField(MAJOR_CODE)).calendarInterval(DateHistogramInterval.MONTH)
                             .subAggregation(AggregationBuilders.terms(DEPTWISEAGG).field(DEPT_NAME).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
                                     .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)))
 
-                            .subAggregation(AggregationBuilders.topHits(TOPHITS).addField(FinancialConstants.DISTNAME)
-                                    .addField(FinancialConstants.ULBNAME)
-                                    .addField(FinancialConstants.ULBGRADE).addField(FinancialConstants.REGNAME)
-                                    .addField(FinancialConstants.VOUCHERFUNDNAME).addField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
-                                    .addField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).setSize(1)))
-                    .execute().actionGet();
+                            .subAggregation(AggregationBuilders.topHits(TOPHITS).docValueField(FinancialConstants.DISTNAME)
+                                    .docValueField(FinancialConstants.ULBNAME)
+                                    .docValueField(FinancialConstants.ULBGRADE).docValueField(FinancialConstants.REGNAME)
+                                    .docValueField(FinancialConstants.VOUCHERFUNDNAME).docValueField(FinancialConstants.VOUCHERMISFUNCTIONNAME)
+                                    .docValueField(FinancialConstants.VOUCHERMISDEPARTMENTNAME).size(1)));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         }
     }
 
@@ -451,19 +465,19 @@ public class RatioAnalysisDashboardService {
             aggrField = AGGRTYPE;
         }
         if (!MONTH.equalsIgnoreCase(aggrField)) {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
                             .subAggregation(AggregationBuilders.terms(DEPTWISEAGG).field(DEPT_NAME).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))))
-                    .execute().actionGet();
+                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         } else {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
                             .subAggregation(AggregationBuilders.terms(DEPTWISEAGG).field(DEPT_NAME).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))))
-                    .execute().actionGet();
+                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         }
     }
 
@@ -475,18 +489,18 @@ public class RatioAnalysisDashboardService {
             aggrField = AGGRTYPE;
         }
         if (!MONTH.equalsIgnoreCase(aggrField)) {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.terms(AGGRFIELD).field(aggrField).size(5000)
                             .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                            .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)))
-                    .execute().actionGet();
+                            .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT)));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         } else {
-            return elasticsearchTemplate.getClient().prepareSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME).setQuery(boolQry)
-                    .addAggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
+            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(boolQry).size(0)
+                    .aggregation(AggregationBuilders.dateHistogram(AGGRFIELD).field(VOUCHER_DATE)
                             .subAggregation(AggregationBuilders.terms(DEPTWISEAGG).field(DEPT_NAME).size(5000)
                                     .subAggregation(AggregationBuilders.sum(DEBITAMOUNT).field(DEBITAMOUNT))
-                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))))
-                    .execute().actionGet();
+                                    .subAggregation(AggregationBuilders.sum(CREDITAMOUNT).field(CREDITAMOUNT))));
+            return executeSearch(FinancialConstants.FINANCIAL_VOUCHER_INDEX_NAME, sourceBuilder);
         }
     }
 

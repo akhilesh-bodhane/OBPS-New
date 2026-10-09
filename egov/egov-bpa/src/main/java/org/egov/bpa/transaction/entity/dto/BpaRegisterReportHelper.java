@@ -4,51 +4,51 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class BpaRegisterReportHelper {
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationType;
-    @SafeHtml
+    @CustomSafeHtml
     private String permitType;
     private Date dateOfAdmission;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;
-    @SafeHtml
+    @CustomSafeHtml
     private String address;
-    @SafeHtml
+    @CustomSafeHtml
     private String surveyNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String village;
-    @SafeHtml
+    @CustomSafeHtml
     private String revenueWard;
-    @SafeHtml
+    @CustomSafeHtml
     private String electionWard;
-    @SafeHtml
+    @CustomSafeHtml
     private String natureOfOccupancy;
-    @SafeHtml
+    @CustomSafeHtml
     private BigDecimal totalFloorArea = BigDecimal.ZERO;
     private Integer numberOfFloors;
     private BigDecimal far;
     private BigDecimal applicationFee;
     private Date docVerificationDate;
     private Date fieldVerificationDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String nocDetails;
-    @SafeHtml
+    @CustomSafeHtml
     private String buildingPermitNo;
     private BigDecimal permitFee;
     private BigDecimal additionalFee;
     private BigDecimal otherFee;
-    @SafeHtml
+    @CustomSafeHtml
     private String rejectionReason;
     private Date finalApprovalDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String apprvd_rejected_by;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceType;
     private BigDecimal shelterFund;
     private BigDecimal labourcess;

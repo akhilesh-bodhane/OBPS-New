@@ -47,13 +47,13 @@
   --%>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <c:choose>
 <c:when test="${not empty error}">
 	<div class="alert alert-danger" role="alert">
 		<i class="fa fa-exclamation-triangle error-symbol"></i>
 		<hr/>
-		<spring:message code="${error}" text="Application Error"/>
+		<p style="color:#000;font-size:17px"><spring:message code="${error}" text="${error}" htmlEscape="true"/></p>
 		<hr/>
 	</div>
 </c:when>

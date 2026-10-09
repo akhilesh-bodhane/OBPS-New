@@ -54,6 +54,7 @@
 			<column name="ID" precision="22" scale="0" />
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_EGCL_BRANCHUSER_MAP</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<many-to-one name="bankbranch" class="org.egov.commons.Bankbranch" fetch="select">

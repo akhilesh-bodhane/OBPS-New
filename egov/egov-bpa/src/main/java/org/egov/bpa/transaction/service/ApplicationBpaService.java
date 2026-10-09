@@ -93,8 +93,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -180,10 +180,10 @@ import org.egov.infra.utils.FileStoreUtils;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.portal.entity.Citizen;
 import org.egov.portal.service.CitizenService;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -417,6 +417,10 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     
     public Plan getPlanInfo(final String edcrNumber) {		
 		EdcrApplicationInfo edcrPlanInfo = drcRestService.getDcrPlanInfo(edcrNumber, ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest());		 
+        if (edcrPlanInfo == null)
+            throw new ApplicationRuntimeException("No plan details were received from the drawing scrutiny (E-DCR) service for E-DCR number " + edcrNumber + ".");
+        if (edcrPlanInfo.getErrorDetail() != null)
+            throw new ApplicationRuntimeException(edcrPlanInfo.getErrorDetail().getErrorMessage());
         return edcrPlanInfo.getPlan();
     }
 
@@ -975,7 +979,7 @@ if(permitLetterToParties.size()>0) {
     }
 
     public BpaApplication findById(final Long applicationId) {
-        return applicationBpaRepository.findOne(applicationId);
+        return applicationBpaRepository.findById(applicationId).orElse(null);
     }
 
     public List<BpaApplication> findApplicationByEDCRNumber(final String eDcrNumber) {
@@ -1320,8 +1324,7 @@ if(permitLetterToParties.size()>0) {
     public List<BpaApplication> getBpaApplicationsForScheduleAndReSchedule(List<BpaStatus> bpaStatusList,
             List<Boundary> boundaryList,
             Integer totalAvailableSlots) {
-        final Criteria criteria = entityManager.unwrap(Session.class)
-                .createCriteria(BpaApplication.class, "application")
+        final Criteria criteria = Criteria.create(entityManager.unwrap(Session.class), BpaApplication.class, "application")
                 .createAlias("application.siteDetail", "siteDetail")
                 .createAlias("application.demand", "demand");
         criteria.add(Restrictions.in(APPLICATION_STATUS, bpaStatusList));
@@ -1343,8 +1346,7 @@ if(permitLetterToParties.size()>0) {
     @SuppressWarnings(UNCHECKED)
     public List<BpaApplication> getOneDayPermitAppForAppointment(BpaStatus bpaStatus, Boundary ward, List<Boundary> boundaryList,
             Integer totalAvailableSlots) {
-        final Criteria criteria = entityManager.unwrap(Session.class)
-                .createCriteria(BpaApplication.class, "application")
+        final Criteria criteria = Criteria.create(entityManager.unwrap(Session.class), BpaApplication.class, "application")
                 .createAlias("application.siteDetail", "siteDetail")
                 .createAlias("application.demand", "demand");
         criteria.add(Restrictions.in("siteDetail.adminBoundary", boundaryList));

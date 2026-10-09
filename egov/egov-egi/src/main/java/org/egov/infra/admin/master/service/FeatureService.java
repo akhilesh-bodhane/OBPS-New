@@ -74,7 +74,7 @@ public class FeatureService {
     }
 
     public Feature getFeatureById(Long id) {
-        return featureRepository.findOne(id);
+        return featureRepository.findById(id).orElse(null);
     }
 
     @Transactional
@@ -83,6 +83,6 @@ public class FeatureService {
     }
 
     public Long getNumberOfFeatureByRoleAction(Role role, Action action) {
-        return this.featureRepository.countByRolesInAndActionsIn(role, action);
+        return this.featureRepository.countByRolesInAndActionsIn(java.util.Collections.singletonList(role), java.util.Collections.singletonList(action));
     }
 }

@@ -98,6 +98,7 @@ function callAjaxSearch() {
 					"toDate": $("#toDate").val(),
 					"sector":$("#sector").val(),
 					"plotNumber":$("#plotNumber").val(),
+					"fileNumber":$("#fileNumber").val(),
 					"ownerName":$("#applicantName").val(),
 					"statusId":$("#statusId").val()
 				};
@@ -170,6 +171,10 @@ function callAjaxSearch() {
 			},
 				{
 				"data": "plotNumber",
+				"sClass": "text-left"
+			},
+			{
+				"data": "fileNumber",
 				"sClass": "text-left"
 			},
 			{

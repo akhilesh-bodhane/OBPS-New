@@ -62,7 +62,7 @@ public class OCAppointmentScheduleService {
     }
 
     public OCAppointmentSchedule findById(Long id) {
-        return ocAppointmentScheduleRepository.findOne(id);
+        return ocAppointmentScheduleRepository.findById(id).orElse(null);
     }
 
     public List<OCAppointmentSchedule> findByApplication(OccupancyCertificate oc, AppointmentSchedulePurpose type) {

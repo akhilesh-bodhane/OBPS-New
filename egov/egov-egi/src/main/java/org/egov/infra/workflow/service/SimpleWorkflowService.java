@@ -60,10 +60,10 @@ import org.egov.infra.workflow.entity.StateAware;
 import org.egov.infra.workflow.entity.WorkflowAction;
 import org.egov.infra.workflow.matrix.entity.WorkFlowMatrix;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.egov.infra.persistence.criteria.Criterion;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -330,8 +330,7 @@ public class SimpleWorkflowService<T extends StateAware> implements WorkflowServ
 
     private Criteria previousWorkFlowMatrixCriteria(final String type, final String additionalRule, final String currentState,
                                                     final String pendingActions) {
-        final Criteria commonWfMatrixCriteria = this.stateAwarePersistenceService.getSession()
-                .createCriteria(WorkFlowMatrix.class);
+        final Criteria commonWfMatrixCriteria = Criteria.create(this.stateAwarePersistenceService.getSession(), WorkFlowMatrix.class);
         commonWfMatrixCriteria.add(Restrictions.eq("objectType", type));
 
         if (org.apache.commons.lang.StringUtils.isNotBlank(additionalRule))
@@ -348,7 +347,7 @@ public class SimpleWorkflowService<T extends StateAware> implements WorkflowServ
     private Criteria commonWorkFlowMatrixCriteria(final String type, final String additionalRule,
                                                   final String currentState, final String pendingActions) {
 
-        final Criteria commonWfMatrixCriteria = this.stateAwarePersistenceService.getSession().createCriteria(
+        final Criteria commonWfMatrixCriteria = Criteria.create(this.stateAwarePersistenceService.getSession(), 
                 WorkFlowMatrix.class);
 
         commonWfMatrixCriteria.add(Restrictions.eq("objectType", type));

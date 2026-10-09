@@ -48,6 +48,8 @@
 
 package org.egov.collection.web.actions.service;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -78,8 +80,8 @@ import org.egov.infstr.models.ServiceCategory;
 import org.egov.infstr.models.ServiceDetails;
 import org.egov.infstr.models.ServiceSubledgerInfo;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -269,21 +271,20 @@ public class ServiceDetailsAction extends BaseFormAction {
     @ValidationErrorPage(value = BEFOREMODIFY)
     @Action(value = "/service/serviceDetails-modify")
     public String modify() {
-        final List<ServiceAccountDetails> accountList = getPersistenceService().getSession()
-                .createCriteria(ServiceAccountDetails.class)
+        final List<ServiceAccountDetails> accountList = Criteria.create(getPersistenceService().getSession(), ServiceAccountDetails.class)
                 .add(Restrictions.eq("serviceDetails.id", serviceDetails.getId())).list();
 
         for (final ServiceAccountDetails serviceAccountDetails : accountList) {
 
             final Query qry = getPersistenceService().getSession().createQuery(
                     "delete from ServiceSubledgerInfo where serviceAccountDetail.id=:accountId");
-            qry.setLong("accountId", serviceAccountDetails.getId());
+            qry.setParameter("accountId", serviceAccountDetails.getId());
             qry.executeUpdate();
         }
 
         final Query qry = getPersistenceService().getSession().createQuery(
                 "delete from ServiceAccountDetails where serviceDetails.id=:serviceId");
-        qry.setLong("serviceId", serviceDetails.getId());
+        qry.setParameter("serviceId", serviceDetails.getId());
         qry.executeUpdate();
         insertOrUpdateService();
         if (hasActionErrors())

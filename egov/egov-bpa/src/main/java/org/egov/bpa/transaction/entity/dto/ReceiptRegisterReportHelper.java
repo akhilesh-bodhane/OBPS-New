@@ -5,15 +5,15 @@ import java.util.Date;
 import java.util.Objects;
 
 import org.egov.infra.web.support.search.DataTableSearchRequest;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class ReceiptRegisterReportHelper extends DataTableSearchRequest {
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String receiptNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private Date paymentDate;
     
     private String Sector;

@@ -67,7 +67,7 @@ var tbody = $('#checklist').children('tbody');
          //validate all rows before adding new row
          $('#checklist tbody tr').each(function (idx, value) {
              $('#checklist tbody tr:eq(' + idx + ') td input[type="text"]').each(function (i, v) {
-                 if (!$.trim($(v).val())) {
+                 if (!String($(v).val() ?? "").trim()) {
                      valid = false;
                      bootbox.alert("Enter Description for existing rows!", function () {
                          $(v).focus();
@@ -102,7 +102,7 @@ var tbody = $('#checklist').children('tbody');
 	         //validate all rows before adding new row
 	         $('#checklist tbody tr').each(function (idx, value) {
 	             $('#checklist tbody tr:eq(' + idx + ') td input[type="text"]').each(function (i, v) {
-	                 if (!$.trim($(v).val())) {
+	                 if (!String($(v).val() ?? "").trim()) {
 	                     valid = false;
 	                     bootbox.alert("Enter Description for existing rows!", function () {
 	                         $(v).focus();

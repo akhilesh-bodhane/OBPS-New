@@ -2,7 +2,7 @@ package org.egov.bpa.transaction.service;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.common.entity.dcr.helper.EdcrApplicationInfo;
 import org.egov.infra.config.core.ApplicationThreadLocals;

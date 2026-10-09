@@ -168,7 +168,7 @@ public class PendingTDSReportAction extends BaseFormAction {
     @Override
     public void prepare() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         addDropdownData("departmentList", persistenceService.findAllBy("from Department order by name"));
         addDropdownData("fundList", persistenceService.findAllBy(" from Fund where isactive=true and isnotleaf=false order by name"));  
@@ -424,7 +424,7 @@ public class PendingTDSReportAction extends BaseFormAction {
                     + "','dd/MM/yyyy') " + deptQuery + partyNameQuery + " group by er.month,vh.name order by er.month,vh.name";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug(qry);
-            result = persistenceService.getSession().createSQLQuery(qry).list();
+            result = persistenceService.getSession().createNativeQuery(qry).list();
             // Query to get total deduction
             final String qryTolDeduction = "SELECT type,MONTH,SUM(gldtamt) FROM (SELECT DISTINCT er.month AS MONTH,ergl.gldtlamt AS gldtamt,"
                     +
@@ -446,7 +446,7 @@ public class PendingTDSReportAction extends BaseFormAction {
                     + " vh.voucherDate >= to_date('"
                     + Constants.DDMMYYYYFORMAT2.format(financialYearDAO.getFinancialYearByDate(asOnDate).getStartingDate())
                     + "','dd/MM/yyyy') " + deptQuery + partyNameQuery + ") as temptable group by type,month";
-            resultTolDeduction = persistenceService.getSession().createSQLQuery(qryTolDeduction).list();
+            resultTolDeduction = persistenceService.getSession().createNativeQuery(qryTolDeduction).list();
         } catch (final ApplicationRuntimeException e) {
             message = e.getMessage();
             return;

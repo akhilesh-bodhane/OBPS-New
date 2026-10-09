@@ -118,7 +118,7 @@ public class ReceiptHeaderServiceTest { /* extends
 		collectionsUtil = (CollectionsUtil) context.getBean("collectionsUtil");
 		financialsUtil = (FinancialsUtil) context.getBean("financialsUtil");
 
-		voucherCreatorMock = org.easymock.classextension.EasyMock
+		voucherCreatorMock = org.easymock.EasyMock
 				.createMock(CreateVoucher.class);
 		financialsUtil.setVoucherCreator(voucherCreatorMock);
 		
@@ -198,9 +198,9 @@ public class ReceiptHeaderServiceTest { /* extends
 		String actualSeqNo = actualinternalRefNo.get(0).substring(0,
 				actualinternalRefNo.get(0).lastIndexOf('/'));
 
-		List numbers = session.createSQLQuery(
+		List numbers = session.createNativeQuery(
 				"SELECT VALUE FROM EG_NUMBER_GENERIC WHERE OBJECTTYPE=?")
-				.setString(0, "RECEIPTREF").list();
+				.setParameter(1, "RECEIPTREF").list();
 		BigDecimal result;
 		if (numbers != null && !numbers.isEmpty())
 			result = (BigDecimal) numbers.get(0);
@@ -238,9 +238,9 @@ public class ReceiptHeaderServiceTest { /* extends
 		String actualSeqNo = actualinternalRefNo.get(1).substring(0,
 				actualinternalRefNo.get(1).lastIndexOf('/'));
 
-		List numbers = session.createSQLQuery(
+		List numbers = session.createNativeQuery(
 				"SELECT VALUE FROM EG_NUMBER_GENERIC WHERE OBJECTTYPE=?")
-				.setString(0, "RECEIPTREF").list();
+				.setParameter(1, "RECEIPTREF").list();
 		BigDecimal result;
 		if (numbers != null && !numbers.isEmpty())
 			result = (BigDecimal) numbers.get(0);
@@ -287,22 +287,22 @@ public class ReceiptHeaderServiceTest { /* extends
 
 		EasyMock.replay(eisCommonsManagerMock);
 
-		org.easymock.classextension.EasyMock.expect(
+		org.easymock.EasyMock.expect(
 				voucherCreatorMock
 						.createVoucher(
-								org.easymock.classextension.EasyMock
+								org.easymock.EasyMock
 										.isA(HashMap.class),
-								org.easymock.classextension.EasyMock
+								org.easymock.EasyMock
 										.isA(List.class),
-								org.easymock.classextension.EasyMock
+								org.easymock.EasyMock
 										.isA(List.class))).andReturn(
 		objectFactory.createVoucher("testVoucher"));
-		org.easymock.classextension.EasyMock.replay(voucherCreatorMock);
+		org.easymock.EasyMock.replay(voucherCreatorMock);
 
 		receiptHeaderService.startWorkflow(receipts,Boolean.FALSE);
 
 		EasyMock.verify(eisCommonsManagerMock);
-		org.easymock.classextension.EasyMock.verify(voucherCreatorMock);
+		org.easymock.EasyMock.verify(voucherCreatorMock);
 		assertNotNull(receiptToBeSubmitted.getState());
 		assertTrue(receiptToBeSubmitted.getState().getValue().equals(CollectionConstants.WF_STATE_VOUCHER_CREATED));
 	}

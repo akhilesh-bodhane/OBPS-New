@@ -66,7 +66,7 @@ public class BuildingFloorDetailsService {
 
 	@Transactional
 	public ApplicationFloorDetail findById(final Long id) {
-		return buildingFloorDetailsRepository.findOne(id);
+		return buildingFloorDetailsRepository.findById(id).orElse(null);
 	}
 
 	public void buildProposedBuildingFloorDetails(final BpaApplication application) {

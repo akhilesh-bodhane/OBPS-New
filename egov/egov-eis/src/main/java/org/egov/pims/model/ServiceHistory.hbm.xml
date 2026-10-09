@@ -60,6 +60,7 @@
 	type="int">
 	<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 		<param name="sequence_name">SEQ_SERVICE_HISTORY</param>
+		<param name="increment_size">1</param>
 	</generator>
 </id>
 	

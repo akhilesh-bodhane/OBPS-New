@@ -60,7 +60,7 @@ public class StakeholderTypeService {
     }
 
     public StakeHolderType findOne(Long id) {
-        return stakeholderTypeRepository.findOne(id);
+        return stakeholderTypeRepository.findById(id).orElse(null);
     }
 
     public StakeHolderType findByCode(String code) {

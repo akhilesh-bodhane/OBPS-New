@@ -49,7 +49,7 @@ package org.egov.services.masters;
 
 import org.egov.commons.SubScheme;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -66,14 +66,14 @@ public class SubSchemeService extends PersistenceService<SubScheme, Integer> {
     public List<SubScheme> getBySchemeId(final Integer schemeId) {
         final Query query = getSession().createQuery(" from SubScheme where isactive = true and scheme.id=:schemeId");
 
-        query.setInteger("schemeId", schemeId);
+        query.setParameter("schemeId", schemeId);
         return query.list();
     }
 
     public SubScheme findByCode(final String code) {
         final Query query = getSession().createQuery(" from Scheme where code = :code ");
 
-        query.setString("code", code);
+        query.setParameter("code", code);
         return (SubScheme) query.uniqueResult();
     }
     

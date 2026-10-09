@@ -52,25 +52,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.egov.bpa.master.entity.VillageName;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENT_SCRUTINY")
@@ -84,25 +84,25 @@ public class DocumentScrutiny extends AbstractAuditable {
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String plotSurveyNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 24)
     private String reSurveyNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 12)
     private String subdivisionNumber;
 
     private BigDecimal extentInSqmts;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String natureOfOwnership;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String registrarOffice;
 
@@ -110,15 +110,15 @@ public class DocumentScrutiny extends AbstractAuditable {
     @JoinColumn(name = "village")
     private VillageName village;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String taluk;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String district;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String deedNumber;
 

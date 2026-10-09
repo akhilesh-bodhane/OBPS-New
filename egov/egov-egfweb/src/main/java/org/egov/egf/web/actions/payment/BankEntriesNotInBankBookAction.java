@@ -67,12 +67,12 @@ import org.egov.services.instrument.BankEntriesService;
 import org.egov.services.voucher.BankEntriesNotInBankBookActionHelper;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.DateType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -158,14 +158,14 @@ public class BankEntriesNotInBankBookAction extends BasePaymentAction {
     @Action(value = "/payment/bankEntriesNotInBankBook-search")
     public String search() {
         Query query = null;
-        query = persistenceService.getSession().createSQLQuery(getQuery())
-                .addScalar("refNum", StringType.INSTANCE)
-                .addScalar("type", StringType.INSTANCE)
-                .addScalar("date", DateType.INSTANCE)
-                .addScalar("amount", BigDecimalType.INSTANCE)
-                .addScalar("remarks", StringType.INSTANCE)
-                .addScalar("glcodeDetail", StringType.INSTANCE)
-                .addScalar("beId", LongType.INSTANCE)
+        query = persistenceService.getSession().createNativeQuery(getQuery())
+                .addScalar("refNum", StandardBasicTypes.STRING)
+                .addScalar("type", StandardBasicTypes.STRING)
+                .addScalar("date", StandardBasicTypes.DATE)
+                .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("remarks", StandardBasicTypes.STRING)
+                .addScalar("glcodeDetail", StandardBasicTypes.STRING)
+                .addScalar("beId", StandardBasicTypes.LONG)
                 .setResultTransformer(Transformers.aliasToBean(BankEntriesNotInBankBook.class));
         bankEntriesNotInBankBookList = query.list();
         List<BankEntriesNotInBankBook> tempList = new ArrayList<BankEntriesNotInBankBook>();

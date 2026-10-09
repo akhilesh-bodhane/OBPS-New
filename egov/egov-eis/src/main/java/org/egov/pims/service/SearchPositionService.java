@@ -54,12 +54,12 @@ import org.egov.infra.exception.ApplicationRuntimeException;
 import org.egov.pims.dao.PersonalInformationDAO;
 import org.egov.pims.dao.PersonalInformationHibernateDAO;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -148,20 +148,20 @@ public class SearchPositionService {
 			}
 			if(desId!= null&& desId.intValue() != 0)
 			{
-				query.setInteger("desId",desId);
+				query.setParameter("desId",desId);
 			}
 			if(deptId!= null&& deptId.intValue() != 0)
 			{
-				query.setInteger("deptId",deptId);
+				query.setParameter("deptId",deptId);
 			}
 
 			if(userDate!=null)
 			{
-				query.setDate("userDate",userDate);
+				query.setParameter("userDate",userDate, jakarta.persistence.TemporalType.DATE);
 			}
 			if(roleId!=null && roleId!=null)
 			{
-				query.setInteger("roleId",roleId);
+				query.setParameter("roleId",roleId);
 			}
 			posList=(List)query.list();
 		}

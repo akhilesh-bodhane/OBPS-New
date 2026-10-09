@@ -53,21 +53,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.egov.bpa.master.entity.BuildingConstructionStage;
 import org.egov.infra.filestore.entity.FileStoreMapper;
@@ -75,7 +75,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -91,7 +91,7 @@ public class InspectionApplication extends StateAware<Position> {
     @GeneratedValue(generator = SEQ_INSPECTIONAPPLICATION, strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String applicationNumber;
 
@@ -109,7 +109,7 @@ public class InspectionApplication extends StateAware<Position> {
     @JoinColumn(name = "buildingConstructionStage")
     private BuildingConstructionStage buildingConstructionStage;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1000)
     private String remarks;
     
@@ -131,14 +131,14 @@ public class InspectionApplication extends StateAware<Position> {
     @OneToMany(mappedBy = "inspectionApplication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InspectionLetterToParty> inspectionLetterToParties = new ArrayList<>();
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 5000)
     private String townSurveyorRemarks;
     private Boolean isTownSurveyorInspectionRequire = false;
     private transient Long approvalDepartment;
     private transient Long approvalDesignation;
     private Boolean isLPRequestInitiated;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 1024)
     private transient String approvalComent;
     private transient MultipartFile[] files;

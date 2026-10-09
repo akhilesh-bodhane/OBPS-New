@@ -135,7 +135,7 @@ public class FunctionwiseIEAction extends ReportAction
     public void prepare()
     {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         if (reportSearch.getStartDate() == null || reportSearch.getStartDate().equals(""))
             reportSearch.setStartDate(sdf.format(((CFinancialYear) persistenceService

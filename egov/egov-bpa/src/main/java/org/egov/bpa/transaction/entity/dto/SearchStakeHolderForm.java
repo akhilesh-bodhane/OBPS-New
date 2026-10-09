@@ -41,7 +41,7 @@ package org.egov.bpa.transaction.entity.dto;
 
 import java.util.Date;
 
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class SearchStakeHolderForm {
     private Long id;
@@ -50,13 +50,13 @@ public class SearchStakeHolderForm {
 
     private Date toDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String type;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String licenceNumber;
 
     private Date issueDate;
@@ -65,7 +65,7 @@ public class SearchStakeHolderForm {
 
     private Boolean isActive;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String status;
 
     private Date createdDate;

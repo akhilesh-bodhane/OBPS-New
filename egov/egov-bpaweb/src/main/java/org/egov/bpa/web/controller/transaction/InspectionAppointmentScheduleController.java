@@ -41,7 +41,7 @@ package org.egov.bpa.web.controller.transaction;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.service.AppointmentLocationsService;
 import org.egov.bpa.transaction.entity.InspectionAppointmentSchedule;

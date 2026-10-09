@@ -65,7 +65,7 @@ public class ExistingBuildingFloorDetailsService {
 
     @Transactional
     public ExistingBuildingFloorDetail findById(final Long id) {
-        return existingBuildingFloorDetailsRepository.findOne(id);
+        return existingBuildingFloorDetailsRepository.findById(id).orElse(null);
     }
 
     public void buildExistingBuildingFloorDetails(final BpaApplication application) {

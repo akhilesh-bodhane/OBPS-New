@@ -105,7 +105,7 @@ public class CashCollectionReportAction extends BaseFormAction {
 
     /*
      * (non-Javadoc)
-     * @see com.opensymphony.xwork2.ModelDriven#getModel()
+     * @see org.apache.struts2.ModelDriven#getModel()
      */
     @Override
     public Object getModel() {

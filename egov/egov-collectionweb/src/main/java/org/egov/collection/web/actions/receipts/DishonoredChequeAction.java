@@ -136,7 +136,7 @@ public class DishonoredChequeAction extends SearchFormAction {
         addDropdownData(CollectionConstants.DROPDOWN_DATA_BANKBRANCH_LIST, bankBranchHibernateDAO.getAllBankBranchs());
         addDropdownData(CollectionConstants.DROPDOWN_DATA_ACCOUNT_NO_LIST, Collections.EMPTY_LIST);
         addDropdownData(CollectionConstants.DROPDOWN_DATA_DISHONOR_REASONS_LIST, persistenceService.getSession()
-                .createSQLQuery("select * from egf_instrument_dishonor_reason").list());
+                .createNativeQuery("select * from egf_instrument_dishonor_reason").list());
 
         instrumentModesMap = CollectionConstants.INSTRUMENT_MODES_MAP;
     }
@@ -330,7 +330,7 @@ public class DishonoredChequeAction extends SearchFormAction {
         }
         instrumentDetails = persistenceService
                 .getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select rpt.id as receiptheaderid,ih.id as instrumentheaderid,rpt.receiptnumber as receiptnumber,rpt.receiptdate as receiptdate,ih.instrumentnumber as instrumentnumber,"
                                 + "ih.instrumentdate as instrumentdate,ih.instrumentamount as instrumentamount,b.name as bankname,ba.accountnumber as accountnumber,ih.payto as payto,status.description as description from egcl_collectionheader rpt,egcl_collectioninstrument ci,egf_instrumentheader ih,egw_status status,bank b,"
                                 + "bankbranch bb,bankaccount ba where rpt.id = ci.collectionheader AND ci.instrumentheader = ih.id AND status.id = ih.id_status "

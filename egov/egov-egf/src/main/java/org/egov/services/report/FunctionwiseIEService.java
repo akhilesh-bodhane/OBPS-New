@@ -59,12 +59,12 @@ import org.egov.infra.exception.ApplicationException;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.LongType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -183,7 +183,7 @@ public class FunctionwiseIEService
                 + reportSearch.getMajorCodeLen() + ")=coa.glcode) " + getFilterQueryGL(reportSearch) + " ORDER BY 1";
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("sql====================" + sql);
-        final Query query = persistenceService.getSession().createSQLQuery(sql);
+        final Query query = persistenceService.getSession().createNativeQuery(sql);
         final List<Object[]> list = query.list();
         for (final Object[] obj : list)
             majorCodeList.add(obj[0].toString() + "-" + obj[1].toString());
@@ -201,7 +201,7 @@ public class FunctionwiseIEService
                 + reportSearch.getMinorCodeLen() + ")=coa.glcode) " + getFilterQueryGL(reportSearch) + " ORDER BY 1";
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("sql====================" + sql);
-        final Query query = persistenceService.getSession().createSQLQuery(sql);
+        final Query query = persistenceService.getSession().createNativeQuery(sql);
         final List<Object[]> list = query.list();
         for (final Object[] obj : list)
             minorCodeList.add(obj[0].toString() + "-" + obj[1].toString());
@@ -241,18 +241,18 @@ public class FunctionwiseIEService
                     +
                     " where  coa.type=:type and length(coa.glcode)=" + reportSearch.getMajorCodeLen() +
                     " order by 1";
-        final Query query = persistenceService.getSession().createSQLQuery(sql)
-                .addScalar("accCode", StringType.INSTANCE)
-                .addScalar("name", StringType.INSTANCE)
-                .addScalar("schedule", StringType.INSTANCE)
-                .addScalar("FIEscheduleId", LongType.INSTANCE)
-                .addScalar("isMajor", BooleanType.INSTANCE)
-                .setString("type", reportSearch.getIncExp())
+        final Query query = persistenceService.getSession().createNativeQuery(sql)
+                .addScalar("accCode", StandardBasicTypes.STRING)
+                .addScalar("name", StandardBasicTypes.STRING)
+                .addScalar("schedule", StandardBasicTypes.STRING)
+                .addScalar("FIEscheduleId", StandardBasicTypes.LONG)
+                .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                .setParameter("type", reportSearch.getIncExp())
                 .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         if (reportSearch.getByDetailCode())
-            query.setString("glcode", reportSearch.getGlcode() + "%");
+            query.setParameter("glcode", reportSearch.getGlcode() + "%");
         else if (reportSearch.getByDepartment())
-            query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+            query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("----------------" + sql);
         return query.list();
@@ -296,18 +296,18 @@ public class FunctionwiseIEService
                     + "and coa.glcode in ("
                     + capExpCodesWithQuotesCond + ")" +
                     " order by 1";
-        final Query query = persistenceService.getSession().createSQLQuery(sql)
-                .addScalar("accCode", StringType.INSTANCE)
-                .addScalar("name", StringType.INSTANCE)
-                .addScalar("schedule", StringType.INSTANCE)
-                .addScalar("FIEscheduleId", LongType.INSTANCE)
-                .addScalar("isMajor", BooleanType.INSTANCE)
-                .setString("type", "A")
+        final Query query = persistenceService.getSession().createNativeQuery(sql)
+                .addScalar("accCode", StandardBasicTypes.STRING)
+                .addScalar("name", StandardBasicTypes.STRING)
+                .addScalar("schedule", StandardBasicTypes.STRING)
+                .addScalar("FIEscheduleId", StandardBasicTypes.LONG)
+                .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                .setParameter("type", "A")
                 .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         if (reportSearch.getByDetailCode())
-            query.setString("glcode", reportSearch.getGlcode() + "%");
+            query.setParameter("glcode", reportSearch.getGlcode() + "%");
         else if (reportSearch.getByDepartment())
-            query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+            query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("----------------" + sql);
         return query.list();
@@ -340,18 +340,18 @@ public class FunctionwiseIEService
                     +
                     " where  coa.type=:type and length(coa.glcode)=" + reportSearch.getMajorCodeLen() +
                     " order by 1";
-        final Query query = persistenceService.getSession().createSQLQuery(sql)
-                .addScalar("accCode", StringType.INSTANCE)
-                .addScalar("name", StringType.INSTANCE)
-                .addScalar("schedule", StringType.INSTANCE)
-                .addScalar("FIEscheduleId", LongType.INSTANCE)
-                .addScalar("isMajor", BooleanType.INSTANCE)
-                .setString("type", reportSearch.getIncExp())
+        final Query query = persistenceService.getSession().createNativeQuery(sql)
+                .addScalar("accCode", StandardBasicTypes.STRING)
+                .addScalar("name", StandardBasicTypes.STRING)
+                .addScalar("schedule", StandardBasicTypes.STRING)
+                .addScalar("FIEscheduleId", StandardBasicTypes.LONG)
+                .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                .setParameter("type", reportSearch.getIncExp())
                 .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         if (reportSearch.getByDetailCode())
-            query.setString("glcode", reportSearch.getGlcode() + "%");
+            query.setParameter("glcode", reportSearch.getGlcode() + "%");
         else if (reportSearch.getByDepartment())
-            query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+            query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("----------------" + sql);
         return query.list();
@@ -372,7 +372,7 @@ public class FunctionwiseIEService
                 + " GROUP BY fn.code,fn.name,CONCAT(CONCAT(coa.majorcode,'-'),coa.name) order by 1,3";
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("sql===" + sql);
-        final Query query = persistenceService.getSession().createSQLQuery(sql);
+        final Query query = persistenceService.getSession().createNativeQuery(sql);
         final List<Object[]> list = query.list();
         FunctionwiseIEEntry entry = new FunctionwiseIEEntry();
         Map<String, BigDecimal> majorcodeWiseAmount = new HashMap<String, BigDecimal>();
@@ -491,12 +491,12 @@ public class FunctionwiseIEService
                 + getFilterQueryVoucherAsOnDate(reportSearch) + getFilterQueryGL(reportSearch)
                 + " GROUP BY  SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen() + "),d.dept_name ";
             sql = sql + "order by 2,1 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
-                    .setString("glcode", reportSearch.getGlcode() + "%")
-                    .setString("deptName", reportSearch.getDepartment().getName())
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
+                    .setParameter("glcode", reportSearch.getGlcode() + "%")
+                    .setParameter("deptName", reportSearch.getDepartment().getName())
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         } else if (reportSearch.getByDepartment())
         {
@@ -529,10 +529,10 @@ public class FunctionwiseIEService
                 + getFilterQueryVoucherAsOnDate(reportSearch) + getFilterQueryGL(reportSearch)
                 + " GROUP BY  SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen() + "),d.dept_name ";
             sql = sql + "order by 2,1 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
 
         } else {
@@ -581,9 +581,9 @@ public class FunctionwiseIEService
                         " AND fn.id = gl.functionid " + getFilterQueryVoucherAsOnDate(reportSearch)
                         + getFilterQueryGL(reportSearch) + " GROUP BY SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen()
                         + "),coa.name order by 1,2 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         }
 
@@ -626,12 +626,12 @@ public class FunctionwiseIEService
                     + getFilterQueryVoucherAsOnPreviousYearDate(reportSearch) + getFilterQueryGL(reportSearch)
                     + " GROUP BY  SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen() + "),d.dept_name ";
             sql = sql + "order by 2,1 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
-                    .setString("glcode", reportSearch.getGlcode() + "%")
-                    .setString("deptName", reportSearch.getDepartment().getName())
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
+                    .setParameter("glcode", reportSearch.getGlcode() + "%")
+                    .setParameter("deptName", reportSearch.getDepartment().getName())
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         } else if (reportSearch.getByDepartment())
         {
@@ -653,10 +653,10 @@ public class FunctionwiseIEService
                     + getFilterQueryVoucherAsOnPreviousYearDate(reportSearch) + getFilterQueryGL(reportSearch)
                     + " GROUP BY  SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen() + "),d.dept_name ";
             sql = sql + "order by 2,1 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
 
         } else {
@@ -687,9 +687,9 @@ public class FunctionwiseIEService
                     " AND fn.id = gl.functionid " + getFilterQueryVoucherAsOnPreviousYearDate(reportSearch)
                     + getFilterQueryGL(reportSearch) + " GROUP BY SUBSTR(coa.glcode,1," + reportSearch.getMinorCodeLen()
                     + "),coa.name order by 1,2 ";
-            query = persistenceService.getSession().createSQLQuery(sql).addScalar("accCode", StringType.INSTANCE).
-                    addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
+            query = persistenceService.getSession().createNativeQuery(sql).addScalar("accCode", StandardBasicTypes.STRING).
+                    addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
         }
 
@@ -1058,76 +1058,76 @@ public class FunctionwiseIEService
         if (reportSearch.getAsOnDate().getMonth() == 2 && reportSearch.getAsOnDate().getDate() == 31) {
             if (reportSearch.getByDepartment())
             {
-                query = persistenceService.getSession().createSQLQuery(queryStr)
-                        .addScalar("accCode", StringType.INSTANCE)
-                        .addScalar("amount", BigDecimalType.INSTANCE)
-                        .addScalar("isMajor", BooleanType.INSTANCE)
-                        .addScalar("deptName", StringType.INSTANCE)
-                        .setString("isBeRe", isBeRe)
-                        .setLong("finYearId", reportSearch.getFinYearId())
-                        .setInteger("fundId", reportSearch.getFund().getId())
+                query = persistenceService.getSession().createNativeQuery(queryStr)
+                        .addScalar("accCode", StandardBasicTypes.STRING)
+                        .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                        .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                        .addScalar("deptName", StandardBasicTypes.STRING)
+                        .setParameter("isBeRe", isBeRe)
+                        .setParameter("finYearId", reportSearch.getFinYearId())
+                        .setParameter("fundId", reportSearch.getFund().getId())
                         .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
 
                 if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                         && reportSearch.getFunction().getId() != -1)
-                    query.setLong("functionId", reportSearch.getFunction().getId());
+                    query.setParameter("functionId", reportSearch.getFunction().getId());
                 if (reportSearch.getByDetailCode())
                 {
-                    query.setString("deptName", reportSearch.getDepartment().getName());
-                    query.setString("glcode", reportSearch.getGlcode() + "%");
+                    query.setParameter("deptName", reportSearch.getDepartment().getName());
+                    query.setParameter("glcode", reportSearch.getGlcode() + "%");
                 } else
-                    query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+                    query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
             } else
             {
-                query = persistenceService.getSession().createSQLQuery(queryStr)
-                        .addScalar("accCode", StringType.INSTANCE)
-                        .addScalar("amount", BigDecimalType.INSTANCE)
-                        .addScalar("isMajor", BooleanType.INSTANCE)
-                        .setString("isBeRe", isBeRe)
-                        .setLong("finYearId", reportSearch.getFinYearId())
-                        .setInteger("fundId", reportSearch.getFund().getId())
+                query = persistenceService.getSession().createNativeQuery(queryStr)
+                        .addScalar("accCode", StandardBasicTypes.STRING)
+                        .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                        .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                        .setParameter("isBeRe", isBeRe)
+                        .setParameter("finYearId", reportSearch.getFinYearId())
+                        .setParameter("fundId", reportSearch.getFund().getId())
                         .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
                 if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                         && reportSearch.getFunction().getId() != -1)
-                    query.setLong("functionId", reportSearch.getFunction().getId());
+                    query.setParameter("functionId", reportSearch.getFunction().getId());
 
             }
         } else if (reportSearch.getByDepartment())
         {
-            query = persistenceService.getSession().createSQLQuery(queryStr)
-                    .addScalar("accCode", StringType.INSTANCE)
-                    .addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
-                    .setString("isBeRe", isBeRe)
-                    .setDate("asOnDate", reportSearch.getAsOnDate())
-                    .setLong("finYearId", reportSearch.getFinYearId())
-                    .setInteger("fundId", reportSearch.getFund().getId())
+            query = persistenceService.getSession().createNativeQuery(queryStr)
+                    .addScalar("accCode", StandardBasicTypes.STRING)
+                    .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
+                    .setParameter("isBeRe", isBeRe)
+                    .setParameter("asOnDate", reportSearch.getAsOnDate(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("finYearId", reportSearch.getFinYearId())
+                    .setParameter("fundId", reportSearch.getFund().getId())
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
 
             if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                     && reportSearch.getFunction().getId() != -1)
-                query.setLong("functionId", reportSearch.getFunction().getId());
+                query.setParameter("functionId", reportSearch.getFunction().getId());
             if (reportSearch.getByDetailCode())
             {
-                query.setString("deptName", reportSearch.getDepartment().getName());
-                query.setString("glcode", reportSearch.getGlcode() + "%");
+                query.setParameter("deptName", reportSearch.getDepartment().getName());
+                query.setParameter("glcode", reportSearch.getGlcode() + "%");
             } else
-                query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+                query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
         } else
         {
-            query = persistenceService.getSession().createSQLQuery(queryStr)
-                    .addScalar("accCode", StringType.INSTANCE)
-                    .addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .setString("isBeRe", isBeRe)
-                    .setDate("asOnDate", reportSearch.getAsOnDate())
-                    .setLong("finYearId", reportSearch.getFinYearId())
-                    .setInteger("fundId", reportSearch.getFund().getId())
+            query = persistenceService.getSession().createNativeQuery(queryStr)
+                    .addScalar("accCode", StandardBasicTypes.STRING)
+                    .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .setParameter("isBeRe", isBeRe)
+                    .setParameter("asOnDate", reportSearch.getAsOnDate(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("finYearId", reportSearch.getFinYearId())
+                    .setParameter("fundId", reportSearch.getFund().getId())
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
             if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                     && reportSearch.getFunction().getId() != -1)
-                query.setLong("functionId", reportSearch.getFunction().getId());
+                query.setParameter("functionId", reportSearch.getFunction().getId());
 
         }
         return query.list();
@@ -1142,40 +1142,40 @@ public class FunctionwiseIEService
         Query query = null;
         if (reportSearch.getByDepartment())
         {
-            query = persistenceService.getSession().createSQLQuery(queryStr)
-                    .addScalar("accCode", StringType.INSTANCE)
-                    .addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .addScalar("deptName", StringType.INSTANCE)
-                    .setString("isBeRe", isBeRe)
-                    .setDate("asOnDate", reportSearch.getAsOnDate())
-                    .setLong("finYearId", reportSearch.getFinYearId())
-                    .setInteger("fundId", reportSearch.getFund().getId())
+            query = persistenceService.getSession().createNativeQuery(queryStr)
+                    .addScalar("accCode", StandardBasicTypes.STRING)
+                    .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .addScalar("deptName", StandardBasicTypes.STRING)
+                    .setParameter("isBeRe", isBeRe)
+                    .setParameter("asOnDate", reportSearch.getAsOnDate(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("finYearId", reportSearch.getFinYearId())
+                    .setParameter("fundId", reportSearch.getFund().getId())
 
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
             if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                     && reportSearch.getFunction().getId() != -1)
-                query.setLong("functionId", reportSearch.getFunction().getId());
+                query.setParameter("functionId", reportSearch.getFunction().getId());
             if (reportSearch.getByDetailCode())
             {
-                query.setString("deptName", reportSearch.getDepartment().getName());
-                query.setString("glcode", reportSearch.getGlcode() + "%");
+                query.setParameter("deptName", reportSearch.getDepartment().getName());
+                query.setParameter("glcode", reportSearch.getGlcode() + "%");
             } else
-                query.setLong("FIEscheduleId", reportSearch.getFIEscheduleId());
+                query.setParameter("FIEscheduleId", reportSearch.getFIEscheduleId());
         } else
         {
-            query = persistenceService.getSession().createSQLQuery(queryStr)
-                    .addScalar("accCode", StringType.INSTANCE)
-                    .addScalar("amount", BigDecimalType.INSTANCE)
-                    .addScalar("isMajor", BooleanType.INSTANCE)
-                    .setString("isBeRe", isBeRe)
-                    .setDate("asOnDate", reportSearch.getAsOnDate())
-                    .setLong("finYearId", reportSearch.getFinYearId())
-                    .setInteger("fundId", reportSearch.getFund().getId())
+            query = persistenceService.getSession().createNativeQuery(queryStr)
+                    .addScalar("accCode", StandardBasicTypes.STRING)
+                    .addScalar("amount", StandardBasicTypes.BIG_DECIMAL)
+                    .addScalar("isMajor", StandardBasicTypes.BOOLEAN)
+                    .setParameter("isBeRe", isBeRe)
+                    .setParameter("asOnDate", reportSearch.getAsOnDate(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("finYearId", reportSearch.getFinYearId())
+                    .setParameter("fundId", reportSearch.getFund().getId())
                     .setResultTransformer(Transformers.aliasToBean(CommonReportBean.class));
             if (reportSearch.getFunction() != null && reportSearch.getFunction().getId() != null
                     && reportSearch.getFunction().getId() != -1)
-                query.setLong("functionId", reportSearch.getFunction().getId());
+                query.setParameter("functionId", reportSearch.getFunction().getId());
         }
 
         return query.list();

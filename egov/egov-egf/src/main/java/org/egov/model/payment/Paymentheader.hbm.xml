@@ -56,6 +56,7 @@
             <column name="ID" precision="10" scale="0" />
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
             <param name="sequence_name">SEQ_PAYMENTHEADER</param>
+            <param name="increment_size">1</param>
             </generator>
         </id>
         <many-to-one name="voucherheader" class="org.egov.commons.CVoucherHeader" fetch="select">

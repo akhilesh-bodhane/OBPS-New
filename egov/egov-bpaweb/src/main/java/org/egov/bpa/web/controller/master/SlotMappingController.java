@@ -47,7 +47,7 @@ import static org.egov.infra.utils.JsonUtils.toJSON;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.entity.SlotMapping;
 import org.egov.bpa.master.entity.enums.WorkingDays;

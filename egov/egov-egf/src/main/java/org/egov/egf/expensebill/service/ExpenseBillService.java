@@ -95,8 +95,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import javax.script.ScriptContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -169,7 +169,7 @@ public class ExpenseBillService {
     }
 
     public EgBillregister getById(final Long id) {
-        return expenseBillRepository.findOne(id);
+        return expenseBillRepository.findById(id).orElse(null);
     }
 
     public EgBillregister getByBillnumber(final String billNumber) {

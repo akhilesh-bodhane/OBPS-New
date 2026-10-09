@@ -89,7 +89,7 @@ function callAjaxSearch() {
 				"bDestroy" : true,
 				"autoWidth" : false,
 				"sDom" : "<'row'<'col-xs-12 hidden col-right'f>r>t<'row'<'col-xs-3'i><'col-xs-3 col-right'l><'col-xs-3 col-right'<'export-data'T>><'col-xs-3 text-right'p>>",
-				"aLengthMenu" : [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
+				"aLengthMenu" : [ [ 10, 25, 50, 100, -1 ], [ 10, 25, 50, 100, "All" ] ],
 				"oTableTools" : {
 					"sSwfPath" : "../../../../../../egi/resources/global/swf/copy_csv_xls_pdf.swf",
 					"aButtons" : [ "xls", "pdf", "print" ]
@@ -142,7 +142,7 @@ function getParentByFinancialYear(financialYearId) {
 					$('#parent').empty();
 					$('#parent').append(
 							$("<option value=''>Select from below</option>"));
-					value = $.parseJSON(value);
+					value = JSON.parse(value);
 					$.each(value, function(index, val) {
 						var selected = "";
 						$('#parent').append(
@@ -176,7 +176,7 @@ function getReferenceBudgets(financialYearId) {
 							$('#referenceBudget')
 									.append(
 											$("<option value=''>Select from below</option>"));
-							value = $.parseJSON(value);
+							value = JSON.parse(value);
 							$
 									.each(
 											value,
@@ -215,7 +215,7 @@ function getDropDownsForModify(budgetId) {
 						}).done(
 						function(value) {
 							console.log(value);
-							value = $.parseJSON(value);
+							value = JSON.parse(value);
 							$.each(value, function(index, val) {
 								var selected = "";
 								if (val.reference != '') {

@@ -60,8 +60,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -109,7 +109,7 @@ public class PlReportsService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPLItemGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItems(searchRequest));
@@ -139,7 +139,7 @@ public class PlReportsService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPLItemGraphRural(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItemsRural(searchRequest));
@@ -169,7 +169,7 @@ public class PlReportsService {
     private Map<String, String> getCurrentOwner(PlinthLevelCertificate application) {
     	Map<String, String> map;
         if (application.getState() != null && application.getState().getOwnerPosition() != null) {
-        	map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
+        	map = workflowHistoryService.getUserDesignationAndPositionLenient(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
         } else {
         	map = new HashMap<String, String>();
         	map.put("designation", "");
@@ -181,7 +181,7 @@ public class PlReportsService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForUrbanPLItem(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItems(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -210,7 +210,7 @@ public class PlReportsService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForRuralPLItem(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlItems(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -239,7 +239,7 @@ public class PlReportsService {
     @ReadOnly
 	public Page<SearchPendingItemsForm> pagedSearchForPLPendingItemGraph(
 			SearchPendingItemsForm searchRequest) {
-		  final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+		  final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
 	        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
 	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItems(searchRequest));
@@ -270,7 +270,7 @@ public class PlReportsService {
     @ReadOnly
   	public Page<SearchPendingItemsForm> pagedSearchForPLPendingItemGraphRural(
   			SearchPendingItemsForm searchRequest) {
-  		  final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+  		  final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
   	        //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
   	        List<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItemsRural(searchRequest));
@@ -301,7 +301,7 @@ public class PlReportsService {
 @ReadOnly
 public Page<SearchPendingItemsForm> pagedSearchForUrbanPLPendingItem(SearchPendingItemsForm searchRequest) {
 
-    final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+    final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
     Page<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItems(searchRequest), pageable);
 
     List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -331,7 +331,7 @@ public Page<SearchPendingItemsForm> pagedSearchForUrbanPLPendingItem(SearchPendi
 @ReadOnly
 public Page<SearchPendingItemsForm> pagedSearchForRuralPLPendingItem(SearchPendingItemsForm searchRequest) {
 
-    final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+    final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
     Page<PlinthLevelCertificate> plApplications = plinthLevelCertificateRepository.findAll(SearchPlApplnFormSpec.searchSpecificationForPlPendingItemsRural(searchRequest), pageable);
 
     List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -372,10 +372,8 @@ public List<SearchBpaApplicationForm> search(SearchBpaApplicationForm searchPLAp
 private String getProcessOwner(PlinthLevelCertificate plinthLevelCertificate) {
     String processOwner;
     if (plinthLevelCertificate.getState() != null && plinthLevelCertificate.getState().getOwnerPosition() != null)
-        processOwner = workflowHistoryService
-                .getUserPositionByPositionAndDate(plinthLevelCertificate.getState().getOwnerPosition().getId(),
-                		plinthLevelCertificate.getState().getLastModifiedDate())
-                .getName();
+        processOwner = workflowHistoryService.getOwnerNameLenient(plinthLevelCertificate.getState().getOwnerPosition().getId(),
+                		plinthLevelCertificate.getState().getLastModifiedDate());
     else
         processOwner = plinthLevelCertificate.getLastModifiedBy().getName();
     return processOwner;

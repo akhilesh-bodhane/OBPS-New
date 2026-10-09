@@ -2,8 +2,8 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.VillageName;
 import org.egov.bpa.master.repository.VillageNameRepository;

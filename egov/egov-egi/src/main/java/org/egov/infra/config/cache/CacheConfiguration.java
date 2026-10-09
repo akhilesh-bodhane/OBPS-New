@@ -58,10 +58,14 @@ import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import java.time.Duration;
+import java.util.HashSet;
 import java.util.List;
 
 @Configuration
@@ -96,12 +100,16 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     @Bean
     @Override
     public CacheManager cacheManager() {
-        RedisCacheManager redisCacheManager = new RedisCacheManager(redisTemplate);
-        redisCacheManager.setTransactionAware(true);
-        redisCacheManager.setCacheNames(cities);
-        redisCacheManager.setUsePrefix(true);
-        redisCacheManager.setDefaultExpiration(60 * 60L);
-        return redisCacheManager;
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofHours(1))
+                .computePrefixWith(cacheName -> cacheName + ":")
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getKeySerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getValueSerializer()));
+        return RedisCacheManager.builder(redisTemplate.getConnectionFactory())
+                .cacheDefaults(cacheConfiguration)
+                .initialCacheNames(new HashSet<>(cities))
+                .transactionAware()
+                .build();
     }
 
     @Resource(name = "cities")

@@ -60,7 +60,7 @@ public class PlinthLevelCertificateService {
     }
 	
 	public PlinthLevelCertificate findById(Long id) {
-        return plinthLevelCertificateRepository.findOne(id);
+        return plinthLevelCertificateRepository.findById(id).orElse(null);
     }
 
     public List<PlinthLevelCertificate> findByStatusListOrderByCreatedDate(List<BpaStatus> listOfBpaStatus) {

@@ -53,10 +53,10 @@ import org.egov.infra.workflow.entity.StateAware;
 import org.egov.infstr.models.EgChecklists;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,31 +77,31 @@ public class EgBillregister extends StateAware<Position> implements java.io.Seri
     private Long id;
     @NotNull
     @Length(min = 1)
-    @SafeHtml
+    @CustomSafeHtml
     private String billnumber;
     @NotNull
     private Date billdate;
     @NotNull
     private BigDecimal billamount;
     private BigDecimal fieldid;
-    @SafeHtml
+    @CustomSafeHtml
     private String billstatus;
-    @SafeHtml
+    @CustomSafeHtml
     private String narration;
     private BigDecimal passedamount;
-    @SafeHtml
+    @CustomSafeHtml
     private String billtype;
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     private String expendituretype;
     private BigDecimal advanceadjusted;
-    @SafeHtml
+    @CustomSafeHtml
     private String zone;
-    @SafeHtml
+    @CustomSafeHtml
     private String division;
-    @SafeHtml
+    @CustomSafeHtml
     private String workordernumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String billapprovalstatus;
     private Boolean isactive;
     private Date billpasseddate;
@@ -111,7 +111,7 @@ public class EgBillregister extends StateAware<Position> implements java.io.Seri
     private EgwStatus status;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "egBillregister", targetEntity = EgBillregistermis.class)
     private EgBillregistermis egBillregistermis;
-    @SafeHtml
+    @CustomSafeHtml
     private String worksdetailId;
     @Transient
     private User approver;

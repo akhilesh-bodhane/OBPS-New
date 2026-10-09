@@ -108,7 +108,7 @@ import org.egov.pims.model.PersonalInformation;
 import org.egov.pims.service.EisUtilService;
 import org.egov.pims.service.SearchPositionService;
 import org.egov.pims.utils.EisManagersUtill;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -476,7 +476,7 @@ public class CollectionsUtil {
                 .createQuery(
                         "from CFinancialYear cfinancialyear where ? between "
                                 + "cfinancialyear.startingDate and cfinancialyear.endingDate")
-                .setDate(0, date).list()
+                .setParameter(1, date, jakarta.persistence.TemporalType.DATE).list()
                 .get(0);
     }
 
@@ -744,7 +744,7 @@ public class CollectionsUtil {
     public List<OnlinePayment> getOnlineTransactionHistory(final String consumerCode) {
         final String hql = "select online from ReceiptHeader rh, org.egov.collection.entity.OnlinePayment online where rh.id = online.receiptHeader.id and rh.consumerCode =:consumercode  order by online.id desc";
         final Query query = persistenceService.getSession().createQuery(hql);
-        query.setString("consumercode", consumerCode);
+        query.setParameter("consumercode", consumerCode);
         query.setMaxResults(3);
         return query.list();
     }
@@ -1057,7 +1057,7 @@ public class CollectionsUtil {
         StringBuilder queryString = new StringBuilder(
                 "select distinct(bb.id) as branchid,b.NAME||'-'||bb.BRANCHNAME as branchname from BANK b,BANKBRANCH bb,"
                         + " EGCL_COLLECTIONMIS cmis where bb.BANKID=b.ID  and bb.id=cmis.depositedBranch ");
-        final Query query = persistenceService.getSession().createSQLQuery(queryString.toString());
+        final Query query = persistenceService.getSession().createNativeQuery(queryString.toString());
         List<Object[]> queryResult = query.list();
         for (int i = 0; i < queryResult.size(); i++) {
             final Object[] arrayObjectInitialIndex = queryResult.get(i);

@@ -47,9 +47,9 @@
   ~   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
   ~
   -->
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1"
-         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
     <display-name>eGov Infrastructure</display-name>
 
@@ -145,6 +145,11 @@
        <filter-name>XFrameFilter</filter-name>
        <filter-class>org.egov.infra.web.filter.XFrameFilter</filter-class>
     </filter>
+
+    <filter>
+        <filter-name>dataTableExportFilter</filter-name>
+        <filter-class>org.egov.infra.web.filter.DataTableExportFilter</filter-class>
+    </filter>
     <!-- Filter Declaration Ends -->
 
     <!-- Filter Mapping Starts -->
@@ -218,12 +223,18 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- Keep last: replays DataTable searches as an Excel export after security/tenant/XSS filters -->
+    <filter-mapping>
+        <filter-name>dataTableExportFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!-- Filter Mapping Ends -->
 
     <!-- Listeners Starts -->
 
     <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        <listener-class>org.egov.infra.web.context.SharedParentContextLoaderListener</listener-class>
     </listener>
 
     <listener>
@@ -242,6 +253,11 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
         <async-supported>true</async-supported>
+        <multipart-config>
+            <max-file-size>1073741274</max-file-size>
+            <max-request-size>1073741274</max-request-size>
+            <file-size-threshold>10485760</file-size-threshold>
+        </multipart-config>
     </servlet>
 
     <servlet>
@@ -268,7 +284,7 @@
             <taglib-location>/WEB-INF/taglib/tiles-jsp.tld</taglib-location>
         </taglib>
         <taglib>
-            <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
+            <taglib-uri>jakarta.tags.core</taglib-uri>
             <taglib-location>/WEB-INF/taglib/c.tld</taglib-location>
         </taglib>
         <taglib>
@@ -284,7 +300,7 @@
             <taglib-location>/WEB-INF/taglib/joda.tld</taglib-location>
         </taglib>
         <taglib>
-            <taglib-uri>http://java.sun.com/jsp/jstl/functions</taglib-uri>
+            <taglib-uri>jakarta.tags.functions</taglib-uri>
             <taglib-location>/WEB-INF/taglib/fn.tld</taglib-location>
         </taglib>
         <jsp-property-group>

@@ -53,10 +53,9 @@ import org.egov.infstr.services.PersistenceService;
 import org.egov.model.budget.Budget;
 import org.egov.model.budget.BudgetUploadReport;
 import org.egov.services.budget.BudgetService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -107,15 +106,15 @@ public class BudgetUploadReportService {
         List<BudgetUploadReport> budgetUploadReportList = new ArrayList<BudgetUploadReport>();
         Query query = null;
         query = persistenceService.getSession()
-                .createSQLQuery(getQuery(reMaterializedPath, beMaterializedPath, fundId, functionId, deptId))
-                .addScalar("fundCode", StringType.INSTANCE)
-                .addScalar("functionCode", StringType.INSTANCE)
-                .addScalar("glCode", StringType.INSTANCE)
-                .addScalar("deptCode", StringType.INSTANCE)
-                .addScalar("approvedReAmount", BigDecimalType.INSTANCE)
-                .addScalar("planningReAmount", BigDecimalType.INSTANCE)
-                .addScalar("approvedBeAmount", BigDecimalType.INSTANCE)
-                .addScalar("planningBeAmount", BigDecimalType.INSTANCE)
+                .createNativeQuery(getQuery(reMaterializedPath, beMaterializedPath, fundId, functionId, deptId))
+                .addScalar("fundCode", StandardBasicTypes.STRING)
+                .addScalar("functionCode", StandardBasicTypes.STRING)
+                .addScalar("glCode", StandardBasicTypes.STRING)
+                .addScalar("deptCode", StandardBasicTypes.STRING)
+                .addScalar("approvedReAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("planningReAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("approvedBeAmount", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("planningBeAmount", StandardBasicTypes.BIG_DECIMAL)
                 .setResultTransformer(Transformers.aliasToBean(BudgetUploadReport.class));
         budgetUploadReportList = query.list();
 

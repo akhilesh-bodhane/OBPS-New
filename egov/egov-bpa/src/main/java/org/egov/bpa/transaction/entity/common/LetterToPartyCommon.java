@@ -53,24 +53,24 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 import java.util.List;
 
 @Entity
@@ -89,7 +89,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@JoinColumn(name = "inspection")
 	private InspectionCommon inspection;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 32)
     private String acknowledgementNumber;
 
@@ -97,7 +97,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@JoinTable(name = "egbpa_lp_reason_common", joinColumns = @JoinColumn(name = "lettertoparty"), inverseJoinColumns = @JoinColumn(name = "lpreason"))
 	private List<LpReason> lpReason = new ArrayList<>();
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String lpNumber;
 
@@ -108,7 +108,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@JoinColumn(name = "scheduledby")
 	private User scheduledBy;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String scheduledPlace;
 
@@ -121,44 +121,44 @@ public class LetterToPartyCommon extends AbstractAuditable {
 	@Temporal(TemporalType.DATE)
 	private Date replyDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String lpRemarks;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String lpReplyRemarks;
     
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String edcrRescrutinyNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String lpDesc;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String lpReplyDesc;
 
     private Boolean isHistory;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 512)
     private String documentId;
 
 	@Temporal(TemporalType.DATE)
 	private Date lastReplyDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 200)
     private String currentStateValueOfLP;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 200)
     private String stateForOwnerPosition;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 200)
     private String pendingAction;
 

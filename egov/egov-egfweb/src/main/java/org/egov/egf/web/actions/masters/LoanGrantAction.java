@@ -70,9 +70,9 @@ import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infra.web.struts.annotation.ValidationErrorPage;
 import org.egov.infstr.services.PersistenceService;
 import org.egov.services.masters.BankService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.LongType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -167,8 +167,8 @@ public class LoanGrantAction extends LoanGrantBaseAction {
         projectCodeList = new ArrayList<LoanGrantBean>();
         final String strQuery = "select pc.id as id , pc.code as code, pc.name as name from egw_projectcode pc," +
                 " egf_subscheme_project sp where pc.id= sp.projectcodeid and sp.subschemeid=" + subSchemeId;
-        query = persistenceService.getSession().createSQLQuery(strQuery)
-                .addScalar("id", LongType.INSTANCE).addScalar("code").addScalar("name")
+        query = persistenceService.getSession().createNativeQuery(strQuery)
+                .addScalar("id", StandardBasicTypes.LONG).addScalar("code").addScalar("name")
                 .setResultTransformer(Transformers.aliasToBean(LoanGrantBean.class));
         projectCodeList = query.list();
         final List<LoanGrantDetail> lgDetailList = loanGrantHeader.getDetailList();
@@ -403,7 +403,7 @@ public class LoanGrantAction extends LoanGrantBaseAction {
                     lgRecptDetail.setCreatedDate(currDate);
                     lgRecptDetail.setModifiedDate(currDate);
                 }
-            query = persistenceService.getSession().createSQLQuery(
+            query = persistenceService.getSession().createNativeQuery(
                     "delete from egf_subscheme_project where subschemeid= " + getSubSchemeId());
             query.executeUpdate();
             SubSchemeProject subSchemeProject;

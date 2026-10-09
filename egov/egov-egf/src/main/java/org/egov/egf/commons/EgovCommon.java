@@ -88,7 +88,7 @@ import org.egov.services.report.FundFlowService;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -186,7 +186,7 @@ public class EgovCommon {
         try {
             final Query qry1 =
                     persistenceService.getSession()
-                    .createSQLQuery(
+                    .createNativeQuery(
                             " select is_primary, dept_id from EG_EIS_EMPLOYEEINFO employeevi0_ where upper(trim(employeevi0_.CODE))='"
                                     + employeeService.getEmpForUserId(user.getId())
                                     .getCode()
@@ -432,8 +432,8 @@ public class EgovCommon {
                                                     + "vh.voucherDate >= (select startingDate from FinancialYear where  startingDate <= :date AND endingDate >=:date) and"
                                                     + " vh.voucherDate <= :date and ph.state_id=es.id and es.value='END' and vh.status=0 and  iv.voucherheaderid=vh.id and iv.instrumentheaderid=ih.id and "
                                                     + "ih.id_status=egws.id and egws.description in ('Surrendered','Surrender_For_Reassign')");
-            final List<Object> list = persistenceService.getSession().createSQLQuery(paymentQuery.toString())
-                    .setDate("date", voucherDate).list();
+            final List<Object> list = persistenceService.getSession().createNativeQuery(paymentQuery.toString())
+                    .setParameter("date", voucherDate, jakarta.persistence.TemporalType.DATE).list();
             final BigDecimal amount = (BigDecimal) list.get(0);
             bankBalance = amount == null ? BigDecimal.ZERO : amount;
             LOGGER
@@ -585,7 +585,7 @@ public class EgovCommon {
             throw new ApplicationRuntimeException("To Date cannot be null");
 
         final Query qry = session.createQuery("from CChartOfAccounts c where c.glcode=:glcode and c.classification=4 ");
-        qry.setString("glcode", glcode);
+        qry.setParameter("glcode", glcode);
         final List<Object> coaRes = qry.list();
 
         if (null == coaRes || coaRes.size() == 0)
@@ -594,8 +594,8 @@ public class EgovCommon {
 
         final Query actQry = session
                 .createQuery("from Accountdetailkey adk where adk.accountdetailtype.name=:subledgerType and adk.detailkey=:detailkey");
-        actQry.setString("subledgerType", subledgerType);
-        actQry.setInteger("detailkey", accountdetailkeyId.intValue());
+        actQry.setParameter("subledgerType", subledgerType);
+        actQry.setParameter("detailkey", accountdetailkeyId.intValue());
 
         final List<Object> actRes = actQry.list();
         if (null == actRes || actRes.size() == 0)
@@ -614,10 +614,10 @@ public class EgovCommon {
                 .append(" and epayee.egBilldetailsId.egBillregister.expendituretype='Works'  group by epayee.accountDetailKeyId");
 
         final Query amountQry = session.createQuery(query.toString());
-        amountQry.setString("subledger", subledgerType);
-        amountQry.setInteger("accountdetailkey", accountdetailkeyId.intValue());
-        amountQry.setString("glcode", glcode);
-        amountQry.setDate("billdate", toBillDate);
+        amountQry.setParameter("subledger", subledgerType);
+        amountQry.setParameter("accountdetailkey", accountdetailkeyId.intValue());
+        amountQry.setParameter("glcode", glcode);
+        amountQry.setParameter("billdate", toBillDate, jakarta.persistence.TemporalType.DATE);
 
         // if(LOGGER.isInfoEnabled()) LOGGER.info("----------------:"+amountQry.list());
         BigDecimal result = BigDecimal.ZERO;
@@ -1007,8 +1007,8 @@ public class EgovCommon {
             final Query qry = session
                     .createQuery("from CChartOfAccountDetail cd,CChartOfAccounts c where "
                             + "cd.glCodeId = c.id and c.glcode=:glcode and cd.detailTypeId=:detailTypeId");
-            qry.setString(VoucherConstant.GLCODE, glcode);
-            qry.setString("detailTypeId", accountdetailType.toString());
+            qry.setParameter(VoucherConstant.GLCODE, glcode);
+            qry.setParameter("detailTypeId", accountdetailType.toString());
 
             if (null == qry.list() || qry.list().size() == 0)
                 throw new ValidationException(
@@ -1024,9 +1024,9 @@ public class EgovCommon {
             final Session session = persistenceService.getSession();
             final Query qry = session
                     .createQuery("from Accountdetailkey adk where adk.accountdetailtype=:detailtypeid and adk.detailkey=:detailkey");
-            qry.setString(VoucherConstant.DETAILTYPEID, accountdetailType
+            qry.setParameter(VoucherConstant.DETAILTYPEID, accountdetailType
                     .toString());
-            qry.setString("detailkey", accountdetailkey.toString());
+            qry.setParameter("detailkey", accountdetailkey.toString());
 
             if (null == qry.list() || qry.list().size() == 0)
                 throw new ValidationException(
@@ -1143,7 +1143,7 @@ public class EgovCommon {
                                             " Group by txns.GLCODEID,txns.fundid,txns.FINANCIALYEARID ");
 
         final List<Object> list = persistenceService.getSession()
-                .createSQLQuery(opBalncQuery.toString()).list();
+                .createNativeQuery(opBalncQuery.toString()).list();
         if (list != null && list.size() > 0)
             opBalAsonDate = (BigDecimal) list.get(0);
         opBalAsonDate = opBalAsonDate == null ? BigDecimal.ZERO : opBalAsonDate;
@@ -1503,13 +1503,13 @@ public class EgovCommon {
         final Query query1 = persistenceService.getSession().createQuery(
                 query.toString());
         if (isNotNull(queryParamMap.get("fromDate")))
-            query1.setTimestamp("from", (Date) queryParamMap.get("fromDate"));
+            query1.setParameter("from", (Date) queryParamMap.get("fromDate"), jakarta.persistence.TemporalType.DATE);
         if (isNotNull(queryParamMap.get("toDate"))) {
             final Date date = (Date) queryParamMap.get("toDate");
             date.setMinutes(59);
             date.setHours(23);
             date.setSeconds(59);
-            query1.setTimestamp("to", date);
+            query1.setParameter("to", date, jakarta.persistence.TemporalType.DATE);
         }
 
         listBudgetUsage = query1.list();
@@ -1812,7 +1812,7 @@ public class EgovCommon {
                                             "AND fy.startingdate        <='").append(Constants.DDMMYYYYFORMAT1.format(asondate)).append("' " +
                                                     "GROUP BY fy.startingdate ORDER BY fy.startingdate");
 
-        final List<Object> list = persistenceService.getSession().createSQLQuery(opBalncQuery.toString()).list();
+        final List<Object> list = persistenceService.getSession().createNativeQuery(opBalncQuery.toString()).list();
         if (list != null && list.size() > 0)
             opBalAsonDate = (BigDecimal) list.get(0);
         opBalAsonDate = opBalAsonDate == null ? BigDecimal.ZERO : opBalAsonDate;
@@ -1948,8 +1948,8 @@ public class EgovCommon {
             final Query qry = session
                     .createQuery("from CChartOfAccountDetail cd,CChartOfAccounts c where "
                             + "cd.glCodeId = c.id and c.glcode=:glcode and cd.detailTypeId=:detailTypeId");
-            qry.setString(VoucherConstant.GLCODE, glcode);
-            qry.setString("detailTypeId", accountdetailType.toString());
+            qry.setParameter(VoucherConstant.GLCODE, glcode);
+            qry.setParameter("detailTypeId", accountdetailType.toString());
 
             if (null == qry.list() || qry.list().size() == 0)
                 throw new ValidationException(
@@ -1965,9 +1965,9 @@ public class EgovCommon {
             final Session session = persistenceService.getSession();
             final Query qry = session
                     .createQuery("from Accountdetailkey adk where adk.accountdetailtype=:detailtypeid and adk.detailkey=:detailkey");
-            qry.setString(VoucherConstant.DETAILTYPEID, accountdetailType
+            qry.setParameter(VoucherConstant.DETAILTYPEID, accountdetailType
                     .toString());
-            qry.setString("detailkey", accountdetailkey.toString());
+            qry.setParameter("detailkey", accountdetailkey.toString());
 
             if (null == qry.list() || qry.list().size() == 0)
                 throw new ValidationException(
@@ -2052,7 +2052,7 @@ public class EgovCommon {
             dbEntIdQuery = validationQuery + commaSeperatedEntitiesList.get(i) + " ) order by detailkey ";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug(i + ":dbEntIdQuery- " + dbEntIdQuery);
-            dbEntIdList = persistenceService.getSession().createSQLQuery(dbEntIdQuery).list();
+            dbEntIdList = persistenceService.getSession().createNativeQuery(dbEntIdQuery).list();
             if (dbEntIdList != null && dbEntIdList.size() != limitedEntityList.get(i).size())
                 for (final Long entId : limitedEntityList.get(i)) {
                     isPresent = false;
@@ -2086,8 +2086,8 @@ public class EgovCommon {
                 LOGGER.debug(i + ": qryForExpense- " + qryForExpense);
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug(i + ": qryForNonExpense- " + qryForNonExpense);
-            objForExpense = persistenceService.getSession().createSQLQuery(qryForExpense).list();
-            objForNonExpense = persistenceService.getSession().createSQLQuery(qryForNonExpense).list();
+            objForExpense = persistenceService.getSession().createNativeQuery(qryForExpense).list();
+            objForNonExpense = persistenceService.getSession().createNativeQuery(qryForNonExpense).list();
             if (objForExpense != null && objForExpense.size() != 0) {
                 tempAmountObj = new BigDecimal(objForExpense.get(0)[0].toString());
                 tempCountObj = new BigDecimal(objForExpense.get(0)[1].toString());
@@ -2176,7 +2176,7 @@ public class EgovCommon {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Final payQuery - " + payQuery);
 
-        objForExpense = persistenceService.getSession().createSQLQuery(payQuery).list();
+        objForExpense = persistenceService.getSession().createNativeQuery(payQuery).list();
         if (objForExpense != null && objForExpense.size() != 0) {
             totalPaymentAmount = new BigDecimal(objForExpense.get(0)[0].toString());
             totalCount = new BigDecimal(objForExpense.get(0)[1].toString());
@@ -2240,7 +2240,7 @@ public class EgovCommon {
          * if(LOGGER.isDebugEnabled()) LOGGER.debug(i + ":dbEntIdQuery- " + dbEntIdQuery);
          * if(i==commaSeperatedEntitiesList.size()-1) dbEntIdQuery=dbEntIdQuery+ ")) order by detailkey "; }
          * if(LOGGER.isDebugEnabled()) LOGGER.debug("Final Query- " + dbEntIdQuery); dbEntIdList = (List<BigDecimal>)
-         * persistenceService.getSession().createSQLQuery(dbEntIdQuery).list(); if (dbEntIdList != null && dbEntIdList.size() !=
+         * persistenceService.getSession().createNativeQuery(dbEntIdQuery).list(); if (dbEntIdList != null && dbEntIdList.size() !=
          * limitedEntityList.size()) { for (int i = 0; i < commaSeperatedEntitiesList.size(); i++) { for (Long entId :
          * limitedEntityList.get(i)) { isPresent = false; for (BigDecimal dbEntId : dbEntIdList) { if (dbEntId.longValue() ==
          * entId.longValue()) { isPresent = true; break; } } if (!isPresent) { incorrectEntityIds.add(entId); } } } } if
@@ -2263,8 +2263,8 @@ public class EgovCommon {
                 LOGGER.debug(i + ": qryForExpense- " + qryForExpense);
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug(i + ": qryForNonExpense- " + qryForNonExpense);
-            objForExpense = persistenceService.getSession().createSQLQuery(qryForExpense).list();
-            objForNonExpense = persistenceService.getSession().createSQLQuery(qryForNonExpense).list();
+            objForExpense = persistenceService.getSession().createNativeQuery(qryForExpense).list();
+            objForNonExpense = persistenceService.getSession().createNativeQuery(qryForNonExpense).list();
             if (objForExpense != null && objForExpense.size() != 0) {
                 tempAmountObj = new BigDecimal(objForExpense.get(0)[0].toString());
                 deptName = objForExpense.get(0)[1].toString();
@@ -2325,7 +2325,7 @@ public class EgovCommon {
                 + " ";
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("sqlQuery- " + sqlQuery);
-        final List<BigDecimal> paymentAmount = persistenceService.getSession().createSQLQuery(sqlQuery).list();
+        final List<BigDecimal> paymentAmount = persistenceService.getSession().createNativeQuery(sqlQuery).list();
         return paymentAmount.get(0) == null ? BigDecimal.ZERO : paymentAmount
                 .get(0);
     }
@@ -2420,7 +2420,7 @@ public class EgovCommon {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("queryForGLList >> " + queryForGLList);
         final List<Object[]> generalLedgerList = persistenceService.getSession()
-                .createSQLQuery(queryForGLList).list();
+                .createNativeQuery(queryForGLList).list();
         for (final Object[] objects : generalLedgerList) {
             if (LOGGER.isInfoEnabled())
                 LOGGER.info("Project code has vouchers.");
@@ -2483,7 +2483,7 @@ public class EgovCommon {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("queryForGLList >> " + queryForGLList);
         final List<Object[]> generalLedgerList = persistenceService.getSession()
-                .createSQLQuery(queryForGLList).list();
+                .createNativeQuery(queryForGLList).list();
         for (final Object[] objects : generalLedgerList) {
             if (LOGGER.isInfoEnabled())
                 LOGGER.info("Deposit code has vouchers.");
@@ -2551,7 +2551,7 @@ public class EgovCommon {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("queryForGLList >> " + queryForGLList);
         final List<Object[]> generalLedgerList = persistenceService.getSession()
-                .createSQLQuery(queryForGLList).list();
+                .createNativeQuery(queryForGLList).list();
         for (final Object[] objects : generalLedgerList) {
             if (LOGGER.isInfoEnabled())
                 LOGGER.info("Project code has vouchers.");
@@ -2600,7 +2600,7 @@ public class EgovCommon {
 
         final Query expenditureQuery = persistenceService.getSession().createQuery(query);
 
-        expenditureQuery.setInteger("detailTypeId", detailTypeId);
+        expenditureQuery.setParameter("detailTypeId", detailTypeId);
         expenditureQuery.setParameterList("entityIdList", entityIdList);
         final List<Object> result = expenditureQuery.list();
         if (result != null)
@@ -2634,7 +2634,7 @@ public class EgovCommon {
 
         final Query expenditureQuery = persistenceService.getSession().createQuery(query);
 
-        expenditureQuery.setInteger("detailTypeId", detailTypeId);
+        expenditureQuery.setParameter("detailTypeId", detailTypeId);
         expenditureQuery.setParameterList("entityIdList", entityIdList);
         final List<Object> result = expenditureQuery.list();
         if (result != null)

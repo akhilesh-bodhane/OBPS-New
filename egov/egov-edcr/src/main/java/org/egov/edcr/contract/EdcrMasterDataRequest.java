@@ -1,74 +1,74 @@
 package org.egov.edcr.contract;
 
 import org.egov.infra.web.support.search.DataTableSearchRequest;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class EdcrMasterDataRequest extends DataTableSearchRequest {
 
-	@SafeHtml
+	@CustomSafeHtml
     private String occupancyType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String subOccupancyType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String code;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String phase;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String sector;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotNo;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String bycWidth;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String bycHeight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotArea;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotAreaSqYards;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String areaType;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotDepthAvg;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String plotDepthWidthAvg;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String permissibleBuildingStories;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String permissibleBuildingHeight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String maxPermissibleFar;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackFront;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackRear;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackRight;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String minPermissibleSetBackLeft;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String drawingNumber;
     
-    @SafeHtml
+    @CustomSafeHtml
     private String jobNumber; 
 
 	public String getOccupancyType() {

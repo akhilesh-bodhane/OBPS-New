@@ -3,7 +3,7 @@ package org.egov.edcr.web.controller.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.edcr.entity.SearchBuildingPlanScrutinyForm;
 import org.egov.edcr.service.EdcrApplicationService;

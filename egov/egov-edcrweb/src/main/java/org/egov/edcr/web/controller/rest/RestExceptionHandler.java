@@ -47,8 +47,8 @@
 
 package org.egov.edcr.web.controller.rest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,13 +66,13 @@ public class RestExceptionHandler {
     @GetMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getHandleError(HttpServletRequest request, HttpServletResponse response) {
-        return new ResponseEntity<>(request.getAttribute("javax.servlet.error.exception"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(request.getAttribute("jakarta.servlet.error.exception"), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> postHandleError(HttpServletRequest request, HttpServletResponse response) {
-        return new ResponseEntity<>(request.getAttribute("javax.servlet.error.exception"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(request.getAttribute("jakarta.servlet.error.exception"), HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~    eGov  SmartCity eGovernance suite aims to improve the internal efficiency,transparency,
+  ~    accountability and the service delivery of the government  organizations.
+  ~
+  ~     Copyright (C) 2017  eGovernments Foundation
+  ~
+  ~     The updated version of eGov suite of products as by eGovernments Foundation
+  ~     is available at http://www.egovernments.org
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program. If not, see http://www.gnu.org/licenses/ or
+  ~     http://www.gnu.org/licenses/gpl.html .
+  ~
+  ~     In addition to the terms of the GPL license to be adhered to in using this
+  ~     program, the following additional terms are to be complied with:
+  ~
+  ~         1) All versions of this program, verbatim or modified must carry this
+  ~            Legal Notice.
+  ~            Further, all user interfaces, including but not limited to citizen facing interfaces,
+  ~            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any
+  ~            derived works should carry eGovernments Foundation logo on the top right corner.
+  ~
+  ~            For the logo, please refer http://egovernments.org/html/logo/egov_logo.png.
+  ~            For any further queries on attribution, including queries on brand guidelines,
+  ~            please contact contact@egovernments.org
+  ~
+  ~         2) Any misrepresentation of the origin of the material is prohibited. It
+  ~            is required that all modified versions of this material be marked in
+  ~            reasonable ways as different from the original version.
+  ~
+  ~         3) This license does not grant any rights to any user of the program
+  ~            with regards to rights under trademark law for use of the trade names
+  ~            or trademarks of eGovernments Foundation.
+  ~
+  ~   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+  ~
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- Deliberately has no parent: the root pom puts this artifact on every module's classpath, so inheriting from it would be a cycle. -->
+	<groupId>org.egov</groupId>
+	<artifactId>egov-jakarta-libs</artifactId>
+	<version>BPA-3.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>EGov Jakarta Libs</name>
+	<description>jakarta.* builds of third-party libraries that have no jakarta release (displaytag, sitemesh, ehcache-web,
+		joda-time-jsptags, zuul-core, Apache Tiles servlet/JSP/EL/extras). The original javax jars are downloaded from Maven Central,
+		merged and transformed with the Eclipse Transformer at build time, so no binaries are kept in the source tree.</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<transformer.version>1.0.0</transformer.version>
+		<display-tag-version>1.2</display-tag-version>
+		<sitemesh-version>2.4.2</sitemesh-version>
+		<ehcache-web-version>2.0.4</ehcache-web-version>
+		<joda-time-jsptag-version>1.1.1</joda-time-jsptag-version>
+		<zuul-version>1.3.1</zuul-version>
+		<apache-tiles-version>3.0.8</apache-tiles-version>
+		<tiles-request-version>1.0.7</tiles-request-version>
+	</properties>
+
+	<dependencies>
+		<!-- Third-party dependencies of the bundled libraries, as declared by their original poms -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
+			<version>${apache-tiles-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-template</artifactId>
+			<version>${apache-tiles-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-request-api</artifactId>
+			<version>${tiles-request-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-autotag-core-runtime</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.4.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.3.10</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.6</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.archaius</groupId>
+			<artifactId>archaius-core</artifactId>
+			<version>0.6.0</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.servo</groupId>
+			<artifactId>servo-core</artifactId>
+			<version>0.7.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.netflix-commons</groupId>
+			<artifactId>netflix-commons-util</artifactId>
+			<version>0.1.1</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- Compile-time only: the servlet/JSP/EL APIs come from the application server -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.8.1</version>
+				<executions>
+					<execution>
+						<id>unpack-javax-libs</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/javax-classes</outputDirectory>
+							<excludes>META-INF/MANIFEST.MF,META-INF/maven/**,META-INF/*.SF,META-INF/*.DSA,META-INF/*.RSA,META-INF/LICENSE*,META-INF/NOTICE*,META-INF/DEPENDENCIES</excludes>
+							<artifactItems>
+								<artifactItem>
+									<groupId>displaytag</groupId>
+									<artifactId>displaytag</artifactId>
+									<version>${display-tag-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>displaytag</groupId>
+									<artifactId>displaytag-export-poi</artifactId>
+									<version>${display-tag-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>opensymphony</groupId>
+									<artifactId>sitemesh</artifactId>
+									<version>${sitemesh-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>net.sf.ehcache</groupId>
+									<artifactId>ehcache-web</artifactId>
+									<version>${ehcache-web-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>joda-time</groupId>
+									<artifactId>joda-time-jsptags</artifactId>
+									<version>${joda-time-jsptag-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.netflix.zuul</groupId>
+									<artifactId>zuul-core</artifactId>
+									<version>${zuul-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-servlet</artifactId>
+									<version>${apache-tiles-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-jsp</artifactId>
+									<version>${apache-tiles-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-el</artifactId>
+									<version>${apache-tiles-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-extras</artifactId>
+									<version>${apache-tiles-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-request-servlet</artifactId>
+									<version>${tiles-request-version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.apache.tiles</groupId>
+									<artifactId>tiles-request-jsp</artifactId>
+									<version>${tiles-request-version}</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.transformer</groupId>
+						<artifactId>org.eclipse.transformer.cli</artifactId>
+						<version>${transformer.version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>javax-to-jakarta</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<mkdir dir="${project.build.outputDirectory}"/>
+								<java classname="org.eclipse.transformer.cli.JakartaTransformerCLI" classpathref="maven.plugin.classpath" fork="true" failonerror="true">
+									<arg value="${project.build.directory}/javax-classes"/>
+									<arg value="${project.build.outputDirectory}"/>
+									<arg value="-o"/>
+								</java>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -49,14 +49,14 @@ package org.egov.demand.dao;
 
 import org.egov.demand.model.BillReceipt;
 import org.egov.demand.model.EgBill;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository(value = "egBillReceiptDAO")
@@ -74,7 +74,7 @@ public class EgBillReceiptHibDao implements EgBillReceiptDao {
     public BillReceipt getBillReceiptByEgBill(final EgBill bill) {
         BillReceipt billRecpt = null;
         if (bill != null) {
-            final Criteria criteria = getCurrentSession().createCriteria(BillReceipt.class).add(
+            final Criteria criteria = Criteria.create(getCurrentSession(), BillReceipt.class).add(
                     Restrictions.eq("billId", bill));
             if (criteria.list() != null && !criteria.list().isEmpty())
                 billRecpt = (BillReceipt) criteria.list().get(0);

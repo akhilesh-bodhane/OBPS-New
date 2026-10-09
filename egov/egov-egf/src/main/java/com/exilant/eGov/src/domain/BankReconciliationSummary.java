@@ -51,7 +51,7 @@ package com.exilant.eGov.src.domain;
 import org.apache.log4j.Logger;
 import org.egov.infra.admin.master.service.AppConfigValueService;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -128,10 +128,10 @@ public class BankReconciliationSummary {
 		
 		try
 		{
-			SQLQuery totalSQLQuery =  persistenceService.getSession().createSQLQuery(totalQuery);
-			totalSQLQuery.setInteger("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			NativeQuery totalSQLQuery =  persistenceService.getSession().createNativeQuery(totalQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			
 			List list = totalSQLQuery.list();
 			if (list.size()>0)
@@ -142,10 +142,10 @@ public class BankReconciliationSummary {
 				debitTotal=my[1]!=null?my[1].toString():null;
 			}
 
-			totalSQLQuery = persistenceService.getSession().createSQLQuery(otherTotalQuery);
-			totalSQLQuery.setInteger("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			totalSQLQuery = persistenceService.getSession().createNativeQuery(otherTotalQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			list = totalSQLQuery.list();
 			if (list.size()>0)
 			{
@@ -155,10 +155,10 @@ public class BankReconciliationSummary {
 				debitOtherTotal=my[1]!=null?my[1].toString():null;
 			}
 
-			totalSQLQuery = persistenceService.getSession().createSQLQuery(brsEntryQuery);
-			totalSQLQuery.setInteger("bankAccountId",bankAccId);
-			totalSQLQuery.setDate("fromDate",fromDate);
-			totalSQLQuery.setDate("toDate",toDate);
+			totalSQLQuery = persistenceService.getSession().createNativeQuery(brsEntryQuery);
+			totalSQLQuery.setParameter("bankAccountId",bankAccId);
+			totalSQLQuery.setParameter("fromDate",fromDate, jakarta.persistence.TemporalType.DATE);
+			totalSQLQuery.setParameter("toDate",toDate, jakarta.persistence.TemporalType.DATE);
 			list = totalSQLQuery.list();
 			if (list.size()>0)
 			{

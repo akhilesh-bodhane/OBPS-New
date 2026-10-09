@@ -2,7 +2,7 @@ package org.egov.transaction.service;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.infra.web.utils.WebUtils;
 import org.springframework.stereotype.Service;

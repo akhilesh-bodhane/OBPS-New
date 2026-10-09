@@ -42,8 +42,8 @@ package org.egov.bpa.master.service;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.master.repository.ChecklistServiceTypeMappingRepository;
@@ -69,7 +69,7 @@ public class ChecklistServicetypeMappingService {
 
     @Transactional
     public void save(List<ChecklistServiceTypeMapping> mappings) {
-        mappingRepository.save(mappings);
+        mappingRepository.saveAll(mappings);
     }
 
     public List<org.egov.bpa.master.entity.ChecklistServiceTypeMapping> searchChecklistServicetypeMapping(

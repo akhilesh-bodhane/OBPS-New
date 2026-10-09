@@ -50,46 +50,46 @@ package org.egov.bpa.transaction.entity.dto;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class PersonalRegisterHelper {
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationType;
-    @SafeHtml
+    @CustomSafeHtml
     private String permitType;
     private Date dateOfAdmission;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;
-    @SafeHtml
+    @CustomSafeHtml
     private String address;
-    @SafeHtml
+    @CustomSafeHtml
     private String surveyNo;
-    @SafeHtml
+    @CustomSafeHtml
     private String village;
-    @SafeHtml
+    @CustomSafeHtml
     private String revenueWard;
-    @SafeHtml
+    @CustomSafeHtml
     private String electionWard;
-    @SafeHtml
+    @CustomSafeHtml
     private String natureOfOccupancy;
     private BigDecimal totalFloorArea;
     private Integer noOfFloors;
     private BigDecimal far;
-    @SafeHtml
+    @CustomSafeHtml
     private String fromWhom;
-    @SafeHtml
+    @CustomSafeHtml
     private String toWhom;
-    @SafeHtml
+    @CustomSafeHtml
     private String previousStatus;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentStatus;
     private Date previousDateAndTime;
     private Date NextDateAndTime;
     private Long userId;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceTypeEnum;
 
     public Long getId() {

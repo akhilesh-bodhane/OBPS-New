@@ -57,7 +57,7 @@
         <id name="id" type="long">
             <column name="ID" precision="22" scale="0" />
            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-           <param name="sequence_name">SEQ_EG_ADVANCEREQPAYEEDETAILS</param></generator>
+           <param name="sequence_name">SEQ_EG_ADVANCEREQPAYEEDETAILS</param><param name="increment_size">1</param></generator>
         </id>
             <timestamp
 			column="LASTUPDATEDTIME"

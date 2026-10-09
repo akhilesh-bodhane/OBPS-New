@@ -56,9 +56,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 
@@ -84,10 +84,10 @@ public TransactionSummaryService(final TransactionSummaryRepository transactionS
 	return transactionSummaryRepository.save(transactionSummary);
 	  } 
 	public List<TransactionSummary> findAll() {
-	 return transactionSummaryRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+	 return transactionSummaryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 	   }
 	public TransactionSummary findOne(Long id){
-	return transactionSummaryRepository.findOne(id);
+	return transactionSummaryRepository.findById(id).orElse(null);
 	}
 	@Transactional
 	public void delete(final TransactionSummary transactionSummary) {

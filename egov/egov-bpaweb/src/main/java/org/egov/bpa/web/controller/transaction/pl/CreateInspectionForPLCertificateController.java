@@ -3,7 +3,7 @@ package org.egov.bpa.web.controller.transaction.pl;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static org.egov.bpa.utils.PLConstants.PLINTH_LEVEL_CERTIFICATE;
 

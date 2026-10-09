@@ -82,7 +82,7 @@ import org.egov.services.voucher.ContraJournalVoucherService;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -614,23 +614,23 @@ public class ContraService extends PersistenceService<ContraJournalVoucher, Long
         final String ioSql = "update EGF_INSTRUMENTOTHERDETAILS set PAYINSLIPID=:payinId,INSTRUMENTSTATUSDATE=:ihStatusDate," +
                 " LASTMODIFIEDBY=:modifiedBy, LASTMODIFIEDDATE =:modifiedDate where INSTRUMENTHEADERID=:ihId";
 
-        final SQLQuery ioSQLQuery = getSession().createSQLQuery(ioSql);
-        ioSQLQuery.setLong("payinId", (Long) instrumentDetailsMap.get("payinid"))
-                .setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
-                .setDate("ihStatusDate", (Date) instrumentDetailsMap.get("depositdate"))
-                .setDate("modifiedDate", new Date())
-                .setLong("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
+        final NativeQuery ioSQLQuery = getSession().createNativeQuery(ioSql);
+        ioSQLQuery.setParameter("payinId", (Long) instrumentDetailsMap.get("payinid"))
+                .setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
+                .setParameter("ihStatusDate", (Date) instrumentDetailsMap.get("depositdate"), jakarta.persistence.TemporalType.DATE)
+                .setParameter("modifiedDate", new Date(), jakarta.persistence.TemporalType.DATE)
+                .setParameter("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
         ioSQLQuery.executeUpdate();
 
         final String ihSql = "update EGF_instrumentheader  set ID_STATUS=:statusId,BANKACCOUNTID=:bankAccId,LASTMODIFIEDBY=:modifiedBy,"
                 + " LASTMODIFIEDDATE =:modifiedDate where id=:ihId";
 
-        final SQLQuery ihSQLQuery = getSession().createSQLQuery(ihSql);
-        ihSQLQuery.setLong("statusId", (Long) instrumentDetailsMap.get("instrumentDepositedStatus"))
-                .setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
-                .setLong("bankAccId", (Long) instrumentDetailsMap.get("bankaccountid"))
-                .setDate("modifiedDate", new Date())
-                .setLong("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
+        final NativeQuery ihSQLQuery = getSession().createNativeQuery(ihSql);
+        ihSQLQuery.setParameter("statusId", (Long) instrumentDetailsMap.get("instrumentDepositedStatus"))
+                .setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
+                .setParameter("bankAccId", (Long) instrumentDetailsMap.get("bankaccountid"))
+                .setParameter("modifiedDate", new Date(), jakarta.persistence.TemporalType.DATE)
+                .setParameter("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
         ihSQLQuery.executeUpdate();
 
     }
@@ -647,12 +647,12 @@ public class ContraService extends PersistenceService<ContraJournalVoucher, Long
         final String brsSql = "Insert into bankreconciliation (ID,BANKACCOUNTID,AMOUNT,TRANSACTIONTYPE,INSTRUMENTHEADERID) values "
                 +
                 " (nextVal('seq_bankreconciliation'),:bankAccId,:amount,:trType,:ihId)";
-        final SQLQuery brsSQLQuery = getSession().createSQLQuery(brsSql);
+        final NativeQuery brsSQLQuery = getSession().createNativeQuery(brsSql);
 
-        brsSQLQuery.setLong("bankAccId", (Long) instrumentDetailsMap.get("bankaccountid"))
-                .setBigDecimal("amount", (BigDecimal) instrumentDetailsMap.get("instrumentamount"))
-                .setString("trType", "1".equalsIgnoreCase((String) instrumentDetailsMap.get("ispaycheque")) ? "Cr" : "Dr")
-                .setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"));
+        brsSQLQuery.setParameter("bankAccId", (Long) instrumentDetailsMap.get("bankaccountid"))
+                .setParameter("amount", (BigDecimal) instrumentDetailsMap.get("instrumentamount"))
+                .setParameter("trType", "1".equalsIgnoreCase((String) instrumentDetailsMap.get("ispaycheque")) ? "Cr" : "Dr")
+                .setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"));
         brsSQLQuery.executeUpdate();
 
         if (FinancialConstants.INSTRUMENT_TYPE_CASH.equalsIgnoreCase((String) instrumentDetailsMap.get("instrumenttype"))
@@ -667,21 +667,21 @@ public class ContraService extends PersistenceService<ContraJournalVoucher, Long
                     +
                     " LASTMODIFIEDDATE =:modifiedDate where INSTRUMENTHEADERID=:ihId";
 
-            final SQLQuery ioSQLQuery = getSession().createSQLQuery(ioSql);
-            ioSQLQuery.setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
-                    .setBigDecimal("reconciledAmt", (BigDecimal) instrumentDetailsMap.get("instrumentamount"))
-                    .setDate("ihStatusDate", (Date) instrumentDetailsMap.get("depositdate"))
-                    .setDate("modifiedDate", new Date())
-                    .setLong("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
+            final NativeQuery ioSQLQuery = getSession().createNativeQuery(ioSql);
+            ioSQLQuery.setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
+                    .setParameter("reconciledAmt", (BigDecimal) instrumentDetailsMap.get("instrumentamount"))
+                    .setParameter("ihStatusDate", (Date) instrumentDetailsMap.get("depositdate"), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("modifiedDate", new Date(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
             ioSQLQuery.executeUpdate();
 
             final String ihSql = "update EGF_instrumentheader  set ID_STATUS=:statusId,LASTMODIFIEDBY=:modifiedBy," +
                     " LASTMODIFIEDDATE =:modifiedDate where id=:ihId";
-            final SQLQuery ihSQLQuery = getSession().createSQLQuery(ihSql);
-            ihSQLQuery.setLong("statusId", (Long) instrumentDetailsMap.get("instrumentReconciledStatus"))
-                    .setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
-                    .setDate("modifiedDate", new Date())
-                    .setLong("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
+            final NativeQuery ihSQLQuery = getSession().createNativeQuery(ihSql);
+            ihSQLQuery.setParameter("statusId", (Long) instrumentDetailsMap.get("instrumentReconciledStatus"))
+                    .setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
+                    .setParameter("modifiedDate", new Date(), jakarta.persistence.TemporalType.DATE)
+                    .setParameter("modifiedBy", (Long) instrumentDetailsMap.get("createdby"));
             ihSQLQuery.executeUpdate();
 
         }
@@ -694,11 +694,11 @@ public class ContraService extends PersistenceService<ContraJournalVoucher, Long
                 +
                 " ,STATE_ID,CREATEDBY,LASTMODIFIEDBY) values " +
                 " (nextVal('seq_contrajournalvoucher'),:vhId,null,:depositedBankId,:ihId,null,:createdBy,:createdBy)";
-        final SQLQuery ioSQLQuery = getSession().createSQLQuery(ioSql);
-        ioSQLQuery.setLong("vhId", (Long) instrumentDetailsMap.get("payinid"))
-                .setLong("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
-                .setLong("depositedBankId", (Long) instrumentDetailsMap.get("bankaccountid"))
-                .setLong("createdBy", (Long) instrumentDetailsMap.get("createdby"));
+        final NativeQuery ioSQLQuery = getSession().createNativeQuery(ioSql);
+        ioSQLQuery.setParameter("vhId", (Long) instrumentDetailsMap.get("payinid"))
+                .setParameter("ihId", (Long) instrumentDetailsMap.get("instrumentheader"))
+                .setParameter("depositedBankId", (Long) instrumentDetailsMap.get("bankaccountid"))
+                .setParameter("createdBy", (Long) instrumentDetailsMap.get("createdby"));
         ioSQLQuery.executeUpdate();
 
     }

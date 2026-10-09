@@ -63,8 +63,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.egov.bpa.master.entity.ApplicationSubType;
@@ -85,14 +85,14 @@ import org.egov.bpa.transaction.service.oc.OccupancyCertificateService;
 import org.egov.bpa.utils.BpaConstants;
 import org.egov.infra.config.persistence.datasource.routing.annotation.ReadOnly;
 import org.egov.infra.utils.DateUtils;
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
+import org.egov.infra.persistence.criteria.Criteria;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.CriteriaSpecification;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,7 +174,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         Page<BpaApplication> bpaApplications = applicationBpaRepository
@@ -192,7 +192,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPendingTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -224,7 +224,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForUrbanPendingTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -258,7 +258,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForRuralPendingTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsRural(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -292,7 +292,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPendingTaskGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItemsUrban(searchRequest));
@@ -326,7 +326,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForUrbanBPATask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest), pageable);
         
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -355,7 +355,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForRuralBPATask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest), pageable);
 
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
@@ -386,7 +386,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForBPATaskGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsUrban(searchRequest));
@@ -418,7 +418,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForBPATaskRuralGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForBPAItemsRural(searchRequest));
@@ -450,7 +450,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> hasFeeCollectionPending(
             final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         Page<BpaApplication> bpaApplications = applicationBpaRepository
@@ -467,7 +467,7 @@ public class SearchBpaApplicationService {
 
     @ReadOnly
     public Page<SearchBpaApplicationForm> searchForDocumentScrutinyPending(final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         Page<SlotApplication> slotApplications = slotApplicationRepository
@@ -491,10 +491,8 @@ public class SearchBpaApplicationService {
     private String getProcessOwner(BpaApplication application) {
         String processOwner;
         if (application.getState() != null && application.getState().getOwnerPosition() != null)
-            processOwner = workflowHistoryService
-                    .getUserPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),
-                            application.getState().getLastModifiedDate())
-                    .getName();
+            processOwner = workflowHistoryService.getOwnerNameLenient(application.getState().getOwnerPosition().getId(),
+                            application.getState().getLastModifiedDate());
         else
             processOwner = application.getLastModifiedBy().getName();
         return processOwner;
@@ -503,7 +501,7 @@ public class SearchBpaApplicationService {
     private Map<String, String> getCurrentOwner(BpaApplication application) {
     	Map<String, String> map;
         if (application.getState() != null && application.getState().getOwnerPosition() != null) {
-        	map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
+        	map = workflowHistoryService.getUserDesignationAndPositionLenient(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
         } else {
         	map = new HashMap<String, String>();
         	map.put("designation", "");
@@ -521,7 +519,7 @@ public class SearchBpaApplicationService {
     }
 
     public Criteria buildSearchCriteria(final SearchBpaApplicationForm searchBpaApplicationForm) {
-        final Criteria criteria = getCurrentSession().createCriteria(BpaApplication.class, "bpaApplication");
+        final Criteria criteria = Criteria.create(getCurrentSession(), BpaApplication.class, "bpaApplication");
         
         if(searchBpaApplicationForm.getApplicationTypeId()!=null) {
         	criteria.createAlias("bpaApplication.applicationType", "applicationType");
@@ -627,7 +625,7 @@ public class SearchBpaApplicationService {
 
     @SuppressWarnings("unchecked")
     public List<SearchBpaApplicationForm> buildSlotApplicationDetails(final SearchBpaApplicationForm searchBpaApplicationForm) {
-        final Criteria criteria = getCurrentSession().createCriteria(SlotApplication.class, "slotApplication");
+        final Criteria criteria = Criteria.create(getCurrentSession(), SlotApplication.class, "slotApplication");
         criteria.createAlias("slotApplication.slotDetail", "slotDetail");
         if (searchBpaApplicationForm.getAppointmentTime() != null)
             criteria.add(Restrictions.eq("slotDetail.appointmentTime",
@@ -701,7 +699,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> searchForRevocation(final SearchBpaApplicationForm searchRequest,
             final List<Long> userIds) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<BpaApplication> bpaApplications = applicationBpaRepository
                 .findAll(SearchBpaApplnFormSpec.searchPermitRevocationSpecification(searchRequest), pageable);
@@ -717,7 +715,7 @@ public class SearchBpaApplicationService {
     @ReadOnly
     public Page<SearchBpaApplicationForm> searchInspection(final SearchBpaApplicationForm searchRequest,
             final List<Long> userIds) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         
         Page<BpaApplication> bpaApplications = applicationBpaRepository

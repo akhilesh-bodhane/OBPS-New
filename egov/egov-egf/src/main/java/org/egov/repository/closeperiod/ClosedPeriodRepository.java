@@ -48,6 +48,10 @@
 
 package org.egov.repository.closeperiod;
 
+import org.springframework.data.repository.query.Param;
+
+import org.springframework.data.jpa.repository.Query;
+
 
 import org.egov.egf.model.ClosedPeriod;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,5 +60,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository 
 public interface ClosedPeriodRepository extends JpaRepository<ClosedPeriod,Long> {
-	ClosedPeriod findByCFinancialYearId(Long id);
+	@Query("select cp from ClosedPeriod cp where cp.cFinancialYearId.id = :id")
+	ClosedPeriod findByCFinancialYearId(@Param("id") Long id);
 }

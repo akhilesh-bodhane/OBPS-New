@@ -68,6 +68,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/public")
 public class EdcrRestController {
+    private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(EdcrRestController.class);
 
     @Autowired
     private EdcrExternalService edcrExternalService;
@@ -84,8 +85,20 @@ public class EdcrRestController {
             EdcrApplicationInfo applicationInfo = new EdcrApplicationInfo();
             applicationInfo.setErrorDetail(errorDetail);
             return applicationInfo;
-        } else
-            return edcrExternalService.loadEdcrApplicationDetails(dcrNumber);
+        } else {
+            try {
+                return edcrExternalService.loadEdcrApplicationDetails(dcrNumber);
+            } catch (RuntimeException e) {
+                LOG.error("Unable to load plan details of EDCR number {}", dcrNumber, e);
+                ErrorDetail errorDetail = new ErrorDetail();
+                errorDetail.setErrorCode("EDCR - 02");
+                errorDetail.setErrorMessage("The approved plan details of E-DCR number " + dcrNumber
+                        + " could not be loaded: " + e.getMessage());
+                EdcrApplicationInfo applicationInfo = new EdcrApplicationInfo();
+                applicationInfo.setErrorDetail(errorDetail);
+                return applicationInfo;
+            }
+        }
     }
 
     @GetMapping(value = "/approved-report-ouput/by-edcr-number/{dcrNumber}")

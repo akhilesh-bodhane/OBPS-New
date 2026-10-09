@@ -55,6 +55,7 @@
             <column name="ID" precision="10" scale="0" />
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
             <param name="sequence_name">seq_egf_grant</param>
+            <param name="increment_size">1</param>
             </generator>
         </id> 
 		<many-to-one name="department" class="org.egov.infra.admin.master.entity.Department" fetch="select" column="DEPTID" /> 

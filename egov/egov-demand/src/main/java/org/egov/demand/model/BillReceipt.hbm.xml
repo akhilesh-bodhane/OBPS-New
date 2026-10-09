@@ -57,6 +57,7 @@
 		<id name="id" column="ID">
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_EG_BILLRECEIPT</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		

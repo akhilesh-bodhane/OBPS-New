@@ -72,10 +72,13 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
+import net.sf.jasperreports.export.type.HtmlSizeUnitEnum;
 import org.apache.log4j.Logger;
 import org.egov.commons.Fund;
 import org.egov.egf.model.BudgetReAppReportBean;
@@ -192,7 +195,8 @@ public class ReportHelper {
     public InputStream exportHtml(InputStream inputStream, final String jasperPath,
             final Map<String, Object> paramMap, final List dataSource, final String sizeUnitPoint) {
         try {
-            exportReport(setUpAndGetJasperPrint(jasperPath, paramMap, dataSource), sizeUnitPoint);
+            final HtmlSizeUnitEnum sizeUnit = "px".equals(sizeUnitPoint) ? HtmlSizeUnitEnum.PIXEL : HtmlSizeUnitEnum.POINT;
+            exportReport(setUpAndGetJasperPrint(jasperPath, paramMap, dataSource), sizeUnit);
             inputStream = new ByteArrayInputStream(outputBytes.toByteArray());
             closeStream(reportStream);
         } catch (final JRException e) {
@@ -207,7 +211,7 @@ public class ReportHelper {
             final JasperPrint jasperPrint) {
         try {
             outputBytes = new ByteArrayOutputStream(1 * MB);
-            exportReport(jasperPrint, JRHtmlExporterParameter.SIZE_UNIT_POINT);
+            exportReport(jasperPrint, HtmlSizeUnitEnum.POINT);
             inputStream = new ByteArrayInputStream(outputBytes.toByteArray());
             closeStream(reportStream);
         } catch (final JRException e) {
@@ -222,7 +226,7 @@ public class ReportHelper {
             final JasperPrint jasperPrint, final String sizeunitpoint) {
         try {
             outputBytes = new ByteArrayOutputStream(1 * MB);
-            exportReport(jasperPrint, JRHtmlExporterParameter.SIZE_UNIT_POINT);
+            exportReport(jasperPrint, HtmlSizeUnitEnum.POINT);
             inputStream = new ByteArrayInputStream(outputBytes.toByteArray());
             closeStream(reportStream);
         } catch (final JRException e) {
@@ -954,20 +958,16 @@ public class ReportHelper {
         return detailStyle;
     }
 
-    private void exportReport(final JasperPrint jasperPrint, final String sizeUnitPoint)
+    private void exportReport(final JasperPrint jasperPrint, final HtmlSizeUnitEnum sizeUnit)
             throws JRException {
-        final JRHtmlExporter exporter = new JRHtmlExporter();
-        exporter
-        .setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
-                outputBytes);
-        exporter.setParameter(JRHtmlExporterParameter.BETWEEN_PAGES_HTML, "");
-        exporter.setParameter(
-                JRHtmlExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
-                Boolean.TRUE);
-        exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN,
-                false);
-        exporter.setParameter(JRHtmlExporterParameter.SIZE_UNIT, sizeUnitPoint);
+        final HtmlExporter exporter = new HtmlExporter();
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+        exporter.setExporterOutput(new SimpleHtmlExporterOutput(outputBytes));
+        final SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
+        reportConfig.setRemoveEmptySpaceBetweenRows(true);
+        reportConfig.setUseBackgroundImageToAlign(false);
+        reportConfig.setSizeUnit(sizeUnit);
+        exporter.setConfiguration(reportConfig);
         exporter.exportReport();
     }
 

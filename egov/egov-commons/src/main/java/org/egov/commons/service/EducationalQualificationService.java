@@ -50,17 +50,17 @@ package org.egov.commons.service;
 
 import org.egov.common.entity.EducationalQualification;
 import org.egov.commons.repository.EducationalQualificationRepository;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
@@ -94,12 +94,12 @@ public class EducationalQualificationService {
     }
 
     public List<EducationalQualification> findAll() {
-        return qualificationRepository.findAll(new Sort(
+        return qualificationRepository.findAll(Sort.by(
                 Sort.Direction.ASC, "name"));
     }
 
     public EducationalQualification findOne(Long id) {
-        return qualificationRepository.findOne(id);
+        return qualificationRepository.findById(id).orElse(null);
     }
 
     public List<EducationalQualification> getActiveQualifications() {
@@ -109,7 +109,7 @@ public class EducationalQualificationService {
     @SuppressWarnings("unchecked")
     public List<EducationalQualification> search(
             EducationalQualification qualification) {
-        final Criteria criteria = getCurrentSession().createCriteria(
+        final Criteria criteria = Criteria.create(getCurrentSession(), 
                 EducationalQualification.class);
         if (null != qualification.getName())
             criteria.add(Restrictions

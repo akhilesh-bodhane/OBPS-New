@@ -44,19 +44,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.master.entity.enums.StakeHolderStatus;
@@ -71,7 +71,7 @@ import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_STAKEHOLDER", schema = "state")
@@ -86,13 +86,13 @@ public class StakeHolder extends User {
     @JoinColumn(name = "stakeholdertype")
     private StakeHolderType stakeHolderType;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true ,nullable = false)
     @Audited
     private String code;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     @Audited
     private String licenceNumber;
@@ -103,43 +103,43 @@ public class StakeHolder extends User {
     @Temporal(value = TemporalType.DATE)
     private Date buildingLicenceExpiryDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String coaEnrolmentNumber;
     @Temporal(value = TemporalType.DATE)
     private Date coaEnrolmentDueDate;
     private Boolean isEnrolWithLocalBody;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String organizationName;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String organizationAddress;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 64)
     private String organizationUrl;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 15)
     private String organizationMobNo;
     private Boolean isOnbehalfOfOrganization;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 11)
     private String tinNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 256)
     private String contactPerson;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String designation;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 64)
     private String cinNumber;
     private transient CorrespondenceAddress correspondenceAddress = new CorrespondenceAddress();
@@ -147,7 +147,7 @@ public class StakeHolder extends User {
     private transient List<CheckListDetail> checkListDocuments = new ArrayList<>(0);
     private transient String activationCode;
 	
-	@SafeHtml
+	@CustomSafeHtml
     @Length(max=1024)
     @Audited
     private String comments;
@@ -173,11 +173,11 @@ public class StakeHolder extends User {
     private transient Long approvalDepartment;
     private transient Long approvalDesignation;
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String workFlowAction;
     private transient Long nextPosition;
 
-    @SafeHtml
+    @CustomSafeHtml
     private transient String approvalComent;
 
     public String getApprovalComent() {

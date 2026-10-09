@@ -56,7 +56,7 @@ public class PermitCoApplicantService {
     private PermitCoApplicantRepository permitCoApplicantRepository;
 
     public PermitCoApplicant findById(Long id) {
-        return permitCoApplicantRepository.findOne(id);
+        return permitCoApplicantRepository.findById(id).orElse(null);
     }
 
     @Transactional

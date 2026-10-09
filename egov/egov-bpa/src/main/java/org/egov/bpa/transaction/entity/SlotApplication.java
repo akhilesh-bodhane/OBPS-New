@@ -42,8 +42,8 @@ package org.egov.bpa.transaction.entity;
 import org.egov.bpa.transaction.entity.enums.ScheduleAppointmentType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "egbpa_slotapplication")

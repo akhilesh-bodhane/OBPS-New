@@ -1,5 +1,5 @@
 <%@ tag body-content="empty" isELIgnored="false" pageEncoding="UTF-8" description="To show Bread Crumb for each and every Screen" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 
 <%--

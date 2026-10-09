@@ -52,48 +52,48 @@ import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationNumber;
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date applicationDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantType;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceType;
-    @SafeHtml
+    @CustomSafeHtml
     private String occupancy;
     private Long occupancyId;
     private Long serviceTypeId;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceCode;
-    @SafeHtml
+    @CustomSafeHtml
     private String status;
     private Long statusId;
-    @SafeHtml
+    @CustomSafeHtml
     private String planPermissionNumber;
     private BigDecimal admissionfeeAmount;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;
-    @SafeHtml
+    @CustomSafeHtml
     private String stakeHolderName;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentOwner;
-    @SafeHtml
+    @CustomSafeHtml
     private String pendingAction;
-    @SafeHtml
+    @CustomSafeHtml
     private String ward;
     private Long wardId;
-    @SafeHtml
+    @CustomSafeHtml
     private String electionWard;
     private Long electionWardId;
-    @SafeHtml
+    @CustomSafeHtml
     private String zone;
     private Long zoneId;
     private boolean isFeeCollected;
@@ -103,24 +103,24 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date toDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String address;
-    @SafeHtml
+    @CustomSafeHtml
     private String locality;
-    @SafeHtml
+    @CustomSafeHtml
     private String reSurveyNumber;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceTypeEnum;
     private Date appointmentDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String appointmentTime;
     private Boolean isRescheduledByEmployee;
     private Boolean isOnePermitApplication;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationType;
-    @SafeHtml
+    @CustomSafeHtml
     private String scheduleType;
-    @SafeHtml
+    @CustomSafeHtml
     private String failureRemarks;
     private Long userId;
     private BigDecimal fromPlotArea;
@@ -131,11 +131,11 @@ public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Long adminBoundary;
     private Long revenueBoundary;
     private Long locationBoundary;
-    @SafeHtml
+    @CustomSafeHtml
     private String revocationNumber;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date planPermissionDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String occupancyCertificateNumber;
     private String plinthLevelCertificateNumber;
     private Boolean wfEnded;

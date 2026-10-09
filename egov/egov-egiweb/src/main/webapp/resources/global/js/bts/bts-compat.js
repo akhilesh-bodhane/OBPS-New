@@ -151,6 +151,23 @@
     definePlugins();
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', definePlugins); }
 
+    // BS3 let modal('hide') run at any time; BS5 silently ignores it while the fade-in is still running. The
+    // loading overlay (.loader-class) is shown in beforeSend and hidden in complete, so a quick response left it
+    // on screen for good. Run a hide that arrives mid-transition as soon as the modal has finished showing.
+    if (window.bootstrap && window.bootstrap.Modal && !window.bootstrap.Modal.prototype.__hideDeferred) {
+        var modalProto = window.bootstrap.Modal.prototype;
+        var originalHide = modalProto.hide;
+        modalProto.hide = function () {
+            var self = this;
+            if (self._isShown && self._isTransitioning) {
+                self._element.addEventListener('shown.bs.modal', function () { originalHide.call(self); }, { once: true });
+                return;
+            }
+            return originalHide.apply(this, arguments);
+        };
+        modalProto.__hideDeferred = true;
+    }
+
     // $el.data('bs.modal') etc. -> instance
     var oldData = $.fn.data;
     $.fn.data = function (key) {

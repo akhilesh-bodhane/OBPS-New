@@ -48,8 +48,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.egov.bpa.service.es.PermitRenewalIndexService;
@@ -247,7 +247,7 @@ public class PermitRenewalTaxCollection extends TaxCollection {
         query.append(
                 "select dmdet FROM EgDemandDetails dmdet left join fetch dmdet.egDemandReason dmdRsn left join fetch dmdRsn.egDemandReasonMaster dmdRsnMstr left join fetch dmdRsn.egInstallmentMaster installment WHERE dmdet.egDemand.id = :demand");
         final List<EgDemandDetails> demandDetailList = getCurrentSession().createQuery(query.toString())
-                .setLong("demand", demand.getId()).list();
+                .setParameter("demand", demand.getId()).list();
         final Map<String, Map<String, EgDemandDetails>> installmentWiseDemandDetailsByReason = new ConcurrentHashMap<>();
         Map<String, EgDemandDetails> demandDetailByReason;
         EgDemandReason dmdRsn;

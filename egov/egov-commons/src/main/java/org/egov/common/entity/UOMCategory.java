@@ -53,20 +53,20 @@ import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "eg_uomcategory")
@@ -84,11 +84,11 @@ public class UOMCategory extends AbstractAuditable {
 
     @Length(min = 1, max = 25)
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     private String category;
 
     @Length(min = 1, max = 25)
-    @SafeHtml
+    @CustomSafeHtml
     private String narration;
 
     @OneToMany(mappedBy = "uomCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

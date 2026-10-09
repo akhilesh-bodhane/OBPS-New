@@ -48,7 +48,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.master.entity.StakeHolderState;

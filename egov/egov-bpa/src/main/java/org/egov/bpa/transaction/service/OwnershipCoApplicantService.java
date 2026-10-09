@@ -56,7 +56,7 @@ public class OwnershipCoApplicantService {
     private OwnershipCoApplicantRepository ownershipCoApplicantRepository;
 
     public OwnershipTransferCoApplicant findById(Long id) {
-        return ownershipCoApplicantRepository.findOne(id);
+        return ownershipCoApplicantRepository.findById(id).orElse(null);
     }
 
     @Transactional

@@ -48,9 +48,9 @@
 
 package org.egov.infra.web.struts.interceptors;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.ExceptionHolder;
-import com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor;
+import org.apache.struts2.ActionInvocation;
+import org.apache.struts2.interceptor.ExceptionHolder;
+import org.apache.struts2.interceptor.ExceptionMappingInterceptor;
 
 /**
  * This class overrides the default behaviour for transaction management. The transaction is marked for rollback, so that the HibSessionServletFilter further down the filter stack will rollback the

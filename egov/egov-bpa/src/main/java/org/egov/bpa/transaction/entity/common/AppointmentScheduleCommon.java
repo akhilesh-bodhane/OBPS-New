@@ -52,23 +52,23 @@ import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPOINTMENT_SCHEDULE_COMMON")
@@ -89,7 +89,7 @@ public class AppointmentScheduleCommon extends AbstractAuditable {
     @Temporal(value = TemporalType.DATE)
     private Date appointmentDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 50)
     private String appointmentTime;
 
@@ -97,11 +97,11 @@ public class AppointmentScheduleCommon extends AbstractAuditable {
     @JoinColumn(name = "appointmentLocation")
     private AppointmentLocations appointmentLocation;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 256)
     private String remarks;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 256)
     private String postponementReason;
 

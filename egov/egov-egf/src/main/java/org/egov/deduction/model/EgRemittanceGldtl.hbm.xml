@@ -56,6 +56,7 @@
             <column name="ID" precision="22" scale="0" />
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
             <param name="sequence_name">seq_eg_remittance_gldtl</param>
+            <param name="increment_size">1</param>
             </generator>
         </id>
         <many-to-one name="generalledgerdetail" class="org.egov.commons.CGeneralLedgerDetail" fetch="select">

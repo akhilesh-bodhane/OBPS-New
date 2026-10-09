@@ -5,41 +5,42 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.entity.pl.PlinthLevelCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class SearchPendingItemsForm extends DataTableSearchRequest {
 	private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationNumber;
     private Date applicationDate;
     private Long applicationTypeId;
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantType;
     private Long serviceTypeId;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceType;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentOwner;    
-    @SafeHtml
+    @CustomSafeHtml
     private String occupancy;
-    @SafeHtml
+    @CustomSafeHtml
     private String serviceCode;
     private Date fromDate;
     private Date toDate;
-    @SafeHtml
+    @CustomSafeHtml
     private String status;   
-    @SafeHtml
+    @CustomSafeHtml
     private String applicantName;    
-    @SafeHtml
+    @CustomSafeHtml
     private String pendingAction; 
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationType;
     private int ellapseTime;
-    @SafeHtml
+    @CustomSafeHtml
     private String currentOwnerDesg; 
     
     private String sector;
     private String plotNumber;
+    private String fileNumber;
     private String ownerName;
     private String bPAApplicationType;
     private Long statusId;
@@ -63,6 +64,7 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
         setEllapseTime(ellapseDays);
         setSector(application.getSector());
         setPlotNumber(application.getPlotNumber());
+        setFileNumber(application.getFileNumber());
         setIsPreviousPlan(application.getIsPreviousPlan()==null?false:application.getIsPreviousPlan());
     }
 	
@@ -255,6 +257,14 @@ public class SearchPendingItemsForm extends DataTableSearchRequest {
 
 	public void setPlotNumber(String plotNumber) {
 		this.plotNumber = plotNumber;
+	}
+
+	public String getFileNumber() {
+		return fileNumber;
+	}
+
+	public void setFileNumber(String fileNumber) {
+		this.fileNumber = fileNumber;
 	}
 
 	public String getOwnerName() {

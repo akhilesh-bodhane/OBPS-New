@@ -56,7 +56,7 @@ public class AppointmentLocationsService {
     private AppointmentLocationsRepository appointmentLocationsRepository;
 
     public List<AppointmentLocations> findAllOrderByOrderNumber() {
-        return appointmentLocationsRepository.findAll(new Sort(Sort.Direction.ASC, "orderNumber"));
+        return appointmentLocationsRepository.findAll(Sort.by(Sort.Direction.ASC, "orderNumber"));
     }
 
 }

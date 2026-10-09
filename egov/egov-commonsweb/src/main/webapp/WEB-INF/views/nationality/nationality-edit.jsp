@@ -46,13 +46,13 @@
   ~
   --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <form:form role="form" method="post" modelAttribute="nationality" action="../update" class="form-horizontal form-groups-bordered" 
- id="form-nationality"  commandName="nationality">
+ id="form-nationality"  modelAttribute="nationality">
 			
 			<div class="row" id="page-content">
 			<div class="col-md-12">

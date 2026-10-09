@@ -45,24 +45,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @ToString
@@ -77,7 +77,7 @@ public class ApplicationFee extends StateAware<Position> {
     private Long id;
     @NotNull
     private Date feeDate;
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String feeRemarks;
     @NotNull
@@ -85,7 +85,7 @@ public class ApplicationFee extends StateAware<Position> {
     @JoinColumn(name = "status")
     private BpaStatus status;
    
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 128)
     private String challanNumber;
     @OrderBy("id ASC")
@@ -93,7 +93,7 @@ public class ApplicationFee extends StateAware<Position> {
     private List<ApplicationFeeDetail> applicationFeeDetail = new ArrayList<>();
   
     private Boolean isRevised = false;
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 512)
     private String modifyFeeReason;
 

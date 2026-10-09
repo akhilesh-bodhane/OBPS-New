@@ -73,10 +73,10 @@ import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
-import org.hibernate.type.LongType;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -139,7 +139,7 @@ public class ChequeIssueRegisterReportAction extends BaseFormAction {
     @Override
     public void prepare() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
         if (!parameters.containsKey("showDropDown")) {
             addDropdownData("bankList", egovCommon.getBankBranchForActiveBanks());
@@ -182,7 +182,7 @@ public class ChequeIssueRegisterReportAction extends BaseFormAction {
 
         final Query query = persistenceService
                 .getSession()
-                .createSQLQuery(
+                .createNativeQuery(
                         "select ih.instrumentnumber as chequeNumber,ih.instrumentdate as chequeDate,"
                                 + "ih.instrumentamount as chequeAmount,vh.vouchernumber as voucherNumber,vh.id as vhId,ih.serialno as serialNo,vh.voucherdate as voucherDate,vh.name as voucherName,ih.payto as payTo,mbd.billnumber as billNumber,"
                                 + "mbd.billDate as billDate,vh.type as type,es.DESCRIPTION as chequeStatus,ih.id as instrumentheaderid from egf_instrumentHeader ih,egf_instrumentvoucher iv,EGW_STATUS es,"
@@ -197,11 +197,11 @@ public class ChequeIssueRegisterReportAction extends BaseFormAction {
                                 + " and vmis.voucherheaderid=vh.id " + createQuery()
                                 + " order by ih.instrumentDate,ih.instrumentNumber ")
                 .addScalar("chequeNumber").addScalar("chequeDate", StandardBasicTypes.DATE)
-                .addScalar("chequeAmount", BigDecimalType.INSTANCE).addScalar("voucherNumber")
+                .addScalar("chequeAmount", StandardBasicTypes.BIG_DECIMAL).addScalar("voucherNumber")
                 .addScalar("voucherDate", StandardBasicTypes.DATE).addScalar("voucherName").addScalar("payTo")
                 .addScalar("billNumber").addScalar("billDate", StandardBasicTypes.DATE).addScalar("type")
-                .addScalar("vhId", BigDecimalType.INSTANCE).addScalar("serialNo", LongType.INSTANCE)
-                .addScalar("chequeStatus").addScalar("instrumentHeaderId", LongType.INSTANCE)
+                .addScalar("vhId", StandardBasicTypes.BIG_DECIMAL).addScalar("serialNo", StandardBasicTypes.LONG)
+                .addScalar("chequeStatus").addScalar("instrumentHeaderId", StandardBasicTypes.LONG)
                 .setResultTransformer(Transformers.aliasToBean(ChequeIssueRegisterDisplay.class));
         if (LOGGER.isDebugEnabled())
             LOGGER.debug("Search query" + query.getQueryString());

@@ -57,29 +57,24 @@
 	<bean id="securityFilterChain" name="securityFilterChain" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<list>
-				<security:filter-chain pattern="/resources/**" filters="none" />
-				<security:filter-chain pattern="/error/**" filters="none" />
-				<security:filter-chain pattern="/index.jsp" filters="none" />
-				<security:filter-chain pattern="/public/**" filters="none"/>
-				<security:filter-chain pattern="/application/findby-permit-number" filters="none"/>
-				<security:filter-chain pattern="/collection/citizen/**" filters="none" />
-				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegister" filters="none"/>
-				<security:filter-chain pattern="/ajax/getFeeDetailsDuringRegisterForOC" filters="none"/>
-				<security:filter-chain pattern="/reports/statusreport-api" filters="none" />
-				<security:filter-chain pattern="/reports/servicewise-summary-api" filters="none" />
-				<security:filter-chain pattern="/reports/searchPLPendingItemsRural" filters="none" />
-				<security:filter-chain pattern="/reports/searchPLItems" filters="none" />
-				<security:filter-chain pattern="/reports/searchPLPendingItems" filters="none" />
-				<security:filter-chain pattern="/reports/searchPLItemsRural" filters="none" />
-				<security:filter-chain pattern="/rest/**" filters="anonymousAuthenticationFilter"/>
-				<security:filter-chain pattern="/national-dashboard/_obpas" filters="none"/>
-				<security:filter-chain pattern="/application/citizen/check-status/**" filters="anonymousAuthenticationFilter"/>
-				<security:filter-chain pattern="/**"  filters="concurrentSessionFilter,securityContextPersistenceFilter,
-													 sessionHijackProtectionFilter,
-													 logoutFilter,authenticationProcessingFilter,headerWriterFilter,
-													 securityContextHolderAwareRequestFilter,rememberMeAuthenticationFilter,
-													 anonymousAuthenticationFilter,exceptionTranslationFilter,
-													 filterSecurityInterceptor" />
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/resources/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/error/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/index.jsp"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/public/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/application/findby-permit-number"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/collection/citizen/**"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/ajax/getFeeDetailsDuringRegister"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/ajax/getFeeDetailsDuringRegisterForOC"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/statusreport-api"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/servicewise-summary-api"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/searchPLPendingItemsRural"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/searchPLItems"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/searchPLPendingItems"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/reports/searchPLItemsRural"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/rest/**"/></bean></constructor-arg><constructor-arg><list><ref bean="anonymousAuthenticationFilter"/></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/national-dashboard/_obpas"/></bean></constructor-arg><constructor-arg><list></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/application/citizen/check-status/**"/></bean></constructor-arg><constructor-arg><list><ref bean="anonymousAuthenticationFilter"/></list></constructor-arg></bean>
+				<bean class="org.springframework.security.web.DefaultSecurityFilterChain"><constructor-arg><bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher"><constructor-arg value="/**"/></bean></constructor-arg><constructor-arg><list><ref bean="concurrentSessionFilter"/><ref bean="securityContextPersistenceFilter"/><ref bean="sessionHijackProtectionFilter"/><ref bean="logoutFilter"/><ref bean="authenticationProcessingFilter"/><ref bean="headerWriterFilter"/><ref bean="securityContextHolderAwareRequestFilter"/><ref bean="rememberMeAuthenticationFilter"/><ref bean="anonymousAuthenticationFilter"/><ref bean="exceptionTranslationFilter"/><ref bean="filterSecurityInterceptor"/></list></constructor-arg></bean>
 			</list>
 		</constructor-arg>
 	</bean>	

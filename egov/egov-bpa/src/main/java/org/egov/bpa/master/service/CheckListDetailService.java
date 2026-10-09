@@ -51,7 +51,7 @@ public class CheckListDetailService {
     }
 
     public CheckListDetail findOne(final Long checkListDetailId) {
-        return checkListDetailRepository.findOne(checkListDetailId);
+        return checkListDetailRepository.findById(checkListDetailId).orElse(null);
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class CheckListDetailService {
     }
 
     public List<CheckListDetail> findAll() {
-        return checkListDetailRepository.findAll(new Sort(Sort.Direction.DESC, "description"));
+        return checkListDetailRepository.findAll(Sort.by(Sort.Direction.DESC, "description"));
     }
 
     public CheckListDetail load(final Long id) {

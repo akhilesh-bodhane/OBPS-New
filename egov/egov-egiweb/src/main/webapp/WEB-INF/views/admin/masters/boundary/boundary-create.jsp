@@ -47,8 +47,8 @@
   --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="egov" tagdir="/WEB-INF/tags" %>
@@ -108,7 +108,7 @@
                         </form:form>
                     </c:when>
                     <c:otherwise>
-                        <form:form method="post" action="/egi/boundary/create" class="form-horizontal form-groups-bordered" commandName="boundary" id="boundaryCreate">
+                        <form:form method="post" action="/egi/boundary/create" class="form-horizontal form-groups-bordered" modelAttribute="boundary" id="boundaryCreate">
                             <div class="panel panel-primary" data-collapsed="0">
                                 <div class="panel-heading">
                                     <div class="panel-title">

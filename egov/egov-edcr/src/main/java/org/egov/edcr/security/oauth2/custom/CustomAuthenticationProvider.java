@@ -45,6 +45,7 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
+
 package org.egov.edcr.security.oauth2.custom;
 
 import java.util.ArrayList;
@@ -55,19 +56,14 @@ import org.egov.infra.admin.master.service.UserService;
 import org.egov.infra.config.security.authentication.userdetail.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.stereotype.Component;
 
-/**
- *
- * @author subhash
- *
- */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -78,25 +74,22 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) {
-        String userName = authentication.getName();
-        User user = userService.getUserByUsername(userName);
-
+    public Authentication authenticate(final Authentication authentication) {
+        final String userName = authentication.getName();
+        final User user = userService.getUserByUsername(userName);
         if (user == null)
-            throw new OAuth2Exception("Invalid login credentials");
-
-        String password = authentication.getCredentials().toString();
+            throw new BadCredentialsException("Invalid login credentials");
+        final String password = authentication.getCredentials().toString();
         if (passwordEncoder.matches(password, user.getPassword())) {
-            List<GrantedAuthority> grantedAuths = new ArrayList<>();
+            final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             user.getRoles().forEach(role -> grantedAuths.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
             return new UsernamePasswordAuthenticationToken(new CurrentUser(user), password, grantedAuths);
         } else
-            throw new OAuth2Exception("Invalid login credentials");
+            throw new BadCredentialsException("Invalid login credentials");
     }
 
     @Override
     public boolean supports(final Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
-
 }

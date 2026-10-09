@@ -41,8 +41,8 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.FeeBoundaryMapping;
 import org.egov.bpa.master.repository.FeeBoundaryMappingRepository;
@@ -69,7 +69,7 @@ public class FeeBoundaryMappingService {
 	}
 
 	public FeeBoundaryMapping findById(final Long id) {
-		return feeBoundaryMappingRepository.findOne(id);
+		return feeBoundaryMappingRepository.findById(id).orElse(null);
 	}
 	
 	public List<FeeBoundaryMapping> findByBoundaryAndFee(final Long feeId , final Long boundaryId) {

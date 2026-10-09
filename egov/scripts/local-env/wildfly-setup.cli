@@ -1,0 +1,14 @@
+# One-time WildFly configuration, run offline by setup-env.ps1 (embed-server, no running server needed).
+# @DB_URL@ @DB_USER@ @DB_PASSWORD@ are substituted by setup-env.ps1.
+embed-server --server-config=standalone-full.xml --std-out=echo
+/subsystem=datasources/jdbc-driver=postgres:add(driver-name=postgres,driver-module-name=org.postgres,driver-class-name=org.postgresql.Driver,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+data-source add --name=READWRITE_DS --jndi-name=java:/READWRITE_DS --driver-name=postgres --connection-url=@DB_URL@ --user-name=@DB_USER@ --password=@DB_PASSWORD@ --min-pool-size=2 --max-pool-size=30
+data-source add --name=READONLY_DS --jndi-name=java:/READONLY_DS --driver-name=postgres --connection-url=@DB_URL@ --user-name=@DB_USER@ --password=@DB_PASSWORD@ --min-pool-size=1 --max-pool-size=10
+data-source add --name=QUARTZ_NO_TXN_DS --jndi-name=java:/QUARTZ_NO_TXN_DS --driver-name=postgres --connection-url=@DB_URL@ --user-name=@DB_USER@ --password=@DB_PASSWORD@ --jta=false --min-pool-size=1 --max-pool-size=5
+/subsystem=messaging-activemq/server=default/jms-queue=sms:add(entries=[java:/jms/queue/sms])
+/subsystem=messaging-activemq/server=default/jms-queue=email:add(entries=[java:/jms/queue/email])
+/subsystem=infinispan/cache-container=master-data:add(statistics-enabled=true)
+/subsystem=infinispan/cache-container=master-data/local-cache=master-data:add
+/subsystem=infinispan/cache-container=master-data:write-attribute(name=default-cache,value=master-data)
+/subsystem=infinispan/cache-container=master-data:write-attribute(name=marshaller,value=PROTOSTREAM)
+stop-embedded-server

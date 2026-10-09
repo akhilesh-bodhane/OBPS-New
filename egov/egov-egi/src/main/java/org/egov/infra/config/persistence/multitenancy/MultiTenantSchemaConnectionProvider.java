@@ -60,7 +60,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MultiTenantSchemaConnectionProvider implements MultiTenantConnectionProvider {
+public class MultiTenantSchemaConnectionProvider implements MultiTenantConnectionProvider<String> {
     private static final long serialVersionUID = -6022082859572861041L;
     private static final Logger LOG = LoggerFactory.getLogger(MultiTenantSchemaConnectionProvider.class);
 

@@ -69,7 +69,7 @@ var tbody = $('#holiday').children('tbody');
          //validate all rows before adding new row
          $('#holiday tbody tr').each(function (idx, value) {
              $('#holiday tbody tr:eq(' + idx + ') td input[type="text"]').each(function (i, v) {
-                 if (!$.trim($(v).val())) {
+                 if (!String($(v).val() ?? "").trim()) {
                      valid = false;
                      bootbox.alert("Enter all values for existing rows!", function () {
                          $(v).focus();

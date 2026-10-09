@@ -41,28 +41,28 @@ package org.egov.bpa.transaction.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.transaction.entity.enums.GenderTitle;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.entity.enums.Gender;
 import org.egov.infra.validation.regex.Constants;
-import org.hibernate.validator.constraints.Email;
+import jakarta.validation.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 /**
  * @author vinoth
@@ -80,48 +80,48 @@ public class CoApplicant extends AbstractAuditable {
     private Long id;
     private GenderTitle title;
     @NotNull
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 2, max = 100)
     private String name;
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 128)
     private String fatherorHusbandName;
     private Date dateofBirth;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Email(regexp = Constants.EMAIL)
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 128)
     private String emailId;
     @Pattern(regexp = Constants.MOBILE_NUM)
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 10, max = 15)
     private String mobileNumber;
-	@SafeHtml
+	@CustomSafeHtml
     @Length(min = 1, max = 128)
     private String pinCode;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 1024)
     private String address;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String district;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String taluk;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String area;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String city;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(min = 1, max = 128)
     private String state;
 

@@ -2,8 +2,8 @@ package org.egov.bpa.master.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.master.entity.BpaApplicationType;
 import org.egov.bpa.master.entity.NocConfig;
@@ -38,11 +38,11 @@ public class NocConfigService {
 	}
 
 	public List<NocConfig> findAll() {
-		return nocConfigRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+		return nocConfigRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 	}
 
 	public NocConfig findOne(Long id) {
-		return nocConfigRepository.findOne(id);
+		return nocConfigRepository.findById(id).orElse(null);
 	}
 
 	public List<NocConfig> search(NocConfig nocConfig) {

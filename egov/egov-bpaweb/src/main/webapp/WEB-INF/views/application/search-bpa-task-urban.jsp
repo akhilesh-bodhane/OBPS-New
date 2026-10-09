@@ -38,7 +38,7 @@
   ~   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
   --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
@@ -108,6 +108,13 @@
 	                        <form:input class="form-control patternvalidation" maxlength="50"
 	                                    id="applicantName" path="applicantName"/>
 	                        <form:errors path="applicantName" cssClass="add-margin error-msg"/>
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label text-right"><spring:message code="lbl.file.no"/></label>
+	                    <div class="col-sm-3 add-margin">
+	                        <form:input class="form-control patternvalidation" maxlength="50" id="fileNumber" path="fileNumber"/>
+	                        <form:errors path="fileNumber" cssClass="add-margin error-msg"/>
 	                    </div>
 	                </div>
 	                 <div class="form-group">
@@ -188,6 +195,7 @@
 					<th><spring:message code="lbl.service.type" /></th>
 					<th><spring:message code="lbl.sectors.villages" /></th>
 					<th><spring:message code="lbl.plot.no" /></th>
+					<th><spring:message code="lbl.file.no" /></th>
 					<th><spring:message code="lbl.occupancy" /></th>
 					<th><spring:message code="lbl.status" /></th>
 					<th><spring:message code="lbl.current.owner" /></th>

@@ -73,7 +73,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ValidationException;
+import jakarta.validation.ValidationException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -117,7 +117,7 @@ public class BoundaryService {
     }
 
     public Boundary getBoundaryById(final Long id) {
-        return boundaryRepository.findOne(id);
+        return boundaryRepository.findById(id).orElse(null);
     }
 
     public List<Boundary> getAllBoundariesOrderByBoundaryNumAsc(BoundaryType boundaryType) {
@@ -129,7 +129,7 @@ public class BoundaryService {
     }
 
     public Page<Boundary> getPageOfBoundaries(BoundarySearchRequest searchRequest) {
-        Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+        Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(),
                 searchRequest.orderDir(), searchRequest.orderBy());
         return boundaryRepository.findByBoundaryTypeId(searchRequest.getBoundaryTypeId(), pageable);
     }

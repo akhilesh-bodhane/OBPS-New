@@ -9,42 +9,41 @@ import java.util.Date;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldIndex;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Document(indexName = "bpa", type = "bpa")
+@Document(indexName = "bpa")
 public class BpaIndex {
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String id;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String ulbName;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String districtName;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String regionName;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String ulbGrade;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String ulbCode;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicantName;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicantMobileNumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicantEmailId;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicantAddress;
 
 	@Field(type = FieldType.Double)
@@ -77,16 +76,16 @@ public class BpaIndex {
 	@Field(type = FieldType.Double)
 	private BigDecimal totalCollectedAmount;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicantGender;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String aadhaarNumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String serviceType;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String applicationNumber;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
@@ -96,23 +95,23 @@ public class BpaIndex {
 	@Field(type = FieldType.Double)
 	private BigDecimal admissionFeeAmount;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String stakeHolderName;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String stakeHolderType;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String remarks;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String planPermissionNumber;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
 	@Field(type = FieldType.Date, format = DateFormat.date_optional_time, pattern = ES_DATE_FORMAT)
 	private Date planPermissionDate;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String status;
 
 	@Field(type = FieldType.Boolean)
@@ -125,71 +124,71 @@ public class BpaIndex {
 	@Field(type = FieldType.Double)
 	private BigDecimal extentinsqmts;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String zone; // admin boundary parent
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String revenueWard; // admin boundary
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String village; // location boundary
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String electionWard; // election boundary
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String reSurveyNumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String natureofOwnership;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String registrarOffice;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String nearestbuildingnumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String doorNumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String streetAddress;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String locality;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String cityTown;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String pinCode;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String taluk;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String postOffice;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String district;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String state;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String scheme;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String landUsage;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String occupancy;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String governmentType;
 
 	// plotDetailsData
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private BigDecimal totalPlintArea;
 
 	@Field(type = FieldType.Integer)
@@ -228,10 +227,10 @@ public class BpaIndex {
 	@Field(type = FieldType.Double)
 	private BigDecimal heightFromStreetLevelWithOutStairRoom;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String eDcrNumber;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String typeOfLand;
 
 	@Field(type = FieldType.Boolean)
@@ -240,10 +239,10 @@ public class BpaIndex {
 	@Field(type = FieldType.Boolean)
 	private Boolean isappForRegularization = false;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String constStages;
 
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed)
+	@Field(type = FieldType.Keyword)
 	private String stateOfConstruction;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE)
@@ -257,8 +256,8 @@ public class BpaIndex {
 	@Field(type = FieldType.Integer)
 	private Integer noOfDaysToProcess;
 	
-	@Field(type = FieldType.String, index = FieldIndex.not_analyzed) 
-	private String revocationNumber; 
+	@Field(type = FieldType.Keyword)
+	private String revocationNumber;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ES_DATE_FORMAT, timezone = DEFAULT_TIMEZONE) 
 	@Field(type = FieldType.Date, format = DateFormat.date_optional_time, pattern = ES_DATE_FORMAT) 

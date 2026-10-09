@@ -234,7 +234,7 @@ $(document).ready( function () {
 	// email validation
 	$('#emailId1').blur(function() {
 		var pattern = new RegExp("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-		var email = $.trim($(this).val());
+		var email = String($(this).val() ?? "").trim();
 		if (email && !pattern.test(email) && $(this).val().length > 0) {
 			var span = $(this).siblings('span');
 	    	$(span).addClass('error-msg');

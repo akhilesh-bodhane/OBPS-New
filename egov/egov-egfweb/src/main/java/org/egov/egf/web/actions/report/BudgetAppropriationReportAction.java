@@ -63,9 +63,9 @@ import org.egov.model.budget.BudgetReAppropriation;
 import org.egov.utils.Constants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -125,7 +125,7 @@ public class BudgetAppropriationReportAction extends BaseFormAction {
 	@Override
 	public void prepare() {
 		persistenceService.getSession().setDefaultReadOnly(true);
-		persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+		persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
 		super.prepare();
 		if (!parameters.containsKey("showDropDown")) {
 			addDropdownData("departmentList",
@@ -225,13 +225,13 @@ public class BudgetAppropriationReportAction extends BaseFormAction {
 
 	private Query generateQuery() {
 		final Query query = persistenceService.getSession()
-				.createSQLQuery(getQueryString().toString())
+				.createNativeQuery(getQueryString().toString())
 				.addScalar("department").addScalar("function")
 				.addScalar("fund").addScalar("budgetHead")
 				.addScalar("budgetAppropriationNo")
 				.addScalar("appropriationDate").addScalar("actualAmount")
-				.addScalar("additionAmount", BigDecimalType.INSTANCE)
-				.addScalar("deductionAmount", BigDecimalType.INSTANCE);
+				.addScalar("additionAmount", StandardBasicTypes.BIG_DECIMAL)
+				.addScalar("deductionAmount", StandardBasicTypes.BIG_DECIMAL);
 		return query;
 	}
 
@@ -259,7 +259,7 @@ public class BudgetAppropriationReportAction extends BaseFormAction {
 	 */
 	@SuppressWarnings("unchecked")
 	public String getUlbName() {
-		final Query query = persistenceService.getSession().createSQLQuery(
+		final Query query = persistenceService.getSession().createNativeQuery(
 				"select name from companydetail");
 		final List<String> result = query.list();
 		if (result != null)

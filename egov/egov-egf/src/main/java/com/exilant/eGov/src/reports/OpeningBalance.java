@@ -54,7 +54,7 @@ package com.exilant.eGov.src.reports;
 import com.exilant.exility.common.TaskFailedException;
 import org.apache.log4j.Logger;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -141,18 +141,18 @@ public class OpeningBalance
 
         try {
             OpeningBalanceBean ob = null;
-            pstmt = persistenceService.getSession().createSQLQuery(query);
+            pstmt = persistenceService.getSession().createNativeQuery(query);
             int i = 0;
-            pstmt.setLong(i++, Long.valueOf(finYear));
+            pstmt.setParameter(i++, Long.valueOf(finYear));
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setLong(i++, Long.valueOf(fundId));
+                pstmt.setParameter(i++, Long.valueOf(fundId));
             if (!deptId.equalsIgnoreCase(""))
-                pstmt.setLong(i++,Long.valueOf( deptId));
-            pstmt.setLong(i++, Long.valueOf(finYear));
+                pstmt.setParameter(i++,Long.valueOf( deptId));
+            pstmt.setParameter(i++, Long.valueOf(finYear));
             if (!fundId.equalsIgnoreCase(""))
-                pstmt.setLong(i++, Long.valueOf(fundId));
+                pstmt.setParameter(i++, Long.valueOf(fundId));
             if (!deptId.equalsIgnoreCase(""))
-                pstmt.setLong(i++,Long.valueOf( deptId));
+                pstmt.setParameter(i++,Long.valueOf( deptId));
             List<Object[]> list= pstmt.list();
             resultset =list;
             

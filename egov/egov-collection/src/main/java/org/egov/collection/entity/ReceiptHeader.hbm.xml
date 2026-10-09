@@ -55,6 +55,7 @@
 			<column name="ID" precision="22" scale="0" />
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">SEQ_EGCL_COLLECTIONHEADER</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>
 		<version name="version" column="VERSION" type="long" />
@@ -146,7 +147,7 @@
 			<key>
 				<column name="collectionheader" precision="22" scale="0" />
 			</key>
-			<one-to-many class="org.egov.collection.entity.ReceiptVoucher" />
+			<one-to-many entity-name="CollectionReceiptVoucher" />
 		</set>
 		<property name="isReconciled" type="java.lang.Boolean">
 			<column name="isreconciled" precision="1" scale="0" />
@@ -204,7 +205,7 @@
 		</property>	
 	</class>
 	<query name="RECEIPTS_FOR_VOUCHERS">
-	<![CDATA[select receiptHeader from org.egov.collection.entity.ReceiptVoucher rv where rv.voucherheader.id in (:param_0)]]></query>
+	<![CDATA[select receiptHeader from CollectionReceiptVoucher rv where rv.voucherheader.id in (:param_0)]]></query>
 	
 	<query name="RECEIPTS_FOR_BOUNCED_INSTRUMENTS">
 	<![CDATA[select rh from org.egov.collection.entity.ReceiptHeader rh join rh.receiptVoucher as rv where rh.status.code<>? and rv.voucherheader.id in (:param_1)]]></query>

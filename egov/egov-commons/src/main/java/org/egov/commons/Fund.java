@@ -53,17 +53,17 @@ import org.egov.infra.persistence.entity.AbstractPersistable;
 import org.egov.infra.persistence.validator.annotation.Required;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -79,12 +79,12 @@ public class Fund extends AbstractPersistable<Integer> {
     @GeneratedValue(generator = Fund.SEQ, strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50, min = 2)
     @Required
     private String name;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50, min = 2)
     @Required
     private String code;

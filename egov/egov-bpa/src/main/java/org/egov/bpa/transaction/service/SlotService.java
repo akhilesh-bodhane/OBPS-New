@@ -41,8 +41,8 @@ package org.egov.bpa.transaction.service;
 
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.bpa.transaction.entity.Slot;
 import org.egov.bpa.transaction.repository.SlotRepository;

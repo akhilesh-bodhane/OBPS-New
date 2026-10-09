@@ -40,6 +40,7 @@ public class SearchBpaPendingTaskAdaptor implements DataTableJsonAdapter<SearchP
             baseRegisterJson.addProperty("ellapseTime", baseForm.getEllapseTime());
             baseRegisterJson.addProperty("sector", baseForm.getSector());
             baseRegisterJson.addProperty("plotNumber", baseForm.getPlotNumber());
+            baseRegisterJson.addProperty("fileNumber", baseForm.getFileNumber());
 
             baseRegisterResultData.add(baseRegisterJson);
         });

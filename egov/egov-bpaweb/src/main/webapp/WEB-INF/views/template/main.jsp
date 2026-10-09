@@ -77,6 +77,8 @@
 		<script src="<c:url value='/resources/global/js/bts/typeahead.bundle.js' context='/egi'/>"></script>
 		<script src="<c:url value='/resources/global/js/jq/plugins/jq.inputmask.bundle.min.js' context='/egi'/>"></script>
 		<script src="<c:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script>
+		<script src="<c:url value='/resources/global/js/egov/datatable-export.js?rnd=${app_release_no}' context='/egi'/>"></script>
+		<script src="<c:url value='/resources/global/js/egov/datatable-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
         <script src="<c:url value='/resources/global/js/egov/patternvalidation.js?rnd=${app_release_no}' context='/egi'/>"></script>
         <script src="<c:url value='/resources/js/app/util-helper.js?rnd=${app_release_no}'/>"></script>
 		

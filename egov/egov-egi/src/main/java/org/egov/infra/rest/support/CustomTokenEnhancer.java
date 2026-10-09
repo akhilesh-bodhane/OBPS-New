@@ -45,15 +45,17 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
+
 package org.egov.infra.rest.support;
 
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
 
 /**
- *
- * @author subhash
- *
+ * Contributes additional information to the access tokens issued by the REST API token endpoint.
  */
-public interface CustomTokenEnhancer extends TokenEnhancer {
+public interface CustomTokenEnhancer {
 
+    Map<String, Object> additionalInformation(Authentication authentication);
 }

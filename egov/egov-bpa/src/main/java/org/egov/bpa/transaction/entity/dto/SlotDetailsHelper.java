@@ -50,24 +50,24 @@ package org.egov.bpa.transaction.entity.dto;
 import java.util.Date;
 
 import org.egov.infra.web.support.search.DataTableSearchRequest;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 public class SlotDetailsHelper extends DataTableSearchRequest {
-    @SafeHtml
+    @CustomSafeHtml
     private String applicationType;
     private Long slotId;
     private Long slotDetailsId;
-    @SafeHtml
+    @CustomSafeHtml
     private String appointmentTime;
     private Date appointmentDate;
     private Long zoneId;
-    @SafeHtml
+    @CustomSafeHtml
     private String zone;
     private Long revenueWardId;
-    @SafeHtml
+    @CustomSafeHtml
     private String revenueWardWard;
     private Long electionWardId;
-    @SafeHtml
+    @CustomSafeHtml
     private String electionWard;
     private Integer byNoOfDays;
     private Integer maxScheduledSlots;

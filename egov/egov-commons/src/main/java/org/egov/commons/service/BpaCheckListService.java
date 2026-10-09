@@ -96,7 +96,7 @@ public class BpaCheckListService {
 		for (Checklist checklist : checklists){
 			checklist.setCode(StringUtils.substring(checklist.getChecklistType().getCode(), 0, 3).concat("-").concat(String.valueOf(rand.nextInt(100))));
 		}
-        return bpaCheckListRepository.save(checklists);
+        return bpaCheckListRepository.saveAll(checklists);
     }
 
     @Transactional

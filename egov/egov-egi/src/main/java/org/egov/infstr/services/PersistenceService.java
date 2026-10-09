@@ -55,13 +55,13 @@ import org.egov.infra.persistence.utils.Page;
 import org.egov.infra.validation.exception.ValidationError;
 import org.egov.infra.validation.exception.ValidationException;
 import org.egov.infstr.models.BaseModel;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.Example;
+import org.egov.infra.persistence.criteria.Order;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +69,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
-import javax.validation.Path.Node;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path.Node;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -175,7 +175,7 @@ public class PersistenceService<T, ID extends Serializable> {
 
     private Query getQueryWithParams(final String query, final Object... params) {
         final Query q = getSession().createQuery(query);
-        int index = 0;
+        int index = 1;
         for (final Object param : params) {
             q.setParameter(index, param);
             index++;
@@ -204,10 +204,10 @@ public class PersistenceService<T, ID extends Serializable> {
 
     private Query getNamedQueryWithParams(final String namedQuery, final Object... params) {
         final Query q = getSession().getNamedQuery(namedQuery);
-        int index = 0;
+        int index = 1;
         for (final Object param : params) {
             if (param instanceof Collection)
-                q.setParameterList(String.valueOf("param_" + index), (Collection) param);
+                q.setParameterList(String.valueOf("param_" + (index - 1)), (Collection) param);
             else
                 q.setParameter(index, param);
             index++;
@@ -251,12 +251,12 @@ public class PersistenceService<T, ID extends Serializable> {
 
 
     public List<T> findAll() {
-        return getSession().createCriteria(this.type).list();
+        return Criteria.create(getSession(), this.type).list();
     }
 
 
     public List<T> findByExample(final T exampleT) {
-        final Criteria criteria = getSession().createCriteria(this.type);
+        final Criteria criteria = Criteria.create(getSession(), this.type);
         return criteria.add(Example.create(exampleT)).list();
     }
 
@@ -266,7 +266,7 @@ public class PersistenceService<T, ID extends Serializable> {
     }
 
     public T findByIdWithJoinFetch(final ID id, final String joinFetchPropertyName) {
-        return (T) getSession().createCriteria(type).setFetchMode(joinFetchPropertyName, FetchMode.JOIN)
+        return (T) Criteria.create(getSession(), type).setFetchMode(joinFetchPropertyName, FetchMode.JOIN)
                 .add(Restrictions.idEq(id)).uniqueResult();
     }
 
@@ -278,7 +278,7 @@ public class PersistenceService<T, ID extends Serializable> {
     }
 
     public List<T> findAll(final String... orderByFields) {
-        final Criteria c = getSession().createCriteria(this.type);
+        final Criteria c = Criteria.create(getSession(), this.type);
         for (final String orderBy : orderByFields)
             c.addOrder(Order.asc(orderBy).ignoreCase());
         return c.list();

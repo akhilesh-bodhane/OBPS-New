@@ -389,6 +389,33 @@ public class WorkflowHistoryService {
         }
     }
     
+    /**
+     * For list/search screens: a row whose owner position has no assignment must not break the whole result set
+     * (and with it the "All" view and the Excel export), so the owner is reported as N/A instead of failing.
+     */
+    public String getOwnerNameLenient(Long ownerPosition, Date date) {
+        try {
+            return getUserPositionByPositionAndDate(ownerPosition, date).getName();
+        } catch (final ApplicationRuntimeException e) {
+            org.slf4j.LoggerFactory.getLogger(WorkflowHistoryService.class)
+                    .warn("Owner not resolved for position {}: {}", ownerPosition, e.getMessage());
+            return "N/A";
+        }
+    }
+
+    public Map<String, String> getUserDesignationAndPositionLenient(Long ownerPosition, Date date) {
+        try {
+            return getUserDesignationAndPositionByPositionAndDate(ownerPosition, date);
+        } catch (final ApplicationRuntimeException e) {
+            org.slf4j.LoggerFactory.getLogger(WorkflowHistoryService.class)
+                    .warn("Owner not resolved for position {}: {}", ownerPosition, e.getMessage());
+            final Map<String, String> map = new HashMap<String, String>();
+            map.put("designation", "");
+            map.put("name", "N/A");
+            return map;
+        }
+    }
+
     public Map<String, String> getUserDesignationAndPositionByPositionAndDate(Long ownerPosition, Date date) {
         try {
         	Map<String, String> map = new HashMap<String, String>();

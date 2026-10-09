@@ -49,11 +49,11 @@ package org.egov.commons.service;
 
 import org.egov.commons.Bankbranch;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -83,7 +83,7 @@ public class BankBranchService extends PersistenceService<Bankbranch, Integer> {
         Query createQuery = getCurrentSession()
                 .createQuery(
                         "select distinct bb from Bankbranch bb , Bankaccount ba  where ba.bankbranch =bb and ba.type in ('RECEIPTS_PAYMENTS','PAYMENTS') and bb.bank.id=:bankId and bb.isactive=true")
-                .setInteger("bankId", bankId);
+                .setParameter("bankId", bankId);
         if (bankId != null) {
             List<Bankbranch> list = (List<Bankbranch>) createQuery.list();
             if (list != null && !list.isEmpty()) {

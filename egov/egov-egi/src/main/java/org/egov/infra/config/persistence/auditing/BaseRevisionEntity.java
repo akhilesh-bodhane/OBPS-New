@@ -51,11 +51,11 @@ package org.egov.infra.config.persistence.auditing;
 import org.egov.infra.config.persistence.auditing.listener.AuditableEntityListener;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "REVINFO")
@@ -66,7 +66,7 @@ public class BaseRevisionEntity extends DefaultRevisionEntity {
     private Long userId;
 
     @NotNull
-	@SafeHtml
+	@CustomSafeHtml
     private String ipAddress;
 
     public Long getUserId() {

@@ -52,7 +52,9 @@ import org.egov.portal.entity.Firm;
 import org.egov.portal.entity.SearchRequestFirm;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 public class SearchFirmSpec {
 
@@ -62,12 +64,12 @@ public class SearchFirmSpec {
 
     public static Specification<Firm> searchFirm(final SearchRequestFirm searchRequestFirm) {
         return (root, query, builder) -> {
-            final Predicate predicate = builder.conjunction();
+            final List<Predicate> predicates = new ArrayList<>();
             if (searchRequestFirm.getName() != null)
-                predicate.getExpressions().add(builder.equal(root.get("name"), searchRequestFirm.getName()));
+                predicates.add(builder.equal(root.get("name"), searchRequestFirm.getName()));
             if (searchRequestFirm.getPan() != null)
-                predicate.getExpressions().add(builder.equal(root.get("pan"), searchRequestFirm.getPan()));
-            return predicate;
+                predicates.add(builder.equal(root.get("pan"), searchRequestFirm.getPan()));
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 

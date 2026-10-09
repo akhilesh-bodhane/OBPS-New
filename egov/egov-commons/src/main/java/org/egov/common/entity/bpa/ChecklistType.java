@@ -29,16 +29,16 @@
  */
 package org.egov.common.entity.bpa;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
 @Entity
 @Table(name = "EG_CHECKLIST_TYPE")
@@ -52,11 +52,11 @@ public class ChecklistType extends AbstractAuditable {
 	@GeneratedValue(generator = SEQ_CHECKLIST_TYPE, strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@SafeHtml
+	@CustomSafeHtml
 	@Length(min = 1, max = 128)
 	private String code;
 
-	@SafeHtml
+	@CustomSafeHtml
 	@Length(min = 1, max = 250)
 	private String description;
 

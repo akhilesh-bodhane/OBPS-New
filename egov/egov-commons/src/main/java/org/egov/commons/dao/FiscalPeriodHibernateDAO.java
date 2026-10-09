@@ -47,15 +47,17 @@
  */
 package org.egov.commons.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.apache.log4j.Logger;
 import org.egov.commons.CFiscalPeriod;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +85,7 @@ public class FiscalPeriodHibernateDAO   implements FiscalPeriodDAO {
     }
 
     public List<CFiscalPeriod> findAll() {
-        return (List<CFiscalPeriod>) getCurrentSession().createCriteria(CFiscalPeriod.class).list();
+        return (List<CFiscalPeriod>) Criteria.create(getCurrentSession(), CFiscalPeriod.class).list();
     }
 
     @PersistenceContext
@@ -124,7 +126,7 @@ public class FiscalPeriodHibernateDAO   implements FiscalPeriodDAO {
     public CFiscalPeriod getFiscalPeriodByDate(Date voucherDate) {
         Query query = getCurrentSession().createQuery(
                 "from CFiscalPeriod fp where  :voucherDate between fp.startingDate and fp.endingDate");
-        query.setDate("voucherDate", voucherDate);
+        query.setParameter("voucherDate", voucherDate, jakarta.persistence.TemporalType.DATE);
         query.setCacheable(true);
         return (CFiscalPeriod) query.uniqueResult();
     }

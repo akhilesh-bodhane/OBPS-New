@@ -42,7 +42,7 @@ package org.egov.bpa.web.controller.transaction;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egov.bpa.master.entity.ChecklistServiceTypeMapping;
 import org.egov.bpa.master.service.ChecklistServicetypeMappingService;

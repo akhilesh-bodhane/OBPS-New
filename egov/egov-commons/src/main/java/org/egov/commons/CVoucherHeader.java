@@ -50,22 +50,22 @@ package org.egov.commons;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,19 +84,19 @@ public class CVoucherHeader extends StateAware<Position> {
     @Id
     @GeneratedValue(generator = SEQ_VOUCHERHEADER, strategy = GenerationType.SEQUENCE)
     private Long id;
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(max = 50)
     private String name;
-    @SafeHtml
+    @CustomSafeHtml
     @NotNull
     @Length(max = 100)
     private String type;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 1024)
     private String description;
     private Date effectiveDate;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 30)
     private String voucherNumber;
     private Date voucherDate;
@@ -108,16 +108,16 @@ public class CVoucherHeader extends StateAware<Position> {
     private Long originalvcId;
     private Integer isConfirmed;
     private Long refvhId;
-    @SafeHtml
+    @CustomSafeHtml
     @Length(max = 50)
     private String cgvn;
     private Integer moduleId;
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String voucherSubType;
     @Transient
     private Boolean isRestrictedtoOneFunctionCenter;
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String voucherNumberPrefix;
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "voucherHeaderId", targetEntity = CGeneralLedger.class)
@@ -131,18 +131,18 @@ public class CVoucherHeader extends StateAware<Position> {
     @Transient
     private List<CGeneralLedgerDetail> subLedgerDetails = new ArrayList<>();
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String partyName;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String partyBillNumber;
 
     @Transient
     private Date partyBillDate;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String billNumber;
 
@@ -152,11 +152,11 @@ public class CVoucherHeader extends StateAware<Position> {
     @Transient
     private Long approvalDepartment;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String approvalComent;
 
-    @SafeHtml
+    @CustomSafeHtml
     @Transient
     private String voucherNumType;
 

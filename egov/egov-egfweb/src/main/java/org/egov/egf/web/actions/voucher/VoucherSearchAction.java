@@ -77,7 +77,7 @@ import org.egov.model.bills.EgBillregistermis;
 import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.VoucherHelper;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -96,7 +96,7 @@ import java.util.Map;
 @ParentPackage("egov")
 @Results({
     @Result(name = VoucherSearchAction.SEARCH, location = "voucherSearch-search.jsp"),
-    @Result(name = com.opensymphony.xwork2.Action.SUCCESS, type = "redirect", location = "voucherSearch.action")
+    @Result(name = org.apache.struts2.action.Action.SUCCESS, type = "redirect", location = "voucherSearch.action")
 })
 public class VoucherSearchAction extends BaseFormAction
 {

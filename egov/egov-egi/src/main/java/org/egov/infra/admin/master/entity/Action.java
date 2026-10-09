@@ -51,22 +51,22 @@ package org.egov.infra.admin.master.entity;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.validator.constraints.SafeHtml;
+import org.egov.tracer.annotations.CustomSafeHtml;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -85,13 +85,13 @@ public class Action extends AbstractAuditable {
     private Long id;
 
     @Column(unique = true)
-    @SafeHtml
+    @CustomSafeHtml
     private String name;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String url;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String queryParams;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -104,11 +104,11 @@ public class Action extends AbstractAuditable {
     private Module parentModule;
     private Integer orderNumber;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String displayName;
     private boolean enabled;
 
-    @SafeHtml
+    @CustomSafeHtml
     private String contextRoot;
 
     @Override

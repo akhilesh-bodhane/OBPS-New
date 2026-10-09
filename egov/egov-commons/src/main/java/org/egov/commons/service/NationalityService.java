@@ -49,17 +49,17 @@ package org.egov.commons.service;
 
 import org.egov.common.entity.Nationality;
 import org.egov.commons.repository.NationalityRepository;
-import org.hibernate.Criteria;
+import org.egov.infra.persistence.criteria.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.egov.infra.persistence.criteria.MatchMode;
+import org.egov.infra.persistence.criteria.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
@@ -87,15 +87,15 @@ public class NationalityService {
     }
 
     public List<Nationality> findAll() {
-        return nationalityRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+        return nationalityRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public Nationality findOne(final Long id) {
-        return nationalityRepository.findOne(id);
+        return nationalityRepository.findById(id).orElse(null);
     }
 
     public List<Nationality> search(final Nationality nationality) {
-        final Criteria criteria = getCurrentSession().createCriteria(
+        final Criteria criteria = Criteria.create(getCurrentSession(), 
                 Nationality.class);
         if (null != nationality.getName())
             criteria.add(Restrictions.ilike("name", nationality.getName(), MatchMode.ANYWHERE));

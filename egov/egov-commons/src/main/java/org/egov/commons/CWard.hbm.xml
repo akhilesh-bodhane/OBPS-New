@@ -55,6 +55,7 @@
 			<column name="ID" not-null="true"/>
 			<generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
 				<param name="sequence_name">S_70_3_WARD</param>
+				<param name="increment_size">1</param>
 			</generator>
 		</id>				
 		<property name="name" column="NAME" />

@@ -50,8 +50,8 @@ package org.egov.commons.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.egov.common.entity.bpa.Checklist;
 import org.egov.commons.repository.CheckListRepository;

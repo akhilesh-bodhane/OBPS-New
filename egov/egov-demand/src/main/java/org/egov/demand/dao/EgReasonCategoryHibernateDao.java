@@ -47,13 +47,15 @@
  */
 package org.egov.demand.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.commons.Accountdetailkey;
 import org.egov.demand.model.EgReasonCategory;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository(value = "egReasonCategoryDAO")
@@ -92,7 +94,7 @@ public class EgReasonCategoryHibernateDao implements EgReasonCategoryDao {
 
 	@Override
     public List<EgReasonCategory> findAll() {
-        return (List<EgReasonCategory>) getCurrentSession().createCriteria(EgReasonCategory.class).list();
+        return (List<EgReasonCategory>) Criteria.create(getCurrentSession(), EgReasonCategory.class).list();
     }
 
 }

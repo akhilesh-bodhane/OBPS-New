@@ -47,14 +47,16 @@
  */
 package org.egov.commons.dao;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.egov.commons.Bankbranch;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -84,7 +86,7 @@ public class BankBranchHibernateDAO {
     }
 
     public List<Bankbranch> findAll() {
-        return (List<Bankbranch>) getCurrentSession().createCriteria(Bankbranch.class).list();
+        return (List<Bankbranch>) Criteria.create(getCurrentSession(), Bankbranch.class).list();
     }
 
     @PersistenceContext
@@ -105,7 +107,7 @@ public class BankBranchHibernateDAO {
         Query createQuery = getCurrentSession()
                 .createQuery(
                         "select distinct bb from Bankbranch bb , Bankaccount ba  where ba.bankbranch =bb and ba.type in ('RECEIPTS_PAYMENTS','PAYMENTS') and bb.bank.id=:bankId and bb.isactive=true")
-                .setInteger("bankId", bankId);
+                .setParameter("bankId", bankId);
         if (bankId != null) {
             List<Bankbranch> list = (List<Bankbranch>) createQuery.list();
             if (list != null && !list.isEmpty())
@@ -128,7 +130,7 @@ public class BankBranchHibernateDAO {
         Query createQuery = getCurrentSession()
                 .createQuery(
                         "select distinct bb from Bankbranch bb , Bankaccount ba  where ba.bankbranch =bb and ba.type in ('RECEIPTS_PAYMENTS','RECEIPTS') and bb.bank.id=:bankId and bb.isactive=true")
-                .setInteger("bankId", bankId);
+                .setParameter("bankId", bankId);
         if (bankId != null) {
             List<Bankbranch> list = (List<Bankbranch>) createQuery.list();
             if (list != null && !list.isEmpty())

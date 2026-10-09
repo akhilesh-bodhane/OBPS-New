@@ -48,7 +48,6 @@
 package org.egov.egf.web.actions.report;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -70,9 +69,9 @@ import org.egov.infstr.services.PersistenceService;
 import org.egov.utils.Constants;
 import org.egov.utils.ReportHelper;
 import org.hibernate.FlushMode;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.WebApplicationContext;
@@ -132,7 +131,7 @@ public class RtgsIssueRegisterReportAction extends ReportAction {
     @Override
     public void prepare() {
         persistenceService.getSession().setDefaultReadOnly(true);
-        persistenceService.getSession().setFlushMode(FlushMode.MANUAL);
+        persistenceService.getSession().setHibernateFlushMode(FlushMode.MANUAL);
         super.prepare();
 
         addDropdownData("bankList", persistenceService.findAllBy("from Bank where isactive=true order by upper(name)"));
@@ -177,7 +176,7 @@ public class RtgsIssueRegisterReportAction extends ReportAction {
         search();
         if (rtgsDisplayList.size() > 0) {
             inputStream = reportHelper.exportHtml(inputStream, jasperpath, getParamMap(), rtgsReportList,
-                    JRHtmlExporterParameter.SIZE_UNIT_POINT);
+                    "pt");
             return "HTML";
         }
         addActionMessage("No data found ");
@@ -254,11 +253,11 @@ public class RtgsIssueRegisterReportAction extends ReportAction {
         if (LOGGER.isDebugEnabled())
             LOGGER.debug(" Seraching RTGS result for given criteria ");
 
-        final Query query = persistenceService.getSession().createSQLQuery(getQueryString().toString())
-                .addScalar("ihId", BigDecimalType.INSTANCE)
+        final Query query = persistenceService.getSession().createNativeQuery(getQueryString().toString())
+                .addScalar("ihId", StandardBasicTypes.BIG_DECIMAL)
                 .addScalar("rtgsNumber")
                 .addScalar("rtgsDate")
-                .addScalar("vhId", BigDecimalType.INSTANCE)
+                .addScalar("vhId", StandardBasicTypes.BIG_DECIMAL)
                 .addScalar("paymentNumber")
                 .addScalar("paymentDate")
                 .addScalar("paymentAmount")
@@ -266,11 +265,11 @@ public class RtgsIssueRegisterReportAction extends ReportAction {
                 .addScalar("status")
                 .addScalar("bank")
                 .addScalar("bankBranch")
-                .addScalar("dtId", BigDecimalType.INSTANCE)
-                .addScalar("dkId", BigDecimalType.INSTANCE)
+                .addScalar("dtId", StandardBasicTypes.BIG_DECIMAL)
+                .addScalar("dkId", StandardBasicTypes.BIG_DECIMAL)
                 .addScalar("accountNumber");
         if (null == parameters.get("rtgsAssignedFromDate")[0] || parameters.get("rtgsAssignedFromDate")[0].equalsIgnoreCase(""))
-            query.setDate("finStartDate", new java.sql.Date(fromDate.getTime()));
+            query.setParameter("finStartDate", new java.sql.Date(fromDate.getTime()), jakarta.persistence.TemporalType.DATE);
         if (LOGGER.isInfoEnabled())
             LOGGER.info("Search Query ------------>" + query);
 

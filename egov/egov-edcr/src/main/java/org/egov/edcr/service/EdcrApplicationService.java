@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Plan;
@@ -34,10 +34,10 @@ import org.egov.infra.filestore.service.FileStoreService;
 import org.egov.infra.security.utils.SecurityUtils;
 import org.egov.infra.utils.ApplicationNumberGenerator;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.SQLQuery;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.hibernate.type.StringType;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -45,7 +45,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,7 +89,7 @@ public class EdcrApplicationService {
     private EdcrApplicationDetailService edcrApplicationDetailService;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private ElasticsearchOperations elasticsearchTemplate;
     
 
 	//private EgbpaApplicationDAO egbpaApplicationDAO;
@@ -194,11 +194,11 @@ public class EdcrApplicationService {
     }
 
     public List<EdcrApplication> findAll() {
-        return edcrApplicationRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+        return edcrApplicationRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public EdcrApplication findOne(Long id) {
-        return edcrApplicationRepository.findOne(id);
+        return edcrApplicationRepository.findById(id).orElse(null);
     }
 
     public EdcrApplication findByApplicationNo(String appNo) {
@@ -230,14 +230,14 @@ public class EdcrApplicationService {
     }
 
     public List<EdcrApplication> getEdcrApplications() {
-    	Pageable pageable = new PageRequest(0, 25,Sort.Direction.DESC, "id"); 
+    	Pageable pageable = PageRequest.of(0, 25, Sort.Direction.DESC, "id");
         Page<EdcrApplication> edcrApplications = edcrApplicationRepository.findAll(pageable);
         return edcrApplications.getContent();
     }
 
     @ReadOnly
     public Page<SearchBuildingPlanScrutinyForm> planScrutinyPagedSearch(SearchBuildingPlanScrutinyForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(),
                 searchRequest.orderDir(), searchRequest.orderBy());
         List<SearchBuildingPlanScrutinyForm> searchResults = new ArrayList<>();
         Page<EdcrApplicationDetail> dcrApplications = edcrApplicationDetailRepository
@@ -249,12 +249,12 @@ public class EdcrApplicationService {
     
     @ReadOnly
     public Page<SearchBuildingPlanScrutinyForm> planScrutinyPagedSearchGrap(SearchBuildingPlanScrutinyForm searchRequest) {
-        final Pageable pageable = new PageRequest(1,100);
+        final Pageable pageable = PageRequest.of(1, 100);
         List<SearchBuildingPlanScrutinyForm> searchResults = new ArrayList<>();
 //        Page<EdcrApplicationDetail> dcrApplications1 = edcrApplicationDetailRepository
 //                .findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest), pageable);
        // Page<EdcrApplicationDetail> dcrApplications = edcrApplicationDetailRepository.findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest),pageable);
-        Sort sort=new Sort("id");
+        Sort sort=Sort.by("id");
         List<EdcrApplicationDetail> dcrApplications = edcrApplicationDetailRepository.findAll(DcrReportSearchSpec.searchReportsSpecification(searchRequest),sort);
         for (EdcrApplicationDetail applicationDetail : dcrApplications)
             searchResults.add(buildResponseAsPerForm(applicationDetail));
@@ -336,9 +336,9 @@ public class EdcrApplicationService {
     	
     	String query="SELECT ea.plotnumber, ea.sector FROM egbpa_application ea WHERE ea.planpermissionnumber = '"+planPermitNumber+"'";
     	
-    	SQLQuery createSQLQuery = persistenceService.getSession().createSQLQuery(query);
-    	createSQLQuery.addScalar("plotnumber",StringType.INSTANCE);
-		createSQLQuery.addScalar("sector",StringType.INSTANCE);
+    	NativeQuery createSQLQuery = persistenceService.getSession().createNativeQuery(query);
+    	createSQLQuery.addScalar("plotnumber",StandardBasicTypes.STRING);
+		createSQLQuery.addScalar("sector",StandardBasicTypes.STRING);
 		createSQLQuery.setResultTransformer(Transformers.aliasToBean(EgbpaApplicationDTO.class));
 		EgbpaApplicationDTO result = (EgbpaApplicationDTO) createSQLQuery.uniqueResult();
 		

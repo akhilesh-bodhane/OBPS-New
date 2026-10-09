@@ -144,7 +144,7 @@ public class SlotOpeningForAppointmentService {
                 }
             }
         }
-        slotRepository.save(slots);
+        slotRepository.saveAll(slots);
     }
 
     LocalDate convertToLocalDate(Date date) {
@@ -206,7 +206,7 @@ public class SlotOpeningForAppointmentService {
                 }
             }
         }
-        slotRepository.save(slots);
+        slotRepository.saveAll(slots);
         return null;
     }
 }

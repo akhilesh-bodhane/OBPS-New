@@ -45,22 +45,19 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
+
 package org.egov.edcr.security.oauth2.custom;
 
-import org.egov.infra.rest.support.CustomTokenEnhancer;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import java.util.Collections;
+import java.util.Map;
 
-/**
- *
- * @author subhash
- *
- */
+import org.egov.infra.rest.support.CustomTokenEnhancer;
+import org.springframework.security.core.Authentication;
+
 public class DefaultCustomTokenEnhancer implements CustomTokenEnhancer {
 
     @Override
-    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        return accessToken;
+    public Map<String, Object> additionalInformation(final Authentication authentication) {
+        return Collections.emptyMap();
     }
-
 }

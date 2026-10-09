@@ -51,6 +51,8 @@
  */
 package org.egov.dao.budget;
 
+
+import org.egov.infra.persistence.criteria.Criteria;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.egov.commons.CChartOfAccounts;
@@ -88,14 +90,14 @@ import org.egov.services.budget.BudgetService;
 import org.egov.services.budget.BudgetUsageService;
 import org.egov.utils.BudgetAccountType;
 import org.egov.utils.Constants;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -137,7 +139,7 @@ public class BudgetDetailsHibernateDAO implements BudgetDetailsDAO {
     }
 
     public List<BudgetDetail> findAll() {
-        return (List<BudgetDetail>) getCurrentSession().createCriteria(BudgetDetail.class).list();
+        return (List<BudgetDetail>) Criteria.create(getCurrentSession(), BudgetDetail.class).list();
     }
 
     @PersistenceContext
@@ -2578,13 +2580,13 @@ public class BudgetDetailsHibernateDAO implements BudgetDetailsDAO {
             LOGGER.debug("Budget Usage Query >>>>>>>> " + query.toString());
         final Query query1 = getCurrentSession().createQuery(query.toString());
         if (!isNull(queryParamMap.get("fromDate")))
-            query1.setTimestamp("from", (Date) queryParamMap.get("fromDate"));
+            query1.setParameter("from", (Date) queryParamMap.get("fromDate"), jakarta.persistence.TemporalType.DATE);
         if (!isNull(queryParamMap.get("toDate"))) {
             final Date date = (Date) queryParamMap.get("toDate");
             date.setMinutes(59);
             date.setHours(23);
             date.setSeconds(59);
-            query1.setTimestamp("to", date);
+            query1.setParameter("to", date, jakarta.persistence.TemporalType.DATE);
         }
 
         listBudgetUsage = query1.list();
@@ -2666,9 +2668,9 @@ public class BudgetDetailsHibernateDAO implements BudgetDetailsDAO {
             session = getCurrentSession();
             final Query qry = session.createQuery(qryStr.toString());
             if (fund != null)
-                qry.setInteger("fund", fund);
+                qry.setParameter("fund", fund);
             if (department != null)
-                qry.setLong("department", department);
+                qry.setParameter("department", department);
 
             functionsList = qry.list();
 

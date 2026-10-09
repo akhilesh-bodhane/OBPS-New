@@ -48,7 +48,6 @@
 package org.egov.egf.web.actions.report;
 
 
-import com.opensymphony.xwork2.validator.annotations.Validation;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -85,7 +84,7 @@ import org.egov.utils.Constants;
 import org.egov.utils.FinancialConstants;
 import org.egov.utils.ReportHelper;
 import org.egov.utils.VoucherHelper;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -109,7 +108,6 @@ import java.util.Map;
                 "application/xls", "contentDisposition", "no-cache;filename=VoucherStatusReport.xls" })
 })
 @ParentPackage("egov")
-@Validation
 public class VoucherStatusReportAction extends BaseFormAction
 {
     private static final Logger LOGGER = Logger.getLogger(VoucherSearchAction.class);

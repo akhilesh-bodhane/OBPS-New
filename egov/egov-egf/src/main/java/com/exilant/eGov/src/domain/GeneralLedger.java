@@ -57,7 +57,7 @@ import com.exilant.exility.common.TaskFailedException;
 import com.exilant.exility.updateservice.PrimaryKeyGenerator;
 import org.apache.log4j.Logger;
 import org.egov.infstr.services.PersistenceService;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,18 +137,18 @@ public class GeneralLedger {
 
             if (LOGGER.isInfoEnabled())
                 LOGGER.info(insertQuery);
-            pst = persistenceService.getSession().createSQLQuery(insertQuery);
-            pst.setBigInteger(0, BigInteger.valueOf(Long.valueOf(id)));
-            pst.setBigInteger(1,voucherLineId == null ?BigInteger.ZERO:BigInteger.valueOf(Long.valueOf(voucherLineId)));
-            pst.setTimestamp(2, dt);
-            pst.setBigInteger(3, glCodeId.equalsIgnoreCase("null") ? null : BigInteger.valueOf(Long.valueOf(glCodeId)));
-            pst.setString(4, glCode);
-            pst.setDouble(5, debitAmount.equalsIgnoreCase("null") ? null : Double.parseDouble(debitAmount));
-            pst.setDouble(6, creditAmount.equalsIgnoreCase("null") ? null : Double.parseDouble(creditAmount));
-            pst.setString(7, description);
-            pst.setBigInteger(8,
+            pst = persistenceService.getSession().createNativeQuery(insertQuery);
+            pst.setParameter(1, BigInteger.valueOf(Long.valueOf(id)));
+            pst.setParameter(2,voucherLineId == null ?BigInteger.ZERO:BigInteger.valueOf(Long.valueOf(voucherLineId)));
+            pst.setParameter(3, dt, jakarta.persistence.TemporalType.DATE);
+            pst.setParameter(4, glCodeId.equalsIgnoreCase("null") ? null : BigInteger.valueOf(Long.valueOf(glCodeId)));
+            pst.setParameter(5, glCode);
+            pst.setParameter(6, debitAmount.equalsIgnoreCase("null") ? null : Double.parseDouble(debitAmount));
+            pst.setParameter(7, creditAmount.equalsIgnoreCase("null") ? null : Double.parseDouble(creditAmount));
+            pst.setParameter(8, description);
+            pst.setParameter(9,
                     voucherHeaderId.equalsIgnoreCase("null") ? null : BigInteger.valueOf(Long.valueOf(voucherHeaderId)));
-            pst.setBigInteger(9, functionId == null ? null : BigInteger.valueOf(Long.valueOf(functionId)));
+            pst.setParameter(10, functionId == null ? null : BigInteger.valueOf(Long.valueOf(functionId)));
             pst.executeUpdate();
         } catch (final Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -206,26 +206,26 @@ public class GeneralLedger {
         query.append(" where id=?");
         try {
             int i = 1;
-            pstmt = persistenceService.getSession().createSQLQuery(query.toString());
+            pstmt = persistenceService.getSession().createNativeQuery(query.toString());
             if (voucherLineId != null)
-                pstmt.setString(i++, voucherLineId);
+                pstmt.setParameter(i++, voucherLineId);
             if (effectiveDate != null)
-                pstmt.setString(i++, effectiveDate);
+                pstmt.setParameter(i++, effectiveDate);
             if (glCodeId != null)
-                pstmt.setString(i++, glCodeId);
+                pstmt.setParameter(i++, glCodeId);
             if (glCode != null)
-                pstmt.setString(i++, glCode);
+                pstmt.setParameter(i++, glCode);
             if (debitAmount != null)
-                pstmt.setString(i++, debitAmount);
+                pstmt.setParameter(i++, debitAmount);
             if (creditAmount != null)
-                pstmt.setString(i++, creditAmount);
+                pstmt.setParameter(i++, creditAmount);
             if (description != null)
-                pstmt.setString(i++, description);
+                pstmt.setParameter(i++, description);
             if (voucherHeaderId != null)
-                pstmt.setString(i++, voucherHeaderId);
+                pstmt.setParameter(i++, voucherHeaderId);
             if (functionId != null)
-                pstmt.setString(i++, functionId);
-            pstmt.setString(i++, id);
+                pstmt.setParameter(i++, functionId);
+            pstmt.setParameter(i++, id);
 
             pstmt.executeUpdate();
         } catch (final Exception e) {
@@ -264,12 +264,12 @@ public class GeneralLedger {
                     + " AND VH.ID=GL.VOUCHERHEADERID AND GL.ID=GLD.GENERALLEDGERID AND VH.VOUCHERDATE<= ? GROUP BY GL.GLCODE";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("query (CreditAmount)--> " + selQuery);
-            pst = persistenceService.getSession().createSQLQuery(selQuery);
-            pst.setInteger(0, FUND);
-            pst.setInteger(1, ACCOUNTDETAILTYPE);
-            pst.setInteger(2, ACCOUNTDETAILKEY);
-            pst.setInteger(3, status);
-            pst.setString(4, vDate);
+            pst = persistenceService.getSession().createNativeQuery(selQuery);
+            pst.setParameter(1, FUND);
+            pst.setParameter(2, ACCOUNTDETAILTYPE);
+            pst.setParameter(3, ACCOUNTDETAILKEY);
+            pst.setParameter(4, status);
+            pst.setParameter(5, vDate);
             rs = pst.list();
             for (final Object[] element : rs)
                 hmA.put(element[0].toString(), new BigDecimal(element[1].toString()));
@@ -282,12 +282,12 @@ public class GeneralLedger {
                     + " VH.ID=GL.VOUCHERHEADERID AND GL.ID=GLD.GENERALLEDGERID AND VH.VOUCHERDATE<= ? GROUP BY GL.GLCODE";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("query (DebitAmount)--> " + selQuery);
-            pst = persistenceService.getSession().createSQLQuery(selQuery);
-            pst.setInteger(0, FUND);
-            pst.setInteger(1, ACCOUNTDETAILTYPE);
-            pst.setInteger(2, ACCOUNTDETAILKEY);
-            pst.setInteger(3, status);
-            pst.setString(4, vDate);
+            pst = persistenceService.getSession().createNativeQuery(selQuery);
+            pst.setParameter(1, FUND);
+            pst.setParameter(2, ACCOUNTDETAILTYPE);
+            pst.setParameter(3, ACCOUNTDETAILKEY);
+            pst.setParameter(4, status);
+            pst.setParameter(5, vDate);
             rs = pst.list();
             for (final Object[] elementB : rs)
                 hmB.put(elementB[0].toString(), new BigDecimal(elementB[1].toString()));
@@ -359,12 +359,12 @@ public class GeneralLedger {
                     + " AND VH.ID=GL.VOUCHERHEADERID AND GL.ID=GLD.GENERALLEDGERID AND VH.VOUCHERDATE<= ? GROUP BY GL.GLCODE";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("query (CreditAmount)--> " + selQuery);
-            pst = persistenceService.getSession().createSQLQuery(selQuery);
-            pst.setInteger(0, FUND);
-            pst.setInteger(1, ACCOUNTDETAILTYPE);
-            pst.setInteger(2, ACCOUNTDETAILKEY);
-            pst.setInteger(3, status);
-            pst.setString(4, vDate);
+            pst = persistenceService.getSession().createNativeQuery(selQuery);
+            pst.setParameter(1, FUND);
+            pst.setParameter(2, ACCOUNTDETAILTYPE);
+            pst.setParameter(3, ACCOUNTDETAILKEY);
+            pst.setParameter(4, status);
+            pst.setParameter(5, vDate);
             rs = pst.list();
             for (final Object[] element : rs)
                 hmA.put(element[0].toString(), new BigDecimal(element[1].toString()));
@@ -377,12 +377,12 @@ public class GeneralLedger {
                     + "VH.ID=GL.VOUCHERHEADERID AND GL.ID=GLD.GENERALLEDGERID AND VH.VOUCHERDATE<= ? GROUP BY GL.GLCODE";
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("query (DebitAmount)--> " + selQuery);
-            pst = persistenceService.getSession().createSQLQuery(selQuery);
-            pst.setInteger(0, FUND);
-            pst.setInteger(1, ACCOUNTDETAILTYPE);
-            pst.setInteger(2, ACCOUNTDETAILKEY);
-            pst.setInteger(3, status);
-            pst.setString(4, vDate);
+            pst = persistenceService.getSession().createNativeQuery(selQuery);
+            pst.setParameter(1, FUND);
+            pst.setParameter(2, ACCOUNTDETAILTYPE);
+            pst.setParameter(3, ACCOUNTDETAILKEY);
+            pst.setParameter(4, status);
+            pst.setParameter(5, vDate);
             rs = pst.list();
             for (final Object[] element : rs)
                 hmB.put(element[0].toString(), new BigDecimal(element[1].toString()));

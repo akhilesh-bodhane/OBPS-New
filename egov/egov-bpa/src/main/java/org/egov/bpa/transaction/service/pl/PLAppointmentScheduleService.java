@@ -22,7 +22,7 @@ public class PLAppointmentScheduleService {
 	}
 	
 	public PLAppointmentSchedule findById(Long id) {
-	    return plAppointmentScheduleRepository.findOne(id);
+	    return plAppointmentScheduleRepository.findById(id).orElse(null);
 	}
 	
 	public List<PLAppointmentSchedule> findByApplication(PlinthLevelCertificate pl, AppointmentSchedulePurpose type) {

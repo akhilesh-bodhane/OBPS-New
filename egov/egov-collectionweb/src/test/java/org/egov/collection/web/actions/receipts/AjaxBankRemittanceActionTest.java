@@ -79,10 +79,10 @@ public class AjaxBankRemittanceActionTest { /*extends AbstractPersistenceService
 		ServiceDetails serviceDetails=objectFactory.createServiceDetails();
 		action.setServiceName(serviceDetails.getServiceName());
 		action.setFundId(serviceDetails.getServiceBankAccount().iterator().next().getFund().getId());
-		Query qry=session.createSQLQuery("select bb.id as branchid,b.NAME||'-'||bb.BRANCHNAME as branchname from bank b,bankbranch bb, bankaccount ba," +
+		Query qry=session.createNativeQuery("select bb.id as branchid,b.NAME||'-'||bb.BRANCHNAME as branchname from bank b,bankbranch bb, bankaccount ba," +
 		"EG_BANKACCOUNTSERVICEMAPPING asm,EGCL_SERVICEDETAILS sd where asm.bankaccount=ba.ID and asm.servicedetails=sd.ID and " +
 		"ba.BRANCHID=bb.ID and bb.BANKID=b.ID and sd.SERVICENAME=:serviceName");
-		qry.setString("serviceName", serviceDetails.getServiceName());
+		qry.setParameter("serviceName", serviceDetails.getServiceName());
 		
 		String result = action.bankBranchList();
 		assertNotNull(qry.list());
@@ -99,11 +99,11 @@ public class AjaxBankRemittanceActionTest { /*extends AbstractPersistenceService
 		Bankaccount bankaccount=objectFactory.createBankAccount("123456");
 		action.setBranchId(bankaccount.getId());
 		
-		Query qry=session.createSQLQuery("select ba.id as accountid,ba.accountnumber as accountnumber from bankaccount ba," +
+		Query qry=session.createNativeQuery("select ba.id as accountid,ba.accountnumber as accountnumber from bankaccount ba," +
 		"EG_BANKACCOUNTSERVICEMAPPING asm,EGCL_SERVICEDETAILS sd where asm.bankaccount=ba.ID and asm.servicedetails=sd.ID and " +
 		"ba.BRANCHID=:branchId and sd.SERVICENAME=:serviceName");
-		qry.setString("serviceName", serviceDetails.getServiceName());
-		qry.setInteger("branchId", bankaccount.getId());
+		qry.setParameter("serviceName", serviceDetails.getServiceName());
+		qry.setParameter("branchId", bankaccount.getId());
 		
 		String result = action.accountList();
 		assertNotNull(qry.list());

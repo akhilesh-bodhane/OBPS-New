@@ -87,7 +87,7 @@ public class SearchOCService {
 
     @ReadOnly
     public Page<SearchBpaApplicationForm> searchForDocumentScrutinyPending(final SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OCSlot> ocSlots = ocSlotRepository.findAll(SearchOcSpec.hasDocumentScrutinyPendingSpecificationForOc(searchRequest),
                 pageable);
@@ -108,10 +108,8 @@ public class SearchOCService {
     private String getProcessOwner(OccupancyCertificate occupancyCertificate) {
         String processOwner;
         if (occupancyCertificate.getState() != null && occupancyCertificate.getState().getOwnerPosition() != null)
-            processOwner = workflowHistoryService
-                    .getUserPositionByPositionAndDate(occupancyCertificate.getState().getOwnerPosition().getId(),
-                            occupancyCertificate.getState().getLastModifiedDate())
-                    .getName();
+            processOwner = workflowHistoryService.getOwnerNameLenient(occupancyCertificate.getState().getOwnerPosition().getId(),
+                            occupancyCertificate.getState().getLastModifiedDate());
         else
             processOwner = occupancyCertificate.getLastModifiedBy().getName();
         return processOwner;
@@ -119,7 +117,7 @@ public class SearchOCService {
 
     @ReadOnly
     public Page<SearchBpaApplicationForm> pagedSearch(SearchBpaApplicationForm searchRequest) {
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(),
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(),
                 searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> bpaApplications = occupancyCertificateRepository
                 .findAll(SearchOcSpec.search(searchRequest), pageable);
@@ -136,7 +134,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPendingTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasks(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
@@ -165,7 +163,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPendingTaskRural(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
@@ -194,7 +192,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForOCTask(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForUrban(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
@@ -222,7 +220,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForOCTaskRural(SearchPendingItemsForm searchRequest) {
 
-        final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+        final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
         Page<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForRural(searchRequest), pageable);
         List<SearchPendingItemsForm> searchResults = new ArrayList<>();
         for (OccupancyCertificate application : occupancyCertificate) {
@@ -250,7 +248,7 @@ public class SearchOCService {
     private Map<String, String> getCurrentOwner(OccupancyCertificate application) {
     	Map<String, String> map;
         if (application.getState() != null && application.getState().getOwnerPosition() != null) {
-        	map = workflowHistoryService.getUserDesignationAndPositionByPositionAndDate(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
+        	map = workflowHistoryService.getUserDesignationAndPositionLenient(application.getState().getOwnerPosition().getId(),application.getState().getLastModifiedDate());
         } else {
         	map = new HashMap<String, String>();
         	map.put("designation", "");
@@ -262,7 +260,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForPendingTaskGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchPendingOCTasksRural(searchRequest));
@@ -293,7 +291,7 @@ public class SearchOCService {
     @ReadOnly
     public Page<SearchPendingItemsForm> pagedSearchForOCTaskGraph(SearchPendingItemsForm searchRequest) {
 
-       final Pageable pageable = new PageRequest(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
+       final Pageable pageable = PageRequest.of(searchRequest.pageNumber(), searchRequest.pageSize(), searchRequest.orderDir(), searchRequest.orderBy());
 
         //Page<BpaApplication> bpaApplications = applicationBpaRepository.findAll(SearchBpaApplnFormSpec.searchSpecificationForPendingItems(searchRequest), pageable);
         List<OccupancyCertificate> occupancyCertificate = occupancyCertificateRepository.findAll(SearchOcSpec.searchOCTasksForRural(searchRequest));

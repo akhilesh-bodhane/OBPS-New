@@ -226,6 +226,7 @@
 		<commons.text.version>1.15.0</commons.text.version>
 		<commons.compress.version>1.28.0</commons.compress.version>
 		<httpclient-version>4.5.14</httpclient-version>
+		<kafka-clients-version>3.9.1</kafka-clients-version>
 		<joda-time-version>2.14.4</joda-time-version>
 		<jsoup-version>1.23.2</jsoup-version>
 		<jython-version>2.7.4</jython-version>
@@ -859,6 +860,11 @@
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>${httpclient-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.kafka</groupId>
+				<artifactId>kafka-clients</artifactId>
+				<version>${kafka-clients-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>joda-time</groupId>

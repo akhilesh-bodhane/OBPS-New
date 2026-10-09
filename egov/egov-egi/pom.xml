@@ -60,6 +60,10 @@
     <artifactId>egov-egi</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
 
 
         <dependency>

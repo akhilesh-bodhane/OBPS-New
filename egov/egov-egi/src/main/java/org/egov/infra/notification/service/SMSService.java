@@ -93,6 +93,12 @@ public class SMSService {
 	@Autowired
 	private Environment environment;
 
+	@Autowired
+	private EgovNotificationSmsProducer egovNotificationSmsProducer;
+
+	@Value("${sms.provider.type:gateway}")
+	private String smsProviderType;
+
 	@Value("${sms.priority.enabled}")
 	private boolean smsPriorityEnabled;
 
@@ -143,6 +149,8 @@ public class SMSService {
     }
 
     public boolean sendSMS(String mobileNumber, String message, NotificationPriority priority,String templateId) {
+        if ("kafka".equalsIgnoreCase(smsProviderType))
+            return egovNotificationSmsProducer.send(mobileNumber, message, templateId);
     	LOGGER.info("Template ID :::"+templateId);
     	LOGGER.info("original pattern  ::: Dear {#var#} Members, {#var#} {#var#} Meeting scheduled on {#var#} at {#var#} at {#var#}. Agenda sent to your mail. Chandigarh Smart City Ltd.");
     	LOGGER.info("creted poattern  :::"+message);

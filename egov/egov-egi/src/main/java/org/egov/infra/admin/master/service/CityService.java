@@ -121,8 +121,19 @@ public class CityService {
         return cityRepository.save(city);
     }
 
+    /**
+     * Finds the city mapped to the given domain. Each tenant schema holds a single city, so when the requested host
+     * (localhost, an IP, a load balancer name, ...) is not registered in eg_city.domainurl, fall back to that city
+     * instead of returning null.
+     */
     public City getCityByURL(String url) {
-        return cityRepository.findByDomainURL(url);
+        City city = cityRepository.findByDomainURL(url);
+        if (city == null) {
+            List<City> cities = cityRepository.findAll();
+            if (!cities.isEmpty())
+                city = cities.get(0);
+        }
+        return city;
     }
 
     public City getCityByName(String cityName) {

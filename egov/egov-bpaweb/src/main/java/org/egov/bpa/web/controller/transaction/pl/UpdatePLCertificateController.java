@@ -222,7 +222,7 @@ public class UpdatePLCertificateController extends BpaGenericApplicationControll
     public String updatePLCertificateApplication(@Valid @ModelAttribute final PlinthLevelCertificate plinthLevelCertificate,
             final HttpServletRequest request, final Model model,
             final BindingResult errors, final RedirectAttributes redirectAttributes,
-            @RequestParam final BigDecimal amountRule) {
+            @RequestParam(required = false) final BigDecimal amountRule) {
         if (errors.hasErrors())
             return PL_CERTIFICATE_VIEW;
 

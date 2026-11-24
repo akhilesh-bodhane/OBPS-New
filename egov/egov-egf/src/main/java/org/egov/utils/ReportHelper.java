@@ -1033,8 +1033,6 @@ public class ReportHelper {
                     new ClassicLayoutManager(), ds);
         } catch (final ColumnBuilderException e) {
             LOGGER.error(e, e);
-        } catch (final ClassNotFoundException e) {
-            LOGGER.error(e, e);
         } catch (final JRException e) {
             LOGGER.error(e, e);
         }
@@ -1093,8 +1091,8 @@ public class ReportHelper {
             ds = new JRBeanCollectionDataSource(al);
             return DynamicJasperHelper.generateJasperPrint(dr,
                     new ClassicLayoutManager(), ds);
-            
-            
+
+
         } catch (final ColumnBuilderException e) {
             LOGGER.error(e, e);
         } catch (final ClassNotFoundException e) {
@@ -1162,8 +1160,6 @@ public class ReportHelper {
                     new ClassicLayoutManager(), ds);
         } catch (final ColumnBuilderException e) {
             LOGGER.error(e, e);
-        } catch (final ClassNotFoundException e) {
-            LOGGER.error(e, e);
         } catch (final JRException e) {
             LOGGER.error(e, e);
         }
@@ -1230,8 +1226,6 @@ public class ReportHelper {
             return DynamicJasperHelper.generateJasperPrint(dr,
                     new ClassicLayoutManager(), ds);
         } catch (final ColumnBuilderException e) {
-            LOGGER.error(e, e);
-        } catch (final ClassNotFoundException e) {
             LOGGER.error(e, e);
         } catch (final JRException e) {
             LOGGER.error(e, e);

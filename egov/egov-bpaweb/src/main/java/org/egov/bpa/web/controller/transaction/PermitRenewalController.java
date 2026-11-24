@@ -184,7 +184,7 @@ public class PermitRenewalController extends BpaGenericApplicationController {
 
     @PostMapping("/update-submit/{applicationNumber}")
     public String submitPermitRevocationInitiation(@ModelAttribute PermitRenewal permitRenewal,
-            @PathVariable final String applicationNumber, @RequestParam final BigDecimal amountRule,
+            @PathVariable final String applicationNumber, @RequestParam(required = false) final BigDecimal amountRule,
             final HttpServletRequest request,
             final Model model, final BindingResult errors,
             final RedirectAttributes redirectAttributes) throws IOException {

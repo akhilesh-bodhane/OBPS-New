@@ -303,7 +303,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
     @PostMapping("/documentscrutiny/{applicationNumber}")
     public String documentScrutinyForm(@Valid @ModelAttribute(BPA_APPLICATION) BpaApplication bpaApplication,
             @PathVariable final String applicationNumber, final BindingResult resultBinder,
-            final HttpServletRequest request, @RequestParam final BigDecimal amountRule,
+            final HttpServletRequest request, @RequestParam(required = false) final BigDecimal amountRule,
             final Model model, final RedirectAttributes redirectAttributes) throws IOException {
         if (resultBinder.hasErrors()) {
             loadFormData(model, bpaApplication);
@@ -379,7 +379,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             final HttpServletRequest request,
             final Model model,
             final RedirectAttributes redirectAttributes,
-            @RequestParam final BigDecimal amountRule) throws IOException {    	
+            @RequestParam(required = false) final BigDecimal amountRule) throws IOException {    	
         String workFlowAction = request.getParameter(WORK_FLOW_ACTION);
         String approvalComent = request.getParameter(APPROVAL_COMENT);
 
@@ -1195,4 +1195,4 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                                 .concat(getDesinationNameByPosition(ownerPosition)),
                 bpaAppln.getApplicationNumber(), approvalComent }, LocaleContextHolder.getLocale());
     }
-}
+}

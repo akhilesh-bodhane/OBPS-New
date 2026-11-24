@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import org.egov.common.entity.edcr.Plan;
 import org.egov.common.entity.edcr.PlanFeature;
 import org.egov.common.entity.edcr.PlanInformation;
+import org.egov.common.entity.edcr.SubFeatureColorCode;
+import org.egov.commons.service.SubFeatureColorCodeService;
 // STUBBED OUT (not present in this branch's egov-commons): import org.egov.commons.mdms.EDCRMdmsUtil;
 import org.egov.commons.mdms.config.MdmsConfiguration;
 // STUBBED OUT (not present in this branch's egov-commons): import org.egov.commons.mdms.model.MdmsEdcrResponse;
@@ -64,8 +66,30 @@ public class ExtractService {
     private CityService cityService;
     @Autowired
     private MDMSValidator mdmsValidator;
+    @Autowired
+    private SubFeatureColorCodeService subFeatureColorCodeService;
 
     private Logger LOG = Logger.getLogger(ExtractService.class);
+
+    /**
+     * Loads the feature/sub-feature DXF colour codes (egdcr_sub_feature_colorcode) into the plan. Feature extracts such as
+     * CompoundWallServiceExtract read pl.getSubFeatureColorCodesMaster().get(feature) and fail with a NullPointerException when
+     * the master is empty.
+     */
+    private void loadSubFeatureColorCodes(PlanDetail planDetail) {
+        Map<String, Map<String, Integer>> featureAndSubFeatureCC = new LinkedHashMap<>();
+        try {
+            for (SubFeatureColorCode code : subFeatureColorCodeService.findAll()) {
+                if (code.getFeature() == null || code.getSubFeature() == null || code.getColorCode() == null)
+                    continue;
+                featureAndSubFeatureCC.computeIfAbsent(code.getFeature(), k -> new LinkedHashMap<>())
+                        .put(code.getSubFeature(), code.getColorCode());
+            }
+        } catch (RuntimeException e) {
+            LOG.error("Unable to load sub feature colour codes for the plan extraction", e);
+        }
+        planDetail.setSubFeatureColorCodesMaster(featureAndSubFeatureCC);
+    }
 
     public Plan extract(File dxfFile, Amendment amd, Date scrutinyDate, List<PlanFeature> features /* , String tenantId, ApplicationType applicationType — STUBBED OUT: tenantId setter and applicationType type not present in this branch's egov-commons */ ) {
 
@@ -165,6 +189,8 @@ public class ExtractService {
             a = new AmendmentDetails[amd.getDetails().size()];
             amd.getDetails().toArray(a);
         }
+
+        loadSubFeatureColorCodes(planDetail);
 
         Date start = new Date();
         LOG.info("Initializeing fetch extract api" + start);
@@ -342,6 +368,8 @@ public class ExtractService {
             a = new AmendmentDetails[amd.getDetails().size()];
             amd.getDetails().toArray(a);
         }
+
+        loadSubFeatureColorCodes(planDetail);
 
         Date start = new Date();
         LOG.info("Initializeing fetch extract api" + start);

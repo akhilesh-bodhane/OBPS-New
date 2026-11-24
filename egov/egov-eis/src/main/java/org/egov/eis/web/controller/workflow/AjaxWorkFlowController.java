@@ -86,8 +86,8 @@ public class AjaxWorkFlowController {
     public List<Designation> getDesignationsByObjectType(
             @ModelAttribute("designations") @RequestParam final String departmentRule, @RequestParam final String currentState,
             @RequestParam final String type,
-            @RequestParam final String amountRule, @RequestParam final String additionalRule,
-            @RequestParam final String pendingAction, @RequestParam final Long approvalDepartment) {
+            @RequestParam(required = false) final String amountRule, @RequestParam(required = false) final String additionalRule,
+            @RequestParam(required = false) final String pendingAction, @RequestParam final Long approvalDepartment) {
 
         List<Designation> designationList = designationService.getDesignationsByNames(
                 customizedWorkFlowService.getNextDesignations(type,
@@ -104,8 +104,8 @@ public class AjaxWorkFlowController {
     public List<Designation> getDesignationsForActiveAssignmentsByObjectType(
             @ModelAttribute("designations") @RequestParam final String departmentRule, @RequestParam final String currentState,
             @RequestParam final String type,
-            @RequestParam final String amountRule, @RequestParam final String additionalRule,
-            @RequestParam final String pendingAction, @RequestParam final Long approvalDepartment) {
+            @RequestParam(required = false) final String amountRule, @RequestParam(required = false) final String additionalRule,
+            @RequestParam(required = false) final String pendingAction, @RequestParam final Long approvalDepartment) {
 
         List<Designation> designationList = assignmentService
                 .getDesignationsByActiveAssignmentAndDesignationNames(
@@ -123,8 +123,8 @@ public class AjaxWorkFlowController {
     public List<Designation> getDesignationsForActiveAssignmentsByObjectTypeAndDesignation(
             @ModelAttribute("designations") @RequestParam final String departmentRule, @RequestParam final String currentState,
             @RequestParam final String type,
-            @RequestParam final String amountRule, @RequestParam final String additionalRule,
-            @RequestParam final String pendingAction, @RequestParam final Long approvalDepartment,
+            @RequestParam(required = false) final String amountRule, @RequestParam(required = false) final String additionalRule,
+            @RequestParam(required = false) final String pendingAction, @RequestParam final Long approvalDepartment,
             @RequestParam final String currentDesignation) {
 
         List<Designation> designationList = assignmentService
@@ -142,8 +142,8 @@ public class AjaxWorkFlowController {
     public List<Designation> getDesignationsByObjectTypeAndDesignation(
             @ModelAttribute("designations") @RequestParam final String departmentRule, @RequestParam final String currentState,
             @RequestParam final String type,
-            @RequestParam final String amountRule, @RequestParam final String additionalRule,
-            @RequestParam final String pendingAction, @RequestParam final Long approvalDepartment,
+            @RequestParam(required = false) final String amountRule, @RequestParam(required = false) final String additionalRule,
+            @RequestParam(required = false) final String pendingAction, @RequestParam final Long approvalDepartment,
             @RequestParam final String currentDesignation) {
 
         List<Designation> designationList = designationService.getDesignationsByNames(customizedWorkFlowService.getNextDesignations(type,

@@ -270,8 +270,8 @@ public class BpaAjaxController {
     public List<Designation> getDesignationsByObjectTypeAndDesignation(
             @ModelAttribute("designations") @RequestParam final String departmentRule,
             @RequestParam final String currentState, @RequestParam final String type,
-            @RequestParam final BigDecimal amountRule, @RequestParam final String additionalRule,
-            @RequestParam final String pendingAction, @RequestParam final Long approvalDepartment) {
+            @RequestParam(required = false) final BigDecimal amountRule, @RequestParam(required = false) final String additionalRule,
+            @RequestParam(required = false) final String pendingAction, @RequestParam final Long approvalDepartment) {
         List<Designation> designationList = designationService
                 .getDesignationsByNames(customizedWorkFlowService.getNextDesignations(type, departmentRule, amountRule,
                         additionalRule, currentState, pendingAction, new Date()));
@@ -1262,4 +1262,4 @@ public class BpaAjaxController {
         }
 	}
 
-}
+}

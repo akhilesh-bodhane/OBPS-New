@@ -158,7 +158,7 @@ public class UpdateInspectionApplicationController extends BpaGenericApplication
             final HttpServletRequest request,
             final Model model,
             final RedirectAttributes redirectAttributes,
-            @RequestParam final BigDecimal amountRule) throws IOException {
+            @RequestParam(required = false) final BigDecimal amountRule) throws IOException {
     	
     	if (resultBinder.hasErrors())
             return "inspection-update-form";
@@ -387,4 +387,4 @@ public class UpdateInspectionApplicationController extends BpaGenericApplication
         	
         prepareActions(model, inspectionApplication);
     }
-}
+}

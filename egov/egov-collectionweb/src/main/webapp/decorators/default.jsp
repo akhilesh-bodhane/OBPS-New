@@ -104,6 +104,10 @@
 	
 	<link href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>" rel="stylesheet" type="text/css" />
 	<link href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-legacy.css?rnd=${app_release_no}' context='/egi'/>">
+<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 	<link href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>"
 	rel="stylesheet" type="text/css" />
 		
@@ -139,7 +143,7 @@
 </head>
     
 <body <decorator:getProperty property="body.id" writeEntireProperty="yes"/><decorator:getProperty property="body.class" writeEntireProperty="true"/> <decorator:getProperty property="body.onload" writeEntireProperty="true"/>  >
-    <div class="page-container">
+    <div class="page-container ob-legacy">
 		    <!-- header -->
 		    <egov:breadcrumb/>
 		    
@@ -149,9 +153,11 @@
 		    </div>
 		    
 		    <!-- footer -->
-		    <footer class="main">
-			    <!-- Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a> -->
-			</footer>
+		    <jsp:useBean id="obNow" class="java.util.Date"/>
+		    <footer class="ob-footer" role="contentinfo">
+		        <div class="ob-foot-l"><span>&copy; ${1900 + obNow.year} Chandigarh Administration</span><span class="ob-dot"></span><span>Online Building Plan Approval System</span></div>
+		        <div class="ob-foot-r"><span>Powered by <a href="http://egovernments.org/" target="_blank" rel="noopener">eGovernments Foundation</a></span></div>
+		    </footer>
 	</div>
 	
 	 <!-- loading indicator --> 

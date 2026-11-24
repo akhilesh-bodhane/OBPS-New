@@ -60,6 +60,8 @@
 		<link rel="icon" href="<c:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 	    <link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
+<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+<script src="<c:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->

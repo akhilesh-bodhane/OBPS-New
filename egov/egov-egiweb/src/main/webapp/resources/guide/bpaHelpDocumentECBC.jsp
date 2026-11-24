@@ -15,6 +15,7 @@
 	href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
 <link rel="stylesheet"
 	href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}'/>">
 <link type="text/css" rel="stylesheet"
 	href="/egi/resources/guide/css/bpa-features.css">
 <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/materialize.min.css" media="screen,projection">

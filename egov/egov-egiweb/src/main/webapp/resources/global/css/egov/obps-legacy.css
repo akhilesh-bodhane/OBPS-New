@@ -1,0 +1,270 @@
+/*
+ * OBPAS legacy-screen skin: Struts / YUI / displaytag pages of EGF and Collection.
+ * These screens are table-based and use their own class vocabulary (greybox, bluebox, bluebgheadtd, buttonbottom, subheadnew ...).
+ * Every rule is scoped to .page-container.ob-legacy (added by the module decorators) and the legacy classes; markup is untouched.
+ * Selectors are intentionally specific because custom.css / budget.css / commonegovnew.css / collections.css set the same
+ * properties with long selectors. Colours are tokens only, so dark mode applies automatically.
+ * (This file is generated from a scoped source; edit it directly from now on.)
+ */
+
+/* ============ 0. page frame ============ */
+html body:has(.page-container.ob-legacy) { padding-top: var(--ob-topbar-h); background: var(--ob-bg); text-align: left; }
+html body .page-container.ob-legacy { text-align: left; font-family: var(--ob-font); font-size: 13.5px; color: var(--ob-text); }
+html body .page-container.ob-legacy.ob-legacy .main-content table, html body .page-container.ob-legacy.ob-legacy .main-content td, html body .page-container.ob-legacy.ob-legacy .main-content th, html body .page-container.ob-legacy.ob-legacy .main-content input, html body .page-container.ob-legacy.ob-legacy .main-content select, html body .page-container.ob-legacy.ob-legacy .main-content textarea, html body .page-container.ob-legacy.ob-legacy .main-content label, html body .page-container.ob-legacy.ob-legacy .main-content p { font-family: var(--ob-font); }
+html body .page-container.ob-legacy a:link, html body .page-container.ob-legacy a:visited { font-family: inherit; font-size: inherit; }
+html body .page-container.ob-legacy a:not(.btn):not([class*="ob-"]):link, html body .page-container.ob-legacy a:not(.btn):not([class*="ob-"]):visited { color: var(--ob-primary); }
+html body .page-container.ob-legacy a:not(.btn):not([class*="ob-"]):hover { color: var(--ob-primary-hover); text-decoration: underline; text-underline-offset: 2px; }
+html body .page-container.ob-legacy.ob-legacy .main-content .bold, html body .page-container.ob-legacy.ob-legacy .main-content .boldblue, html body .page-container.ob-legacy.ob-legacy .main-content b, html body .page-container.ob-legacy.ob-legacy .main-content strong { font-weight: 650 !important; font-family: var(--ob-font) !important; color: inherit; }
+html body .page-container.ob-legacy.ob-legacy .main-content .mandatory1, html body .page-container.ob-legacy.ob-legacy .main-content .mandatorycoll, html body .page-container.ob-legacy.ob-legacy .main-content span.mandatory1 { color: var(--ob-danger) !important; font-weight: 700; }
+html body .page-container.ob-legacy.ob-legacy .main-content hr { border-color: var(--ob-border); }
+html body .page-container.ob-legacy.ob-legacy .main-content fieldset { border: 1px solid var(--ob-border); border-radius: var(--ob-r-lg); padding: var(--ob-s4); margin-bottom: var(--ob-s4); }
+html body .page-container.ob-legacy.ob-legacy .main-content legend { width: auto; padding: 0 8px; font: 650 13px var(--ob-font); color: var(--ob-text-2); border: 0; }
+
+/* ============ 1. card + titles ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox {
+  display: block !important; min-width: 0 !important; width: auto !important; margin: 0 0 var(--ob-s5) 0 !important; padding: 0 0 var(--ob-s5) !important;
+  background: var(--ob-surface) !important; border: 1px solid var(--ob-border); border-radius: var(--ob-r-lg) !important; box-shadow: var(--ob-shadow-1) !important; text-align: left;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > form, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > table, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > div:not(.subheadnew):not(.buttonbottom) { margin-left: var(--ob-s5); margin-right: var(--ob-s5); }
+html body .page-container.ob-legacy.ob-legacy .main-content div.subheadnew, html body .page-container.ob-legacy.ob-legacy .main-content div.formheading, html body .page-container.ob-legacy.ob-legacy .main-content h1.subhead, html body .page-container.ob-legacy.ob-legacy .main-content div.new-page-header {
+  position: relative; margin: 0 !important; padding: 16px var(--ob-s5) 16px calc(var(--ob-s5) + 14px) !important; text-align: left !important;
+  font: 650 17px/1.35 var(--ob-font-display) !important; letter-spacing: -.005em; color: var(--ob-text) !important; background: transparent !important;
+  border: 0 !important; border-bottom: 1px solid var(--ob-border) !important; border-radius: var(--ob-r-lg) var(--ob-r-lg) 0 0;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.subheadnew::before, html body .page-container.ob-legacy.ob-legacy .main-content div.formheading::before, html body .page-container.ob-legacy.ob-legacy .main-content div.new-page-header::before { content: ""; position: absolute; left: var(--ob-s5); top: 50%; width: 4px; height: 18px; margin-top: -9px; border-radius: 4px; background: var(--ob-primary); }
+html body .page-container.ob-legacy.ob-legacy .main-content div.subheadsmallnew, html body .page-container.ob-legacy.ob-legacy .main-content td.subheadsmallnew, html body .page-container.ob-legacy.ob-legacy .main-content div.excelpdf, html body .page-container.ob-legacy.ob-legacy .main-content .reportheader {
+  margin: var(--ob-s4) 0 var(--ob-s2); padding: 10px var(--ob-s4) !important; text-align: left !important;
+  font: 650 12px/1.4 var(--ob-font) !important; letter-spacing: .05em; text-transform: uppercase; color: var(--ob-text-2) !important;
+  background: var(--ob-surface-2) !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r) !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.excelpdf, html body .page-container.ob-legacy.ob-legacy .main-content .reportheader { text-transform: none; letter-spacing: 0; font-weight: 500 !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.commontopbreadc, html body .page-container.ob-legacy.ob-legacy .main-content div.navibar, html body .page-container.ob-legacy.ob-legacy .main-content div.egov, html body .page-container.ob-legacy.ob-legacy .main-content div.gov { display: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.commontopyellowbg, html body .page-container.ob-legacy.ob-legacy .main-content div.commontopbluebg { background: transparent !important; background-image: none !important; color: var(--ob-text) !important; font: 650 17px var(--ob-font-display) !important; padding: 14px var(--ob-s5) !important; }
+
+/* ============ 2. form grid (label cell / field cell) ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content td.greybox, html body .page-container.ob-legacy.ob-legacy .main-content td.greyboxwithlink, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox2, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox3, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox2cheque {
+  background: transparent !important; background-color: transparent !important; border: 0 !important; padding: 9px 12px !important;
+  font: 400 13.5px/1.45 var(--ob-font) !important; color: var(--ob-text) !important; text-align: left; vertical-align: middle;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content td.greybox, html body .page-container.ob-legacy.ob-legacy .main-content td.greyboxwithlink { font-weight: 550 !important; color: var(--ob-text-2) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox2 { background-color: var(--ob-surface-2) !important; border-radius: var(--ob-r); }
+html body .page-container.ob-legacy.ob-legacy .main-content td.setborder, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox.setborder, html body .page-container.ob-legacy.ob-legacy .main-content td.greybox.setborder { border: 1px solid var(--ob-border) !important; }
+
+/* ============ 3. inputs ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="text"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="password"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="number"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="email"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="tel"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="search"],
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="url"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="date"], html body .page-container.ob-legacy.ob-legacy .main-content input:not([type]), html body .page-container.ob-legacy.ob-legacy .main-content select, html body .page-container.ob-legacy.ob-legacy .main-content textarea {
+  height: 38px; padding: 6px 11px !important; font: 400 13.5px/1.4 var(--ob-font) !important; color: var(--ob-text) !important;
+  background-color: var(--ob-surface) !important; border: 1px solid var(--ob-border-strong) !important; border-radius: var(--ob-r) !important;
+  box-shadow: none !important; box-sizing: border-box; transition: border-color .15s var(--ob-ease), box-shadow .15s var(--ob-ease);
+}
+html body .page-container.ob-legacy.ob-legacy .main-content select { appearance: none; -webkit-appearance: none; padding-right: 32px !important; max-width: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%236b7782' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat !important; background-position: right 11px center !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content select[multiple], html body .page-container.ob-legacy.ob-legacy .main-content select[size]:not([size="1"]) { height: auto; background-image: none !important; padding-right: 11px !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content textarea { height: auto; min-height: 80px; resize: vertical; line-height: 1.5; }
+html body .page-container.ob-legacy.ob-legacy .main-content input:hover:not(:disabled):not([readonly]):not(.button):not(.buttonsubmit), html body .page-container.ob-legacy.ob-legacy .main-content select:hover:not(:disabled), html body .page-container.ob-legacy.ob-legacy .main-content textarea:hover:not(:disabled) { border-color: var(--ob-faint) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="text"]:focus, html body .page-container.ob-legacy.ob-legacy .main-content input[type="password"]:focus, html body .page-container.ob-legacy.ob-legacy .main-content input[type="number"]:focus, html body .page-container.ob-legacy.ob-legacy .main-content input:not([type]):focus, html body .page-container.ob-legacy.ob-legacy .main-content select:focus, html body .page-container.ob-legacy.ob-legacy .main-content textarea:focus {
+  outline: 0 !important; border-color: var(--ob-primary) !important; box-shadow: var(--ob-focus) !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content input[readonly], html body .page-container.ob-legacy.ob-legacy .main-content input[disabled], html body .page-container.ob-legacy.ob-legacy .main-content select[disabled], html body .page-container.ob-legacy.ob-legacy .main-content textarea[readonly], html body .page-container.ob-legacy.ob-legacy .main-content textarea[disabled], html body .page-container.ob-legacy.ob-legacy .main-content input.hiddenslno, html body .page-container.ob-legacy.ob-legacy .main-content input.hiddentext {
+  background-color: var(--ob-surface-2) !important; color: var(--ob-muted) !important; border-color: var(--ob-border) !important; cursor: not-allowed;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content input.tablerow, html body .page-container.ob-legacy.ob-legacy .main-content input.amount, html body .page-container.ob-legacy.ob-legacy .main-content td input[type="text"] { height: 34px; }
+html body .page-container.ob-legacy.ob-legacy .main-content input.amount, html body .page-container.ob-legacy.ob-legacy .main-content input.righttext { text-align: right; font-variant-numeric: tabular-nums; }
+html body .page-container.ob-legacy.ob-legacy .main-content input.centretext { text-align: center; }
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="checkbox"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="radio"] { accent-color: var(--ob-primary); width: 16px; height: 16px; vertical-align: -3px; cursor: pointer; background: none; border: 0; box-shadow: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="file"] { height: auto; padding: 5px !important; background: var(--ob-surface); }
+html body .page-container.ob-legacy.ob-legacy .main-content input[type="file"]::file-selector-button { margin-right: 10px; padding: 6px 12px; font: 600 12.5px var(--ob-font); color: var(--ob-primary); background: var(--ob-primary-soft); border: 0; border-radius: var(--ob-r-sm); cursor: pointer; }
+html body .page-container.ob-legacy.ob-legacy .main-content label { font-weight: 550; color: var(--ob-text-2); }
+/* YUI / jQuery autocomplete */
+html body .yui-ac-content, html body .autoComContainer .yui-ac-content {
+  margin-top: 4px; padding: 4px; max-height: 280px; overflow: auto; background: var(--ob-surface) !important; border: 1px solid var(--ob-border) !important;
+  border-radius: var(--ob-r) !important; box-shadow: var(--ob-shadow-3) !important; font-family: var(--ob-font);
+}
+html body .yui-ac-content ul { margin: 0; padding: 0; list-style: none; }
+html body .yui-ac-content li { padding: 8px 10px !important; font: 400 13.5px var(--ob-font) !important; color: var(--ob-text) !important; border-radius: var(--ob-r-sm); cursor: pointer; }
+html body .yui-ac-content li.yui-ac-highlight, html body .yui-ac-content li.yui-ac-prehighlight { background: var(--ob-primary-soft) !important; color: var(--ob-primary) !important; }
+html body .yui-ac-content .yui-ac-hd, html body .yui-ac-content .yui-ac-ft { background: var(--ob-surface-2); color: var(--ob-muted); font-size: 12px; }
+
+/* ============ 4. buttons + action bar ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content input.button, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit, html body .page-container.ob-legacy.ob-legacy .main-content input[type="button"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="reset"], html body .page-container.ob-legacy.ob-legacy .main-content button:not(.btn):not(.close):not(.ob-iconbtn):not(.ob-userbtn):not(.ob-totop), html body .page-container.ob-legacy.ob-legacy .main-content a.buttongeneral, html body .page-container.ob-legacy.ob-legacy .main-content .buttongeneral {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: auto !important; min-width: 88px; height: 38px; padding: 0 18px !important;
+  font: 600 13.5px/1 var(--ob-font) !important; letter-spacing: .005em; text-transform: none !important; text-decoration: none; white-space: nowrap; cursor: pointer;
+  color: var(--ob-text) !important; background: var(--ob-surface) !important; background-image: none !important; border: 1px solid var(--ob-border-strong) !important; border-radius: var(--ob-r) !important;
+  box-shadow: none !important; transition: background-color .15s var(--ob-ease), border-color .15s var(--ob-ease), color .15s var(--ob-ease), transform .08s;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content input.button:hover, html body .page-container.ob-legacy.ob-legacy .main-content input[type="button"]:hover, html body .page-container.ob-legacy.ob-legacy .main-content input[type="reset"]:hover, html body .page-container.ob-legacy.ob-legacy .main-content button:not(.btn):not(.close):hover, html body .page-container.ob-legacy.ob-legacy .main-content .buttongeneral:hover {
+  color: var(--ob-primary) !important; background: var(--ob-primary-soft) !important; border-color: var(--ob-primary) !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit, html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"] { color: #fff !important; background: var(--ob-primary) !important; border-color: var(--ob-primary) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit:hover, html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"]:hover, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit:focus, html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"]:focus {
+  color: #fff !important; background: var(--ob-primary-hover) !important; border-color: var(--ob-primary-hover) !important; opacity: 1 !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content input.button:active, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit:active { transform: translateY(1px); }
+html body .page-container.ob-legacy.ob-legacy .main-content input.button:focus-visible, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit:focus-visible, html body .page-container.ob-legacy.ob-legacy .main-content input[type="button"]:focus-visible { outline: 0; box-shadow: var(--ob-focus) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content input[disabled].button, html body .page-container.ob-legacy.ob-legacy .main-content input[disabled].buttonsubmit, html body .page-container.ob-legacy.ob-legacy .main-content input[type="button"][disabled], html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"][disabled], html body .page-container.ob-legacy.ob-legacy .main-content button[disabled]:not(.btn) { opacity: .5; cursor: not-allowed; pointer-events: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content input.button[value*="Delete" i], html body .page-container.ob-legacy.ob-legacy .main-content input.button[value*="Remove" i], html body .page-container.ob-legacy.ob-legacy .main-content input.button[value*="Cancel Bill" i] { color: var(--ob-danger) !important; border-color: var(--ob-danger) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottom, html body .page-container.ob-legacy.ob-legacy .main-content div.bottom, html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottomnew, html body .page-container.ob-legacy.ob-legacy .main-content .buttonbottomnew {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--ob-s2); margin: var(--ob-s4) 0 0 !important;
+  padding: var(--ob-s4) var(--ob-s5) 0 !important; text-align: center; background: transparent !important; border-top: 1px solid var(--ob-border);
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottom table { margin: 0 auto; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottom > br { display: none; }
+
+/* ============ 5. data grids ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content table.tablebottom, html body .page-container.ob-legacy.ob-legacy .main-content table.tablebottom2, html body .page-container.ob-legacy.ob-legacy .main-content table.setborder, html body .page-container.ob-legacy.ob-legacy .main-content table.its, html body .page-container.ob-legacy.ob-legacy .main-content table#row {
+  width: 100%; box-sizing: border-box; border-collapse: separate !important; border-spacing: 0 !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r-lg); overflow: hidden;
+  background: var(--ob-surface); margin: var(--ob-s2) 0 var(--ob-s4);
+}
+html body .page-container.ob-legacy.ob-legacy .main-content table.tablebottom.no-border { border: 0 !important; border-radius: 0; background: transparent; }
+html body .page-container.ob-legacy.ob-legacy .main-content table.setborder tr { border-bottom: 0 !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content th.bluebgheadtd, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebgheadtd, html body .page-container.ob-legacy.ob-legacy .main-content th.bluebgheadtdnew, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebgheadtdnew, html body .page-container.ob-legacy.ob-legacy .main-content table.its th, html body .page-container.ob-legacy.ob-legacy .main-content table#row th {
+  height: auto !important; padding: 11px 14px !important; background: var(--ob-surface-2) !important; background-image: none !important; color: var(--ob-text-2) !important;
+  font: 650 11.5px/1.3 var(--ob-font) !important; letter-spacing: .05em; text-transform: uppercase; vertical-align: middle; text-align: left;
+  border: 0 !important; border-bottom: 1px solid var(--ob-border-strong) !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content table.its th a, html body .page-container.ob-legacy.ob-legacy .main-content table#row th a { color: var(--ob-text-2) !important; text-decoration: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content table.its th.sorted a, html body .page-container.ob-legacy.ob-legacy .main-content table.its th.sortable a:hover { color: var(--ob-primary) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd1, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd2, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd3, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd4, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortdnew, html body .page-container.ob-legacy.ob-legacy .main-content td.paymentdetaillink,
+html body .page-container.ob-legacy.ob-legacy .main-content table.its td, html body .page-container.ob-legacy.ob-legacy .main-content table#row td {
+  padding: 10px 14px !important; background: transparent !important; background-color: transparent !important; color: var(--ob-text) !important;
+  font: 400 13.5px/1.45 var(--ob-font) !important; border: 0 !important; border-bottom: 1px solid var(--ob-border) !important; vertical-align: middle;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd1, html body .page-container.ob-legacy.ob-legacy .main-content table.its tr.odd td, html body .page-container.ob-legacy.ob-legacy .main-content table#row tr.odd td { background-color: var(--ob-surface-2) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd2, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd3, html body .page-container.ob-legacy.ob-legacy .main-content td.blueborderfortd4 { background-color: var(--ob-track) !important; font-weight: 600 !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content td.totalbg { padding: 11px 14px !important; background: var(--ob-surface-2) !important; color: var(--ob-text) !important; font: 700 13.5px var(--ob-font) !important; border: 0 !important; border-top: 1px solid var(--ob-border-strong) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content tr:hover > td.blueborderfortd, html body .page-container.ob-legacy.ob-legacy .main-content tr:hover > td.blueborderfortd1, html body .page-container.ob-legacy.ob-legacy .main-content tr:hover > td.blueborderfortdnew, html body .page-container.ob-legacy.ob-legacy .main-content table.its tr:hover td, html body .page-container.ob-legacy.ob-legacy .main-content table#row tr:hover td { background-color: var(--ob-primary-soft) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content table.tablebottom tr:last-child > td, html body .page-container.ob-legacy.ob-legacy .main-content table.its tr:last-child > td { border-bottom: 0 !important; }
+/* displaytag paging / export */
+html body .page-container.ob-legacy.ob-legacy .main-content span.pagebanner, html body .page-container.ob-legacy.ob-legacy .main-content span.pagelinks, html body .page-container.ob-legacy.ob-legacy .main-content div.exportlinks { display: block; margin: var(--ob-s2) 0; font-size: 12.5px; color: var(--ob-muted); }
+html body .page-container.ob-legacy.ob-legacy .main-content span.pagelinks a, html body .page-container.ob-legacy.ob-legacy .main-content div.exportlinks a { display: inline-flex; align-items: center; min-width: 30px; height: 30px; padding: 0 10px; margin: 0 2px; justify-content: center; color: var(--ob-text-2) !important; text-decoration: none !important; border: 1px solid var(--ob-border); border-radius: var(--ob-r); background: var(--ob-surface); }
+html body .page-container.ob-legacy.ob-legacy .main-content span.pagelinks a:hover, html body .page-container.ob-legacy.ob-legacy .main-content div.exportlinks a:hover { color: var(--ob-primary) !important; border-color: var(--ob-primary); background: var(--ob-primary-soft); }
+html body .page-container.ob-legacy.ob-legacy .main-content span.pagelinks strong { display: inline-flex; min-width: 30px; height: 30px; align-items: center; justify-content: center; margin: 0 2px; color: #fff; background: var(--ob-primary); border-radius: var(--ob-r); }
+/* YUI DataTable */
+html body .yui-skin-sam .yui-dt { font-family: var(--ob-font); font-size: 13.5px; }
+html body .yui-skin-sam .yui-dt table { border: 0 !important; border-collapse: separate; border-spacing: 0; width: 100%; background: var(--ob-surface); }
+html body .yui-skin-sam .yui-dt-hd, html body .yui-skin-sam .yui-dt-bd { border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r-lg); background: var(--ob-surface) !important; }
+html body .yui-skin-sam .yui-dt th, html body .yui-skin-sam .yui-dt th a { background: var(--ob-surface-2) !important; background-image: none !important; color: var(--ob-text-2) !important; font: 650 11.5px var(--ob-font) !important; letter-spacing: .05em; text-transform: uppercase; border: 0 !important; border-bottom: 1px solid var(--ob-border-strong) !important; }
+html body .yui-skin-sam .yui-dt-liner { padding: 10px 14px; }
+html body .yui-skin-sam .yui-dt td { color: var(--ob-text) !important; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--ob-border) !important; }
+html body .yui-skin-sam .yui-dt-odd td { background: var(--ob-surface-2) !important; }
+html body .yui-skin-sam .yui-dt tr.yui-dt-highlighted td, html body .yui-skin-sam .yui-dt tr.yui-dt-highlighted .yui-dt-liner { background: var(--ob-primary-soft) !important; }
+html body .yui-skin-sam .yui-dt tr.yui-dt-selected td { background: var(--ob-selected) !important; color: var(--ob-text) !important; }
+html body .yui-skin-sam .yui-dt-message, html body .yui-skin-sam .yui-dt-empty .yui-dt-liner { color: var(--ob-muted); text-align: center; padding: 28px 14px; }
+html body .yui-skin-sam .yui-dt-loading .yui-dt-liner { background: none; }
+html body .yui-skin-sam .yui-pg-container { margin: var(--ob-s2) 0; font: 13px var(--ob-font); color: var(--ob-muted); }
+html body .yui-skin-sam .yui-pg-container a, html body .yui-skin-sam .yui-pg-container span.yui-pg-first, html body .yui-skin-sam .yui-pg-container span.yui-pg-previous, html body .yui-skin-sam .yui-pg-container span.yui-pg-next, html body .yui-skin-sam .yui-pg-container span.yui-pg-last {
+  display: inline-flex; min-width: 30px; height: 30px; align-items: center; justify-content: center; padding: 0 8px; margin: 0 2px; text-decoration: none; color: var(--ob-text-2); border: 1px solid var(--ob-border); border-radius: var(--ob-r); background: var(--ob-surface);
+}
+html body .yui-skin-sam .yui-pg-container a:hover { color: var(--ob-primary); border-color: var(--ob-primary); background: var(--ob-primary-soft); }
+html body .yui-skin-sam .yui-pg-container .yui-pg-current-page { display: inline-flex; min-width: 30px; height: 30px; align-items: center; justify-content: center; margin: 0 2px; color: #fff; background: var(--ob-primary); border-radius: var(--ob-r); }
+html body .yui-skin-sam .yui-pg-container select { height: 30px !important; padding: 2px 24px 2px 8px !important; }
+
+/* ============ 6. tabs ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 {
+  display: flex; flex-wrap: wrap; gap: 2px; margin: 0 0 var(--ob-s4) !important; padding: 0 !important; list-style: none; background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--ob-border) !important; text-align: left;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu li, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 li { display: block !important; float: none !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: 0 !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li a, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu li a, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 li a, html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li a:link, html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li a:visited {
+  display: block; position: relative; margin: 0 0 -1px !important; padding: 11px 16px !important; font: 600 13.5px/1.2 var(--ob-font) !important; text-transform: none !important; letter-spacing: 0;
+  color: var(--ob-muted) !important; background: transparent !important; background-image: none !important; border: 0 !important; border-bottom: 2px solid transparent !important; border-radius: var(--ob-r) var(--ob-r) 0 0 !important; text-decoration: none !important;
+  transition: color .15s, background-color .15s, border-color .15s;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li a:hover, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu li a:hover, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 li a:hover { color: var(--ob-text) !important; background: var(--ob-surface-2) !important; border-bottom-color: var(--ob-border-strong) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li.tabberactive a, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu li a.active, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 li a.active, html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li.tabberactive a:hover {
+  color: var(--ob-primary) !important; background: transparent !important; border-bottom-color: var(--ob-primary) !important;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu a.active::after, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 a.active::after { display: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.tabbertab, html body .page-container.ob-legacy.ob-legacy .main-content .tabberlive .tabbertab, html body .page-container.ob-legacy.ob-legacy .main-content div.tabbertabnew { padding: var(--ob-s2) 0 !important; background: transparent !important; border: 0 !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content .tabberlive .tabbertab h2 { display: none; }
+
+/* ============ 7. messages ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content div.error-block, html body .page-container.ob-legacy.ob-legacy .main-content div.errorstyle, html body .page-container.ob-legacy.ob-legacy .main-content ul.errorMessage, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionError, html body .page-container.ob-legacy.ob-legacy .main-content .errorstyle:not(span):not(td), html body .page-container.ob-legacy.ob-legacy .main-content td.errorMessage, html body .page-container.ob-legacy.ob-legacy .main-content span.errorMessage {
+  box-sizing: border-box; padding: 11px 16px 11px 42px; margin: var(--ob-s3) var(--ob-s5); position: relative; list-style: none;
+  color: var(--ob-bad-fg) !important; background: var(--ob-danger-soft) !important; background-image: none !important; border: 1px solid var(--ob-bad-bd) !important; border-radius: var(--ob-r-lg); font: 500 13.5px/1.45 var(--ob-font) !important; text-align: left;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.error-block::before, html body .page-container.ob-legacy.ob-legacy .main-content div.errorstyle::before, html body .page-container.ob-legacy.ob-legacy .main-content ul.errorMessage::before, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionError::before { content: "\f06a"; position: absolute; left: 15px; top: 11px; font: normal 16px/1.4 FontAwesome; color: var(--ob-danger); }
+html body .page-container.ob-legacy.ob-legacy .main-content ul.errorMessage li, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionError li, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionMessage li { list-style: none; margin: 0; padding: 0; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.messagestyle, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionMessage, html body .page-container.ob-legacy.ob-legacy .main-content .messagestyle:not(span):not(td), html body .page-container.ob-legacy.ob-legacy .main-content div.successmsg {
+  box-sizing: border-box; padding: 11px 16px 11px 42px; margin: var(--ob-s3) var(--ob-s5); position: relative; list-style: none;
+  color: var(--ob-ok-fg) !important; background: var(--ob-success-soft) !important; background-image: none !important; border: 1px solid var(--ob-ok-bd) !important; border-radius: var(--ob-r-lg); font: 500 13.5px/1.45 var(--ob-font) !important; text-align: left;
+}
+html body .page-container.ob-legacy.ob-legacy .main-content div.messagestyle::before, html body .page-container.ob-legacy.ob-legacy .main-content ul.actionMessage::before { content: "\f058"; position: absolute; left: 15px; top: 11px; font: normal 16px/1.4 FontAwesome; color: var(--ob-success); }
+html body .page-container.ob-legacy.ob-legacy .main-content span.errorstyle, html body .page-container.ob-legacy.ob-legacy .main-content span.messagestyle { font-weight: 600; font-size: 12.5px; }
+html body .page-container.ob-legacy.ob-legacy .main-content span.errorstyle { color: var(--ob-danger) !important; background: transparent !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content span.messagestyle { color: var(--ob-success) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content .highlight2, html body .page-container.ob-legacy.ob-legacy .main-content .highlight3 { display: block; margin: var(--ob-s2) 0; padding: 9px 14px !important; font: 400 12.5px/1.5 var(--ob-font) !important; color: var(--ob-info-fg) !important; background: var(--ob-info-soft) !important; border: 1px solid var(--ob-info-bd); border-radius: var(--ob-r); }
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errorroundbox2, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errorcontent2, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errortop2, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errortop2 div, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errorbot2, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errorbot2 div { background: transparent !important; background-image: none !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox .errorcontent2 { padding: 4px 0; color: var(--ob-bad-fg); font-weight: 500; }
+
+/* ============ 8. collection widgets ============ */
+html body .page-container.ob-legacy.ob-legacy .main-content div.billhead, html body .page-container.ob-legacy.ob-legacy .main-content div.billhead2 { padding: 12px var(--ob-s4); margin: var(--ob-s2) 0; font: 650 13.5px var(--ob-font) !important; color: var(--ob-text) !important; background: var(--ob-surface-2) !important; background-image: none !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r); }
+html body .page-container.ob-legacy.ob-legacy .main-content div.billheadtext, html body .page-container.ob-legacy.ob-legacy .main-content span.boldblue { color: var(--ob-text) !important; font-weight: 650; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.billdetailaction, html body .page-container.ob-legacy.ob-legacy .main-content div.billdetailaction2, html body .page-container.ob-legacy.ob-legacy .main-content div.billdetailaction3 { background: var(--ob-surface) !important; color: var(--ob-primary) !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r); padding: 6px 12px; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.billdetailaction:hover, html body .page-container.ob-legacy.ob-legacy .main-content div.billdetailaction2:hover { background: var(--ob-primary-soft) !important; border-color: var(--ob-primary) !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content td.paymentbuttonholder { background: transparent !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.insidecontent, html body .page-container.ob-legacy.ob-legacy .main-content .rbcontent2 { background: transparent !important; }
+html body .page-container.ob-legacy.ob-legacy .main-content .rbroundbox2, html body .page-container.ob-legacy.ob-legacy .main-content .rbtop2, html body .page-container.ob-legacy.ob-legacy .main-content .rbtop2 div, html body .page-container.ob-legacy.ob-legacy .main-content .rbbot2, html body .page-container.ob-legacy.ob-legacy .main-content .rbbot2 div { background: transparent !important; background-image: none !important; }
+
+/* ============ 9. dialogs, calendar, jQuery UI ============ */
+html body .mask { background: #0e1d2b !important; opacity: .5 !important; }
+html body .yui-panel-container.shadow .underlay { background: transparent !important; }
+html body .yui-skin-sam .yui-panel { background: var(--ob-surface) !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r-xl); box-shadow: var(--ob-shadow-3) !important; overflow: hidden; color: var(--ob-text); }
+html body .yui-skin-sam .yui-panel .hd { background: var(--ob-surface) !important; background-image: none !important; color: var(--ob-text) !important; font: 650 15px var(--ob-font-display) !important; padding: 14px var(--ob-s5) !important; border: 0 !important; border-bottom: 1px solid var(--ob-border) !important; border-radius: 0 !important; text-shadow: none !important; }
+html body .yui-skin-sam .yui-panel .bd { padding: var(--ob-s5) !important; background: var(--ob-surface) !important; color: var(--ob-text); }
+html body .yui-skin-sam .yui-panel .ft { padding: var(--ob-s3) var(--ob-s5) !important; background: var(--ob-surface-2) !important; border-top: 1px solid var(--ob-border) !important; }
+html body .yui-skin-sam .container-close { background-image: none; }
+html body .yui-calcontainer, html body .yui-skin-sam .yui-calcontainer { background: var(--ob-surface) !important; border: 1px solid var(--ob-border) !important; border-radius: var(--ob-r-lg); box-shadow: var(--ob-shadow-3); padding: 8px; }
+html body .yui-calendar { background: transparent !important; border: 0 !important; font-family: var(--ob-font); }
+html body .yui-calendar .calhead, html body .yui-calendar .calheader { background: transparent !important; color: var(--ob-text) !important; border: 0 !important; font-weight: 650; }
+html body .yui-calendar td.calcell, html body .yui-calendar th.calweekdaycell { color: var(--ob-text) !important; background: transparent !important; border: 0 !important; border-radius: var(--ob-r-sm); }
+html body .yui-calendar td.calcell a { color: var(--ob-text) !important; }
+html body .yui-calendar td.calcell.selected, html body .yui-calendar td.calcell.calcellhover.selected { background: var(--ob-primary) !important; }
+html body .yui-calendar td.calcell.selected a { color: #fff !important; }
+html body .yui-calendar td.calcell.calcellhover, html body .yui-calendar td.calcell.today { background: var(--ob-primary-soft) !important; }
+html body .yui-calendar td.calcell.oom { color: var(--ob-faint) !important; background: transparent !important; }
+html body .ui-datepicker { background: var(--ob-surface); color: var(--ob-text); border: 1px solid var(--ob-border); border-radius: var(--ob-r-lg); box-shadow: var(--ob-shadow-3); padding: 8px; font-family: var(--ob-font); }
+html body .ui-datepicker .ui-datepicker-header { background: transparent; border: 0; }
+html body .ui-datepicker td a.ui-state-active, html body .ui-datepicker td a.ui-state-hover { background: var(--ob-primary); color: #fff; border-color: var(--ob-primary); }
+html body .ui-widget-content { background: var(--ob-surface); color: var(--ob-text); border-color: var(--ob-border); }
+
+/* ============ 10. responsive ============ */
+@media (max-width: 991px) {
+  html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > form, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > table, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > div:not(.subheadnew):not(.buttonbottom) { margin-left: var(--ob-s3); margin-right: var(--ob-s3); }
+  html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox { overflow-x: auto; }
+  html body .page-container.ob-legacy.ob-legacy .main-content table.tablebottom, html body .page-container.ob-legacy.ob-legacy .main-content table.its { display: block; overflow-x: auto; }
+  html body .page-container.ob-legacy.ob-legacy .main-content td.greybox, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox { padding: 7px 8px !important; }
+}
+@media (max-width: 575px) {
+  html body .page-container.ob-legacy.ob-legacy .main-content input[type="text"], html body .page-container.ob-legacy.ob-legacy .main-content select, html body .page-container.ob-legacy.ob-legacy .main-content textarea { font-size: 16px !important; height: 44px; }
+  html body .page-container.ob-legacy.ob-legacy .main-content input.button, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit, html body .page-container.ob-legacy.ob-legacy .main-content input[type="button"], html body .page-container.ob-legacy.ob-legacy .main-content input[type="submit"] { width: 100% !important; height: 44px; }
+  html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottom { flex-direction: column; align-items: stretch; }
+}
+@media print {
+  html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox { box-shadow: none !important; border-color: #bbb; }
+  html body .page-container.ob-legacy.ob-legacy .main-content div.buttonbottom, html body .page-container.ob-legacy.ob-legacy .main-content input.button, html body .page-container.ob-legacy.ob-legacy .main-content input.buttonsubmit { display: none !important; }
+}
+
+/* direct-child tables keep the card gutter instead of overflowing it */
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > table, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > form > table { width: calc(100% - 2 * var(--ob-s5)); }
+html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > table.tablebottom, html body .page-container.ob-legacy.ob-legacy .main-content div.formmainbox > table.its { width: calc(100% - 2 * var(--ob-s5)); }
+/* Struts renders <ul class="errorMessage"> inside div.error-block: draw one box, not two */
+html body .page-container.ob-legacy.ob-legacy .main-content div.error-block ul.errorMessage, html body .page-container.ob-legacy.ob-legacy .main-content div.error-block ul.actionError, html body .page-container.ob-legacy.ob-legacy .main-content div.errorstyle ul, html body .page-container.ob-legacy.ob-legacy .main-content div.messagestyle ul { margin: 0; padding: 0; background: transparent !important; border: 0 !important; border-radius: 0; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.error-block ul.errorMessage::before, html body .page-container.ob-legacy.ob-legacy .main-content div.error-block ul.actionError::before { display: none; }
+html body .page-container.ob-legacy.ob-legacy .main-content div.error-block li, html body .page-container.ob-legacy.ob-legacy .main-content div.messagestyle li { list-style: none; margin: 0; padding: 0; }
+
+/* ============ 11. phones: label/field tables stack, tabs scroll ============ */
+@media (max-width: 767px) {
+  html body .page-container.ob-legacy.ob-legacy .main-content table:has(> tbody > tr > td.greybox, > tbody > tr > td.bluebox, > tbody > tr > td.bluebox2, > tbody > tr > td.bluebox3),
+  html body .page-container.ob-legacy.ob-legacy .main-content table:has(> tbody > tr > td.greybox, > tbody > tr > td.bluebox, > tbody > tr > td.bluebox2, > tbody > tr > td.bluebox3) > tbody,
+  html body .page-container.ob-legacy.ob-legacy .main-content table:has(> tbody > tr > td.greybox, > tbody > tr > td.bluebox, > tbody > tr > td.bluebox2, > tbody > tr > td.bluebox3) > tbody > tr { display: block; width: 100% !important; height: auto !important; }
+  html body .page-container.ob-legacy.ob-legacy .main-content td.greybox, html body .page-container.ob-legacy.ob-legacy .main-content td.greyboxwithlink,
+  html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox2, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox3 {
+    display: block; width: 100% !important; box-sizing: border-box; padding: 6px 4px !important;
+  }
+  html body .page-container.ob-legacy.ob-legacy .main-content td.greybox { padding-bottom: 0 !important; }
+  html body .page-container.ob-legacy.ob-legacy .main-content td.greybox:empty, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox:empty { display: none; }
+  html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox input[type="text"], html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox select, html body .page-container.ob-legacy.ob-legacy .main-content td.bluebox textarea { width: 100% !important; }
+  html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav, html body .page-container.ob-legacy.ob-legacy .main-content #tabmenu, html body .page-container.ob-legacy.ob-legacy .main-content #tab2 { flex-wrap: nowrap; overflow-x: auto; }
+  html body .page-container.ob-legacy.ob-legacy .main-content ul.tabbernav li a { white-space: nowrap; }
+}

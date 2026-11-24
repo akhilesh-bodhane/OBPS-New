@@ -89,7 +89,7 @@
         </div>
         <div class="col-sm-3" style=" padding-left: 5px;">
             <form:password path="activationCode" id="activationcode" cssClass="form-control"
-                           placeholder="Enter OTP"  autocomplete="off"/>
+                           placeholder="Enter OTP" minlength="6" maxlength="6"  autocomplete="off"/>
                <span class=""></span>  
             <spring:message code="lbl.otp"/>     
             <label id="activationcode-error" class="error align-right pull-right display-hide"

@@ -136,6 +136,7 @@ $(document).ready(function(){
             return false;
         } else {
             $(".mobile-error").hide();
+            $('#otp-send-error').hide();
             $(this).hide();
         }
 		$.ajax({
@@ -149,11 +150,16 @@ $(document).ready(function(){
 					$('#activationcode').val('');
 					$('#signup-section,#otp-section').show();
 					$('#otpbtn-section').hide();
+				} else {
+					// throttled, SMS disabled or SMS provider unavailable
+					$('#otp-send-error').show();
+					$('#otpbtn').show();
 				}
 			},
 			error: function() {
 				console.error('Error while sending otp');
-				$(this).show();
+				$('#otp-send-error').show();
+				$('#otpbtn').show();
 			}
 		});
 	});

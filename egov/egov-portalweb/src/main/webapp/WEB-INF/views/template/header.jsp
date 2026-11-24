@@ -49,58 +49,37 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<header><!-- set fixed position by adding class "navbar-fixed-top" -->
+<header class="ob-topbar ob-portal-bar" role="banner">
+    <a class="ob-brand" href="javascript:void(0);" aria-label="Citizen Portal">
+        <img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" alt="Chandigarh Administration">
+        <span class="ob-brand-text">
+            <span class="ob-brand-name">Citizen Portal</span>
+            <span class="ob-brand-sub"><c:out value="${cityName}"/></span>
+        </span>
+    </a>
 
-    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header col-lg-4 col-md-6 col-sm-2 col-xs-3">
-                <a class="navbar-brand" href="javascript:void(0);">
-                     <%-- <img src="<c:url value='/downloadfile/logo' context='/egi'/>" height="60"> --%>
-                    <img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" height="60">
-                    <div>
-                        <span class="title2 hidden-sm hidden-xs citizen-title">Citizen Portal<br>${cityName}</span>
-                    </div>
-                </a>
-            </div>
-            <div class="nav-menu col-lg-4 col-xs-12">
-                <ul class="hr-menu text-center">
-                    <li class="active"><a class="menu-item " href="/portal/home" data-show-screen="#inbox-template"> <span class="title">Inbox</span><span id="unreadMessageCount" class="badge custom-badge">
-								 </span></a></li>
-                    <span class="separator">|</span>
-                    <li><a class="menu-item" href="javascript:void(0);" data-show-screen="#myaccount">My Account</a></li>
-                    <span class="separator">|</span>
-                    <li><a class="menu-item" href="javascript:void(0);" data-show-screen="#newreq">New Request</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
-
-            <div class="col-lg-4 col-md-6 col-sm-5 col-xs-9 nav-right-menu home">
-                <ul class="hr-menu text-right">
-
-                    <li class="ico-menu">
-                        <a href="javascript:void(0);" title="Help">
-                            <i class="fa fa-question-circle"></i>
-                        </a>
-                    </li>
-
-                    <li class="ico-menu">
-                        <a class="dropdown-toggle" href="javascript:void(0);" data-toggle="dropdown">
-                            <i class="fa fa-user"></i>${userName}
-                        </a>
-                        <ul class="right-arrow dropdown-menu" role="menu">
-                            <li><a href="/egi/home/profile/edit" data-open-popup><i class="fa fa-user"></i>Edit Profile</a></li>
-                            <li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i>Change Password</a></li>
-                            <li><a href="/egi/logout"><i class="fa fa-sign-out"></i>Sign out</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="ico-menu">
-                        <div style="width:66px;"></div>
-                    </li>
-
-                </ul>
-            </div>
-
-        </div>
+    <nav class="ob-navgroup hr-menu" aria-label="Primary">
+        <ul class="ob-navgroup" style="margin:0">
+            <li class="active"><a class="menu-item ob-navlink active" href="/portal/home" data-show-screen="#inbox-template"><i class="fa fa-inbox" aria-hidden="true"></i><span class="title t">Inbox</span><span id="unreadMessageCount" class="badge custom-badge"></span></a></li>
+            <li><a class="menu-item ob-navlink" href="javascript:void(0);" data-show-screen="#myaccount"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span class="t">My Account</span></a></li>
+            <li><a class="menu-item ob-navlink" href="javascript:void(0);" data-show-screen="#newreq"><i class="fa fa-plus-circle" aria-hidden="true"></i><span class="t">New Request</span></a></li>
+        </ul>
     </nav>
 
+    <div class="ob-actions nav-right-menu home">
+        <a class="ob-iconbtn" href="javascript:void(0);" title="Help" aria-label="Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+        <div class="ob-userwrap">
+            <button type="button" class="ob-iconbtn ob-userbtn" data-ob-menu aria-haspopup="true" aria-expanded="false">
+                <span class="ob-avatar" data-ob-initials="${userName}"><i class="fa fa-user" aria-hidden="true"></i></span>
+                <span class="ob-username t"><c:out value="${userName}"/></span>
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </button>
+            <ul class="ob-menu" role="menu">
+                <li><a href="/egi/home/profile/edit" data-open-popup role="menuitem"><i class="fa fa-user"></i>Edit Profile</a></li>
+                <li><a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});" role="menuitem"><i class="fa fa-key"></i>Change Password</a></li>
+                <li class="ob-menu-sep"></li>
+                <li><a href="/egi/logout" role="menuitem"><i class="fa fa-sign-out"></i>Sign out</a></li>
+            </ul>
+        </div>
+    </div>
 </header>

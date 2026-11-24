@@ -71,6 +71,9 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="<cdn:url value='/resources/css/citizen.css?rnd=${app_release_no}'/>" rel="stylesheet">
         <link href="<cdn:url value='/resources/css/citizen-modern.css?rnd=${app_release_no}&v=2'/>" rel="stylesheet">
+        <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+        <link href="<cdn:url value='/resources/css/citizen-obps.css?rnd=${app_release_no}'/>" rel="stylesheet">
+        <script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
         <link href="<cdn:url value='/resources/css/scrollbar.css'/>" rel="stylesheet">
         <link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png' context='/egi'/>" sizes="32x32">
 

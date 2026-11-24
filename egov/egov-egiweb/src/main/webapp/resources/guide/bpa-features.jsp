@@ -46,106 +46,63 @@
 <body>
 	<div class="landingpage-font-style">
 
-		<div class="card landingpage-card">
-			<ul class="collapsible card-collapse">
-				<li style="padding-left: 40px; padding-right: 40px;" class="">
-					<div class="card-content collapsible-header landingpage-card-content" tabindex="0">
-						<span class="card-title card-header">About Building Plan Approval System</span>
-					</div>
-					<div class="row lp-row-1 collapsible-header landingpage-card-content" tabindex="0">
-						<div class="col s12 m2">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_1.png">
-							<p class="landingpage-card-icon-description">End to end Process Digitisation</p>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_2.png">
-							<p class="landingpage-card-icon-description">Single window for multiple services</p>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_3.png">
-							<p class="landingpage-card-icon-description">Open source smart platform</p>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_4.png">
-							<p class="landingpage-card-icon-description">Achieving Transparency</p>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_5.png">
-							<p class="landingpage-card-icon-description">Seamless Application Processes</p>
-						</div>
-					</div>
-					<div class="row collapsible-header collapsible-body card-body" tabindex="0" style="">
-						<div class="col s12 m2">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_1.png">
-							<p class="landingpage-card-icon-description">End to end Process Digitisation</p>
-	
-							<div class="landingpage-card-description"> Scrutiny reports are produced in the matter of minutes with automatic rule mapping. The development regulation process is also automated saving paperwork and time of stakeholders. 
-							</div>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_2.png">
-							<p class="landingpage-card-icon-description">Single window for multiple services</p>
-	
-							<div class="landingpage-card-description">Stakeholders like ULB officials, architects, town planners, engineers and citizens are connected on a single platform to coordinate various services. Stakeholders are updated in  real time of the application progress thus achieving transparency.
-						  
-							</div>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_3.png">
-							<p class="landingpage-card-icon-description">Open source smart platform</p>
-	
-							<div class="landingpage-card-description">It is a state-of-the-art, ERP-based platform created for urban governance, built on advanced open source technologies ensuring flexibility, interoperability and faster implementation.
-									 </div>
-						</div>
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_4.png">
-							<p class="landingpage-card-icon-description">Achieving Transparency</p>
-							<div class="landingpage-card-description">Existing manual processes are completely replaced with automated workflows. Standardisation of processes with well-defined roles and responsibilities of stakeholders mapped in the system. MIS reports are automatically generated to help track process efficiency.</div>
-						</div>
-	
-						<div class="col s12 m2 lp-col-margin">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/BPA_5.png">
-							<p class="landingpage-card-icon-description">Seamless Application Processes</p>
-	
-							<div class="landingpage-card-description">Earlier processes which were tedious have been replaced with  a seamless submission process for Building Plan Licensing systems through auto synchronisation of data between DIGIT DCR and BPA application.</div>
-						</div>
-					</div>
-					<div class="row collapsible-header card-action card-collapse-header" tabindex="0">
-						<i class="material-icons landingpage-card-down-arrow">keyboard_arrow_down</i>
-						<i class="material-icons landingpage-card-up-arrow row-hide">keyboard_arrow_up</i>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="card landingpage-card">
-			<ul class="collapsible card-collapse">
-				<li style="padding-left: 40px; padding-right: 40px;">
-					<div class="card-content collapsible-header landingpage-card-content" tabindex="0">
-						<span class="card-title card-header">Citizen &amp; Building Licensee </span>
-					</div>
-					<div class="row collapsible-header card-body" tabindex="0">
-						<div class="col s12 m4 ">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/licensee_1.png">
-							<p class="landingpage-card-icon-description">Online payment</p>
-							<div class="landingpage-card-description">All payments related to building plan application can be made online using debit/credit card/internet banking/etc. anytime.
-							</div>
-						</div>
-						<div class="col s12 m4">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/citizen_1.png">
-							<p class="landingpage-card-icon-description">Track Application</p>
-							<p class="landingpage-card-description">The citizen and building licensee will receive real time updates related to submitted application via SMS and email notifications.
-							</p>
-						</div>
-						<div class="col s12 m4">
-							<img class="header-icon" src="/egi/resources/guide/assets/ICONS/citizen_2.png">
-							<p class="landingpage-card-icon-description">Receive alert and notification</p>
-							<p class="landingpage-card-description">Centralized platform for all stakeholders including citizens, business users, and department officials. 
-							</p>
-						</div>
-					</div>
-				</li>
-			</ul>
-		</div>
+		<section class="ob-hl-section" aria-labelledby="obHlAbout">
+			<div class="ob-hl-head">
+				<span class="ob-eyebrow">About</span>
+				<h2 id="obHlAbout">About Building Plan Approval System</h2>
+			</div>
+			<div class="ob-hl-grid ob-hl-grid-5">
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/BPA_1.png" alt=""></span>
+					<h3>End to end Process Digitisation</h3>
+					<p>Scrutiny reports are produced in the matter of minutes with automatic rule mapping. The development regulation process is also automated saving paperwork and time of stakeholders.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/BPA_2.png" alt=""></span>
+					<h3>Single window for multiple services</h3>
+					<p>Stakeholders like ULB officials, architects, town planners, engineers and citizens are connected on a single platform to coordinate various services. Stakeholders are updated in real time of the application progress thus achieving transparency.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/BPA_3.png" alt=""></span>
+					<h3>Open source smart platform</h3>
+					<p>It is a state-of-the-art, ERP-based platform created for urban governance, built on advanced open source technologies ensuring flexibility, interoperability and faster implementation.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/BPA_4.png" alt=""></span>
+					<h3>Achieving Transparency</h3>
+					<p>Existing manual processes are completely replaced with automated workflows. Standardisation of processes with well-defined roles and responsibilities of stakeholders mapped in the system. MIS reports are automatically generated to help track process efficiency.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/BPA_5.png" alt=""></span>
+					<h3>Seamless Application Processes</h3>
+					<p>Earlier processes which were tedious have been replaced with a seamless submission process for Building Plan Licensing systems through auto synchronisation of data between DIGIT DCR and BPA application.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="ob-hl-section" aria-labelledby="obHlCitizen">
+			<div class="ob-hl-head">
+				<span class="ob-eyebrow">For applicants</span>
+				<h2 id="obHlCitizen">Citizen &amp; Building Licensee</h2>
+			</div>
+			<div class="ob-hl-grid ob-hl-grid-3">
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/licensee_1.png" alt=""></span>
+					<h3>Online payment</h3>
+					<p>All payments related to building plan application can be made online using debit/credit card/internet banking/etc. anytime.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/citizen_1.png" alt=""></span>
+					<h3>Track Application</h3>
+					<p>The citizen and building licensee will receive real time updates related to submitted application via SMS and email notifications.</p>
+				</article>
+				<article class="ob-hl-card">
+					<span class="ob-hl-ico"><img src="/egi/resources/guide/assets/ICONS/citizen_2.png" alt=""></span>
+					<h3>Receive alert and notification</h3>
+					<p>Centralized platform for all stakeholders including citizens, business users, and department officials.</p>
+				</article>
+			</div>
+		</section>
 
 		<%-- <div class="card landingpage-card">
 			<ul class="collapsible card-collapse">
@@ -284,13 +241,16 @@
 				</li>
 			</ul>
 		</div>
-		<div class = "footer-list-content col-md-6"></div>
+		<div class="footer-list-content ob-foot-about">
+			<div class="ob-foot-brand"><img src="/egi/resources/global/images/logo.png" alt="Chandigarh Administration"><span><strong>OBPAS</strong><em>Chandigarh Administration</em></span></div>
+			<p>Single window portal for online scrutiny and approval of building plan applications within the municipal limits of Chandigarh.</p>
+		</div>
 		<div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
 			<div class = "footer-contact-info-cont">
-				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
-3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
-Chandigarh 160017</div>
+				<div class = "color-black bpa-common-text">Estate Office, SDO Building,
+Town hall Building Sector 17
+UT Chandigarh</div>
 				<div class = "footer-icon-info-cont" style="display:none;">
 					<div class = "footer-icon">
 						<i class="fa fa-map-marker fa-1x"></i>
@@ -335,6 +295,45 @@ Chandigarh 160017</div>
 				</div>
 			</div>
 		</div>
+		<div class="ob-foot-bottom"><span>&copy; Chandigarh Administration</span><span>Online Building Plan Approval System</span></div>
 	</footer>
+	<script type="text/javascript">
+		/* Highlights: cards show icon + title; clicking one reveals its description below the row (click again to close). */
+		(function () {
+			function init() {
+				var sections = document.querySelectorAll('.ob-hl-section');
+				Array.prototype.forEach.call(sections, function (sec) {
+					sec.classList.add('ob-hl-js');
+					var grid = sec.querySelector('.ob-hl-grid');
+					var panel = document.createElement('div');
+					panel.className = 'ob-hl-detail';
+					panel.hidden = true;
+					panel.setAttribute('aria-live', 'polite');
+					grid.parentNode.insertBefore(panel, grid.nextSibling);
+					var cards = grid.querySelectorAll('.ob-hl-card');
+					function select(card) {
+						var open = card.classList.contains('is-active');
+						Array.prototype.forEach.call(cards, function (c) { c.classList.remove('is-active'); c.setAttribute('aria-expanded', 'false'); });
+						if (open) { panel.hidden = true; return; }
+						card.classList.add('is-active');
+						card.setAttribute('aria-expanded', 'true');
+						panel.innerHTML = '';
+						var h = document.createElement('h3'); h.textContent = card.querySelector('h3').textContent;
+						var p = document.createElement('p'); p.textContent = card.querySelector('p').textContent;
+						panel.appendChild(h); panel.appendChild(p);
+						panel.hidden = false;
+					}
+					Array.prototype.forEach.call(cards, function (card) {
+						card.setAttribute('tabindex', '0');
+						card.setAttribute('role', 'button');
+						card.setAttribute('aria-expanded', 'false');
+						card.addEventListener('click', function () { select(card); });
+						card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(card); } });
+					});
+				});
+			}
+			if (document.readyState !== 'loading') { init(); } else { document.addEventListener('DOMContentLoaded', init); }
+		})();
+	</script>
 </body>
 </html>

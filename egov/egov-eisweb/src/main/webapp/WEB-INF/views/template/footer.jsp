@@ -46,6 +46,18 @@
   ~
   --%>
 
-<footer class="main">
-    Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
+<jsp:useBean id="obNow" class="java.util.Date"/>
+<footer class="ob-footer" role="contentinfo">
+    <div class="ob-foot-l">
+        <span>&copy; <fmt:formatDate value="${obNow}" pattern="yyyy"/> Chandigarh Administration</span>
+        <span class="ob-dot"></span>
+        <span>Online Building Plan Approval System</span>
+    </div>
+    <div class="ob-foot-r">
+        <span>Powered by <a href="http://egovernments.org/" target="_blank" rel="noopener">eGovernments Foundation</a></span>
+        <c:if test="${not empty app_version}"><span>v<c:out value="${app_version}"/><c:if test="${not empty app_buildno}">_<c:out value="${app_buildno}"/></c:if></span></c:if>
+    </div>
 </footer>

@@ -82,7 +82,7 @@
 		} else if (rejectbutton == 'Forward'
 				&& $('#currentState').val() == 'LP Initiated') {
 			removeMandatory();
-		}else if(rejectbutton != null && rejectbutton == 'Revert to BA'){
+		}else if(rejectbutton != null && (rejectbutton == 'Revert to BA' || rejectbutton == 'Revert to JE')){
 			removeMandatory();
 			$('#approvalComent').attr('required', 'required');
 		} else if(rejectbutton != null && rejectbutton == 'Inspection Approved'){

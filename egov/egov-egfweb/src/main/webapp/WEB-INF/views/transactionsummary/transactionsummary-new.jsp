@@ -79,6 +79,8 @@
 	href="<cdn:url value='/resources/global/css/bts/typeahead.css'  context='/egi'/>">
 <link rel="stylesheet"
       href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <link rel="stylesheet"
 	href="<cdn:url value='/resources/global/css/bts/bts-datepicker.css'  context='/egi'/>" />
 <script

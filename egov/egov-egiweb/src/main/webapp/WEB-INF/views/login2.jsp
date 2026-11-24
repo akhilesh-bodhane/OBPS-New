@@ -436,7 +436,7 @@
 												</div>
 												<input style="display: none" type="password"> <input
 													type="password" class="form-control style-form"
-													name="token" id="token" placeholder="Enter your OTP"
+													name="token" id="token" placeholder="Enter your OTP" maxlength="6" inputmode="numeric"
 													autocomplete="off" required="required" /> <span
 													class="mandatory set-mandatory"></span>
 											</div>

@@ -66,6 +66,8 @@
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
     <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
     <script src="<cdn:url value='/resources/global/js/jq/jq.js' context='/egi'/>" type="text/javascript"></script>
     <script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>" type="text/javascript"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -183,7 +185,7 @@
                             <div class="input-group-addon style-label">
                                 <i class="fa fa-key fa-fw theme-color style-color"></i>
                             </div>
-                            <form:password path="activationCode" id="activationcode" cssClass="form-control style-form" placeholder="OTP" minlength="5" maxlength="5" autocomplete="off" required="required"/>
+                            <form:password path="activationCode" id="activationcode" cssClass="form-control style-form" placeholder="OTP" minlength="6" maxlength="6" autocomplete="off" required="required"/>
                             <span class="mandatory set-mandatory"></span>
                             <div class="input-group-addon" style="background:#fff;border:none;border-bottom:1px solid #D0D2D7;cursor:default;">
                                 <i class="fa fa-eye show otp-view" data-view="show" aria-hidden="true"></i>
@@ -192,6 +194,7 @@
                         <label id="activationcode-error" class="error align-top pull-right display-hide" for="activationcode">Required</label>
                     </div>
                     <div class="form-group signup-leftpadding text-center" id="otpbtn-section">
+                        <div id="otp-send-error" class="add-margin error-msg display-hide"><spring:message code="msg.otp.send.failed"/></div>
                         <form:errors path="activationCode" cssClass="add-margin error-msg"/>
                         <button type="button" class="btn btn-primary btn-block" id="otpbtn">
                             <i class="fa fa-key" aria-hidden="true"></i> <spring:message code="lbl.generate.otp"/>

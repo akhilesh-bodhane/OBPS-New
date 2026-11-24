@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
 <link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}'/>">
+<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}'/>"></script>
 <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/bpa-features.css">
 <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/materialize.min.css" media="screen,projection">
 <link type="text/css" rel="stylesheet" href="/egi/resources/guide/css/landingpage.css">
@@ -150,9 +152,9 @@
 		<div class = "footer-list-content col-md-4">
 			<div style = "margin-bottom: 16px;" class = "color-black bpa-common-header2 bpa-common-header">Get in Touch</div>
 			<div class = "footer-contact-info-cont">
-				<div class = "color-black bpa-common-text">Chandigarh Smart City Limited,
-3rd Floor, Building over the New Bridge (Above SCO 17,18,19) Sector 17-A
-Chandigarh 160017</div>
+				<div class = "color-black bpa-common-text">Estate Office, SDO Building,
+Town hall Building Sector 17
+UT Chandigarh</div>
 				<div class = "footer-icon-info-cont" style="display:none;">
 					<div class = "footer-icon">
 						<i class="fa fa-map-marker fa-1x"></i>

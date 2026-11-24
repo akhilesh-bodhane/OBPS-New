@@ -68,6 +68,8 @@
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/typeahead.css'/>">
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/bts/bts-datepicker.css'/>"/>
     <link rel="stylesheet" href="<cdn:url  value='/resources/global/css/egov/custom.css?rnd=${app_release_no}'/>">
+<link rel="stylesheet" href="<cdn:url  value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}'/>">
+<script src="<cdn:url  value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}'/>"></script>
 
     <script src="<cdn:url  value='/resources/global/js/jq/jq.js'/>"></script>
     <script src="<cdn:url  value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>"></script>

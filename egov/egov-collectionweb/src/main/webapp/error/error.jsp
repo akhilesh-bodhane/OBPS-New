@@ -93,6 +93,8 @@
 	<title>eGov - Application Error</title>
 	<link href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>" rel="stylesheet" type="text/css" />
 	<link href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>">
+<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 	</head>
 	<body>
 	<div class="formmainbox">

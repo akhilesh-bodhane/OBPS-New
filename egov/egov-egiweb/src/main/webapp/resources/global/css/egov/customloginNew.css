@@ -498,6 +498,11 @@
 	font-size: 13px;
 }
 
+.login-page .login-reset-msg {
+	margin: 20px 0 0;
+	clear: both;
+}
+
 .login-page .application-card .success-msg {
 	padding: 10px 14px;
 	border-left: 4px solid #2e7d32;
@@ -515,6 +520,105 @@
 .login-page .modal-title {
 	color: var(--navy);
 	font-family: Roboto_Medium, "Segoe UI", Arial, sans-serif;
+}
+
+/* Modal buttons: the full-width sign-in button style must not apply here, otherwise they stack and overflow */
+.login-page .modal-footer .form-group {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 10px;
+	width: 100%;
+	margin: 0;
+}
+
+.login-page .modal-footer .btn-login-new {
+	display: inline-block;
+	width: auto;
+	flex: 0 1 auto;
+	height: 44px !important;
+	margin: 0;
+	padding: 0 20px;
+	font-size: 13px;
+	line-height: 44px;
+	white-space: nowrap;
+}
+
+/* OTP: one square per character */
+.login-page .otp-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	width: 100%;
+}
+
+.login-page .otp-wrap .otp-boxes {
+	width: auto;
+}
+
+.login-page .otp-toggle {
+	width: 44px;
+	height: 44px;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background: #fff;
+	color: var(--muted);
+	font-size: 18px;
+	cursor: pointer;
+}
+
+.login-page .otp-toggle:hover {
+	color: var(--accent-dark);
+	border-color: var(--accent);
+}
+
+.login-page .otp-boxes {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	width: 100%;
+	margin: 12px 0 8px;
+}
+
+.login-page .otp-boxes .otp-box {
+	box-sizing: border-box;
+	width: 46px;
+	height: 54px;
+	padding: 0 !important;
+	border: 1px solid #c5ccd6 !important;
+	border-radius: 10px !important;
+	background: var(--surface) !important;
+	box-shadow: none;
+	color: var(--navy);
+	font-size: 24px;
+	font-weight: 500;
+	text-align: center;
+}
+
+.login-page .otp-boxes .otp-box:focus {
+	border-color: var(--accent) !important;
+	background: #fff !important;
+	box-shadow: 0 0 0 4px rgba(225, 124, 27, 0.18);
+	outline: 0;
+}
+
+.login-page .modal-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.login-page .modal-header .close {
+	order: 2;
+	margin-left: auto !important;
+	padding: 0 4px;
+	border: 0;
+	background: transparent;
+	font-size: 28px;
+	line-height: 1;
+	color: #6b7280;
+	opacity: 1;
 }
 
 /* ---------- Features section ---------- */
@@ -831,4 +935,11 @@
 		transition: none !important;
 		animation: none !important;
 	}
+}
+
+/* Recover-password modal inputs: no icon here, so give the text breathing room on the left */
+.login-page .modal .login-input.form-control {
+	padding: 0 14px !important;
+	border: 1px solid var(--line);
+	border-radius: 10px;
 }

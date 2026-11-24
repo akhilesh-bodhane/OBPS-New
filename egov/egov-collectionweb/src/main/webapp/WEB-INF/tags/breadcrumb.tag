@@ -50,34 +50,21 @@
   ~
   --%>
 
-<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
-    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header col-md-10 col-xs-10">
-                <a class="navbar-brand" href="javascript:void(0);">
-                    <img src="<c:url value='/downloadfile/logo' context='/egi'/>" height="60">
-                    <div>
-						<span class="title2">
-						  Collections
-						</span>
-
-                    </div>
-                </a>
-            </div>
-
-            <div class="nav-right-menu col-md-2 col-xs-2">
-                <ul class="hr-menu text-right">
-                    <li class="ico-menu">
-                        <a href="http://www.egovernments.org" target="_blank">
-                            <img src="<cdn:url value='/resources/global/images/digit-logo-black.png' context='/egi'/>" title="Powered by eGovernments" height="35px" style="opacity: 0.8">
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
-
-        </div>
-    </nav>
+<header class="ob-topbar" role="banner">
+    <a class="ob-brand" href="javascript:void(0);" aria-label="Collections">
+        <img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" alt="Chandigarh Administration">
+        <span class="ob-brand-text">
+            <span class="ob-brand-name">OBPAS</span>
+            <span class="ob-brand-sub">Building Plan Approvals</span>
+        </span>
+    </a>
+    <ol class="ob-crumbs" aria-label="Breadcrumb">
+        <li>OBPAS</li>
+        <li aria-current="page">Collections</li>
+    </ol>
+    <div class="ob-actions">
+        <button type="button" class="ob-iconbtn" onclick="window.print();" title="Print this page" aria-label="Print this page"><i class="fa fa-print" aria-hidden="true"></i></button>
+    </div>
 </header>
 	
  

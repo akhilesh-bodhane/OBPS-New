@@ -116,10 +116,7 @@
 	                        <form:input class="form-control patternvalidation" maxlength="50" id="fileNumber" path="fileNumber"/>
 	                        <form:errors path="fileNumber" cssClass="add-margin error-msg"/>
 	                    </div>
-	                </div>
-	                 <div class="form-group">
-	                   
- 						<label class="col-sm-3 control-label text-right"><spring:message
+	                <label class="col-sm-2 control-label text-right"><spring:message
 	                            code="lbl.sectors.villages"/></label>
 	                    <div class="col-sm-3 add-margin">
 <%-- 	                        <form:select path="sector" data-first-option="false" --%>
@@ -133,7 +130,9 @@
 	                                    id="sector" path="sector"/>
 	                        <form:errors path="sector" cssClass="add-margin error-msg"/>
 	                    </div>
-	                     <label class="col-sm-2 control-label text-right"><spring:message
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label text-right"><spring:message
 	                            code="lbl.appln.status"/></label>
 	                    <div class="col-sm-3 add-margin">
 	                        <form:select path="statusId" data-first-option="false"

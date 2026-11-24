@@ -66,6 +66,8 @@
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/bts/bts-datepicker.css' context='/egi'/>">
 		<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>">
+<link rel="stylesheet" href="<c:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}&v=20261124a' context='/egi'/>">
+<script src="<c:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 		
 		<script src="<c:url value='/resources/global/js/jq/jq.js' context='/egi'/>"></script>
 		<script src="<c:url value='/resources/global/js/jq/plugins/jq.migrate.min.js' context='/egi'/>"></script>

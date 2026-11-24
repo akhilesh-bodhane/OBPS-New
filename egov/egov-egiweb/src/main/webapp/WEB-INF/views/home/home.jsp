@@ -51,7 +51,7 @@
 <%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <!DOCTYPE html>
-<html class="no-js" oncontextmenu="return false;">
+<html class="no-js" lang="en" oncontextmenu="return false;">
 	<head>
 		<meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -60,7 +60,7 @@
 		<meta name="author" content="Chandigarh Administration"/>
 		<spring:eval expression="@environment.getProperty('user.pwd.strength','high')" var="pwdstrengthmsg"/>
 		<spring:message code="usr.pwd.strength.msg.${pwdstrengthmsg}" var="pwdmsg" htmlEscape="true"/>
-		<title>Chandigarh Building Plan Approvals</title>		
+		<title>Chandigarh Building Plan Approvals</title>
 		<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
@@ -70,178 +70,128 @@
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/jq.dataTables.min.css' context='/egi'/>"/>
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/jq/plugins/datatables/dataTables.bts.min.css' context='/egi'/>">
 		<link rel="stylesheet" href="<cdn:url value='/resources/global/js/jq/plugins/datatables/responsive/css/datatables.responsive.css'/>">
-		
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}'/>">
+		<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-home.css?rnd=${app_release_no}'/>">
+
 		<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/bts/bts5.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/multi-level-menu/jq.multilevelpushmenu.js'/>"></script>
-		
-		
+		<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}'/>"></script>
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		<script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/ie8/respond.min.js'/>"></script>
 		<![endif]-->
-		<style>
-		body{padding:0;}
-		footer {
-			background-color:#f3f4f5;bottom: 0;clear:both;position: fixed;width:100%;z-index: 999;
-		}
-		
-		footer a{
-			color: rgb(116, 101, 101);text-decoration: none;
-		}
-		
-		footer span.copyright {
-			float: left;font-size: 11px;padding: 7px;
-		}
-		
-		footer span.version {
-			float: right;font-size: 11px;padding: 7px;
-		}
-		    
-		footer span.copyright a {
-			color: rgb(116, 101, 101);
-		}
-		
-		footer #legal {
-			clear: left;display: block;
-		}
-		
-		.constrain {
-				padding-left: 10px;padding-right: 10px;margin-bottom:0px;
-		}
-		</style>
 	</head>
-	<body class="page-body">
+	<body class="page-body ob-home">
 		<div id="loadingMask"></div>
 		<div id="loading">
 		    <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
 		</div>
 		<div class="page-container horizontal-menu">
+			<!-- Quick Find (menu search). Ids/classes are used by homepageofficial.js -->
 			<div class="search">
-				<input type="text" id="searchtree" autofocus="" autocomplete="off" placeholder="Quick Find"><span class="fa fa-search searchicon tooltip-secondary" data-toggle="tooltip" data-original-title="Search menu item"></span>
+				<input type="text" id="searchtree" autofocus="" autocomplete="off" placeholder="Find a service or report" aria-label="Quick find"><span class="fa fa-search searchicon tooltip-secondary" data-toggle="tooltip" data-original-title="Search menu item"></span>
 				<span class="applyanimation"></span>
 			</div>
 			<div class="search_list">
 				<div class="list"><ul class="ullist"></ul></div>
 			</div>
-			<header class="navbar navbar-fixed-top border-header"><!-- set fixed position by adding class "navbar-fixed-top" -->
-				
-				<div class="navbar-inner">
-					
-					<!-- logo -->
-					<div class="navbar-brand">
-						<a href="javascript:void(0);">
-							<!-- <img src="/egi/downloadfile/logo" class="rounded" style="height: 60px;"> -->
-							<img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" class="rounded" style="height: 60px;">
-						</a>
-					</div>   
-					
-					<div class="navbar-brand">
-						<h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">${sessionScope.citymunicipalityname}</h3>
-					</div>
-					
-					<!-- notifications and other links -->
-					<ul class="nav navbar-right pull-right">
-						
-						<li class="dropdown">
-							<a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="Worklist" data-work="worklist">
-								<i class="fa fa-list fa-fw"></i>
-							</a>
-						</li>
-						<li class="dropdown">
-							<a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="Drafts" data-work="drafts">
-								<i class="fa fa-pencil fa-fw"></i>
-							</a>
-							
-						</li>
-						<li class="dropdown">
-							<a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="Notifications" data-work="notifications">
 
-								<i class="fa fa-bell fa-fw"></i>
-							</a>
-							
-						</li>
-						
-						<li class="hidden-xs menu-responsive">
-							<a href="javascript:void(0);" class="profile-name">
-								<i class="fa fa-user img-circle"></i> ${userName}
-							</a>
-							<ul>
-								<li>
-									<a href="home/profile/edit" class="open-popup">
-										<i class="fa fa-user"></i>
-										<span class="title">Edit Profile</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});">
-										<i class="fa fa-key"></i>
-										<span class="title">Change Password</span>
-									</a>
-								</li>
-								<li>
-									<a href="javascript:void(0);"  onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});">
-										<i class="fa fa-comment"></i>
-										<span class="title">Feedback</span>
-									</a>
-								</li>
-								<c:if test="${not empty issue_report_url}">
-								<li>
-									<a href="${issue_report_url}" data-strwindname="r&i"  class="open-popup">
-										<i class="fa fa-bug"></i>
-										<span class="title">Report an Issue</span>
-									</a>
-								</li>
-								</c:if>
-								<li>
-									<a href="help" data-strwindname="help"  class="open-popup">
-										<i class="fa fa-question"></i>
-										<span class="title">Help</span>
-									</a>
-								</li>
-								<li>
-									<a href="/egi/logout" class="signout">
-										<i class="fa fa-sign-out"></i>
-										<span class="title">Sign Out</span>
-									</a>
-								</li>
-							</ul>
-						</li>
-						
-						<li class="dropdown visible-xs hidden-sm">
-							<a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="Sign Out">
-								<i class="fa fa-sign-out"></i>
-							</a>
-						</li>
-						
-						<li class="dropdown">
-							<div style="width:66px;"></div>
-						</li>
-					</ul>
+			<!-- ===== Top bar ===== -->
+			<header class="ob-home-top" role="banner">
+				<button type="button" class="ob-hamburger" id="obNavToggle" aria-label="Toggle navigation" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i></button>
+				<a class="ob-brand" href="javascript:void(0);" aria-label="Online Building Plan Approval System">
+					<img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" alt="Chandigarh Administration">
+					<span class="ob-brand-text">
+						<span class="ob-brand-name">OBPAS</span>
+						<span class="ob-brand-sub" id="hp-citizen-title"><c:out value="${sessionScope.citymunicipalityname}"/></span>
+					</span>
+				</a>
+				<div class="ob-home-actions">
+					<a href="help" data-strwindname="help" class="ob-iconbtn open-popup" title="Help" aria-label="Help"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					<div class="ob-userwrap">
+						<button type="button" class="ob-userbtn" data-ob-menu aria-haspopup="true" aria-expanded="false">
+							<span class="ob-avatar" id="obAvatar" data-ob-name="${userName}"><i class="fa fa-user" aria-hidden="true"></i></span>
+							<span class="ob-username"><c:out value="${userName}"/></span>
+							<i class="fa fa-angle-down" aria-hidden="true"></i>
+						</button>
+						<ul class="ob-menu" role="menu">
+							<li class="ob-menu-head"><span class="ob-eyebrow">Signed in as</span><strong><c:out value="${userName}"/></strong></li>
+							<li><a href="home/profile/edit" class="open-popup" role="menuitem"><i class="fa fa-user"></i><span class="title">Edit Profile</span></a></li>
+							<li><a href="javascript:void(0);" role="menuitem" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});"><i class="fa fa-key"></i><span class="title">Change Password</span></a></li>
+							<li><a href="javascript:void(0);" role="menuitem" onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});"><i class="fa fa-comment"></i><span class="title">Feedback</span></a></li>
+							<c:if test="${not empty issue_report_url}">
+							<li><a href="${issue_report_url}" data-strwindname="r&i" class="open-popup" role="menuitem"><i class="fa fa-bug"></i><span class="title">Report an Issue</span></a></li>
+							</c:if>
+							<li><a href="help" data-strwindname="help" class="open-popup" role="menuitem"><i class="fa fa-question"></i><span class="title">Help</span></a></li>
+							<li class="ob-menu-sep"></li>
+							<li><a href="/egi/logout" class="signout" role="menuitem"><i class="fa fa-sign-out"></i><span class="title">Sign Out</span></a></li>
+						</ul>
+					</div>
 				</div>
 			</header>
-			
-			<!--New side bar menu content-->
+			<div class="ob-scrim" id="obScrim"></div>
+
+			<!-- ===== Side navigation (multi-level menu rendered by custom-menu.js into #menu) ===== -->
 			<div class="home-container">
-				
+
 				<div id="menu" class="homepage">
-				
+
 				</div>
-				
+
 				<div class="inline-main-content">
+
+					<!-- ===== Dashboard overview (figures are computed in the browser from the worklist returned by the server) ===== -->
+					<section class="ob-dash" aria-label="Overview">
+						<div class="ob-welcome">
+							<div>
+								<span class="ob-eyebrow" id="obToday"></span>
+								<h1 class="ob-welcome-title">Welcome back, <span class="ob-welcome-name"><c:out value="${userName}"/></span></h1>
+								<p class="ob-welcome-sub" id="obWelcomeSub">Here is what is waiting in your worklist.</p>
+							</div>
+						</div>
+
+						<div class="ob-kpi-row" id="obKpis">
+							<div class="ob-stat" data-kpi="total"><span class="ob-stat-ico"><i class="fa fa-inbox"></i></span><div><div class="ob-stat-num">&ndash;</div><div class="ob-stat-lbl">In your worklist</div></div></div>
+							<div class="ob-stat ok" data-kpi="within"><span class="ob-stat-ico"><i class="fa fa-check-circle-o"></i></span><div><div class="ob-stat-num">&ndash;</div><div class="ob-stat-lbl">Within SLA</div></div></div>
+							<div class="ob-stat bad" data-kpi="overdue"><span class="ob-stat-ico"><i class="fa fa-clock-o"></i></span><div><div class="ob-stat-num">&ndash;</div><div class="ob-stat-lbl">Overdue</div></div></div>
+							<div class="ob-stat" data-kpi="types"><span class="ob-stat-ico"><i class="fa fa-tags"></i></span><div><div class="ob-stat-num">&ndash;</div><div class="ob-stat-lbl">Types of work</div></div></div>
+						</div>
+
+						<div class="ob-dash-grid" id="obDashGrid" hidden>
+							<div class="ob-card">
+								<div class="ob-card-head"><h2 class="ob-section-title">Worklist by type of work</h2><span class="ob-chip muted" id="obByTypeNote"></span></div>
+								<ul class="ob-bars" id="obByType"></ul>
+								<div class="ob-legend"><span><i class="dot ok"></i>Within SLA</span><span><i class="dot bad"></i>Overdue</span></div>
+							</div>
+							<div class="ob-card">
+								<div class="ob-card-head"><h2 class="ob-section-title">Needs your attention</h2><span class="ob-chip bad" id="obAttnNote"></span></div>
+								<ul class="ob-attn" id="obAttn"></ul>
+							</div>
+						</div>
+					</section>
+
+					<!-- ===== Workspace switcher: Worklist / Drafts / Notifications (handled by homepageofficial.js via .workspace[data-work]) ===== -->
+					<nav class="ob-tabs" aria-label="Workspace">
+						<a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="Worklist" data-work="worklist"><i class="fa fa-list fa-fw"></i><span>Worklist</span></a>
+						<a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="Drafts" data-work="drafts"><i class="fa fa-pencil fa-fw"></i><span>Drafts</span></a>
+						<a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="Notifications" data-work="notifications"><i class="fa fa-bell fa-fw"></i><span>Notifications</span></a>
+					</nav>
+
 					<div class="row main-space" id="worklist">
 						<div class="col-xs-12">
-							<div class="row">
+							<div class="row ob-table-head">
 								<div class="col-md-9 col-xs-9 table-header">
 									Worklist
 								</div>
 								<div class="col-md-3 col-xs-3 add-margin text-right">
 									<div class="input-group">
-									  <input type="text" class="form-control input-sm search-table" id="inboxsearch">
+									  <input type="text" class="form-control input-sm search-table" id="inboxsearch" placeholder="Search worklist" aria-label="Search worklist">
 									  <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
 									</div>
 								</div>
@@ -266,13 +216,13 @@
 					</div>
 					<div class="row main-space display-hide" id="drafts">
 						<div class="col-xs-12">
-							<div class="row">
+							<div class="row ob-table-head">
 								<div class="col-md-9 col-xs-9 table-header">
 									Drafts
 								</div>
 								<div class="col-md-3 col-xs-3 add-margin text-right">
 									<div class="input-group">
-									  <input type="text" class="form-control input-sm search-table" id="draftsearch">
+									  <input type="text" class="form-control input-sm search-table" id="draftsearch" placeholder="Search drafts" aria-label="Search drafts">
 									  <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
 									</div>
 								</div>
@@ -291,16 +241,16 @@
 							</table>
 						</div>
 					</div>
-					
+
 					<div class="row main-space display-hide" id="notifications">
 						<div class="col-xs-12">
-							<div class="row">
+							<div class="row ob-table-head">
 								<div class="col-md-9 col-xs-9 table-header">
 									Notifications
 								</div>
 								<div class="col-md-3 col-xs-3 add-margin text-right">
 									<div class="input-group">
-									  <input type="text" class="form-control input-sm search-table" id="notifysearch">
+									  <input type="text" class="form-control input-sm search-table" id="notifysearch" placeholder="Search notifications" aria-label="Search notifications">
 									  <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
 									</div>
 								</div>
@@ -318,31 +268,27 @@
 							</table>
 						</div>
 					</div>
-					
+
 				</div>
-				
+
 			</div>
-			<%-- <footer class="clearfix simple">
-				<div class="constrain">
-					<div id="legal">
-						<c:set var="now" value="<%=new org.joda.time.DateTime()%>" />
-						<span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> <joda:format value="${now}" pattern="yyyy" /> <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>&reg;</sup></a></span>
-						<span class="version">eGov ERP - ${app_version}_${app_buildno}<c:if test="${not empty app_core_build_no}"> @ Core - ${app_core_build_no}</c:if></span>
-					</div>
-				</div>
-			</footer> --%>	
+			<footer class="ob-footer ob-home-foot" role="contentinfo">
+				<c:set var="now" value="<%=new org.joda.time.DateTime()%>" />
+				<div class="ob-foot-l"><span>&copy; <joda:format value="${now}" pattern="yyyy" /> Chandigarh Administration</span><span class="ob-dot"></span><span>Online Building Plan Approval System</span></div>
+				<div class="ob-foot-r"><span>Powered by <a href="http://www.egovernments.org" target="_blank" rel="noopener">eGovernments Foundation</a></span><span class="ob-dot"></span><span>eGov ERP - ${app_version}_${app_buildno}<c:if test="${not empty app_core_build_no}"> @ Core - ${app_core_build_no}</c:if></span></div>
+			</footer>
 		</div>
-		
+
 		<!--feedback -->
 		<div class="modal fade add-feedback" data-backdrop="static">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					
+
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">Feedback</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					
+
 					<div class="modal-body">
 						<form id="feedback-form" class="form-horizontal form-groups-bordered" >
 							<div class="form-group">
@@ -353,7 +299,7 @@
 							<div class="form-group">
 								<div class="col-md-12 add-margin">
 									 <textarea class="form-control" rows="5" id="comment" placeholder="Message"></textarea>
-									 Mail will be sent to ${sessionScope.corpContactEmail}
+									 <span class="help-block">Mail will be sent to ${sessionScope.corpContactEmail}</span>
 								</div>
 							</div>
 							<div class="form-group text-right">
@@ -371,16 +317,16 @@
 		<div class="modal fade change-password" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					
+
 					<div class="modal-header">
-						<button type="button" class="close pass-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">Change Password</h4>
+						<button type="button" class="close pass-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					
+
 					<div class="modal-body">
 						<c:if test="${dflt_pwd_reset_req}">
 							<div class="alert alert-warning" role="alert" id="pass-alert">
-							<i class="fa fa-exclamation-triangle"></i> Security alert...! You are using default password, please reset your password.
+							Security alert! You are using the default password, please reset your password.
 							</div>
 						</c:if>
 						<form id="password-form" method="post" class="form-horizontal form-groups-bordered">
@@ -418,8 +364,8 @@
 								</div>
 							</div>
 							</form>
-						
-						
+
+
 					</div>
 				</div>
 			</div>
@@ -439,48 +385,48 @@
 		<div class="modal fade favourites" data-backdrop="static">
 			<div class="modal-dialog">
 				<div class="modal-content">
-				
+
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">Favourites</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					
+
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-4">
 								<label class="control-label">Favourites Name</label>
 							</div>
 							<div class="col-md-8">
-								
+
 								<div class="form-group">
 									<input type="text" class="form-control" id="fav-name" placeholder="">
-								</div>	
+								</div>
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="modal-footer">
 						<button type="button" class="btn btn-primary add-fav">Add Favourites</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
 		<div class="modal fade history-inbox">
 			<div class="modal-dialog history">
 				<div class="modal-content">
-					
+
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title">History</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					
+
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-12">
 								<table id="historyTable" class="table table-bordered datatable dataTable no-footer">
-									<thead> 
+									<thead>
 										<tr>
 											<th>Date</th>
 											<th>Sender</th>
@@ -493,11 +439,11 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
@@ -514,6 +460,7 @@
 		<script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"></script>
 		<script src="<cdn:url value='/resources/js/app/custom-menu.js?rnd=${app_release_no}&v=2'/>"></script>
 		<script src="<cdn:url value='/resources/js/app/homepageofficial.js?rnd=${app_release_no}'/>"></script>
+		<script src="<cdn:url value='/resources/js/app/obps-home.js?rnd=${app_release_no}'/>"></script>
 		<script type="text/javascript">
 			$(window).on('load', function(){
 		        document.getElementById("loading").style.display = "none";
@@ -521,4 +468,4 @@
 		    });
 		</script>
 	</body>
-</html>																						
+</html>

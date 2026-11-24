@@ -74,314 +74,242 @@
 	<meta name="author" content="Chandigarh Administration" />
 	<title>Chandigarh Building Plan Approvals</title>
 	<link rel="icon" href="<cdn:url value='/resources/global/images/favicon.png'/>" sizes="32x32">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customloginNew.css?rnd=${app_release_no}'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/bts/bts5.css'/>">
 	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css'/>">
-	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/customlogin.css?rnd=${app_release_no}'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}'/>">
+	<link rel="stylesheet" href="<cdn:url value='/resources/global/css/egov/obps-login.css?rnd=${app_release_no}'/>">
 	<script src="<cdn:url value='/resources/global/js/jq/jq.js'/>" type="text/javascript"></script>
 	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.migrate.min.js'/>" type="text/javascript"></script>
-	
+	<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}'/>" type="text/javascript"></script>
+
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 		<script src="<cdn:url value='/resources/global/js/ie8/html5shiv.min.js'/>"></script>
 		<script src="<cdn:url value='/resources/global/js/ie8/respond.min.js'/>"></script>
 	<![endif]-->
 </head>
-<body class="page-body index login-page">
-	<div class="page-container">
-		<div class="padding0 login-main-content">
-			<div class = "padding0 login-cont">
-				<div class = "login-bg-cont clearfix">
-					<div class = "blue-background"></div>
-					<div class = "login-content-wrapper col-md-12" style="padding-left: 0!important;padding-right: 0!important;">
-						<div class = "new-login-header-wrapper page-common-padding col-md-12">
-							<div class = "new-login-header padding0 col-md-12">
-								<span><img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" height="67" class="rounded"></span>
-							</div>
-						</div>
-						<c:set var="tenantId" value="<%=tenantId%>" />
-						<div class="page-common-padding col-md-12 login-hero-main">
-						<div class = "new-login-content padding0 col-md-12">
-							<div class = "login-left-cont padding0 col-md-6">
-								<h1 class="animated fadeInUpBig login-hero-title">
-									Building Plan Approvals
-								</h1>
-								<div class="animated fadeInDownBig" style="max-width: 700px;">
-									Online building plan approval system (OBPAS) is a single window portal for online scrutiny and approval of building plan applications within the municipal limits of Chandigarh. Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.
-								</div>								
-							</div>
-							<div class = "f-regular login-right-cont padding0 col-md-6">
-								<div class = "application-card bpa-card-new card col-md-8">
-									<div class = "card-body">
-										<div class = "login-card-header">
-											<spring:message code="lbl.login" />
-										</div>
-										<form action="${pageContext.request.contextPath}/j_security_check" method="post" role="form" id="signform">
-											<div class = "md-form clearfix">
-												<div class = "col-md-12 padding0 login-field" style = "margin: 36px 0 16px 0">
-													<label class = "login-input-label" for="j_username">Login ID</label>
-													<i class="fa fa-user login-field-icon" aria-hidden="true"></i>
-														<input name="j_username" id="j_username" 
-														style="font-family: Roboto_Regular;" 
-														placeholder="Enter Login ID" 
-														required="" type="text" autofocus="autofocus"
-														autocomplete="off" class="login-input form-control" />
-												</div>
-												<div class = "col-md-12 padding0 login-field">
-													<label class = "login-input-label" for="j_password">Password</label>
-													<i class="fa fa-lock login-field-icon" aria-hidden="true"></i>
-														<input name="j_password" id="j_password" required="required"
-														style="font-family: Roboto_Regular;" placeholder="Enter Password" 
-														type="password" class="login-input form-control"
-														autocomplete="off" />
-												</div>
-												<div class = "col-md-12 forgot-password-text">
-													<span data-toggle="modal" data-target="#fpassword" data-backdrop="static">FORGOT PASSWORD?</span>
-												</div>
-												<div class="col-md-12 form-group display-hide" id="counter-section">
-													<div class="input-group">
-														<div class="input-group-addon style-label">
-															<i class="fa fa-map-marker theme-color style-color"></i>
-														</div>
-														<select class="form-control style-form" name="locationId"
-															id="locationId"></select> <label id="locationId-error"
-															class="error pull-right" for="locationId"></label>
-													</div>
-												</div>
-												<div class="col-md-12 add-margin">
-													<spring:eval
-														expression="@environment.getProperty('captcha.strength')"
-														var="strength" />
-													<c:import url="/WEB-INF/views/common/captcha-${strength}.jsp"
-														context="/egi" />
-												</div>
-												<c:if test="${param.sessionSecurity}">
-													<div class="col-md-12 text-center error-msg add-margin">
-														<spring:message code="msg.session.security" />
-													</div>
-												</c:if>
-												<c:if test="${param.error}">
-													<div class="col-md-12 text-center error-msg add-margin">
-														<c:set var="security_message"
-															value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}" />
-														<c:choose>
-															<c:when
-																test="${security_message.contains('Maximum sessions')}">
-																<spring:message code="msg.multiple.login" />
-															</c:when>
-															<c:when test="${security_message.contains('expired')}">
-																<spring:message code="msg.cred.exprd1" />
-																<a href="javascript:void(0);" data-toggle="modal"
-																	data-target="#fpassword" data-backdrop="static"> <spring:message
-																		code="msg.cred.exprd2" />
-																</a>
-																<spring:message code="msg.cred.exprd3" />
-															</c:when>
-															<c:when
-																test="${fn:contains(security_message, 'User account is locked')}">
-																<spring:message code="msg.acc.locked" />
-															</c:when>
-															<c:when
-																test="${fn:contains(security_message, 'Recaptcha Invalid')}">
-																<spring:message code="err.recaptcha.invalid" />
-															</c:when>
-															<c:when
-																test="${fn:contains(security_message, 'Too many attempts')}">
-																<c:set var="attempts"
-																	value="${fn:substringAfter(security_message, 'Too many attempts')}" />
-																<spring:message code="msg.acc.toomany.attempt"
-																	arguments="${attempts}" />
-															</c:when>
-															<c:otherwise>
-																<div class="form-group">
-																	<div>
-																		<spring:message code="msg.cred.invalid" />
-																	</div>
-																</div>
-															</c:otherwise>
-														</c:choose>
-													</div>
-												</c:if>
-												<c:if test="${not empty reset}">
-													<div class="form-group">
-														<c:choose>
-															<c:when test="${reset}">
-																<div class="text-center success-msg font-12">
-																	<spring:message code="msg.success.pwd.reset" />
-																</div>
-															</c:when>
-															<c:otherwise>
-																<div class="text-center  error-msg font-12">
-																	<spring:message code="msg.fail.pwd.reset" />
-																</div>
-															</c:otherwise>
-														</c:choose>
-													</div>
-												</c:if>
-												<input type="hidden" id="ipAddress" name="ipAddress"
-													value="<%=ipAddress%>" /> <input type="hidden" id="loginType"
-													name="loginType" /> <input type="hidden" name="userAgentInfo"
-													value="<%=userAgentInfo%>" />
-												<div class = "col-md-12 padding0" style="padding-bottom: 10px;">
-												 	<button style = "margin-top:15px;" id="signin-action" type="submit" class="f-medium col-md-12 btn-login-new btn padding0">
-												 		<spring:message code="lbl.login" />
-												 	</button>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
+<body class="ob-login">
+	<c:set var="tenantId" value="<%=tenantId%>" />
+
+	<!-- ===== Public home: navigation + hero; the sign-in form opens from the Login button ===== -->
+	<header class="ob-land-nav" role="banner">
+		<a class="ob-land-brand" href="javascript:void(0);" aria-label="Online Building Plan Approval System">
+			<img src="<c:url value='/resources/global/images/logo.png' context='/egi'/>" alt="Chandigarh Administration">
+			<span class="ob-land-brand-text"><strong>OBPAS</strong><em>Chandigarh Administration</em></span>
+		</a>
+		<div class="ob-actions">
+			<a class="ob-land-link" href="#highlights">Help &amp; resources</a>
+			<button type="button" class="btn btn-primary ob-land-login" data-ob-login><i class="fa fa-sign-in" aria-hidden="true"></i> <spring:message code="lbl.login" /></button>
+		</div>
+	</header>
+
+	<section class="ob-land-hero" aria-label="Home">
+		<div class="ob-land-inner">
+			<span class="ob-eyebrow">Online Building Plan Approval System</span>
+			<h1>Building Plan Approvals</h1>
+			<p>Online building plan approval system (OBPAS) is a single window portal for online scrutiny and approval of building plan applications within the municipal limits of Chandigarh. Citizens, Officials, and other stakeholders can submit and track applications in real time and obtain approvals without having to physically visit an office.</p>
+			<ul class="ob-login-points">
+				<li><i class="fa fa-search" aria-hidden="true"></i><span>Online scrutiny of building plans</span></li>
+				<li><i class="fa fa-line-chart" aria-hidden="true"></i><span>Track every application in real time</span></li>
+				<li><i class="fa fa-check-circle" aria-hidden="true"></i><span>Obtain approvals without visiting an office</span></li>
+			</ul>
+			<div class="ob-land-cta">
+				<button type="button" class="btn btn-primary btn-lg" data-ob-login><i class="fa fa-sign-in" aria-hidden="true"></i> <spring:message code="lbl.login" /></button>
+				<a class="btn btn-lg ob-land-ghost" href="#highlights">Help &amp; resources</a>
+			</div>
+		</div>
+		<a class="ob-land-scroll" href="#highlights" aria-label="Scroll to highlights"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
+	</section>
+
+	<!-- ===== Sign-in dialog (same form, ids and hooks as before) ===== -->
+	<div class="modal fade ob-login-modal" id="loginModal" tabindex="-1" role="dialog" aria-label="Sign in" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<button type="button" class="close ob-login-x" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<div class="ob-login-card">
+				<div class="ob-login-card-head">
+					<h2><spring:message code="lbl.login" /></h2>
+					<p>Sign in with your Login ID to continue.</p>
+				</div>
+
+				<c:if test="${not empty reset}">
+					<div class="ob-alert ${reset ? 'ok' : 'bad'}" role="alert">
+						<c:choose>
+							<c:when test="${reset}"><spring:message code="msg.success.pwd.reset" /></c:when>
+							<c:otherwise><spring:message code="msg.fail.pwd.reset" /></c:otherwise>
+						</c:choose>
+					</div>
+				</c:if>
+
+				<form action="${pageContext.request.contextPath}/j_security_check" method="post" role="form" id="signform">
+					<div class="ob-field">
+						<label class="ob-label" for="j_username">Login ID</label>
+						<div class="ob-input">
+							<i class="fa fa-user ob-input-ico" aria-hidden="true"></i>
+							<input name="j_username" id="j_username" placeholder="Enter Login ID" required="" type="text" autofocus="autofocus" autocomplete="off" class="form-control" />
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class = "padding0 bpa-feature-main-cont col-md-12">
-				<div class = "bpa-feature-wrapper">
-					<%@include file="../../resources/guide/bpa-features.jsp"%>
-				</div>
-			</div>
-			<div style="margin-bottom: 0px;" class="row top-space">
-				<div class="text-center error-msg">
-					<noscript>You don't have javascript enabled. Make sure
-						Javascript is enabled.</noscript>
+					<div class="ob-field">
+						<div class="ob-label-row">
+							<label class="ob-label" for="j_password">Password</label>
+							<button type="button" class="ob-link" data-ob-forgot>Forgot password?</button>
+						</div>
+						<div class="ob-input">
+							<i class="fa fa-lock ob-input-ico" aria-hidden="true"></i>
+							<input name="j_password" id="j_password" required="required" placeholder="Enter Password" type="password" class="form-control" autocomplete="off" data-ob-toggle-pass />
+						</div>
+					</div>
+
+					<div class="ob-field display-hide" id="counter-section">
+						<label class="ob-label" for="locationId">Location</label>
+						<div class="ob-input">
+							<i class="fa fa-map-marker ob-input-ico" aria-hidden="true"></i>
+							<select class="form-control" name="locationId" id="locationId"></select>
+						</div>
+						<label id="locationId-error" class="error" for="locationId"></label>
+					</div>
+
+					<div class="ob-field ob-captcha">
+						<spring:eval expression="@environment.getProperty('captcha.strength')" var="strength" />
+						<c:import url="/WEB-INF/views/common/captcha-${strength}.jsp" context="/egi" />
+					</div>
+
+					<c:if test="${param.sessionSecurity}">
+						<div class="ob-alert bad" role="alert"><spring:message code="msg.session.security" /></div>
+					</c:if>
+					<c:if test="${param.error}">
+						<div class="ob-alert bad" role="alert">
+							<c:set var="security_message" value="${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}" />
+							<c:choose>
+								<c:when test="${security_message.contains('Maximum sessions')}">
+									<spring:message code="msg.multiple.login" />
+								</c:when>
+								<c:when test="${security_message.contains('expired')}">
+									<spring:message code="msg.cred.exprd1" />
+									<a href="javascript:void(0);" data-ob-forgot> <spring:message code="msg.cred.exprd2" /></a>
+									<spring:message code="msg.cred.exprd3" />
+								</c:when>
+								<c:when test="${fn:contains(security_message, 'User account is locked')}">
+									<spring:message code="msg.acc.locked" />
+								</c:when>
+								<c:when test="${fn:contains(security_message, 'Recaptcha Invalid')}">
+									<spring:message code="err.recaptcha.invalid" />
+								</c:when>
+								<c:when test="${fn:contains(security_message, 'Too many attempts')}">
+									<c:set var="attempts" value="${fn:substringAfter(security_message, 'Too many attempts')}" />
+									<spring:message code="msg.acc.toomany.attempt" arguments="${attempts}" />
+								</c:when>
+								<c:otherwise>
+									<spring:message code="msg.cred.invalid" />
+								</c:otherwise>
+							</c:choose>
+						</div>
+					</c:if>
+
+					<input type="hidden" id="ipAddress" name="ipAddress" value="<%=ipAddress%>" />
+					<input type="hidden" id="loginType" name="loginType" />
+					<input type="hidden" name="userAgentInfo" value="<%=userAgentInfo%>" />
+
+					<button id="signin-action" type="submit" class="btn btn-primary btn-lg btn-block ob-login-submit">
+						<spring:message code="lbl.login" /> <i class="fa fa-arrow-right" aria-hidden="true"></i>
+					</button>
+				</form>
+				<noscript><div class="ob-alert bad">You don't have javascript enabled. Make sure Javascript is enabled.</div></noscript>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	<div class="f-regular login-modal-new modal fade" id="fpassword" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
+	<c:if test="${not empty reset or param.error or param.sessionSecurity}">
+		<script>document.addEventListener('DOMContentLoaded', function () { window.jQuery('#loginModal').modal('show'); });</script>
+	</c:if>
+
+	<!-- ===== Platform highlights (existing content, unchanged) ===== -->
+	<section class="ob-login-features" id="highlights" aria-label="Platform highlights">
+		<div class="bpa-feature-wrapper">
+			<%@include file="../../resources/guide/bpa-features.jsp"%>
+		</div>
+	</section>
+
+	<!-- ===== Forgot password ===== -->
+	<div class="modal fade" id="fpassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div style = "border: none;" class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel">
-						<spring:message code="lbl.recover.pwd" />
-					</h4>
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel"><spring:message code="lbl.recover.pwd" /></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				</div>
 				<form method="post" role="form" id="forgotPasswordForm">
-					<div style = "border: none;" class="modal-body">
-						<div class="form-group">
-							<div class="input-group col-md-12" style="margin: 0;">
-								<!-- <div class="input-group-addon style-label">
-									<i class="fa fa-user style-color"></i>
-								</div> -->
-								<label class = "login-input-label" for="identity">Login ID</label>
-								<input type="text" class="login-input form-control style-form"
-									name="identity" id="emailOrMobileNum" required="required"
-									placeholder="Login ID" autocomplete="off"
-									style="font-family: Roboto_Regular;" /> 
-								<input type="hidden" name="originURL" id="originURL" /> 
-								<input type="hidden" name="byOTP" id="byOtp" style="font-family: Roboto_Regular;" />
+					<div class="modal-body">
+						<div class="ob-field" style="margin:0">
+							<label class="ob-label" for="emailOrMobileNum">Login ID</label>
+							<div class="ob-input">
+								<i class="fa fa-user ob-input-ico" aria-hidden="true"></i>
+								<input type="text" class="form-control" name="identity" id="emailOrMobileNum" required="required" placeholder="Login ID" autocomplete="off" />
 							</div>
-							<div id="emailOrMobileNoReq"
-								class="text-right error-msg display-hide">
-								<spring:message code="lbl.pwd.recover.un.req" />
-							</div>
-							<div class="text-right" style="font-size: 12px; color: #6b4f2c;">
-								<spring:message code="lbl.pwd.reset.link" />
-							</div>
+							<input type="hidden" name="originURL" id="originURL" />
+							<input type="hidden" name="byOTP" id="byOtp" />
 						</div>
+						<div id="emailOrMobileNoReq" class="error-msg display-hide" style="margin-top:6px"><spring:message code="lbl.pwd.recover.un.req" /></div>
+						<p class="ob-hint"><spring:message code="lbl.pwd.reset.link" /></p>
 					</div>
-					<div style="background-color: transparent; border: none;" class="modal-footer">
-						<div class="form-group text-right">
-							<button type="button" class="f-medium btn-login-new btn btn-primary recovrbtn">
-								<spring:message code="btn.lbl.recover.link" />
-							</button>
-							<button type="button" id="recoveryotpbtn"
-								class="f-medium btn-login-new btn btn-primary recovrbtn">
-								<spring:message code="btn.lbl.recover.otp" />
-							</button>
-							<button type="button" class="f-medium btn-login-new btn btn-default"
-								data-dismiss="modal">
-								<spring:message code="lbl.close" />
-							</button>
-						</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="lbl.close" /></button>
+						<button type="button" class="btn btn-primary recovrbtn"><spring:message code="btn.lbl.recover.link" /></button>
+						<button type="button" id="recoveryotpbtn" class="btn btn-primary recovrbtn"><spring:message code="btn.lbl.recover.otp" /></button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div class="f-regular login-modal-new modal fade" id="cookieornoscript" data-backdrop="static">
+
+	<div class="modal fade" id="cookieornoscript" data-backdrop="static">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div style = "border: none;" class="modal-header">
-					<h4 class="modal-title">Enable Cookies</h4>
-				</div>
-				<div class="modal-body">Your browser seems to have cookies
-					disabled. Make sure cookies are enabled or try opening a new
-					browser window.</div>
+				<div class="modal-header"><h4 class="modal-title">Enable Cookies</h4></div>
+				<div class="modal-body">Your browser seems to have cookies disabled. Make sure cookies are enabled or try opening a new browser window.</div>
 			</div>
 		</div>
 	</div>
+
 	<c:if test="${not empty recovered}">
-		<div class="f-regular login-modal-new modal fade" data-backdrop="static" id="resetpwd">
+		<div class="modal fade" data-backdrop="static" id="resetpwd">
 			<div class="modal-dialog">
 				<div class="modal-content">
-					<div style = "border: none;" class="modal-header">
-						<h4 class="modal-title">
-							<spring:message code="lbl.recover.pwd" />
-						</h4>
-					</div>
-					<form class = "f-regular" method="post" role="form">
+					<div class="modal-header"><h4 class="modal-title"><spring:message code="lbl.recover.pwd" /></h4></div>
+					<form method="post" role="form">
 						<c:choose>
 							<c:when test="${recovered}">
 								<c:if test="${byOTP}">
-									<div class="modal-body f-regular">
-										<div class="form-group">
-											<div class="col-md-12 input-group" style="margin: 0;">
-												<!-- <div class="input-group-addon style-label">
-													<i class="fa fa-key theme-color style-color"></i>
-												</div> -->
-												<label class = "login-input-label" for="token">Enter OTP</label>
-												<input
-													type="text" class="login-input form-control style-form"
-													name="token" id="token" placeholder="Enter your OTP"
-													autocomplete="off" required="required"
-													style="font-family: Roboto_Regular;"  />
-													<span class="mandatory set-mandatory"></span>
-											</div>
-											<div class="text-right font-12">OTP sent to your
-												registered mobile / email
+									<div class="modal-body">
+										<div class="ob-field" style="margin:0">
+											<label class="ob-label" for="token">Enter OTP</label>
+											<input type="hidden" name="token" id="token" />
+											<div class="otp-wrap">
+												<div class="otp-boxes" id="otpBoxes">
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 1" />
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 2" />
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 3" />
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 4" />
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 5" />
+													<input type="password" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 6" />
+												</div>
+												<button type="button" id="otpToggle" class="otp-toggle" aria-label="Show OTP" aria-pressed="false" title="Show OTP"><i class="fa fa-eye" aria-hidden="true"></i></button>
 											</div>
 										</div>
+										<p class="ob-hint">OTP sent to your registered mobile / email</p>
 									</div>
-									<div style = "background-color: transparent; border: none;" class="modal-footer">
-										<button type="button"
-											class="f-medium btn-login-new btn btn-custom recovrbtn text-right"
-											id="otprecoverybtn">
-											<spring:message code="title.reset.password" />
-										</button>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary recovrbtn" id="otprecoverybtn"><spring:message code="title.reset.password" /></button>
 									</div>
 								</c:if>
 								<c:if test="${not byOTP}">
-									<div class="modal-body f-regular">
-										<div class="text-center font-12">
-											<spring:message
-												code="msg.success.pwd.recov.otp.${byOTP}" />
-										</div>
-									</div>
-									<div style = "background-color: transparent; border: none;" class="modal-footer">
-										<button type="button" class="f-medium btn-login-new btn btn-default text-right"
-											data-dismiss="modal">Close</button>
-									</div>
+									<div class="modal-body"><spring:message code="msg.success.pwd.recov.otp.${byOTP}" /></div>
+									<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
 								</c:if>
 							</c:when>
 							<c:otherwise>
-								<div class="modal-body f-regular ">
-									<div class="text-center error-msg">
-										<spring:message code="msg.fail.pwd.recov" />
-									</div>
-								</div>
-								<div style = "background-color: transparent; border: none;" class="modal-footer">
-									<button type="button" class="f-medium btn-login-new btn btn-default text-right"
-										data-dismiss="modal">Close</button>
-								</div>
+								<div class="modal-body"><div class="error-msg"><spring:message code="msg.fail.pwd.recov" /></div></div>
+								<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
 							</c:otherwise>
 						</c:choose>
 					</form>
@@ -397,17 +325,25 @@
 		</script>
 	</c:if>
 
-	<script
-		src="<cdn:url value='/resources/global/js/bts/bts5.js'/>"
-<script 		src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>"
-		type="text/javascript"></script>
-	<script
-		src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>"
-		type="text/javascript"></script>
-	<script
-		src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js'/>"></script>
-	<script
-		src="<cdn:url value='/resources/js/app/login.js?rnd=${app_release_no}'/>"
-		type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/bts/bts5.js'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/bts/bts-compat.js'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}'/>" type="text/javascript"></script>
+	<script src="<cdn:url value='/resources/global/js/jq/plugins/jq.validate.min.js'/>"></script>
+	<script src="<cdn:url value='/resources/js/app/login.js?rnd=${app_release_no}'/>" type="text/javascript"></script>
+	<script type="text/javascript">
+		// Landing page: the Login buttons open the sign-in dialog; "Forgot password" swaps it for the recovery dialog.
+		jQuery(function ($) {
+			$('[data-ob-login]').on('click', function () { $('#loginModal').modal('show'); });
+			$('#loginModal').on('shown.bs.modal', function () { $('#j_username').trigger('focus'); });
+			$(document).on('click', '[data-ob-forgot]', function (e) {
+				e.preventDefault();
+				var $login = $('#loginModal');
+				function openRecovery() { $('#fpassword').modal('show', {backdrop: 'static'}); }
+				if ($login.hasClass('show') || $login.hasClass('in')) { $login.one('hidden.bs.modal', openRecovery); $login.modal('hide'); } else { openRecovery(); }
+			});
+			// closing recovery brings the sign-in dialog back
+			$('#fpassword').on('hidden.bs.modal', function () { if (!$('#resetpwd').length) { $('#loginModal').modal('show'); } });
+		});
+	</script>
 </body>
 </html>

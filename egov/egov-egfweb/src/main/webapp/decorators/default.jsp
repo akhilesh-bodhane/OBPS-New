@@ -80,6 +80,10 @@
 	<link href="<cdn:url value='/resources/global/css/bts/bts5.css' context='/egi'/>" rel="stylesheet" type="text/css" />
     <link href="<cdn:url value='/resources/global/css/egov/custom.css?rnd=${app_release_no}' context='/egi'/>"
           rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="<cdn:url value='/resources/global/css/font-icons/font-awesome/css/font-awesome.min.css' context='/egi'/>">
+	<link href="<cdn:url value='/resources/global/css/egov/obps-ui.css?rnd=${app_release_no}' context='/egi'/>" rel="stylesheet" type="text/css"/>
+	<link href="<cdn:url value='/resources/global/css/egov/obps-legacy.css?rnd=${app_release_no}' context='/egi'/>" rel="stylesheet" type="text/css"/>
+	<script src="<cdn:url value='/resources/global/js/egov/obps-ui.js?rnd=${app_release_no}' context='/egi'/>"></script>
 	<script type="text/javascript" src="<cdn:url value='/resources/global/js/bts/bts5.js' context='/egi'/>"></script>
 	<script type="text/javascript" src="<cdn:url value='/resources/global/js/bts/bts-compat.js' context='/egi'/>"></script>
 	<script src="<cdn:url value='/resources/global/js/bts/bootbox.min.js' context='/egi'/>"></script>
@@ -107,7 +111,7 @@ window.document.onkeydown = function(event) {
 </script>	
 <body <decorator:getProperty property="body.id" writeEntireProperty="yes"/><decorator:getProperty property="body.class" writeEntireProperty="true"/> <decorator:getProperty property="body.onload" writeEntireProperty="true"/>  >
 	
-		<div class="page-container">
+		<div class="page-container ob-legacy">
 		    <!-- header -->
 		    <egovtags:breadcrumb/> 
 		    
@@ -117,9 +121,11 @@ window.document.onkeydown = function(event) {
 		    </div>
 		    
 		    <!-- footer -->
-		    <footer class="main">
-			    <!-- Powered by <a href="http://egovernments.org/" target="_blank">eGovernments Foundation</a> -->
-			</footer>
+		    <jsp:useBean id="obNow" class="java.util.Date"/>
+		    <footer class="ob-footer" role="contentinfo">
+		        <div class="ob-foot-l"><span>&copy; ${1900 + obNow.year} Chandigarh Administration</span><span class="ob-dot"></span><span>Online Building Plan Approval System</span></div>
+		        <div class="ob-foot-r"><span>Powered by <a href="http://egovernments.org/" target="_blank" rel="noopener">eGovernments Foundation</a></span></div>
+		    </footer>
 	   </div>
 	   
 	   <!-- loading indicator --> 

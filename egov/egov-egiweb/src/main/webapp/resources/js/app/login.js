@@ -64,6 +64,37 @@ $(document).ready(function()
 		return false;
 	});
 
+    var $otpBoxes = $('#otpBoxes .otp-box');
+    function syncOtp() {
+        $('#token').val($otpBoxes.map(function () { return this.value; }).get().join(''));
+    }
+    $otpBoxes.on('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if (this.value) { $otpBoxes.eq($otpBoxes.index(this) + 1).trigger('focus'); }
+        syncOtp();
+    }).on('keydown', function (e) {
+        var i = $otpBoxes.index(this);
+        if (e.key === 'Backspace' && !this.value && i > 0) { $otpBoxes.eq(i - 1).val('').trigger('focus'); syncOtp(); }
+        else if (e.key === 'ArrowLeft' && i > 0) { $otpBoxes.eq(i - 1).trigger('focus'); }
+        else if (e.key === 'ArrowRight' && i < $otpBoxes.length - 1) { $otpBoxes.eq(i + 1).trigger('focus'); }
+        else if (e.key === 'Enter') { $('#otprecoverybtn').trigger('click'); }
+    }).on('paste', function (e) {
+        var text = ((e.originalEvent || e).clipboardData.getData('text') || '').replace(/[^0-9]/g, '');
+        if (!text) { return; }
+        e.preventDefault();
+        $otpBoxes.each(function (i) { this.value = text.charAt(i) || ''; });
+        $otpBoxes.eq(Math.min(text.length, $otpBoxes.length - 1)).trigger('focus');
+        syncOtp();
+    });
+    // OTP is masked by default; the eye button shows/hides it
+    $('#otpToggle').on('click', function () {
+        var masked = $otpBoxes.first().attr('type') === 'password';
+        $otpBoxes.attr('type', masked ? 'text' : 'password');
+        $(this).attr({ 'aria-pressed': masked, 'aria-label': masked ? 'Hide OTP' : 'Show OTP', title: masked ? 'Hide OTP' : 'Show OTP' })
+            .find('i').attr('class', masked ? 'fa fa-eye-slash' : 'fa fa-eye');
+    });
+    $('#resetpwd').on('shown.bs.modal', function () { $otpBoxes.first().trigger('focus'); });
+
     $("#otprecoverybtn").click( function () {
             if ($("#token").val() != "") {
                 $.ajax({

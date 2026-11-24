@@ -93,6 +93,7 @@ function callAjaxSearch() {
 					"applicantName": $("#applicantName").val(),
 					"sector": $("#sector").val(),
 					"plotNumber": $("#plotNumber").val(),
+					"fileNumber": $("#fileNumber").val(),
 					"applicationNumber": $("#applicationNumber").val(),
 					"fromDate": $("#fromDate").val(),
 					"toDate": $("#toDate").val(),
@@ -144,6 +145,11 @@ function callAjaxSearch() {
 			},
 			{
 				"data": "plotNumber",
+				"sClass": "text-left"
+			},
+			{
+				"data": "fileNumber",
+				"defaultContent": "",
 				"sClass": "text-left"
 			},
 			{
